@@ -118,3 +118,21 @@ Den större utvecklingsrundan omfattar 100 konkreta produkt- och tekniksteg, gru
 10. Runtime-validering av datalagren, versionsvisning och teknisk QA.
 
 Länspriser är riktvärden från rapporterade stationspriser, inte exakta priser för varje station.
+
+
+## Produktlyft v0.6.0
+
+Ytterligare 100 utvecklingssteg (101–200) har genomförts:
+
+1. Förstagångsguide och snabbstart.
+2. Län-mot-län-jämförelse med delbar URL och direktval.
+3. Prisfördelning med median, kvartiler, percentil och IQR-baserad avvikelseindikering.
+4. Sparade lägen i webbläsaren med återställning.
+5. Export av länspriser som CSV, kopiering av länstabell och scenarioexport som JSON.
+6. Dynamiskt källregister med filter och tydliga dataluckor.
+7. Online/offline-status, PWA-installation och kontrollerad uppdatering av service worker.
+8. Neutral jämförelse mellan nuvarande referens och valt politiskt scenario.
+9. Debouncerad historik med ångra/gör om för kalkylens tillstånd.
+10. Inbyggt självtest, förbättrad cache-strategi och rendering av innehåll under folden.
+
+Aktuell applikationsversion: **0.6.0**.
