@@ -3043,3 +3043,56 @@ footer {
   }
   .registry-health { justify-items: start; }
 }
+
+
+/* Steps 161-170: network, install and update controls */
+.network-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 9px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  color: var(--muted);
+  background: rgba(255,255,255,.018);
+  font-size: 8px;
+}
+.network-pill > span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--good);
+  box-shadow: 0 0 0 3px rgba(87,209,139,.1);
+}
+.network-pill.offline > span {
+  background: var(--carbon);
+  box-shadow: 0 0 0 3px rgba(255,122,89,.1);
+}
+.network-pill strong { color: var(--text); }
+.install-button {
+  min-height: 32px;
+  padding: 0 9px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--text);
+  background: rgba(255,255,255,.025);
+  cursor: pointer;
+  font-size: 8px;
+  font-weight: 850;
+}
+.install-button.update {
+  color: #111722;
+  border-color: var(--accent);
+  background: var(--accent);
+}
+.data-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+@media (max-width: 1100px) {
+  .network-pill,
+  .install-button { display: none; }
+}
