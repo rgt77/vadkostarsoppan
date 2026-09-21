@@ -644,6 +644,11 @@
         <div class="receipt-line"><span>Moms</span><strong id="receiptVat">—</strong></div>
         <div class="receipt-total"><span>TOTALT</span><strong id="receiptTotal">—</strong></div>
         <p id="receiptNote">En liter. Hela notan.</p>
+        <div class="receipt-actions">
+          <button id="copyReceipt" type="button">Kopiera kvittot</button>
+          <button id="shareReceipt" type="button">Dela</button>
+          <button id="printReceipt" type="button">Skriv ut</button>
+        </div>
       </div>
     </section>
 
@@ -733,6 +738,7 @@
     <span>Oberoende hobbyprojekt · kronor per liter, inte per tank.</span>
   </footer>
 
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
   <div class="live-region" id="liveRegion" aria-live="polite" aria-atomic="true"></div>
 
   <script src="/fuel-data.js"></script>
