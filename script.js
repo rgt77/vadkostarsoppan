@@ -138,6 +138,8 @@ const els = {
   countyFavorites: document.querySelector("#countyFavorites"),
   countyFavoritesOnly: document.querySelector("#countyFavoritesOnly"),
   toggleCountyFavorite: document.querySelector("#toggleCountyFavorite"),
+  favoriteCompareGrid: document.querySelector("#favoriteCompareGrid"),
+  favoriteCompareSummary: document.querySelector("#favoriteCompareSummary"),
   priceModeBadge: document.querySelector("#priceModeBadge"),
   manualVsCounty: document.querySelector("#manualVsCounty"),
   manualVsNational: document.querySelector("#manualVsNational"),
@@ -377,6 +379,7 @@ function toggleFavoriteCounty(id = selectedCounty) {
   }
   savePreferences();
   renderFavoriteCounties();
+  renderFavoriteComparison();
   renderCountyExplorer();
   updateCountyUI();
 }
@@ -405,6 +408,57 @@ function renderFavoriteCounties() {
       applyCountyPrice({announceChange:true});
     });
     els.countyFavorites.appendChild(button);
+  });
+}
+
+function renderFavoriteComparison() {
+  if (!els.favoriteCompareGrid) return;
+  els.favoriteCompareGrid.innerHTML = "";
+  const rows = favoriteCounties
+    .map(id => countyEntry(id))
+    .filter(Boolean)
+    .map(entry => ({
+      entry,
+      price: countyPriceForFuel(entry.id)
+    }))
+    .filter(item => Number.isFinite(item.price))
+    .sort((a,b)=>a.price-b.price);
+
+  if (rows.length < 2) {
+    const empty = document.createElement("div");
+    empty.className = "saved-empty";
+    empty.textContent = "Spara minst två län som favoriter för att jämföra dem här.";
+    els.favoriteCompareGrid.appendChild(empty);
+    if (els.favoriteCompareSummary) els.favoriteCompareSummary.textContent = "Spara minst två län som favoriter.";
+    return;
+  }
+
+  const min = rows[0].price;
+  const max = rows[rows.length-1].price;
+  if (els.favoriteCompareSummary) {
+    els.favoriteCompareSummary.textContent =
+      rows.length + " län · spridning " + fmt(max-min) + " kr/l";
+  }
+
+  rows.forEach((item,index) => {
+    const card = document.createElement("article");
+    card.className = "favorite-compare-card";
+    if (index === 0) card.classList.add("lowest");
+    if (index === rows.length-1) card.classList.add("highest");
+    card.innerHTML = `
+      <span>${index === 0 ? "LÄGST AV DINA" : index === rows.length-1 ? "HÖGST AV DINA" : "FAVORIT"}</span>
+      <strong>${fmt(item.price)} kr/l</strong>
+      <small>${item.entry.name}</small>
+      <button type="button">Använd priset</button>
+    `;
+    card.querySelector("button").addEventListener("click", () => {
+      selectedCounty = item.entry.id;
+      priceMode = "county";
+      if (els.countySelect) els.countySelect.value = selectedCounty;
+      applyCountyPrice({announceChange:true});
+      jumpToSection("#literpris");
+    });
+    els.favoriteCompareGrid.appendChild(card);
   });
 }
 
@@ -1442,6 +1496,7 @@ function updateCountyUI() {
 
   renderRecentCounties();
   renderFavoriteCounties();
+  renderFavoriteComparison();
   renderCountyExplorer();
   renderCountyDistribution();
   updateCountyComparison();
@@ -2647,6 +2702,7 @@ loadStateFromUrl();
 updateCountyUI();
 renderRecentCounties();
 renderFavoriteCounties();
+renderFavoriteComparison();
 if (els.dataFreshness) els.dataFreshness.textContent = formatDataFreshness(countyData.updatedAt);
 
 if (els.dataVersion) els.dataVersion.textContent = siteData.dataVersion || "—";
