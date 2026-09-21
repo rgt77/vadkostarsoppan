@@ -56,28 +56,50 @@
         <p class="eyebrow">1 LITER. VARJE KRONA.</p>
         <h1 id="hero-title">Vad kostar<br><span>soppan?</span></h1>
         <p class="hero-copy">Sidan redovisar vad en liter faktiskt består av – från marknads- och distributionskostnad till skatt, moms och politiskt påverkbara delar. Där underlaget inte räcker till exakt precision visar vi det öppet.</p>
-        <a class="hero-cta" href="#literpris">Se literpriset <span aria-hidden="true">↓</span></a>
+        <div class="hero-live-prices" aria-label="Veckoreferenser">
+          <button type="button" class="hero-price-chip active" data-hero-fuel="petrol">
+            <span>Bensin 95</span><strong id="heroPetrolPrice">—</strong>
+          </button>
+          <button type="button" class="hero-price-chip" data-hero-fuel="diesel">
+            <span>Diesel</span><strong id="heroDieselPrice">—</strong>
+          </button>
+        </div>
+        <a class="hero-cta" href="#literpris">Plocka isär en liter <span aria-hidden="true">↓</span></a>
       </div>
 
-      <aside class="hero-card" aria-label="Kostnadskedjan i korthet">
-        <span class="hero-card-kicker">HELA LITERN</span>
-        <strong>6 kostnadsled.</strong>
-        <ol>
-          <li><span>01</span>Produkt / bränsle</li>
-          <li><span>02</span>Import, frakt & terminal</li>
-          <li><span>03</span>Distribution, station & marginal</li>
-          <li><span>04</span>Energiskatt</li>
-          <li><span>05</span>Koldioxidskatt</li>
-          <li><span>06</span>Moms</li>
-        </ol>
+      <aside class="hero-card playful-gauge" aria-label="En liter uppdelad visuellt">
+        <div class="gauge-head">
+          <span class="hero-card-kicker">1 LITER, UPPDELAD</span>
+          <span class="gauge-badge" id="gaugeFuelLabel">BENSIN 95</span>
+        </div>
+        <div class="fuel-glass" aria-hidden="true">
+          <div class="fuel-stack">
+            <span class="fuel-slice market" id="gaugeMarket"></span>
+            <span class="fuel-slice energy" id="gaugeEnergy"></span>
+            <span class="fuel-slice carbon" id="gaugeCarbon"></span>
+            <span class="fuel-slice vat" id="gaugeVat"></span>
+          </div>
+          <div class="fuel-glass-label">
+            <strong id="gaugeTotal">—</strong>
+            <span>kr/l</span>
+          </div>
+        </div>
+        <div class="gauge-legend">
+          <span><i class="legend-dot market"></i>Marknad</span>
+          <span><i class="legend-dot energy"></i>Energi</span>
+          <span><i class="legend-dot carbon"></i>CO₂</span>
+          <span><i class="legend-dot vat"></i>Moms</span>
+        </div>
+        <p class="gauge-caption">Varje färg är kronor som lämnar samma liter.</p>
       </aside>
     </section>
 
     <section class="calculator" id="literpris" aria-labelledby="calculator-title">
       <div class="calculator-head">
         <div>
-          <p class="section-label">LITERPRISET</p>
-          <h2 id="calculator-title">Bryt ner en liter.</h2>
+          <p class="section-label">LITERLABBET</p>
+          <h2 id="calculator-title">Plocka isär en liter.</h2>
+          <p class="section-intro compact">Skriv ett pris. Resten händer direkt.</p>
         </div>
         <div class="fuel-switch" role="tablist" aria-label="Bränsletyp">
           <button class="fuel-tab active" type="button" data-fuel="petrol" role="tab" aria-selected="true">Bensin 95</button>
@@ -100,11 +122,12 @@
           <small class="input-error" id="priceError" role="alert" hidden>Ange ett pris mellan 1 och 100 kr/l.</small>
         </label>
 
-        <div class="summary-card" aria-live="polite">
-          <span class="mini-label">SKATT + MOMS</span>
+        <div class="summary-card punch-card" aria-live="polite">
+          <span class="mini-label">AV VARJE LITER GÅR</span>
           <strong id="taxPerLiter">— kr/l</strong>
           <small id="taxShare">— % av pumppriset</small>
-          <button class="text-button" id="resetAll" type="button">Återställ hela sidan</button>
+          <div class="punchline" id="taxPunchline">till skatt + moms</div>
+          <button class="text-button" id="resetAll" type="button">↺ Börja om</button>
         </div>
       </div>
 
@@ -181,6 +204,13 @@
         </div>
       </div>
 
+      <div class="cost-chips" aria-label="Snabböversikt kostnadsposter">
+        <button type="button" class="cost-chip market" data-focus-part="market"><span>Marknad/kedja</span><strong id="chipMarket">—</strong></button>
+        <button type="button" class="cost-chip energy" data-focus-part="energy"><span>Energiskatt</span><strong id="chipEnergy">—</strong></button>
+        <button type="button" class="cost-chip carbon" data-focus-part="carbon"><span>Koldioxidskatt</span><strong id="chipCarbon">—</strong></button>
+        <button type="button" class="cost-chip vat" data-focus-part="vat"><span>Moms</span><strong id="chipVat">—</strong></button>
+      </div>
+
       <div class="price-stack" aria-label="Literprisets fördelning">
         <div class="price-stack-bar" id="priceBar">
           <span class="bar-other"></span>
@@ -204,8 +234,8 @@
 
     <section class="market-section" id="marknad" aria-labelledby="market-title">
       <div class="section-heading">
-        <p class="section-label">MARKNADSREFERENSER</p>
-        <h2 id="market-title">Vad driver marknadsdelen?</h2>
+        <p class="section-label">MARKNADSMOTORN</p>
+        <h2 id="market-title">Vad puttar priset upp och ner?</h2>
         <p class="section-intro">Råolja, valuta och färdiga produktpriser påverkar kostnaden före skatt. Här visar vi marknadsreferenser separat från själva kostnadsfördelningen så att råolja inte felaktigt presenteras som priset på färdig bensin eller diesel.</p>
       </div>
 
@@ -308,8 +338,8 @@
 
     <section class="politics-section" id="politik" aria-labelledby="politics-title">
       <div class="section-heading">
-        <p class="section-label">POLITIKENS PÅVERKAN PER LITER</p>
-        <h2 id="politics-title">Vilka delar kan politiken ändra?</h2>
+        <p class="section-label">POLITIKLABBET</p>
+        <h2 id="politics-title">Skruva på politiken. Se vad som händer.</h2>
         <p class="section-intro">Skatt, moms och vissa regelkostnader kan ändras genom politiska beslut. Marknadspris, valuta, frakt och företagens kommersiella beslut kan däremot inte sättas direkt av ett parti.</p>
       </div>
 
@@ -325,6 +355,8 @@
           <small>hålls konstant i partiscenarier om inget annat är kvantifierat</small>
         </div>
       </div>
+
+      <div class="party-pills" id="partyPills" aria-label="Välj politiskt scenario"></div>
 
       <div class="politics-grid">
         <div class="politics-controls">
@@ -370,6 +402,11 @@
         </article>
       </div>
 
+      <div class="scenario-meter" aria-live="polite">
+        <div class="meter-labels"><span>Lägre än referens</span><strong id="meterDeltaLabel">Referens</strong><span>Högre än referens</span></div>
+        <div class="meter-track"><span class="meter-center"></span><span class="meter-dot" id="scenarioMeterDot"></span></div>
+      </div>
+
       <div class="scenario-compare" aria-live="polite">
         <div>
           <span>Referens</span>
@@ -385,10 +422,14 @@
       <div class="custom-simulator">
         <div class="custom-simulator-head">
           <div>
-            <p class="section-label">EGET POLITISKT SCENARIO</p>
-            <h3>Testa styrmedlen själv.</h3>
+            <p class="section-label">EGET SCENARIO</p>
+            <h3>Dra i reglagen. Priset svarar direkt.</h3>
           </div>
-          <button id="resetPolicy" type="button">Återställ dagens nivå</button>
+          <div class="simulator-head-actions">
+            <button class="preset-button" type="button" data-preset="zero-excise">Noll punktskatt</button>
+            <button class="preset-button" type="button" data-preset="half-excise">Halv punktskatt</button>
+            <button id="resetPolicy" type="button">Dagens nivå</button>
+          </div>
         </div>
 
         <div class="policy-sliders">
@@ -446,6 +487,21 @@
       <div class="politics-note">
         <strong>Metod:</strong>
         <span>Partiscenarier återger dokumenterade förslag. Om ett parti saknar tillräckligt exakta nivåer visas inget konstruerat partipris.</span>
+      </div>
+    </section>
+
+    <section class="receipt-section" aria-labelledby="receipt-title">
+      <div class="receipt-card">
+        <div class="receipt-top">
+          <span>KVITTO PÅ 1 LITER</span>
+          <strong id="receiptFuel">Bensin 95</strong>
+        </div>
+        <div class="receipt-line"><span>Marknad/kedja</span><strong id="receiptMarket">—</strong></div>
+        <div class="receipt-line"><span>Energiskatt</span><strong id="receiptEnergy">—</strong></div>
+        <div class="receipt-line"><span>Koldioxidskatt</span><strong id="receiptCarbon">—</strong></div>
+        <div class="receipt-line"><span>Moms</span><strong id="receiptVat">—</strong></div>
+        <div class="receipt-total"><span>TOTALT</span><strong id="receiptTotal">—</strong></div>
+        <p id="receiptNote">En liter. Hela notan.</p>
       </div>
     </section>
 
