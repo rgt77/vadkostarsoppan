@@ -39,6 +39,7 @@
     </a>
     <nav class="nav" aria-label="Huvudmeny">
       <a href="#literpris">Literpris</a>
+      <a href="#marknad">Marknad</a>
       <a href="#kostnadskedja">Kostnadskedjan</a>
       <a href="#politik">Politik</a>
       <a href="#metod">Metod</a>
@@ -92,6 +93,10 @@
             <strong>kr/l</strong>
           </div>
           <small id="priceHelp">Skriv priset du vill analysera. Alla resultat nedan är per liter.</small>
+          <div class="input-actions">
+            <button class="reference-button" id="useWeeklyReference" type="button">Använd veckoreferens</button>
+            <span id="weeklyReferenceLabel">—</span>
+          </div>
           <small class="input-error" id="priceError" role="alert" hidden>Ange ett pris mellan 1 och 100 kr/l.</small>
         </label>
 
@@ -193,6 +198,64 @@
         <span><i class="trust-dot exact"></i><b>Exakt:</b> skatter & moms</span>
         <span><i class="trust-dot residual"></i><b>Restpost:</b> marknad/kedja</span>
         <span><i class="trust-dot pending"></i><b>Nästa datalager:</b> dela upp restposten</span>
+      </div>
+    </section>
+
+
+    <section class="market-section" id="marknad" aria-labelledby="market-title">
+      <div class="section-heading">
+        <p class="section-label">MARKNADSREFERENSER</p>
+        <h2 id="market-title">Vad driver marknadsdelen?</h2>
+        <p class="section-intro">Råolja, valuta och färdiga produktpriser påverkar kostnaden före skatt. Här visar vi marknadsreferenser separat från själva kostnadsfördelningen så att råolja inte felaktigt presenteras som priset på färdig bensin eller diesel.</p>
+      </div>
+
+      <div class="market-grid">
+        <article class="market-card">
+          <span class="market-kicker">SVENSKT VECKOPRIS</span>
+          <strong id="weeklyPumpReference">— kr/l</strong>
+          <small id="weeklyPumpDate">—</small>
+          <p>EU-kommissionens veckoreferens för vald bränsletyp. Kan användas som utgångspris i kalkylen.</p>
+          <a id="weeklyPumpSource" href="#" target="_blank" rel="noopener">Källa ↗</a>
+        </article>
+
+        <article class="market-card">
+          <span class="market-kicker">BRENT RÅOLJA</span>
+          <strong id="brentPrice">— USD/fat</strong>
+          <small id="brentDate">—</small>
+          <p>Internationell råoljereferens. Visas som marknadsdrivare, inte som färdig produktkostnad.</p>
+          <a id="brentSource" href="#" target="_blank" rel="noopener">Källa ↗</a>
+        </article>
+
+        <article class="market-card">
+          <span class="market-kicker">USD/SEK</span>
+          <strong id="usdSek">—</strong>
+          <small id="fxDate">—</small>
+          <p>Olja och petroleumprodukter handlas internationellt i dollar. Kronkursen påverkar därför svensk anskaffningskostnad.</p>
+          <a id="fxSource" href="#" target="_blank" rel="noopener">Källa ↗</a>
+        </article>
+
+        <article class="market-card">
+          <span class="market-kicker">RÅOLJEEKVIVALENT</span>
+          <strong id="crudeSekPerLiter">— kr/l</strong>
+          <small>Brent × USD/SEK ÷ liter per fat</small>
+          <p>En pedagogisk omräkning av råoljevärdet per liter. Den inkluderar inte raffinering, produktpremie, biodrivmedel, frakt eller distribution.</p>
+        </article>
+      </div>
+
+      <div class="market-bridge">
+        <div>
+          <span>Veckoreferens vid pump</span>
+          <strong id="bridgePump">— kr/l</strong>
+        </div>
+        <div>
+          <span>Marknad/kedja före skatt</span>
+          <strong id="bridgeMarket">— kr/l</strong>
+        </div>
+        <div>
+          <span>Brent råoljeekvivalent</span>
+          <strong id="bridgeCrude">— kr/l</strong>
+        </div>
+        <p>Skillnaden mellan råoljeekvivalenten och marknad/kedja är <b>inte en vinstmarginal</b>. Där ryms bland annat raffinering, färdig produktpremie, bioinblandning, import, logistik, station och marginaler.</p>
       </div>
     </section>
 
@@ -453,6 +516,8 @@
         <div class="source-buttons">
           <a href="https://www.skatteverket.se/foretag/skatterochavdrag/punktskatter/energiskatter/skattpabransle.4.15532c7b1442f256bae5e56.html" target="_blank" rel="noopener">Skatteverket – skatt på bränsle ↗</a>
           <a href="https://www.skatteverket.se/privat/skatter/beloppochprocent/2026.4.1522bf3f19aea8075ba21.html" target="_blank" rel="noopener">Skatteverket – moms 2026 ↗</a>
+          <a href="https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en" target="_blank" rel="noopener">EU-kommissionen – Weekly Oil Bulletin ↗</a>
+          <a href="https://www.eia.gov/dnav/pet/PET_PRI_SPT_S1_D.htm" target="_blank" rel="noopener">EIA – Brent spotpris ↗</a>
         </div>
         <p class="verified">Dataversion: <span id="dataVersion">2026-09-21</span> · Senast faktakontrollerad: <span id="factCheckDate">21 september 2026</span>.</p>
       </div>
@@ -467,6 +532,7 @@
   <div class="live-region" id="liveRegion" aria-live="polite" aria-atomic="true"></div>
 
   <script src="/fuel-data.js"></script>
+  <script src="/market-data.js"></script>
   <script src="/policy-data.js"></script>
   <script src="/script.js"></script>
 </body>
