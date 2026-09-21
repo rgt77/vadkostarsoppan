@@ -814,3 +814,45 @@ footer {
     flex-direction: column;
   }
 }
+
+
+.data-progress {
+  margin-top: 30px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255,255,255,.018);
+}
+.data-progress > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.data-progress strong { color: var(--text); }
+.data-progress-bar {
+  height: 8px;
+  margin: 12px 0 10px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: var(--surface-3);
+}
+.data-progress-bar span {
+  display: block;
+  width: 50%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--good);
+}
+.data-progress small {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+@media (max-width: 560px) {
+  .data-progress > div:first-child {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
