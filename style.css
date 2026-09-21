@@ -3236,3 +3236,104 @@ footer {
   content-visibility: auto;
   contain-intrinsic-size: 900px;
 }
+
+
+/* Steps 201-250: simple/expert modes + themes */
+.view-toggle {
+  display: inline-flex;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255,255,255,.02);
+}
+.view-toggle button {
+  min-height: 28px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 7px;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 8px;
+  font-weight: 850;
+}
+.view-toggle button[aria-pressed="true"] {
+  color: #111722;
+  background: var(--accent);
+}
+.simple-explainer {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: baseline;
+  margin-top: 14px;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255,255,255,.018);
+}
+.simple-explainer strong {
+  color: var(--accent);
+  font-size: 9px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.simple-explainer span {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+body.simple-mode .expert-only { display: none !important; }
+body.expert-mode .simple-explainer { display: none; }
+
+:root.light-theme {
+  --bg: #f5f2e9;
+  --surface: #fffdf7;
+  --surface-2: #f1ede2;
+  --surface-3: #e8e1d3;
+  --text: #15171b;
+  --muted: #626875;
+  --muted-2: #858c98;
+  --line: rgba(21,23,27,.12);
+  --line-strong: rgba(21,23,27,.22);
+  --other: #6d7788;
+}
+:root.light-theme body {
+  background:
+    radial-gradient(circle at 85% -10%, rgba(105,199,240,.16), transparent 34rem),
+    radial-gradient(circle at -10% 12%, rgba(244,208,63,.16), transparent 30rem),
+    var(--bg);
+}
+:root.light-theme .site-header {
+  background: rgba(245,242,233,.9);
+}
+:root.light-theme .mobile-bottom-nav {
+  background: rgba(255,253,247,.95);
+}
+:root.light-theme .receipt-card {
+  box-shadow: 0 24px 70px rgba(46,40,25,.14);
+}
+:root.light-theme .fuel-glass-label { text-shadow: none; }
+
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+  scroll-behavior: auto !important;
+  animation-duration: .001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: .001ms !important;
+}
+.low-data .noise { display: none; }
+.low-data .market-card,
+.low-data .saved-card,
+.low-data .county-row {
+  backdrop-filter: none !important;
+}
+
+@media (max-width: 1100px) {
+  .view-toggle { display: none; }
+}
+@media (max-width: 620px) {
+  .simple-explainer { grid-template-columns: 1fr; }
+}
