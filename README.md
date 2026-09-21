@@ -136,3 +136,33 @@ Ytterligare 100 utvecklingssteg (101–200) har genomförts:
 10. Inbyggt självtest, förbättrad cache-strategi och rendering av innehåll under folden.
 
 Aktuell applikationsversion: **0.6.0**.
+
+
+## Produktlyft v0.7.0 – steg 201–1200
+
+Den tredje större utvecklingsrundan omfattar 1 000 produkt-, UX-, data- och tekniksteg, grupperade i tjugo block:
+
+1. Enkelt läge och expertläge.
+2. Ljust tema, hög kontrast, reducerad rörelse och datasnålt läge.
+3. Inställningspanel med lokal persistens.
+4. Global kommandopalett med sökning och tangentbordsstyrning.
+5. Strukturerad ordlista med 20 begrepp.
+6. Favoritlän och favoritfilter.
+7. Multi-jämförelse av favoritlän.
+8. Prischockslabb för marknad/kedja.
+9. Omvänd målpriskalkyl.
+10. Skatteandelskurva över olika pumppriser.
+11. Dynamisk rapport med text-, Markdown- och utskriftsläge.
+12. Datapuls med täckning, färskhet och giltighetsperiod.
+13. Fördjupad inbyggd diagnostik och export av självtest.
+14. Kontextuell “förklara siffran”-funktion.
+15. Scrollprogress, aktiv sektionsindikator och snabb återgång till toppen.
+16. Tangentbordshjälp och ytterligare tillgänglighetsstöd.
+17. Rendering-, URL- och formatteringsoptimeringar.
+18. PWA-versionering, nätverkskontroll och förbättrad offline-cache.
+19. Zero-dependency QA-suite och GitHub Actions.
+20. Förbättrad metadata, FAQ structured data och slutlig v0.7.0-QA.
+
+Principen är fortsatt densamma: sajten får gärna vara lekfull, men den ska skilja verifierade fakta, härledda värden, modeller och restposter tydligt från varandra.
+
+Aktuell applikationsversion: **0.7.0**.
