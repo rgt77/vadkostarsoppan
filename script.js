@@ -20,6 +20,8 @@ let lightTheme = false;
 let reducedMotion = false;
 let lowDataMode = false;
 let displayPrecision = 2;
+let commandActiveIndex = 0;
+let commandItems = [];
 let stateHistory = [];
 let redoHistory = [];
 let historyTimer = null;
@@ -37,6 +39,10 @@ const els = {
   expertMode: document.querySelector("#expertMode"),
   simpleExplainerText: document.querySelector("#simpleExplainerText"),
   settingsOpen: document.querySelector("#settingsOpen"),
+  commandOpen: document.querySelector("#commandOpen"),
+  commandDialog: document.querySelector("#commandDialog"),
+  commandSearch: document.querySelector("#commandSearch"),
+  commandList: document.querySelector("#commandList"),
   settingsDialog: document.querySelector("#settingsDialog"),
   reducedMotionToggle: document.querySelector("#reducedMotionToggle"),
   lowDataToggle: document.querySelector("#lowDataToggle"),
@@ -803,6 +809,132 @@ function updateSimpleExplainer(price, marketBase, politicalDirect) {
   els.simpleExplainerText.textContent =
     "För " + (fuelData[selectedFuel]?.label || "bränslet") + " i " + location +
     " går ungefär " + fmt(taxPct,0) + " av 100 kronor till skatt + moms. Resten ligger i marknad och kedja.";
+}
+
+function jumpToSection(selector) {
+  document.querySelector(selector)?.scrollIntoView({behavior: reducedMotion ? "auto" : "smooth", block:"start"});
+}
+
+function closeCommandPalette() {
+  if (els.commandDialog?.open) els.commandDialog.close();
+}
+
+function runCommand(command) {
+  closeCommandPalette();
+  if (!command) return;
+
+  if (command.type === "section") {
+    jumpToSection(command.target);
+  } else if (command.type === "fuel") {
+    selectedFuel = command.value;
+    setFuelTabs();
+    syncCustomControlsFromFuel();
+    if (priceMode === "county") {
+      const local = countyPriceForFuel();
+      if (Number.isFinite(local)) els.pumpPrice.value = fmt(local);
+    }
+    update();
+    jumpToSection("#literpris");
+  } else if (command.type === "county") {
+    selectedCounty = command.value;
+    priceMode = "county";
+    if (els.countySelect) els.countySelect.value = selectedCounty;
+    applyCountyPrice({announceChange:true});
+    jumpToSection("#literpris");
+  } else if (command.type === "mode") {
+    viewMode = command.value;
+    applyViewMode();
+    applyPreferenceClasses();
+    savePreferences();
+  } else if (command.type === "settings") {
+    if (typeof els.settingsDialog?.showModal === "function") els.settingsDialog.showModal();
+  } else if (command.type === "tour") {
+    if (typeof els.welcomeDialog?.showModal === "function") els.welcomeDialog.showModal();
+  } else if (command.type === "action" && command.value === "copy-link") {
+    copyCurrentScenarioLink();
+  } else if (command.type === "action" && command.value === "reset") {
+    els.resetAll?.click();
+  } else if (command.type === "action" && command.value === "diagnostics") {
+    viewMode = "expert";
+    applyViewMode();
+    runDiagnostics();
+    jumpToSection("#kallor");
+  }
+}
+
+function buildCommandItems() {
+  const base = [
+    {title:"Literlabbet", subtitle:"Gå till kalkylatorn", icon:"⛽", type:"section", target:"#literpris"},
+    {title:"Sverigekollen", subtitle:"Jämför alla län", icon:"⌖", type:"section", target:"#lan"},
+    {title:"Marknadsmotorn", subtitle:"Råolja, valuta och benchmark", icon:"↗", type:"section", target:"#marknad"},
+    {title:"Kostnadskedjan", subtitle:"Följ kostnaderna per liter", icon:"≡", type:"section", target:"#kostnadskedja"},
+    {title:"Politiklabbet", subtitle:"Dokumenterade scenarier", icon:"⚙", type:"section", target:"#politik"},
+    {title:"Metod", subtitle:"Så räknar sidan", icon:"?", type:"section", target:"#metod"},
+    {title:"Bensin 95", subtitle:"Byt bränsletyp", icon:"95", type:"fuel", value:"petrol"},
+    {title:"Diesel", subtitle:"Byt bränsletyp", icon:"D", type:"fuel", value:"diesel"},
+    {title:"Enkelt läge", subtitle:"Visa kärnan", icon:"S", type:"mode", value:"simple"},
+    {title:"Expertläge", subtitle:"Visa avancerade verktyg", icon:"E", type:"mode", value:"expert"},
+    {title:"Inställningar", subtitle:"Tema, rörelse och precision", icon:"⚙", type:"settings"},
+    {title:"Snabbstart", subtitle:"Visa introduktionen igen", icon:"▶", type:"tour"},
+    {title:"Kopiera aktuell länk", subtitle:"Dela exakt det här läget", icon:"↗", type:"action", value:"copy-link"},
+    {title:"Återställ sidan", subtitle:"Till standardvärden", icon:"↺", type:"action", value:"reset"},
+    {title:"Kör självtest", subtitle:"Kontrollera data och appstatus", icon:"✓", type:"action", value:"diagnostics"}
+  ];
+
+  const counties = (countyData.counties || []).map(item => ({
+    title:item.name,
+    subtitle:"Välj länssnitt",
+    icon:"L",
+    type:"county",
+    value:item.id
+  }));
+
+  return [...base, ...counties];
+}
+
+function renderCommandPalette() {
+  if (!els.commandList) return;
+  const q = (els.commandSearch?.value || "").trim().toLocaleLowerCase("sv");
+  commandItems = buildCommandItems().filter(item =>
+    !q || (item.title + " " + item.subtitle).toLocaleLowerCase("sv").includes(q)
+  );
+  commandActiveIndex = clamp(commandActiveIndex, 0, Math.max(0,commandItems.length-1));
+  els.commandList.innerHTML = "";
+
+  commandItems.forEach((item,index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "command-item" + (index === commandActiveIndex ? " active" : "");
+    button.setAttribute("role","option");
+    button.setAttribute("aria-selected", String(index === commandActiveIndex));
+    button.innerHTML = `
+      <span class="command-icon">${item.icon}</span>
+      <span class="command-copy"><strong>${item.title}</strong><small>${item.subtitle}</small></span>
+      ${index < 9 ? "<kbd>"+(index+1)+"</kbd>" : ""}
+    `;
+    button.addEventListener("mouseenter", () => {
+      commandActiveIndex = index;
+      renderCommandPalette();
+    });
+    button.addEventListener("click", () => runCommand(item));
+    els.commandList.appendChild(button);
+  });
+
+  if (!commandItems.length) {
+    const empty = document.createElement("div");
+    empty.className = "registry-empty";
+    empty.textContent = "Inga kommandon matchar sökningen.";
+    els.commandList.appendChild(empty);
+  }
+}
+
+function openCommandPalette() {
+  if (!els.commandDialog || typeof els.commandDialog.showModal !== "function") return;
+  commandActiveIndex = 0;
+  if (els.commandSearch) els.commandSearch.value = "";
+  renderCommandPalette();
+  els.commandDialog.showModal();
+  setTimeout(() => els.commandSearch?.focus(), 0);
 }
 
 function validPrice(value) {
@@ -2012,6 +2144,26 @@ els.useCountyAverage?.addEventListener("click", () => {
   applyCountyPrice({ announceChange: true });
 });
 
+els.commandOpen?.addEventListener("click", openCommandPalette);
+els.commandSearch?.addEventListener("input", () => {
+  commandActiveIndex = 0;
+  renderCommandPalette();
+});
+els.commandSearch?.addEventListener("keydown", event => {
+  if (event.key === "ArrowDown") {
+    event.preventDefault();
+    commandActiveIndex = Math.min(commandItems.length-1, commandActiveIndex+1);
+    renderCommandPalette();
+  } else if (event.key === "ArrowUp") {
+    event.preventDefault();
+    commandActiveIndex = Math.max(0, commandActiveIndex-1);
+    renderCommandPalette();
+  } else if (event.key === "Enter") {
+    event.preventDefault();
+    runCommand(commandItems[commandActiveIndex]);
+  }
+});
+
 els.settingsOpen?.addEventListener("click", () => {
   applyPreferenceClasses();
   if (typeof els.settingsDialog?.showModal === "function" && !els.settingsDialog.open) {
@@ -2122,6 +2274,12 @@ els.runDiagnostics?.addEventListener("click", runDiagnostics);
 document.addEventListener("keydown", event => {
   const tag = document.activeElement?.tagName;
   const typing = ["INPUT","TEXTAREA","SELECT"].includes(tag);
+
+  if ((event.ctrlKey || event.metaKey) && !event.altKey && event.key.toLowerCase() === "k") {
+    event.preventDefault();
+    openCommandPalette();
+    return;
+  }
 
   if ((event.ctrlKey || event.metaKey) && !event.altKey && !typing) {
     if (event.key.toLowerCase() === "z" && !event.shiftKey) {
