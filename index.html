@@ -36,6 +36,28 @@
   <a class="skip-link" href="#main">Hoppa till innehållet</a>
   <div class="noise" aria-hidden="true"></div>
 
+  <dialog class="keyboard-dialog" id="keyboardDialog" aria-labelledby="keyboardDialogTitle">
+    <form method="dialog">
+      <div class="command-head">
+        <div>
+          <p class="section-label">TANGENTBORD</p>
+          <h2 id="keyboardDialogTitle">Snabbare utan mus.</h2>
+        </div>
+        <button class="dialog-close" value="close" aria-label="Stäng tangentbordsgenvägar">×</button>
+      </div>
+      <div class="shortcut-list">
+        <div><kbd>⌘/Ctrl</kbd><kbd>K</kbd><span>Öppna snabbkommandon</span></div>
+        <div><kbd>/</kbd><span>Sök län</span></div>
+        <div><kbd>P</kbd><span>Fokusera pumppris</span></div>
+        <div><kbd>⌘/Ctrl</kbd><kbd>Z</kbd><span>Ångra senaste kalkyländring</span></div>
+        <div><kbd>⌘/Ctrl</kbd><kbd>⇧</kbd><kbd>Z</kbd><span>Gör om</span></div>
+        <div><kbd>?</kbd><span>Öppna den här hjälpen</span></div>
+        <div><kbd>Esc</kbd><span>Stäng öppen dialog</span></div>
+      </div>
+      <p class="shortcut-note">Genvägar som använder en bokstav aktiveras inte när du skriver i ett formulärfält.</p>
+    </form>
+  </dialog>
+
   <dialog class="explain-dialog" id="explainDialog" aria-labelledby="explainDialogTitle">
     <form method="dialog">
       <div class="explain-dialog-head">
@@ -155,6 +177,7 @@
       </div>
       <button class="contrast-toggle" id="themeToggle" type="button" aria-pressed="false" title="Växla ljust/mörkt tema">☼</button>
       <button class="contrast-toggle" id="contrastToggle" type="button" aria-pressed="false" title="Växla hög kontrast">◐</button>
+      <button class="contrast-toggle" id="keyboardHelpOpen" type="button" title="Tangentbordsgenvägar">?</button>
       <button class="contrast-toggle" id="commandOpen" type="button" title="Snabbkommandon">⌘</button>
       <button class="contrast-toggle" id="settingsOpen" type="button" title="Inställningar">⚙</button>
     </div>
