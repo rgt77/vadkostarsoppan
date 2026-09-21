@@ -9,6 +9,8 @@ let selectedFuel = siteData.defaultFuel || "petrol";
 let selectedCounty = "riket";
 let priceMode = "county";
 let recentCounties = [];
+let favoriteCounties = [];
+let favoritesOnly = false;
 let partyFilter = "all";
 let compareA = "stockholm";
 let compareB = "ostergotland";
@@ -133,6 +135,9 @@ const els = {
   countyHistogram: document.querySelector("#countyHistogram"),
   distributionNote: document.querySelector("#distributionNote"),
   countyRecent: document.querySelector("#countyRecent"),
+  countyFavorites: document.querySelector("#countyFavorites"),
+  countyFavoritesOnly: document.querySelector("#countyFavoritesOnly"),
+  toggleCountyFavorite: document.querySelector("#toggleCountyFavorite"),
   priceModeBadge: document.querySelector("#priceModeBadge"),
   manualVsCounty: document.querySelector("#manualVsCounty"),
   manualVsNational: document.querySelector("#manualVsNational"),
@@ -316,6 +321,9 @@ function loadSavedPreferences() {
     if (Array.isArray(saved.recent)) {
       recentCounties = saved.recent.filter(id => allCountyEntries().some(item => item.id === id)).slice(0,4);
     }
+    if (Array.isArray(saved.favorites)) {
+      favoriteCounties = saved.favorites.filter(id => countyEntry(id)?.id !== "riket").slice(0,8);
+    }
     if (saved.manualPrice && validPrice(Number(saved.manualPrice)) && priceMode === "manual") {
       els.pumpPrice.value = fmt(Number(saved.manualPrice));
     }
@@ -344,6 +352,7 @@ function savePreferences() {
       mode: priceMode,
       manualPrice: priceMode === "manual" && validPrice(currentPrice) ? currentPrice : null,
       recent: recentCounties,
+      favorites: favoriteCounties,
       highContrast: document.documentElement.classList.contains("high-contrast"),
       lightTheme,
       viewMode,
@@ -352,6 +361,51 @@ function savePreferences() {
       displayPrecision
     }));
   } catch {}
+}
+
+function toggleFavoriteCounty(id = selectedCounty) {
+  if (!id || id === "riket") {
+    showToast("Rikssnittet behöver inte sparas som favorit.");
+    return;
+  }
+  if (favoriteCounties.includes(id)) {
+    favoriteCounties = favoriteCounties.filter(item => item !== id);
+    showToast("Länet togs bort från favoriter.");
+  } else {
+    favoriteCounties = [id, ...favoriteCounties.filter(item => item !== id)].slice(0,8);
+    showToast("Länet sparades som favorit.");
+  }
+  savePreferences();
+  renderFavoriteCounties();
+  renderCountyExplorer();
+  updateCountyUI();
+}
+
+function renderFavoriteCounties() {
+  if (!els.countyFavorites) return;
+  els.countyFavorites.innerHTML = "";
+  if (!favoriteCounties.length) {
+    const span = document.createElement("span");
+    span.className = "county-favorite-empty";
+    span.textContent = "Inga ännu";
+    els.countyFavorites.appendChild(span);
+    return;
+  }
+  favoriteCounties.forEach(id => {
+    const item = countyEntry(id);
+    if (!item) return;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "recent-county" + (id === selectedCounty ? " active" : "");
+    button.textContent = "★ " + item.name.replace(" län","");
+    button.addEventListener("click", () => {
+      selectedCounty = id;
+      priceMode = "county";
+      if (els.countySelect) els.countySelect.value = id;
+      applyCountyPrice({announceChange:true});
+    });
+    els.countyFavorites.appendChild(button);
+  });
 }
 
 function rememberCounty(id) {
@@ -1220,6 +1274,7 @@ function renderCountyExplorer() {
   if (sortMode === "price-desc") rows.sort((a,b) => b.price - a.price || a.name.localeCompare(b.name, "sv"));
   if (sortMode === "name") rows.sort((a,b) => a.name.localeCompare(b.name, "sv"));
   if (q) rows = rows.filter(item => item.name.toLocaleLowerCase("sv").includes(q));
+  if (favoritesOnly) rows = rows.filter(item => favoriteCounties.includes(item.id));
 
   els.countyList.innerHTML = "";
   const range = Math.max(.01, stats.highest.price - stats.lowest.price);
@@ -1237,7 +1292,7 @@ function renderCountyExplorer() {
     button.setAttribute("aria-label", item.name + ", " + fmt(item.price) + " kronor per liter, plats " + actualRank + " av " + stats.rows.length);
     button.innerHTML = `
       <span class="county-row-rank">#${actualRank}</span>
-      <span class="county-row-name">${item.name}</span>
+      <span class="county-row-name">${favoriteCounties.includes(item.id) ? "★ " : ""}${item.name}</span>
       <span class="county-row-bar" aria-hidden="true"><span style="width:${normalized.toFixed(1)}%"></span></span>
       <span class="county-row-price">${fmt(item.price)} kr/l</span>
       <span class="county-row-delta ${delta > .005 ? "positive" : delta < -.005 ? "negative" : ""}">${signed(delta)}</span>
@@ -1356,6 +1411,11 @@ function updateCountyUI() {
   if (els.useCountyAverage) {
     els.useCountyAverage.textContent = entry?.id === "riket" ? "Använd rikssnittet" : "Använd länssnittet";
   }
+  if (els.toggleCountyFavorite) {
+    const favorite = entry?.id !== "riket" && favoriteCounties.includes(entry?.id);
+    els.toggleCountyFavorite.textContent = favorite ? "★ Favorit sparad" : "☆ Spara favorit";
+    els.toggleCountyFavorite.disabled = entry?.id === "riket";
+  }
 
   if (els.priceModeBadge) {
     const labels = { county: entry?.id === "riket" ? "RIKSSNITT" : "LÄNSSNITT", manual: "EGET PRIS", weekly: "VECKOREFERENS" };
@@ -1381,6 +1441,7 @@ function updateCountyUI() {
   setDelta(els.manualVsNational, national, "Mot rikssnitt");
 
   renderRecentCounties();
+  renderFavoriteCounties();
   renderCountyExplorer();
   renderCountyDistribution();
   updateCountyComparison();
@@ -2190,6 +2251,14 @@ els.copyCountyCompare?.addEventListener("click", async () => {
   }
 });
 
+els.toggleCountyFavorite?.addEventListener("click", () => toggleFavoriteCounty(selectedCounty));
+els.countyFavoritesOnly?.addEventListener("click", () => {
+  favoritesOnly = !favoritesOnly;
+  els.countyFavoritesOnly.setAttribute("aria-pressed", String(favoritesOnly));
+  els.countyFavoritesOnly.textContent = favoritesOnly ? "★ Visar favoriter" : "☆ Bara favoriter";
+  renderCountyExplorer();
+});
+
 els.countySearch?.addEventListener("input", renderCountyExplorer);
 els.countySort?.addEventListener("change", renderCountyExplorer);
 els.countyFocusSelected?.addEventListener("click", () => {
@@ -2577,6 +2646,7 @@ applyPreferenceClasses();
 loadStateFromUrl();
 updateCountyUI();
 renderRecentCounties();
+renderFavoriteCounties();
 if (els.dataFreshness) els.dataFreshness.textContent = formatDataFreshness(countyData.updatedAt);
 
 if (els.dataVersion) els.dataVersion.textContent = siteData.dataVersion || "—";
