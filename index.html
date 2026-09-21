@@ -132,11 +132,18 @@
           <button id="useCountyAverage" type="button">Använd länssnittet</button>
           <a id="countySource" href="https://www.carculated.se/bensinpriser" target="_blank" rel="noopener">Priskälla ↗</a>
         </div>
+        <div class="county-recent-wrap">
+          <span>Senast valda</span>
+          <div class="county-recent" id="countyRecent"></div>
+        </div>
       </div>
 
       <div class="input-grid">
         <label class="input-card" for="pumpPrice">
-          <span>Pumppris per liter</span>
+          <div class="input-label-row">
+            <span>Pumppris per liter</span>
+            <span class="price-mode-badge" id="priceModeBadge">LÄNSSNITT</span>
+          </div>
           <div class="input-line">
             <input id="pumpPrice" inputmode="decimal" autocomplete="off" value="17,43" aria-describedby="priceHelp priceError">
             <strong>kr/l</strong>
@@ -145,6 +152,10 @@
           <div class="input-actions">
             <button class="reference-button" id="useWeeklyReference" type="button">Använd veckoreferens</button>
             <span id="weeklyReferenceLabel">—</span>
+          </div>
+          <div class="manual-deltas">
+            <span id="manualVsCounty">Mot länssnitt: —</span>
+            <span id="manualVsNational">Mot rikssnitt: —</span>
           </div>
           <small class="input-error" id="priceError" role="alert" hidden>Ange ett pris mellan 1 och 100 kr/l.</small>
         </label>
@@ -686,7 +697,8 @@
           <a href="https://www.eia.gov/dnav/pet/PET_PRI_SPT_S1_D.htm" target="_blank" rel="noopener">EIA – Brent spotpris ↗</a>
           <a href="https://www.carculated.se/bensinpriser" target="_blank" rel="noopener">Länssnitt – rapporterade stationspriser ↗</a>
         </div>
-        <p class="verified">Dataversion: <span id="dataVersion">2026-09-21</span> · Senast faktakontrollerad: <span id="factCheckDate">21 september 2026</span>.</p>
+        <p class="verified">Dataversion: <span id="dataVersion">2026-09-21</span> · Senast faktakontrollerad: <span id="factCheckDate">21 september 2026</span> · <span id="dataFreshness">—</span>.</p>
+        <button class="text-button" id="clearPreferences" type="button">Rensa sparade val</button>
       </div>
     </section>
   </main>
