@@ -1,9 +1,12 @@
 const fuelData = window.FUEL_DATA || {};
 const siteData = window.SITE_DATA || {};
 const marketData = window.MARKET_DATA || {};
+const countyData = window.COUNTY_PRICES || {};
 const politicalScenarios = window.POLICY_SCENARIOS || {};
 
 let selectedFuel = siteData.defaultFuel || "petrol";
+let selectedCounty = "riket";
+let priceMode = "county";
 
 const els = {
   pumpPrice: document.querySelector("#pumpPrice"),
@@ -30,6 +33,12 @@ const els = {
   dataVersion: document.querySelector("#dataVersion"),
   factCheckDate: document.querySelector("#factCheckDate"),
   chainTotal: document.querySelector("#chainTotal"),
+  countySelect: document.querySelector("#countySelect"),
+  countyPriceLabel: document.querySelector("#countyPriceLabel"),
+  countyPrice: document.querySelector("#countyPrice"),
+  countyDifference: document.querySelector("#countyDifference"),
+  useCountyAverage: document.querySelector("#useCountyAverage"),
+  countySource: document.querySelector("#countySource"),
   heroPetrolPrice: document.querySelector("#heroPetrolPrice"),
   heroDieselPrice: document.querySelector("#heroDieselPrice"),
   heroFuelChips: [...document.querySelectorAll("[data-hero-fuel]")],
@@ -181,6 +190,78 @@ function getReference(price) {
   };
 }
 
+function allCountyEntries() {
+  const national = countyData.national ? [countyData.national] : [];
+  const counties = Array.isArray(countyData.counties) ? countyData.counties : [];
+  return [...national, ...counties];
+}
+
+function countyEntry(id = selectedCounty) {
+  return allCountyEntries().find(item => item.id === id) || countyData.national || null;
+}
+
+function countyPriceForFuel(id = selectedCounty, fuel = selectedFuel) {
+  const entry = countyEntry(id);
+  if (!entry) return null;
+  const value = fuel === "diesel" ? entry.diesel : entry.petrol;
+  return Number.isFinite(value) ? value : null;
+}
+
+function populateCountySelect() {
+  if (!els.countySelect) return;
+  els.countySelect.innerHTML = "";
+  allCountyEntries().forEach(entry => {
+    const option = document.createElement("option");
+    option.value = entry.id;
+    option.textContent = entry.name;
+    els.countySelect.appendChild(option);
+  });
+  els.countySelect.value = selectedCounty;
+  if (els.countySource && countyData.source) els.countySource.href = countyData.source;
+}
+
+function updateCountyUI() {
+  const entry = countyEntry();
+  const local = countyPriceForFuel();
+  const national = countyPriceForFuel("riket");
+
+  if (els.countySelect && els.countySelect.value !== selectedCounty) {
+    els.countySelect.value = selectedCounty;
+  }
+  if (els.countyPriceLabel) {
+    els.countyPriceLabel.textContent = entry?.id === "riket" ? "Rikssnitt" : entry?.name || "Valt län";
+  }
+  if (els.countyPrice) {
+    els.countyPrice.textContent = Number.isFinite(local) ? fmt(local) + " kr/l" : "—";
+  }
+  if (els.countyDifference) {
+    if (!Number.isFinite(local) || !Number.isFinite(national) || entry?.id === "riket") {
+      els.countyDifference.textContent = "Prisdata " + (countyData.updatedAt || "");
+    } else {
+      const delta = local - national;
+      const direction = Math.abs(delta) < .005 ? "samma som rikssnittet" : delta < 0 ? "under rikssnittet" : "över rikssnittet";
+      els.countyDifference.textContent = signed(delta) + " " + direction;
+    }
+  }
+  if (els.useCountyAverage) {
+    els.useCountyAverage.textContent = entry?.id === "riket" ? "Använd rikssnittet" : "Använd länssnittet";
+  }
+}
+
+function applyCountyPrice({ announceChange = false } = {}) {
+  const price = countyPriceForFuel();
+  if (!Number.isFinite(price)) return false;
+  priceMode = "county";
+  els.pumpPrice.value = fmt(price);
+  updateCountyUI();
+  update();
+  if (announceChange) {
+    const entry = countyEntry();
+    announce((entry?.name || "Valt område") + ": " + fmt(price) + " kronor per liter för " + fuelData[selectedFuel].label + ".");
+  }
+  return true;
+}
+
 function weeklyReferenceForFuel() {
   const weekly = marketData.weeklyReference || {};
   return selectedFuel === "diesel" ? weekly.diesel : weekly.petrol;
@@ -226,9 +307,9 @@ function updateMarketReferences() {
 }
 
 function updateHeroReferenceChips() {
-  const weekly = marketData.weeklyReference || {};
-  if (els.heroPetrolPrice) els.heroPetrolPrice.textContent = Number.isFinite(weekly.petrol) ? fmt(weekly.petrol) + " kr/l" : "—";
-  if (els.heroDieselPrice) els.heroDieselPrice.textContent = Number.isFinite(weekly.diesel) ? fmt(weekly.diesel) + " kr/l" : "—";
+  const national = countyData.national || {};
+  if (els.heroPetrolPrice) els.heroPetrolPrice.textContent = Number.isFinite(national.petrol) ? fmt(national.petrol) + " kr/l" : "—";
+  if (els.heroDieselPrice) els.heroDieselPrice.textContent = Number.isFinite(national.diesel) ? fmt(national.diesel) + " kr/l" : "—";
 
   els.heroFuelChips.forEach(chip => {
     chip.classList.toggle("active", chip.dataset.heroFuel === selectedFuel);
@@ -465,6 +546,8 @@ function updateUrl(price) {
   const url = new URL(window.location.href);
   url.searchParams.set("fuel", selectedFuel);
   url.searchParams.set("price", price.toFixed(2));
+  url.searchParams.set("county", selectedCounty);
+  url.searchParams.set("mode", priceMode);
   if (els.partyScenario?.value && els.partyScenario.value !== "current") {
     url.searchParams.set("party", els.partyScenario.value);
   } else {
@@ -482,6 +565,8 @@ function updateUrl(price) {
 function update() {
   const price = getPrice();
   if (price === null) return;
+
+  updateCountyUI();
 
   const reference = getReference(price);
   const { fuel, vat, excise, marketBase, politicalDirect } = reference;
@@ -594,14 +679,25 @@ function loadStateFromUrl() {
   const fuel = params.get("fuel");
   const price = parseNumber(params.get("price"));
   const party = params.get("party");
+  const county = params.get("county");
+  const mode = params.get("mode");
   const energy = parseNumber(params.get("energy"));
   const carbon = parseNumber(params.get("carbon"));
   const vat = parseNumber(params.get("vat"));
   const rule = parseNumber(params.get("rule"));
 
   if (fuel && fuelData[fuel]) selectedFuel = fuel;
-  if (validPrice(price)) els.pumpPrice.value = fmt(price);
+  if (county && allCountyEntries().some(item => item.id === county)) selectedCounty = county;
+  priceMode = mode === "manual" ? "manual" : "county";
   if (party && politicalScenarios[party] && els.partyScenario) els.partyScenario.value = party;
+
+  populateCountySelect();
+  if (priceMode === "county") {
+    const countyPrice = countyPriceForFuel();
+    if (Number.isFinite(countyPrice)) els.pumpPrice.value = fmt(countyPrice);
+  } else if (validPrice(price)) {
+    els.pumpPrice.value = fmt(price);
+  }
 
   setFuelTabs();
   syncCustomControlsFromFuel();
@@ -643,6 +739,10 @@ els.tabs.forEach(tab => {
     setFuelTabs();
     syncCustomControlsFromFuel();
     updateMarketReferences();
+    if (priceMode === "county") {
+      const local = countyPriceForFuel();
+      if (Number.isFinite(local)) els.pumpPrice.value = fmt(local);
+    }
     update();
     announce("Bränsle ändrat till " + fuelData[selectedFuel].label + ".");
   });
@@ -666,11 +766,12 @@ els.heroFuelChips.forEach(chip => {
     selectedFuel = fuel;
     setFuelTabs();
     syncCustomControlsFromFuel();
-    const reference = weeklyReferenceForFuel();
+    priceMode = "county";
+    const reference = countyPriceForFuel();
     if (Number.isFinite(reference)) els.pumpPrice.value = fmt(reference);
     update();
     document.querySelector("#literpris")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    announce("Visar " + fuelData[selectedFuel].label + " med veckoreferensen.");
+    announce("Visar " + fuelData[selectedFuel].label + " med " + (countyEntry()?.name || "valt område") + " som prisreferens.");
   });
 });
 
@@ -682,15 +783,28 @@ els.costChips.forEach(chip => {
   });
 });
 
-els.pumpPrice.addEventListener("input", update);
+els.pumpPrice.addEventListener("input", () => {
+  priceMode = "manual";
+  update();
+});
 els.pumpPrice.addEventListener("blur", normalizePumpPrice);
 
 els.useWeeklyReference?.addEventListener("click", () => {
   const reference = weeklyReferenceForFuel();
   if (!Number.isFinite(reference)) return;
   els.pumpPrice.value = fmt(reference);
+  priceMode = "manual";
   update();
   announce("Veckoreferensen " + fmt(reference) + " kronor per liter används för " + fuelData[selectedFuel].label + ".");
+});
+
+els.countySelect?.addEventListener("change", () => {
+  selectedCounty = els.countySelect.value;
+  applyCountyPrice({ announceChange: true });
+});
+
+els.useCountyAverage?.addEventListener("click", () => {
+  applyCountyPrice({ announceChange: true });
 });
 
 if (els.partyScenario) {
@@ -758,15 +872,21 @@ els.copyScenarioLink?.addEventListener("click", copyCurrentScenarioLink);
 
 els.resetAll?.addEventListener("click", () => {
   selectedFuel = siteData.defaultFuel || "petrol";
-  els.pumpPrice.value = fmt(siteData.defaultPumpPrice || 16.49);
+  selectedCounty = "riket";
+  priceMode = "county";
+  const nationalPrice = countyPriceForFuel("riket", selectedFuel);
+  els.pumpPrice.value = fmt(Number.isFinite(nationalPrice) ? nationalPrice : (siteData.defaultPumpPrice || 17.43));
   if (els.partyScenario) els.partyScenario.value = "current";
+  if (els.countySelect) els.countySelect.value = selectedCounty;
   setFuelTabs();
   syncCustomControlsFromFuel();
   update();
   announce("Sidan är återställd till standardvärden.");
 });
 
+populateCountySelect();
 loadStateFromUrl();
+updateCountyUI();
 
 if (els.dataVersion) els.dataVersion.textContent = siteData.dataVersion || "—";
 if (els.factCheckDate) els.factCheckDate.textContent = siteData.lastFactCheck || "—";
