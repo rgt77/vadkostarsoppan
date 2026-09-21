@@ -2005,3 +2005,66 @@ footer {
     gap: 5px;
   }
 }
+
+
+/* Steps 31-40: sharing, printing and feedback */
+.receipt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+.receipt-actions button {
+  min-height: 34px;
+  padding: 0 11px;
+  border: 1px solid rgba(0,0,0,.2);
+  border-radius: 8px;
+  color: #151515;
+  background: rgba(255,255,255,.45);
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 850;
+}
+.toast {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 80;
+  max-width: min(360px, calc(100vw - 36px));
+  padding: 12px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  color: var(--text);
+  background: rgba(16,24,39,.96);
+  box-shadow: 0 18px 50px rgba(0,0,0,.3);
+  font-size: 11px;
+  line-height: 1.45;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media print {
+  body * { visibility: hidden !important; }
+  .receipt-section,
+  .receipt-section * { visibility: visible !important; }
+  .receipt-section {
+    position: absolute;
+    inset: 0;
+    display: block;
+    padding: 0;
+    background: #fff;
+  }
+  .receipt-card {
+    width: 100%;
+    max-width: none;
+    box-shadow: none;
+    transform: none;
+  }
+  .receipt-actions { display: none !important; }
+}
