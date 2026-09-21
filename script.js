@@ -85,6 +85,9 @@ const els = {
   useCompareA: document.querySelector("#useCompareA"),
   useCompareB: document.querySelector("#useCompareB"),
   copyCountyCompare: document.querySelector("#copyCountyCompare"),
+  downloadCountyCsv: document.querySelector("#downloadCountyCsv"),
+  copyCountyTable: document.querySelector("#copyCountyTable"),
+  downloadScenarioJson: document.querySelector("#downloadScenarioJson"),
   countyMedian: document.querySelector("#countyMedian"),
   countyQ1: document.querySelector("#countyQ1"),
   countyQ3: document.querySelector("#countyQ3"),
@@ -493,6 +496,18 @@ function popValue(node) {
 }
 
 let toastTimer = null;
+
+function downloadTextFile(filename, content, mime = "text/plain;charset=utf-8") {
+  const blob = new Blob([content], {type:mime});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
 
 function showToast(message) {
   if (!els.toast) return;
@@ -1546,6 +1561,56 @@ els.useCompareB?.addEventListener("click", () => {
   if (els.countySelect) els.countySelect.value = compareB;
   applyCountyPrice({announceChange:true});
 });
+els.downloadCountyCsv?.addEventListener("click", () => {
+  const rows = countyRows().sort((a,b)=>a.name.localeCompare(b.name,"sv"));
+  const header = ["län","bränsle","pris_kr_per_liter","datadatum"];
+  const lines = [header.join(";")];
+  rows.forEach(row => {
+    lines.push([
+      '"' + row.name.replaceAll('"','""') + '"',
+      '"' + (fuelData[selectedFuel]?.label || selectedFuel) + '"',
+      row.price.toFixed(2).replace(".",","),
+      countyData.updatedAt || ""
+    ].join(";"));
+  });
+  downloadTextFile(
+    "vadkostarsoppan-lanspriser-" + selectedFuel + "-" + (countyData.updatedAt || "data") + ".csv",
+    "\ufeff" + lines.join("\n"),
+    "text/csv;charset=utf-8"
+  );
+  showToast("CSV med länspriser skapades.");
+});
+
+els.copyCountyTable?.addEventListener("click", async () => {
+  const rows = countyRows().sort((a,b)=>a.price-b.price);
+  const textValue = rows.map((row,index) =>
+    (index+1) + ". " + row.name + " – " + fmt(row.price) + " kr/l"
+  ).join("\n");
+  try {
+    await navigator.clipboard.writeText(textValue);
+    showToast("Länstabellen är kopierad.");
+  } catch {
+    showToast("Kunde inte kopiera länstabellen.");
+  }
+});
+
+els.downloadScenarioJson?.addEventListener("click", () => {
+  const snap = currentSnapshot();
+  if (!snap) return;
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    appVersion: siteData.appVersion || null,
+    dataVersion: siteData.dataVersion || null,
+    scenario: snap
+  };
+  downloadTextFile(
+    "vadkostarsoppan-scenario.json",
+    JSON.stringify(payload,null,2),
+    "application/json;charset=utf-8"
+  );
+  showToast("Scenariofilen skapades.");
+});
+
 els.copyCountyCompare?.addEventListener("click", async () => {
   const a = compareCountyPayload(compareA);
   const b = compareCountyPayload(compareB);
