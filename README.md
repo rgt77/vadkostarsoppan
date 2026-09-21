@@ -44,11 +44,16 @@ Det finns även ett neutralt eget scenario där användaren kan simulera energis
 
 ## Datafiler
 
-- `fuel-data.js` – bränsletyper, skattesatser, moms och dataversion
+- `fuel-data.js` – bränsletyper, skattesatser, moms, app- och dataversion
+- `county-data.js` – rikssnitt och snittpriser för samtliga 21 län
+- `market-data.js` – veckoreferens, Brent, valuta och marknadskonstanter
 - `policy-data.js` – politiska scenarier och källor
-- `script.js` – kalkylmotor och interaktion
+- `script.js` – kalkylmotor, länsjämförelse, delning, tillgänglighet och interaktion
 - `index.html` – sidstruktur
 - `style.css` – responsiv design
+- `sw.js` – offline-cache och fallback
+- `offline.html` – offline-sida
+- `data-sources.json` – källregister och datastatus
 
 ## Publicering
 
@@ -95,3 +100,21 @@ Råoljeekvivalenten är **inte** samma sak som produktkostnaden för färdig ben
 Källa: Carculated, som beräknar länssnitt från rapporterade stationspriser hos Bensinpriser.nu. Data är ett riktvärde och kan avvika från en enskild station. Uppenbara felrapporter filtreras enligt källans metodik.
 
 I gränssnittet kan användaren välja län. Valet uppdaterar pumppriset till länets snitt för vald bränsletyp. Man kan därefter fortfarande skriva in ett eget stationspris manuellt.
+
+
+## UI- och produktlyft v0.5.0
+
+Den större utvecklingsrundan omfattar 100 konkreta produkt- och tekniksteg, grupperade i tio områden:
+
+1. Länsutforskare med sök, sortering, ranking, prisstaplar och spridning.
+2. Sparade val, senaste län, prisläge och datans färskhet.
+3. Snabbjustering av pumppris, dynamisk berättelse och skatt/marknad-jämförelse.
+4. Kopiera, dela och skriva ut ett kvitto för exakt en liter.
+5. Marknadsjämförelser, källkvalitet och förklaring av benchmark/råoljeekvivalent.
+6. Neutralare och tydligare politiska scenarier med filter och egna simulatorpresets.
+7. Mobil bottom navigation, högkontrastläge och tangentbordsgenvägar.
+8. Tillgänglighetsförbättringar, metodförklaringar och no-JavaScript-information.
+9. PWA-förbättringar, service worker, offline-cache och appgenvägar.
+10. Runtime-validering av datalagren, versionsvisning och teknisk QA.
+
+Länspriser är riktvärden från rapporterade stationspriser, inte exakta priser för varje station.
