@@ -383,7 +383,7 @@
 
       <div class="market-grid">
         <article class="market-card">
-          <span class="market-kicker">SVENSKT VECKOPRIS</span>
+          <div class="market-card-top"><span class="market-kicker">SVENSKT VECKOPRIS</span><span class="source-quality official">OFFICIELL</span></div>
           <strong id="weeklyPumpReference">— kr/l</strong>
           <small id="weeklyPumpDate">—</small>
           <p>EU-kommissionens veckoreferens för vald bränsletyp. Kan användas som utgångspris i kalkylen.</p>
@@ -391,7 +391,7 @@
         </article>
 
         <article class="market-card">
-          <span class="market-kicker">BRENT RÅOLJA</span>
+          <div class="market-card-top"><span class="market-kicker">BRENT RÅOLJA</span><span class="source-quality official">OFFICIELL</span></div>
           <strong id="brentPrice">— USD/fat</strong>
           <small id="brentDate">—</small>
           <p>Internationell råoljereferens. Visas som marknadsdrivare, inte som färdig produktkostnad.</p>
@@ -399,7 +399,7 @@
         </article>
 
         <article class="market-card">
-          <span class="market-kicker">USD/SEK</span>
+          <div class="market-card-top"><span class="market-kicker">USD/SEK</span><span class="source-quality derived">HÄRLEDD</span></div>
           <strong id="usdSek">—</strong>
           <small id="fxDate">—</small>
           <p>Olja och petroleumprodukter handlas internationellt i dollar. Kronkursen påverkar därför svensk anskaffningskostnad.</p>
@@ -407,10 +407,33 @@
         </article>
 
         <article class="market-card">
-          <span class="market-kicker">RÅOLJEEKVIVALENT</span>
+          <div class="market-card-top"><span class="market-kicker">RÅOLJEEKVIVALENT</span><span class="source-quality model">MODELL</span></div>
           <strong id="crudeSekPerLiter">— kr/l</strong>
           <small>Brent × USD/SEK ÷ liter per fat</small>
           <p>En pedagogisk omräkning av råoljevärdet per liter. Den inkluderar inte raffinering, produktpremie, biodrivmedel, frakt eller distribution.</p>
+        </article>
+      </div>
+
+      <div class="market-local-compare">
+        <article>
+          <span>Valt län</span>
+          <strong id="marketCountyPrice">— kr/l</strong>
+          <small id="marketCountyName">—</small>
+        </article>
+        <article>
+          <span>Rikssnitt</span>
+          <strong id="marketNationalPrice">— kr/l</strong>
+          <small id="marketCountyVsNational">—</small>
+        </article>
+        <article>
+          <span>EU veckoreferens</span>
+          <strong id="marketWeeklyCompare">— kr/l</strong>
+          <small id="marketCountyVsWeekly">—</small>
+        </article>
+        <article>
+          <span>Råoljeekvivalent / pumppris</span>
+          <strong id="crudeShareOfPump">— %</strong>
+          <small id="marketDataAge">—</small>
         </article>
       </div>
 
@@ -433,6 +456,15 @@
         </div>
         <p>Skillnaden mellan råoljeekvivalenten och marknad/kedja är <b>inte en vinstmarginal</b>. Där ryms bland annat raffinering, färdig produktpremie, bioinblandning, import, logistik, station och marginaler.</p>
       </div>
+
+      <details class="market-explainer">
+        <summary>Vad betyder benchmark, råoljeekvivalent och gap?</summary>
+        <div>
+          <p><strong>Benchmark</strong> är en referenspunkt från en etablerad marknad eller offentlig statistik.</p>
+          <p><strong>Råoljeekvivalent</strong> visar vad Brent-råoljan motsvarar per liter efter valutaomräkning. Det är inte kostnaden för färdig bensin eller diesel.</p>
+          <p><strong>Gapet</strong> är den del av marknad/kedja som återstår efter råoljeekvivalenten. Där ryms flera kostnader och marginaler och det ska inte tolkas som ren vinst.</p>
+        </div>
+      </details>
     </section>
 
     <section class="supply-chain" id="kostnadskedja" aria-labelledby="chain-title">
