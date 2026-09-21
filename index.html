@@ -798,14 +798,25 @@
           <a href="https://www.eia.gov/dnav/pet/PET_PRI_SPT_S1_D.htm" target="_blank" rel="noopener">EIA – Brent spotpris ↗</a>
           <a href="https://www.carculated.se/bensinpriser" target="_blank" rel="noopener">Länssnitt – rapporterade stationspriser ↗</a>
         </div>
+        <div class="data-health">
+          <span class="status-dot" id="dataHealthDot" aria-hidden="true"></span>
+          <div>
+            <strong id="dataHealth">Kontrollerar data…</strong>
+            <small id="dataHealthDetail">—</small>
+          </div>
+        </div>
         <p class="verified">Dataversion: <span id="dataVersion">2026-09-21</span> · Senast faktakontrollerad: <span id="factCheckDate">21 september 2026</span> · <span id="dataFreshness">—</span>.</p>
         <button class="text-button" id="clearPreferences" type="button">Rensa sparade val</button>
+        <details class="changelog">
+          <summary>Vad har byggts i den här versionen?</summary>
+          <p>Länsväljare och länsjämförelse, marknadsreferenser, politiska scenarier, delbart kvitto, mobilnavigation, tillgänglighetsläge, offline-stöd och sparade användarval.</p>
+        </details>
       </div>
     </section>
   </main>
 
   <footer>
-    <span>vadkostarsoppan.se</span>
+    <span>vadkostarsoppan.se · v<span id="appVersion">—</span></span>
     <span>Oberoende hobbyprojekt · kronor per liter, inte per tank.</span>
   </footer>
 
