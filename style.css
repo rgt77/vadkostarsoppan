@@ -998,3 +998,8 @@ footer {
   .market-bridge { grid-template-columns: repeat(2,1fr); }
   .market-bridge p { grid-column: 1 / -1; }
 }
+
+@media (max-width: 620px) {
+  .market-bridge { grid-template-columns: 1fr; }
+  .market-bridge p { grid-column: 1; }
+}
