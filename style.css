@@ -2362,3 +2362,47 @@ footer {
 @media (max-width: 760px) {
   .keyboard-hint { display: none; }
 }
+
+
+/* Steps 91-98: data health and changelog */
+.data-health {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 20px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255,255,255,.018);
+}
+.data-health > div {
+  display: grid;
+  gap: 2px;
+}
+.data-health strong {
+  font-size: 11px;
+}
+.data-health small {
+  color: var(--muted);
+  font-size: 9px;
+}
+.data-health.error .status-dot {
+  background: var(--carbon);
+  box-shadow: 0 0 0 4px rgba(255,122,89,.1);
+}
+.changelog {
+  margin-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.changelog summary {
+  padding: 14px 0;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 800;
+}
+.changelog p {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
+}
