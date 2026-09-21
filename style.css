@@ -767,3 +767,22 @@ footer {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .001ms !important; animation-duration: .001ms !important; }
 }
+
+
+.error-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding-block: 48px;
+}
+.error-page > div { max-width: 720px; }
+.error-page h1 {
+  font-size: clamp(54px, 10vw, 104px);
+  line-height: .9;
+}
+.error-page p:not(.section-label) {
+  max-width: 560px;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.6;
+}
