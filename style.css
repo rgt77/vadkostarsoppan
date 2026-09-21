@@ -3200,3 +3200,39 @@ footer {
   color: var(--muted);
   font-size: 8px;
 }
+
+
+/* Steps 198-199: diagnostics and below-fold rendering */
+.diagnostics {
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-3);
+}
+.diagnostics strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 11px;
+}
+.diagnostics pre {
+  margin: 0;
+  overflow-x: auto;
+  color: var(--muted);
+  font: 10px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: pre-wrap;
+}
+.county-explorer,
+.county-compare-section,
+.distribution-section,
+.market-section,
+.supply-chain,
+.politics-section,
+.receipt-section,
+.explain,
+.faq-section,
+.registry-section,
+.source-section {
+  content-visibility: auto;
+  contain-intrinsic-size: 900px;
+}
