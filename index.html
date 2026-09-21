@@ -18,7 +18,7 @@
       <span>Vad kostar soppan?</span>
     </a>
     <nav class="nav" aria-label="Huvudmeny">
-      <a href="#kalkylator">Kalkylator</a>
+      <a href="#kalkylator">Literkostnad</a>
       <a href="#metod">Så räknar vi</a>
       <a href="#kallor">Källor</a>
     </nav>
@@ -34,7 +34,7 @@
         <p class="eyebrow">BRÄNSLEPRISET, UTAN KRÅNGEL</p>
         <h1>Vad kostar<br><span>soppan?</span></h1>
         <p class="hero-copy">Se vad en liter faktiskt kostar – från inköpt bränsle och importkedja till distribution, skatt och moms. Där data inte går att observera exakt visar vi tydligt vad som är ett estimat.</p>
-        <a class="hero-cta" href="#kalkylator">Räkna på ett pumppris <span>↓</span></a>
+        <a class="hero-cta" href="#kalkylator">Se kostnaden per liter <span>↓</span></a>
       </div>
 
       <aside class="hero-card" aria-label="Vad en liter ska brytas ner i">
@@ -54,8 +54,8 @@
     <section class="calculator" id="kalkylator" aria-labelledby="calculator-title">
       <div class="calculator-head">
         <div>
-          <p class="section-label">KALKYLATOR</p>
-          <h2 id="calculator-title">Bryt ner literpriset.</h2>
+          <p class="section-label">1 LITER, UPPDELAD</p>
+          <h2 id="calculator-title">Vad kostar varje liter?</h2>
         </div>
 
         <div class="fuel-switch" role="tablist" aria-label="Bränsletyp">
@@ -64,23 +64,14 @@
         </div>
       </div>
 
-      <div class="input-grid">
+      <div class="input-grid single">
         <label class="input-card" for="pumpPrice">
-          <span>Pumppris</span>
+          <span>Pumppris per liter</span>
           <div class="input-line">
             <input id="pumpPrice" inputmode="decimal" autocomplete="off" value="16,49" aria-describedby="priceHelp">
             <strong>kr/l</strong>
           </div>
-          <small id="priceHelp">Skriv priset du ser på stationen.</small>
-        </label>
-
-        <label class="input-card compact" for="tankLiters">
-          <span>Tankvolym</span>
-          <div class="input-line">
-            <input id="tankLiters" inputmode="decimal" autocomplete="off" value="50">
-            <strong>liter</strong>
-          </div>
-          <small>Används för tankkostnaden nedan.</small>
+          <small id="priceHelp">Alla poster nedan redovisas i kronor per liter.</small>
         </label>
       </div>
 
@@ -169,35 +160,14 @@
         </div>
       </div>
 
-      <div class="tank-card">
-        <div>
-          <p class="section-label">EN TANK</p>
-          <h3><span id="tankLitersLabel">50</span> liter</h3>
-        </div>
-        <div class="tank-stats">
-          <div>
-            <span>Du betalar</span>
-            <strong id="tankTotal">—</strong>
-          </div>
-          <div>
-            <span>Varav skatt + moms</span>
-            <strong id="tankTax">—</strong>
-          </div>
-          <div>
-            <span>Bränsle + kedjan före skatt</span>
-            <strong id="tankOther">—</strong>
-          </div>
-        </div>
-      </div>
-
-      <p class="method-note">Den grå delen är fortfarande en restpost i den här versionen. Nästa datalager bryter upp den i inköpt produkt, import/frakt, distribution och marginal. Vi visar inte påhittad precision: skatter och moms kan räknas exakt, medan delar av bränslekedjan måste byggas från marknadsdata.</p>
+      <p class="method-note">Allt på sidan ska uttryckas per liter. Skatt och moms kan räknas exakt. Inköpt produkt, import/frakt och distributionsledet kommer att särredovisas när respektive datakälla är verifierad – vi visar inte påhittad precision.</p>
     </section>
 
     <section class="supply-chain" id="kostnadskedja">
       <div class="section-heading">
         <p class="section-label">KOSTNADSKEDJAN FÖRE SKATT</p>
-        <h2>Den här delen ska inte gömmas bakom “övrigt”.</h2>
-        <p class="section-intro">Målet är att visa vad varje krona per liter går till. Pumppriset ensamt räcker inte för att skilja alla marknadsdelar åt, så varje del får en tydlig datastatus.</p>
+        <h2>Varje kostnad ska få en egen rad per liter.</h2>
+        <p class="section-intro">Sidan ska redovisa hela kedjan i kr/l: inköpt produkt, import och frakt, raffinering/inblandning där det är relevant, distribution/station, skatter och moms. Varje post får en tydlig datastatus så att estimat aldrig blandas ihop med exakta belopp.</p>
       </div>
 
       <div class="chain-grid">
