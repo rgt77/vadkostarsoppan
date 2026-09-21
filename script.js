@@ -29,6 +29,11 @@ let commandActiveIndex = 0;
 let commandItems = [];
 let lastDiagnostics = null;
 let stateHistory = [];
+let urlUpdateTimer = null;
+let pendingUrlPrice = null;
+let lastCountyRenderSignature = "";
+let lastDistributionSignature = "";
+let lastFavoriteCompareSignature = "";
 let redoHistory = [];
 let historyTimer = null;
 let isApplyingHistory = false;
@@ -367,11 +372,17 @@ const els = {
   navLinks: [...document.querySelectorAll(".nav a")]
 };
 
-const fmt = (value, digits = displayPrecision) =>
-  new Intl.NumberFormat("sv-SE", {
-    minimumFractionDigits: digits,
-    maximumFractionDigits: digits
-  }).format(value);
+const numberFormatters = new Map();
+const fmt = (value, digits = displayPrecision) => {
+  const key = String(digits);
+  if (!numberFormatters.has(key)) {
+    numberFormatters.set(key, new Intl.NumberFormat("sv-SE", {
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits
+    }));
+  }
+  return numberFormatters.get(key).format(value);
+};
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
@@ -492,6 +503,9 @@ function renderFavoriteCounties() {
 
 function renderFavoriteComparison() {
   if (!els.favoriteCompareGrid) return;
+  const signature = [selectedFuel, favoriteCounties.join(",")].join("|");
+  if (signature === lastFavoriteCompareSignature) return;
+  lastFavoriteCompareSignature = signature;
   els.favoriteCompareGrid.innerHTML = "";
   const rows = favoriteCounties
     .map(id => countyEntry(id))
@@ -1171,6 +1185,9 @@ function countyStats() {
 
 function renderCountyDistribution() {
   if (!els.countyHistogram) return;
+  const signature = [selectedFuel, selectedCounty].join("|");
+  if (signature === lastDistributionSignature) return;
+  lastDistributionSignature = signature;
   const rows = countyRows().sort((a,b) => a.price-b.price);
   if (!rows.length) return;
 
@@ -1229,6 +1246,16 @@ function renderCountyDistribution() {
 
 function renderCountyExplorer() {
   if (!els.countyList) return;
+  const signature = [
+    selectedFuel,
+    selectedCounty,
+    favoritesOnly ? "fav" : "all",
+    favoriteCounties.join(","),
+    els.countySearch?.value || "",
+    els.countySort?.value || "price-asc"
+  ].join("|");
+  if (signature === lastCountyRenderSignature) return;
+  lastCountyRenderSignature = signature;
   const stats = countyStats();
   if (!stats) {
     els.countyList.innerHTML = '<div class="county-row empty">Ingen länsdata tillgänglig.</div>';
@@ -1828,7 +1855,12 @@ function updatePoliticalScenario(price) {
   return { scenario, result, delta };
 }
 
-function updateUrl(price) {
+function commitUrlNow(price = pendingUrlPrice ?? getPrice()) {
+  if (!Number.isFinite(price)) return;
+  clearTimeout(urlUpdateTimer);
+  urlUpdateTimer = null;
+  pendingUrlPrice = price;
+
   const url = new URL(window.location.href);
   url.searchParams.set("fuel", selectedFuel);
   url.searchParams.set("price", price.toFixed(2));
@@ -1849,6 +1881,12 @@ function updateUrl(price) {
 
   history.replaceState(null, "", url);
   savePreferences();
+}
+
+function updateUrl(price) {
+  pendingUrlPrice = price;
+  clearTimeout(urlUpdateTimer);
+  urlUpdateTimer = setTimeout(() => commitUrlNow(price), 120);
 }
 
 function update() {
@@ -2622,6 +2660,7 @@ els.resetPolicy?.addEventListener("click", () => {
 });
 
 async function copyCurrentScenarioLink() {
+  commitUrlNow();
   const url = window.location.href;
   try {
     if (navigator.clipboard?.writeText) {
@@ -2776,7 +2815,11 @@ buildPartyPills();
 setupNavObserver();
 setupScrollFeedback();
 maybeShowWelcome();
-loadSourceRegistry();
+if ("requestIdleCallback" in window) {
+  requestIdleCallback(() => loadSourceRegistry(), {timeout:1800});
+} else {
+  setTimeout(loadSourceRegistry,350);
+}
 renderGlossaryFilters();
 renderGlossary();
 updateMarketReferences();
