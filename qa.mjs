@@ -70,8 +70,12 @@ try {
 try {
   const w = {};
   new Function("window",read("fuel-data.js"))(w);
-  if (w.SITE_DATA?.appVersion !== "0.7.0") fail.push("App version mismatch");
+  const version = JSON.parse(read("version.json"));
+  if (w.SITE_DATA?.appVersion !== "0.7.0" || version.appVersion !== "0.7.0") fail.push("App version mismatch");
   else ok.push("App version 0.7.0");
+  if (!w.FUEL_DATA?.petrol?.validFrom || !w.FUEL_DATA?.petrol?.validTo || !w.FUEL_DATA?.diesel?.validFrom || !w.FUEL_DATA?.diesel?.validTo) {
+    fail.push("Missing machine-readable tax validity dates");
+  } else ok.push("Tax validity dates");
 } catch (error) {
   fail.push("Fuel data evaluation: " + error.message);
 }
@@ -81,4 +85,15 @@ if (fail.length) {
   console.error("\n" + fail.map(line => "✕ " + line).join("\n"));
   process.exit(1);
 }
-console.log("\nPASS — " + ok.length + " checks");
+const requiredMarkers = [
+  "commandDialog","settingsDialog","glossaryGrid","countyFavorites","favoriteCompareGrid",
+  "marketShockSlider","targetPriceInput","taxShareCurve","reportCard","dataScore",
+  "explainDialog","pageProgressBar","keyboardDialog","runDiagnostics"
+];
+for (const id of requiredMarkers) {
+  if (!html.includes(`id="${id}"`)) {
+    console.error("✕ Missing feature marker: " + id);
+    process.exit(1);
+  }
+}
+console.log("\nPASS — " + ok.length + " checks + feature markers");
