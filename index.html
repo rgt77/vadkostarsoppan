@@ -167,16 +167,29 @@
 
     <section class="politics-section" id="politik">
       <div class="section-heading">
-        <p class="section-label">POLITIKENS PÅVERKAN</p>
-        <h2>Hur mycket av literpriset kan politiken påverka?</h2>
-        <p class="section-intro">Politiken kan ändra skatter, moms och regler som påverkar bränslemixen. Den kan däremot inte bestämma världsmarknadspriset, kronkursen eller alla kommersiella kostnader. Därför räknar vi partiscenarier med samma marknadsdel som i pumppriset ovan.</p>
+        <p class="section-label">POLITIKENS PÅVERKAN PER LITER</p>
+        <h2>Vad händer med literpriset om politiken ändras?</h2>
+        <p class="section-intro">Vi skiljer på marknadskostnader och politiskt påverkbara poster. Partiernas egna förslag ändrar bara de delar som faktiskt är dokumenterade. Saknas exakta nivåer visar vi det i stället för att hitta på ett partipris.</p>
       </div>
 
-      <div class="politics-grid">
+      <div class="political-power-card">
+        <div>
+          <span class="mini-label">DIREKT SKATT + MOMS I REFERENSPRiset</span>
+          <strong id="politicalShareKr">— kr/l</strong>
+          <small id="politicalSharePct">— % av pumppriset</small>
+        </div>
+        <div>
+          <span class="mini-label">MARKNADS-/KEDJEDEL FÖRE SKATT</span>
+          <strong id="marketBaseKr">— kr/l</strong>
+          <small>hålls konstant i partiscenarier om inget annat är kvantifierat</small>
+        </div>
+      </div>
+
+      <div class="politics-grid policy-engine">
         <div class="politics-controls">
-          <label for="partyScenario">Välj politiskt scenario</label>
+          <label for="partyScenario">Välj parti eller referens</label>
           <select id="partyScenario">
-            <option value="current">Nuvarande beslutade skattenivå – 21 sep 2026</option>
+            <option value="current">Nuvarande regler</option>
             <option value="m">Moderaterna</option>
             <option value="s">Socialdemokraterna</option>
             <option value="sd">Sverigedemokraterna</option>
@@ -184,46 +197,85 @@
             <option value="v">Vänsterpartiet</option>
             <option value="kd">Kristdemokraterna</option>
             <option value="l">Liberalerna</option>
-            <option value="mp">Miljöpartiet – budgetscenario 2026</option>
-            <option value="custom">Eget politiskt scenario</option>
+            <option value="mp">Miljöpartiet</option>
           </select>
 
           <div class="scenario-price">
-            <span>Beräknat pumppris, allt annat lika</span>
+            <span>Scenario – pumppris per liter</span>
             <strong id="scenarioPrice">—</strong>
             <small id="scenarioDelta">—</small>
           </div>
 
-          <div class="custom-policy" id="customPolicy" hidden>
-            <div class="slider-head">
-              <label for="policyDelta">Politisk priseffekt</label>
-              <strong id="policyDeltaValue">0,00 kr/l</strong>
-            </div>
-            <input id="policyDelta" type="range" min="-6" max="8" step="0.10" value="0">
-            <div class="slider-scale">
-              <span>−6 kr/l</span>
-              <span>0</span>
-              <span>+8 kr/l</span>
-            </div>
-            <p>Detta är en egen simulering, inte ett partiförslag.</p>
+          <div class="scenario-confidence">
+            <span id="scenarioBadge" class="data-badge">BESLUTAD NIVÅ</span>
+            <span id="scenarioAsOf">21 september 2026</span>
           </div>
         </div>
 
         <article class="politics-detail">
-          <div class="politics-detail-top">
-            <span class="data-badge" id="scenarioBadge">BESLUTAD NIVÅ</span>
-            <span id="scenarioAsOf">21 september 2026</span>
+          <h3 id="scenarioTitle">Nuvarande regler</h3>
+          <p id="scenarioSummary"></p>
+
+          <div class="policy-table" aria-label="Dokumenterade politiska parametrar">
+            <div><span>Drivmedelsskatt</span><strong id="policyTax">—</strong></div>
+            <div><span>Reduktionsplikt</span><strong id="policyReduction">—</strong></div>
+            <div><span>Biodrivmedel / inblandning</span><strong id="policyBio">—</strong></div>
+            <div><span>Moms</span><strong id="policyVat">—</strong></div>
+            <div><span>Stöd / kompensation</span><strong id="policySupport">—</strong></div>
           </div>
-          <h3 id="scenarioTitle">Nuvarande beslutade skattenivå</h3>
-          <p id="scenarioSummary">Det här är referensläget som övriga scenarier jämförs med.</p>
+
           <p class="scenario-method" id="scenarioMethod"></p>
-          <a id="scenarioSource" href="https://www.skatteverket.se/foretag/skatterochavdrag/punktskatter/energiskatter/skattpabransle.4.15532c7b1442f256bae5e56.html" target="_blank" rel="noopener">Officiell källa ↗</a>
+          <a id="scenarioSource" href="#" target="_blank" rel="noopener">Officiell källa ↗</a>
         </article>
       </div>
 
+      <div class="custom-simulator">
+        <div class="custom-simulator-head">
+          <div>
+            <p class="section-label">EGET POLITISKT SCENARIO</p>
+            <h3>Testa de styrmedel som faktiskt går att ändra.</h3>
+          </div>
+          <button id="resetPolicy" type="button">Återställ dagens nivå</button>
+        </div>
+
+        <div class="policy-sliders">
+          <label>
+            <span><b>Energiskatt</b><output id="energySliderValue">—</output></span>
+            <input id="energySlider" type="range" min="0" max="6" step="0.01">
+          </label>
+
+          <label>
+            <span><b>Koldioxidskatt</b><output id="carbonSliderValue">—</output></span>
+            <input id="carbonSlider" type="range" min="0" max="6" step="0.01">
+          </label>
+
+          <label>
+            <span><b>Moms</b><output id="vatSliderValue">25 %</output></span>
+            <input id="vatSlider" type="range" min="0" max="30" step="1" value="25">
+          </label>
+
+          <label>
+            <span><b>Regel-/inblandningskostnad</b><output id="regulatorySliderValue">0,00 kr/l</output></span>
+            <input id="regulatorySlider" type="range" min="-3" max="8" step="0.10" value="0">
+            <small>Används för att simulera en kostnadseffekt från exempelvis ändrad reduktionsplikt. En viss procentsats i reduktionsplikt har inte ett fast kr/l-värde.</small>
+          </label>
+        </div>
+
+        <div class="custom-result">
+          <div>
+            <span>Simulerat pumppris</span>
+            <strong id="customScenarioPrice">—</strong>
+          </div>
+          <div>
+            <span>Skillnad mot referens</span>
+            <strong id="customScenarioDelta">—</strong>
+          </div>
+        </div>
+      </div>
+
       <div class="politics-note">
-        <strong>Viktigt:</strong>
-        <span>Ett parti kan inte sätta hela pumppriset. När ett parti inte har publicerat en tillräckligt exakt nivå för skatt, reduktionsplikt eller annan priseffekt visar sidan därför inte ett påhittat “partipris”.</span>
+        <strong>Metod:</strong>
+        <span>Partiscenarier är beskrivningar av dokumenterade förslag, inte rekommendationer eller valprognoser. När ett parti saknar tillräckligt exakta parametrar visas inget konstruerat kr/l-pris. Marknadspris, kronkurs, frakt och kommersiella marginaler hålls annars oförändrade.</span>
       </div>
     </section>
 
@@ -322,6 +374,7 @@
     <span>Ett oberoende hobbyprojekt för att göra svenska drivmedelspriser lättare att förstå.</span>
   </footer>
 
+  <script src="/policy-data.js"></script>
   <script src="/script.js"></script>
 </body>
 </html>
