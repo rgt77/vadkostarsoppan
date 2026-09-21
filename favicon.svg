@@ -1,7 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="16" fill="#f7d046"/>
-  <path d="M18 16h24v35H18z" fill="#0b1020"/>
-  <path d="M22 20h16v11H22z" fill="#f7d046"/>
-  <path d="M42 24h5l4 6v17a4 4 0 0 1-8 0V35" fill="none" stroke="#0b1020" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M16 51h29" stroke="#0b1020" stroke-width="4" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vad kostar soppan?">
+  <rect width="64" height="64" rx="16" fill="#f4d03f"/>
+  <path d="M18 14h25a3 3 0 0 1 3 3v34H15V17a3 3 0 0 1 3-3Z" fill="#0a0f1d"/>
+  <rect x="21" y="20" width="19" height="12" rx="2" fill="#f4d03f"/>
+  <path d="M46 22h4l4 6v17a4 4 0 0 1-8 0v-7" fill="none" stroke="#0a0f1d" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12 51h38" stroke="#0a0f1d" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="30.5" cy="41" r="4.5" fill="#f4d03f"/>
 </svg>
