@@ -1,0 +1,54 @@
+{
+  "version": "2026-09-21",
+  "sources": [
+    {
+      "id": "skatteverket-fuel-tax",
+      "name": "Skatteverket – skatt på bränsle",
+      "role": "energy_and_carbon_tax",
+      "authority": "official",
+      "update_frequency": "when_tax_rules_change",
+      "url": "https://www.skatteverket.se/foretag/skatterochavdrag/punktskatter/energiskatter/skattpabransle.4.15532c7b1442f256bae5e56.html"
+    },
+    {
+      "id": "eu-weekly-oil-bulletin",
+      "name": "European Commission Weekly Oil Bulletin",
+      "role": "weekly_sweden_pump_reference",
+      "authority": "official",
+      "update_frequency": "weekly",
+      "url": "https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en"
+    },
+    {
+      "id": "eia-brent",
+      "name": "U.S. EIA – Europe Brent Spot Price",
+      "role": "crude_market_driver",
+      "authority": "official",
+      "update_frequency": "business_days",
+      "url": "https://www.eia.gov/dnav/pet/PET_PRI_SPT_S1_D.htm"
+    },
+    {
+      "id": "ecb-usdsek-derived",
+      "name": "ECB-baserad USD/SEK-referens",
+      "role": "currency_conversion",
+      "authority": "derived_from_official",
+      "update_frequency": "business_days",
+      "url": "https://ycharts.com/indicators/swedish_krona_to_us_dollar_exchange_rate"
+    }
+  ],
+  "planned_sources": [
+    {
+      "role": "finished_product_benchmark",
+      "status": "required",
+      "note": "Behövs för att ersätta råoljeekvivalenten med relevant pris på färdig bensin/diesel."
+    },
+    {
+      "role": "freight_terminal_cost",
+      "status": "required",
+      "note": "Behövs för import, frakt, lagring och terminalhantering."
+    },
+    {
+      "role": "retail_distribution_margin",
+      "status": "derived_residual_after_verified_inputs",
+      "note": "Får inte beskrivas som nettovinst."
+    }
+  ]
+}
