@@ -8,6 +8,7 @@ let selectedFuel = siteData.defaultFuel || "petrol";
 let selectedCounty = "riket";
 let priceMode = "county";
 let recentCounties = [];
+let partyFilter = "all";
 
 const els = {
   pumpPrice: document.querySelector("#pumpPrice"),
@@ -92,6 +93,10 @@ const els = {
   printReceipt: document.querySelector("#printReceipt"),
   toast: document.querySelector("#toast"),
   partyPills: document.querySelector("#partyPills"),
+  partyFilterButtons: [...document.querySelectorAll("[data-party-filter]")],
+  politicsReferenceLocation: document.querySelector("#politicsReferenceLocation"),
+  politicsReferencePrice: document.querySelector("#politicsReferencePrice"),
+  compareScenarioPct: document.querySelector("#compareScenarioPct"),
   scenarioMeterDot: document.querySelector("#scenarioMeterDot"),
   meterDeltaLabel: document.querySelector("#meterDeltaLabel"),
   presetButtons: [...document.querySelectorAll("[data-preset]")],
@@ -709,6 +714,9 @@ function buildPartyPills() {
   order.forEach(key => {
     const scenario = politicalScenarios[key];
     if (!scenario) return;
+    const modelType = scenario.priceModel?.type || "not_quantified";
+    const quantified = ["baseline","party_delta","stated_target"].includes(modelType);
+    if (partyFilter === "quantified" && !quantified) return;
     const button = document.createElement("button");
     button.type = "button";
     button.className = "party-pill";
@@ -873,6 +881,13 @@ function updatePoliticalScenario(price) {
   if (result !== null) popValue(els.scenarioPrice);
   els.compareReference.textContent = fmt(price) + " kr/l";
   els.compareScenario.textContent = result === null ? "Ej beräkningsbart" : fmt(result) + " kr/l";
+  if (els.compareScenarioPct) {
+    els.compareScenarioPct.textContent = result === null || !price
+      ? "—"
+      : signed((result - price) / price * 100, " %");
+  }
+  if (els.politicsReferenceLocation) els.politicsReferenceLocation.textContent = countyEntry()?.name || "Hela Sverige";
+  if (els.politicsReferencePrice) els.politicsReferencePrice.textContent = fmt(price) + " kr/l";
   updateScenarioMeter(delta);
   syncPartyPills();
 
@@ -1208,6 +1223,18 @@ bindPair(els.carbonSlider, els.carbonNumber);
 bindPair(els.vatSlider, els.vatNumber);
 bindPair(els.regulatorySlider, els.regulatoryNumber);
 
+els.partyFilterButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    partyFilter = button.dataset.partyFilter || "all";
+    els.partyFilterButtons.forEach(item => {
+      const active = item === button;
+      item.classList.toggle("active", active);
+      item.setAttribute("aria-pressed", String(active));
+    });
+    buildPartyPills();
+  });
+});
+
 els.presetButtons.forEach(button => {
   button.addEventListener("click", () => {
     const fuel = fuelData[selectedFuel];
@@ -1218,6 +1245,10 @@ els.presetButtons.forEach(button => {
     } else if (button.dataset.preset === "half-excise") {
       els.energySlider.value = (fuel.energyTax / 2).toFixed(2);
       els.carbonSlider.value = (fuel.carbonTax / 2).toFixed(2);
+    } else if (button.dataset.preset === "zero-vat") {
+      els.vatSlider.value = 0;
+    } else if (button.dataset.preset === "standard-vat") {
+      els.vatSlider.value = 25;
     }
     syncPair(els.energySlider, els.energyNumber);
     syncPair(els.carbonSlider, els.carbonNumber);
