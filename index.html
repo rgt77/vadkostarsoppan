@@ -19,6 +19,7 @@
     </a>
     <nav class="nav" aria-label="Huvudmeny">
       <a href="#kalkylator">Literkostnad</a>
+      <a href="#politik">Politik</a>
       <a href="#metod">Så räknar vi</a>
       <a href="#kallor">Källor</a>
     </nav>
@@ -161,6 +162,69 @@
       </div>
 
       <p class="method-note">Allt på sidan ska uttryckas per liter. Skatt och moms kan räknas exakt. Inköpt produkt, import/frakt och distributionsledet kommer att särredovisas när respektive datakälla är verifierad – vi visar inte påhittad precision.</p>
+    </section>
+
+
+    <section class="politics-section" id="politik">
+      <div class="section-heading">
+        <p class="section-label">POLITIKENS PÅVERKAN</p>
+        <h2>Hur mycket av literpriset kan politiken påverka?</h2>
+        <p class="section-intro">Politiken kan ändra skatter, moms och regler som påverkar bränslemixen. Den kan däremot inte bestämma världsmarknadspriset, kronkursen eller alla kommersiella kostnader. Därför räknar vi partiscenarier med samma marknadsdel som i pumppriset ovan.</p>
+      </div>
+
+      <div class="politics-grid">
+        <div class="politics-controls">
+          <label for="partyScenario">Välj politiskt scenario</label>
+          <select id="partyScenario">
+            <option value="current">Nuvarande beslutade skattenivå – 21 sep 2026</option>
+            <option value="m">Moderaterna</option>
+            <option value="s">Socialdemokraterna</option>
+            <option value="sd">Sverigedemokraterna</option>
+            <option value="c">Centerpartiet</option>
+            <option value="v">Vänsterpartiet</option>
+            <option value="kd">Kristdemokraterna</option>
+            <option value="l">Liberalerna</option>
+            <option value="mp">Miljöpartiet – budgetscenario 2026</option>
+            <option value="custom">Eget politiskt scenario</option>
+          </select>
+
+          <div class="scenario-price">
+            <span>Beräknat pumppris, allt annat lika</span>
+            <strong id="scenarioPrice">—</strong>
+            <small id="scenarioDelta">—</small>
+          </div>
+
+          <div class="custom-policy" id="customPolicy" hidden>
+            <div class="slider-head">
+              <label for="policyDelta">Politisk priseffekt</label>
+              <strong id="policyDeltaValue">0,00 kr/l</strong>
+            </div>
+            <input id="policyDelta" type="range" min="-6" max="8" step="0.10" value="0">
+            <div class="slider-scale">
+              <span>−6 kr/l</span>
+              <span>0</span>
+              <span>+8 kr/l</span>
+            </div>
+            <p>Detta är en egen simulering, inte ett partiförslag.</p>
+          </div>
+        </div>
+
+        <article class="politics-detail">
+          <div class="politics-detail-top">
+            <span class="data-badge" id="scenarioBadge">BESLUTAD NIVÅ</span>
+            <span id="scenarioAsOf">21 september 2026</span>
+          </div>
+          <h3 id="scenarioTitle">Nuvarande beslutade skattenivå</h3>
+          <p id="scenarioSummary">Det här är referensläget som övriga scenarier jämförs med.</p>
+          <p class="scenario-method" id="scenarioMethod"></p>
+          <a id="scenarioSource" href="https://www.skatteverket.se/foretag/skatterochavdrag/punktskatter/energiskatter/skattpabransle.4.15532c7b1442f256bae5e56.html" target="_blank" rel="noopener">Officiell källa ↗</a>
+        </article>
+      </div>
+
+      <div class="politics-note">
+        <strong>Viktigt:</strong>
+        <span>Ett parti kan inte sätta hela pumppriset. När ett parti inte har publicerat en tillräckligt exakt nivå för skatt, reduktionsplikt eller annan priseffekt visar sidan därför inte ett påhittat “partipris”.</span>
+      </div>
     </section>
 
     <section class="supply-chain" id="kostnadskedja">
