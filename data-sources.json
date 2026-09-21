@@ -32,6 +32,15 @@
       "authority": "derived_from_official",
       "update_frequency": "business_days",
       "url": "https://ycharts.com/indicators/swedish_krona_to_us_dollar_exchange_rate"
+    },
+    {
+      "id": "county-station-averages",
+      "name": "Carculated – länssnitt från Bensinpriser.nu",
+      "role": "county_petrol_diesel_averages",
+      "authority": "community_reported_secondary",
+      "update_frequency": "multiple_times_daily",
+      "url": "https://www.carculated.se/bensinpriser",
+      "note": "Snitt av rapporterade stationspriser per län. Uppenbara felrapporter filtreras bort. Ska användas som riktvärde, inte som exakt pris på en enskild station."
     }
   ],
   "planned_sources": [
