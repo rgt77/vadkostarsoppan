@@ -213,6 +213,9 @@ const els = {
   copyScenarioLink: document.querySelector("#copyScenarioLink"),
   copyStatus: document.querySelector("#copyStatus"),
   resetAll: document.querySelector("#resetAll"),
+  saveSnapshot: document.querySelector("#saveSnapshot"),
+  clearSnapshots: document.querySelector("#clearSnapshots"),
+  savedSnapshots: document.querySelector("#savedSnapshots"),
   navLinks: [...document.querySelectorAll(".nav a")]
 };
 
@@ -239,6 +242,8 @@ function signed(value, suffix = " kr/l") {
 
 const STORAGE_KEY = "vadkostarsoppan.preferences.v1";
 const TOUR_KEY = "vadkostarsoppan.tourSeen.v1";
+const SNAPSHOT_KEY = "vadkostarsoppan.snapshots.v1";
+let snapshots = [];
 
 function loadSavedPreferences() {
   try {
@@ -380,6 +385,100 @@ function closeWelcome({ remember = false, jump = false } = {}) {
     document.querySelector("#literpris")?.scrollIntoView({behavior:"smooth",block:"start"});
     setTimeout(() => els.countySelect?.focus(), 350);
   }
+}
+
+function loadSnapshots() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(SNAPSHOT_KEY) || "[]");
+    snapshots = Array.isArray(stored) ? stored.slice(0,5) : [];
+  } catch {
+    snapshots = [];
+  }
+}
+
+function saveSnapshots() {
+  try { localStorage.setItem(SNAPSHOT_KEY, JSON.stringify(snapshots.slice(0,5))); } catch {}
+}
+
+function currentSnapshot() {
+  const price = getPrice();
+  if (price === null) return null;
+  return {
+    id: Date.now(),
+    createdAt: new Date().toISOString(),
+    fuel: selectedFuel,
+    county: selectedCounty,
+    priceMode,
+    price,
+    party: els.partyScenario?.value || "current",
+    energy: Number(els.energySlider?.value),
+    carbon: Number(els.carbonSlider?.value),
+    vat: Number(els.vatSlider?.value),
+    regulatory: Number(els.regulatorySlider?.value)
+  };
+}
+
+function renderSnapshots() {
+  if (!els.savedSnapshots) return;
+  els.savedSnapshots.innerHTML = "";
+  if (!snapshots.length) {
+    const empty = document.createElement("div");
+    empty.className = "saved-empty";
+    empty.textContent = "Inga sparade lägen ännu. Tryck “Spara läget” i Literlabbet.";
+    els.savedSnapshots.appendChild(empty);
+    return;
+  }
+
+  snapshots.forEach((snap,index) => {
+    const county = countyEntry(snap.county);
+    const card = document.createElement("article");
+    card.className = "saved-card";
+    card.innerHTML = `
+      <span class="saved-kicker">LÄGE ${index+1}</span>
+      <strong>${fmt(snap.price)} kr/l</strong>
+      <small>${fuelData[snap.fuel]?.label || snap.fuel} · ${county?.name || "Hela Sverige"}</small>
+      <small>${snap.party && snap.party !== "current" ? "Scenario: " + (politicalScenarios[snap.party]?.name || snap.party) : "Nuvarande regler"}</small>
+      <div class="saved-card-actions">
+        <button type="button" data-action="apply">Öppna</button>
+        <button type="button" data-action="delete">Ta bort</button>
+      </div>
+    `;
+    card.querySelector('[data-action="apply"]').addEventListener("click", () => applySnapshot(snap));
+    card.querySelector('[data-action="delete"]').addEventListener("click", () => {
+      snapshots = snapshots.filter(item => item.id !== snap.id);
+      saveSnapshots();
+      renderSnapshots();
+      showToast("Sparat läge borttaget.");
+    });
+    els.savedSnapshots.appendChild(card);
+  });
+}
+
+function applySnapshot(snap) {
+  if (!snap) return;
+  if (fuelData[snap.fuel]) selectedFuel = snap.fuel;
+  if (countyEntry(snap.county)) selectedCounty = snap.county;
+  priceMode = ["county","manual","weekly"].includes(snap.priceMode) ? snap.priceMode : "manual";
+  if (els.countySelect) els.countySelect.value = selectedCounty;
+  if (validPrice(Number(snap.price))) els.pumpPrice.value = fmt(Number(snap.price));
+  if (els.partyScenario && politicalScenarios[snap.party]) els.partyScenario.value = snap.party;
+
+  const applyValue = (range,number,value,min,max) => {
+    if (!range || !number || !Number.isFinite(Number(value))) return;
+    const safe = clamp(Number(value),min,max);
+    range.value = safe;
+    number.value = safe;
+  };
+  applyValue(els.energySlider,els.energyNumber,snap.energy,0,6);
+  applyValue(els.carbonSlider,els.carbonNumber,snap.carbon,0,6);
+  applyValue(els.vatSlider,els.vatNumber,snap.vat,0,30);
+  applyValue(els.regulatorySlider,els.regulatoryNumber,snap.regulatory,-3,8);
+
+  setFuelTabs();
+  syncPartyPills();
+  update();
+  showToast("Sparat läge öppnat.");
+  document.querySelector("#literpris")?.scrollIntoView({behavior:"smooth",block:"start"});
 }
 
 function validPrice(value) {
@@ -1650,6 +1749,22 @@ els.printReceipt?.addEventListener("click", () => {
   window.print();
 });
 
+els.saveSnapshot?.addEventListener("click", () => {
+  const snap = currentSnapshot();
+  if (!snap) return;
+  snapshots = [snap, ...snapshots].slice(0,5);
+  saveSnapshots();
+  renderSnapshots();
+  showToast("Läget är sparat i den här webbläsaren.");
+});
+
+els.clearSnapshots?.addEventListener("click", () => {
+  snapshots = [];
+  saveSnapshots();
+  renderSnapshots();
+  showToast("Alla sparade lägen är rensade.");
+});
+
 els.resetAll?.addEventListener("click", () => {
   selectedFuel = siteData.defaultFuel || "petrol";
   selectedCounty = "riket";
@@ -1665,6 +1780,8 @@ els.resetAll?.addEventListener("click", () => {
 });
 
 populateCountySelect();
+loadSnapshots();
+renderSnapshots();
 populateCompareSelect(els.compareCountyA, compareA);
 populateCompareSelect(els.compareCountyB, compareB);
 loadSavedPreferences();
