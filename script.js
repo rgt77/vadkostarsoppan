@@ -67,6 +67,7 @@ const els = {
   liveRegion: document.querySelector("#liveRegion"),
   copyScenarioLink: document.querySelector("#copyScenarioLink"),
   copyStatus: document.querySelector("#copyStatus"),
+  resetAll: document.querySelector("#resetAll"),
   navLinks: [...document.querySelectorAll(".nav a")]
 };
 
@@ -467,6 +468,16 @@ async function copyCurrentScenarioLink() {
 }
 
 els.copyScenarioLink?.addEventListener("click", copyCurrentScenarioLink);
+
+els.resetAll?.addEventListener("click", () => {
+  selectedFuel = siteData.defaultFuel || "petrol";
+  els.pumpPrice.value = fmt(siteData.defaultPumpPrice || 16.49);
+  if (els.partyScenario) els.partyScenario.value = "current";
+  setFuelTabs();
+  syncCustomControlsFromFuel();
+  update();
+  announce("Sidan är återställd till standardvärden.");
+});
 
 loadStateFromUrl();
 
