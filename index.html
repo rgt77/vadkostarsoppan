@@ -36,6 +36,23 @@
   <a class="skip-link" href="#main">Hoppa till innehållet</a>
   <div class="noise" aria-hidden="true"></div>
 
+  <dialog class="welcome-dialog" id="welcomeDialog" aria-labelledby="welcomeTitle">
+    <form method="dialog">
+      <div class="welcome-kicker">SNABBSTART</div>
+      <h2 id="welcomeTitle">En liter. Hela historien.</h2>
+      <p>Välj var i Sverige du vill utgå från, se vad varje krona går till och testa hur skatt, moms och andra styrmedel påverkar priset.</p>
+      <div class="welcome-steps">
+        <div><span>1</span><strong>Välj län</strong><small>Vi laddar ett länssnitt.</small></div>
+        <div><span>2</span><strong>Se litern</strong><small>Marknad, skatt och moms delas upp.</small></div>
+        <div><span>3</span><strong>Testa scenarier</strong><small>Ändra styrmedel utan att röra marknaden.</small></div>
+      </div>
+      <div class="welcome-actions">
+        <button value="start" id="welcomeStart" class="primary">Kör igång</button>
+        <button value="skip" id="welcomeSkip">Visa inte igen</button>
+      </div>
+    </form>
+  </dialog>
+
   <header class="site-header">
     <a class="brand" href="/" aria-label="Vad kostar soppan? startsida">
       <span class="brand-mark" aria-hidden="true">⛽</span>
@@ -76,7 +93,10 @@
             <span>Diesel</span><strong id="heroDieselPrice">—</strong>
           </button>
         </div>
-        <a class="hero-cta" href="#literpris">Plocka isär en liter <span aria-hidden="true">↓</span></a>
+        <div class="hero-actions">
+          <a class="hero-cta" href="#literpris">Plocka isär en liter <span aria-hidden="true">↓</span></a>
+          <button class="hero-tour" id="openTour" type="button">Hur funkar det?</button>
+        </div>
       </div>
 
       <aside class="hero-card playful-gauge" aria-label="En liter uppdelad visuellt">
