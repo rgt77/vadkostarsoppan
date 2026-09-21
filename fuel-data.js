@@ -7,6 +7,10 @@ window.FUEL_DATA = {
     carbonTax: 0.87,
     vatRate: 25,
     period: "1 juli–30 september 2026",
+    validFrom: "2026-07-01",
+    validTo: "2026-09-30",
+    validFrom: "2026-07-01",
+    validTo: "2026-09-30",
     taxSource: "https://www.skatteverket.se/foretag/skatterochavdrag/punktskatter/energiskatter/skattpabransle.4.15532c7b1442f256bae5e56.html"
   },
   diesel: {
