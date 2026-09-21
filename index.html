@@ -36,6 +36,25 @@
   <a class="skip-link" href="#main">Hoppa till innehållet</a>
   <div class="noise" aria-hidden="true"></div>
 
+  <dialog class="explain-dialog" id="explainDialog" aria-labelledby="explainDialogTitle">
+    <form method="dialog">
+      <div class="explain-dialog-head">
+        <div>
+          <p class="section-label">FÖRKLARA SIFFRAN</p>
+          <h2 id="explainDialogTitle">—</h2>
+        </div>
+        <button class="dialog-close" value="close" aria-label="Stäng förklaring">×</button>
+      </div>
+      <p class="explain-dialog-copy" id="explainDialogCopy">—</p>
+      <div class="explain-dialog-current">
+        <span>Aktuellt värde</span>
+        <strong id="explainDialogValue">—</strong>
+      </div>
+      <div class="explain-dialog-extra" id="explainDialogExtra"></div>
+      <button class="explain-dialog-glossary" id="explainOpenGlossary" type="button">Visa i ordlistan</button>
+    </form>
+  </dialog>
+
   <dialog class="command-dialog" id="commandDialog" aria-labelledby="commandTitle">
     <form method="dialog">
       <div class="command-head">
@@ -322,6 +341,7 @@
               <strong id="other">—</strong>
               <small id="otherPct">—</small>
             </div>
+            <button class="explain-number" type="button" data-explain="marknadsdel" aria-label="Förklara marknad och kedja">?</button>
           </article>
 
           <article class="breakdown-row">
@@ -334,6 +354,7 @@
               <strong id="energyTax">—</strong>
               <small id="energyPct">—</small>
             </div>
+            <button class="explain-number" type="button" data-explain="energiskatt" aria-label="Förklara energiskatt">?</button>
           </article>
 
           <article class="breakdown-row">
@@ -346,6 +367,7 @@
               <strong id="carbonTax">—</strong>
               <small id="carbonPct">—</small>
             </div>
+            <button class="explain-number" type="button" data-explain="koldioxidskatt" aria-label="Förklara koldioxidskatt">?</button>
           </article>
 
           <article class="breakdown-row">
@@ -358,6 +380,7 @@
               <strong id="vat">—</strong>
               <small id="vatPct">—</small>
             </div>
+            <button class="explain-number" type="button" data-explain="moms" aria-label="Förklara moms">?</button>
           </article>
         </div>
       </div>
