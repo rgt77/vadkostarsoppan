@@ -470,6 +470,54 @@
       </div>
     </section>
 
+
+    <section class="target-section" id="malpris" aria-labelledby="target-title">
+      <div class="section-heading">
+        <p class="section-label">MÅLPRISLABBET</p>
+        <h2 id="target-title">Vad måste ändras för att nå ett visst pris?</h2>
+        <p class="section-intro">Sätt ett önskat pumppris. Kalkylen håller dagens punktskatter och momssats konstanta och räknar baklänges vilken marknad/kedja som skulle krävas.</p>
+      </div>
+
+      <div class="target-card">
+        <label class="target-input">
+          <span>Önskat pumppris</span>
+          <div><input id="targetPriceInput" inputmode="decimal" value="15,00"><strong>kr/l</strong></div>
+          <input id="targetPriceSlider" type="range" min="5" max="35" step="0.1" value="15">
+        </label>
+
+        <div class="target-results">
+          <article>
+            <span>Nuvarande marknad/kedja</span>
+            <strong id="targetCurrentMarket">—</strong>
+          </article>
+          <article>
+            <span>Krävd marknad/kedja</span>
+            <strong id="targetRequiredMarket">—</strong>
+          </article>
+          <article>
+            <span>Förändring</span>
+            <strong id="targetMarketDelta">—</strong>
+            <small id="targetMarketDeltaPct">—</small>
+          </article>
+          <article>
+            <span>Mekaniskt golv</span>
+            <strong id="targetMechanicalFloor">—</strong>
+            <small>om marknad/kedja hypotetiskt vore 0</small>
+          </article>
+        </div>
+
+        <div class="target-message" id="targetMessage">—</div>
+        <div class="target-presets">
+          <button type="button" data-target-delta="-3">−3 kr</button>
+          <button type="button" data-target-delta="-2">−2 kr</button>
+          <button type="button" data-target-delta="-1">−1 kr</button>
+          <button type="button" data-target-delta="1">+1 kr</button>
+          <button type="button" data-target-delta="2">+2 kr</button>
+          <button type="button" data-target-delta="3">+3 kr</button>
+        </div>
+      </div>
+    </section>
+
     <section class="saved-section expert-only" id="sparat" aria-labelledby="saved-title">
       <div class="saved-head">
         <div>
