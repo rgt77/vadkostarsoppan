@@ -959,6 +959,28 @@
       </div>
     </section>
 
+
+    <section class="glossary-section" id="ordlista" aria-labelledby="glossary-title">
+      <div class="section-heading glossary-heading">
+        <div>
+          <p class="section-label">ORDLISTAN</p>
+          <h2 id="glossary-title">Vad betyder allt?</h2>
+          <p class="section-intro">Sök på ett ord och få en kort förklaring utan att lämna sidan.</p>
+        </div>
+        <label class="glossary-search">
+          <span>Sök begrepp</span>
+          <input id="glossarySearch" type="search" autocomplete="off" placeholder="T.ex. moms, Brent, IQR…">
+        </label>
+      </div>
+      <div class="glossary-filters" id="glossaryFilters" aria-label="Filtrera ordlistan"></div>
+      <div class="glossary-grid" id="glossaryGrid"></div>
+      <div class="glossary-spotlight" id="glossarySpotlight" hidden>
+        <span class="mini-label">FÖRKLARING</span>
+        <strong id="glossarySpotlightTerm">—</strong>
+        <p id="glossarySpotlightText">—</p>
+      </div>
+    </section>
+
     <section class="explain" id="metod" aria-labelledby="method-title">
       <div class="section-heading">
         <p class="section-label">SÅ RÄKNAR VI</p>
@@ -1114,6 +1136,7 @@
   <script defer src="/fuel-data.js"></script>
   <script defer src="/market-data.js"></script>
   <script defer src="/county-data.js"></script>
+  <script defer src="/glossary-data.js"></script>
   <script defer src="/policy-data.js"></script>
   <script defer src="/script.js"></script>
 </body>
