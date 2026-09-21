@@ -33,18 +33,20 @@
         </div>
         <p class="eyebrow">BRÄNSLEPRISET, UTAN KRÅNGEL</p>
         <h1>Vad kostar<br><span>soppan?</span></h1>
-        <p class="hero-copy">Se hur mycket av literpriset som är skatt och moms – och hur mycket som återstår till själva bränslet, distributionen och marginalerna.</p>
+        <p class="hero-copy">Se vad en liter faktiskt kostar – från inköpt bränsle och importkedja till distribution, skatt och moms. Där data inte går att observera exakt visar vi tydligt vad som är ett estimat.</p>
         <a class="hero-cta" href="#kalkylator">Räkna på ett pumppris <span>↓</span></a>
       </div>
 
-      <aside class="hero-card" aria-label="Så fungerar sidan">
-        <span class="hero-card-kicker">TRANSPARENT BERÄKNING</span>
-        <strong>4 delar.</strong>
+      <aside class="hero-card" aria-label="Vad en liter ska brytas ner i">
+        <span class="hero-card-kicker">VARJE KRONA PER LITER</span>
+        <strong>Hela kedjan.</strong>
         <ol>
-          <li><span>01</span>Energiskatt</li>
-          <li><span>02</span>Koldioxidskatt</li>
-          <li><span>03</span>Moms</li>
-          <li><span>04</span>Övrigt före skatt</li>
+          <li><span>01</span>Inköpt bränsle / produktpris</li>
+          <li><span>02</span>Import, frakt & hantering</li>
+          <li><span>03</span>Distribution, station & marginal</li>
+          <li><span>04</span>Energiskatt</li>
+          <li><span>05</span>Koldioxidskatt</li>
+          <li><span>06</span>Moms</li>
         </ol>
       </aside>
     </section>
@@ -143,8 +145,8 @@
           <article class="breakdown-row">
             <div class="swatch other"></div>
             <div>
-              <strong>Övrigt före skatt</strong>
-              <small>Produkt, distribution, inblandning och marginaler m.m.</small>
+              <strong>Bränsle + kedjan före skatt</strong>
+              <small>Inköp, raffinering/inblandning, import/frakt, distribution och marginal</small>
             </div>
             <div class="row-value">
               <strong id="other">—</strong>
@@ -182,19 +184,62 @@
             <strong id="tankTax">—</strong>
           </div>
           <div>
-            <span>Övrigt före skatt</span>
+            <span>Bränsle + kedjan före skatt</span>
             <strong id="tankOther">—</strong>
           </div>
         </div>
       </div>
 
-      <p class="method-note">“Övrigt före skatt” är en restpost. Den är inte samma sak som drivmedelsbolagets inköpspris eller vinst.</p>
+      <p class="method-note">Den grå delen är fortfarande en restpost i den här versionen. Nästa datalager bryter upp den i inköpt produkt, import/frakt, distribution och marginal. Vi visar inte påhittad precision: skatter och moms kan räknas exakt, medan delar av bränslekedjan måste byggas från marknadsdata.</p>
+    </section>
+
+    <section class="supply-chain" id="kostnadskedja">
+      <div class="section-heading">
+        <p class="section-label">KOSTNADSKEDJAN FÖRE SKATT</p>
+        <h2>Den här delen ska inte gömmas bakom “övrigt”.</h2>
+        <p class="section-intro">Målet är att visa vad varje krona per liter går till. Pumppriset ensamt räcker inte för att skilja alla marknadsdelar åt, så varje del får en tydlig datastatus.</p>
+      </div>
+
+      <div class="chain-grid">
+        <article class="chain-card">
+          <div class="chain-top">
+            <span class="chain-number">01</span>
+            <span class="data-badge market">MARKNADSDATA</span>
+          </div>
+          <h3>Inköpt bränsle</h3>
+          <p>Internationellt produktpris för färdig bensin eller diesel är mer relevant för pumppriset än att kalla hela delen “råolja”. Råoljepriset visas separat som en prisdrivare.</p>
+        </article>
+
+        <article class="chain-card">
+          <div class="chain-top">
+            <span class="chain-number">02</span>
+            <span class="data-badge estimate">ESTIMAT</span>
+          </div>
+          <h3>Import, frakt & hantering</h3>
+          <p>Transport till Sverige, lagring, terminalhantering samt raffinering eller inblandning där det är relevant. Den här posten kräver externa marknads- och logistikdata.</p>
+        </article>
+
+        <article class="chain-card">
+          <div class="chain-top">
+            <span class="chain-number">03</span>
+            <span class="data-badge residual">RESTPOST</span>
+          </div>
+          <h3>Distribution, station & marginal</h3>
+          <p>Det som återstår efter produktkostnad, skatter, moms och övriga modellerade kostnader. Den ska beskrivas som teoretisk bruttomarginal – inte som ren vinst.</p>
+        </article>
+      </div>
+
+      <div class="data-trust">
+        <div><span class="trust-dot exact"></span><strong>Exakt:</strong> skatt och moms</div>
+        <div><span class="trust-dot market"></span><strong>Marknadsdata:</strong> internationellt produktpris</div>
+        <div><span class="trust-dot estimate"></span><strong>Estimat:</strong> import, frakt och vissa kedjekostnader</div>
+      </div>
     </section>
 
     <section class="explain" id="metod">
       <div class="section-heading">
         <p class="section-label">SÅ RÄKNAR VI</p>
-        <h2>Från pumppris till fyra delar.</h2>
+        <h2>Från pumppris till hela kostnadskedjan.</h2>
       </div>
 
       <div class="explain-grid">
@@ -216,7 +261,7 @@
         <article>
           <span class="step">04</span>
           <h3>Resten visas separat</h3>
-          <p>Det som återstår före skatt samlar bland annat produktkostnad, logistik, inblandning och marginaler.</p>
+          <p>Det som återstår före skatt delas vidare med marknadsdata i inköpt produkt, import/logistik och en teoretisk bruttomarginal.</p>
         </article>
       </div>
     </section>
