@@ -37,9 +37,12 @@
       <span class="brand-mark" aria-hidden="true">⛽</span>
       <span>Vad kostar soppan?</span>
     </a>
-    <div class="header-live" aria-live="polite">
-      <span id="headerFuel">Bensin 95</span>
-      <strong id="headerPrice">— kr/l</strong>
+    <div class="header-tools">
+      <div class="header-live" aria-live="polite">
+        <span id="headerFuel">Bensin 95</span>
+        <strong id="headerPrice">— kr/l</strong>
+      </div>
+      <button class="contrast-toggle" id="contrastToggle" type="button" aria-pressed="false" title="Växla hög kontrast">◐</button>
     </div>
     <nav class="nav" aria-label="Huvudmeny">
       <a href="#literpris">Literpris</a>
@@ -787,6 +790,14 @@
     <span>vadkostarsoppan.se</span>
     <span>Oberoende hobbyprojekt · kronor per liter, inte per tank.</span>
   </footer>
+
+  <nav class="mobile-bottom-nav" aria-label="Snabbnavigation">
+    <a href="#literpris"><span>⛽</span>Liter</a>
+    <a href="#lan"><span>⌖</span>Län</a>
+    <div class="mobile-price"><span id="mobileFuel">Bensin</span><strong id="mobilePrice">—</strong></div>
+    <a href="#marknad"><span>↗</span>Marknad</a>
+    <a href="#politik"><span>⚙</span>Politik</a>
+  </nav>
 
   <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
   <div class="live-region" id="liveRegion" aria-live="polite" aria-atomic="true"></div>
