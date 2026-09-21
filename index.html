@@ -411,6 +411,64 @@
       </details>
     </section>
 
+
+    <section class="county-compare-section" id="lanjamforelse" aria-labelledby="county-compare-title">
+      <div class="section-heading">
+        <p class="section-label">LÄN MOT LÄN</p>
+        <h2 id="county-compare-title">Jämför två län direkt.</h2>
+        <p class="section-intro">Välj två län och se skillnaden i pumppris, skatt + moms och marknad/kedja för samma bränsletyp.</p>
+      </div>
+
+      <div class="county-compare-card">
+        <div class="county-compare-controls">
+          <label>
+            <span>Län A</span>
+            <select id="compareCountyA"></select>
+          </label>
+          <button id="swapCounties" type="button" aria-label="Byt plats på länen">⇄</button>
+          <label>
+            <span>Län B</span>
+            <select id="compareCountyB"></select>
+          </label>
+        </div>
+
+        <div class="county-compare-summary">
+          <article>
+            <span id="compareNameA">—</span>
+            <strong id="comparePriceA">— kr/l</strong>
+            <small id="compareBreakdownA">—</small>
+          </article>
+          <div class="county-compare-delta">
+            <span>Skillnad</span>
+            <strong id="compareCountyDelta">—</strong>
+            <small id="compareCountyDeltaPct">—</small>
+          </div>
+          <article>
+            <span id="compareNameB">—</span>
+            <strong id="comparePriceB">— kr/l</strong>
+            <small id="compareBreakdownB">—</small>
+          </article>
+        </div>
+
+        <div class="county-compare-bars">
+          <div>
+            <span id="compareBarNameA">Län A</span>
+            <div class="compare-bar"><i id="compareBarA"></i></div>
+          </div>
+          <div>
+            <span id="compareBarNameB">Län B</span>
+            <div class="compare-bar"><i id="compareBarB"></i></div>
+          </div>
+        </div>
+
+        <div class="county-compare-actions">
+          <button id="useCompareA" type="button">Använd län A</button>
+          <button id="useCompareB" type="button">Använd län B</button>
+          <button id="copyCountyCompare" type="button">Kopiera jämförelse</button>
+        </div>
+      </div>
+    </section>
+
     <section class="market-section" id="marknad" aria-labelledby="market-title">
       <div class="section-heading">
         <p class="section-label">MARKNADSMOTORN</p>
