@@ -560,8 +560,6 @@ function updateCountyUI() {
   }
 
   const current = parseNumber(els.pumpPrice?.value);
-  const local = countyPriceForFuel();
-  const national = countyPriceForFuel("riket");
   const setDelta = (node, base, label) => {
     if (!node) return;
     node.classList.remove("up","down");
