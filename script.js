@@ -85,6 +85,13 @@ const els = {
   useCompareA: document.querySelector("#useCompareA"),
   useCompareB: document.querySelector("#useCompareB"),
   copyCountyCompare: document.querySelector("#copyCountyCompare"),
+  countyMedian: document.querySelector("#countyMedian"),
+  countyQ1: document.querySelector("#countyQ1"),
+  countyQ3: document.querySelector("#countyQ3"),
+  countyPercentile: document.querySelector("#countyPercentile"),
+  countyPercentileDetail: document.querySelector("#countyPercentileDetail"),
+  countyHistogram: document.querySelector("#countyHistogram"),
+  distributionNote: document.querySelector("#distributionNote"),
   countyRecent: document.querySelector("#countyRecent"),
   priceModeBadge: document.querySelector("#priceModeBadge"),
   manualVsCounty: document.querySelector("#manualVsCounty"),
@@ -480,6 +487,16 @@ function countyRows() {
     .filter(item => Number.isFinite(item.price));
 }
 
+function percentile(sortedValues, p) {
+  if (!sortedValues.length) return null;
+  const index = (sortedValues.length - 1) * p;
+  const lower = Math.floor(index);
+  const upper = Math.ceil(index);
+  if (lower === upper) return sortedValues[lower];
+  const weight = index - lower;
+  return sortedValues[lower] * (1 - weight) + sortedValues[upper] * weight;
+}
+
 function countyStats() {
   const rows = countyRows().sort((a,b) => a.price - b.price || a.name.localeCompare(b.name, "sv"));
   if (!rows.length) return null;
@@ -491,6 +508,64 @@ function countyStats() {
     spread: rows[rows.length - 1].price - rows[0].price,
     selectedRank: selectedIndex >= 0 ? selectedIndex + 1 : null
   };
+}
+
+function renderCountyDistribution() {
+  if (!els.countyHistogram) return;
+  const rows = countyRows().sort((a,b) => a.price-b.price);
+  if (!rows.length) return;
+
+  const values = rows.map(row => row.price);
+  const q1 = percentile(values,.25);
+  const median = percentile(values,.5);
+  const q3 = percentile(values,.75);
+  const iqr = q3-q1;
+  const lowFence = q1 - 1.5*iqr;
+  const highFence = q3 + 1.5*iqr;
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = Math.max(.01,max-min);
+
+  const selectedIndex = rows.findIndex(row => row.id===selectedCounty);
+  const percentileRank = selectedIndex >= 0 ? (selectedIndex+1)/rows.length*100 : null;
+
+  if (els.countyMedian) els.countyMedian.textContent = fmt(median)+" kr/l";
+  if (els.countyQ1) els.countyQ1.textContent = fmt(q1)+" kr/l";
+  if (els.countyQ3) els.countyQ3.textContent = fmt(q3)+" kr/l";
+  if (els.countyPercentile) els.countyPercentile.textContent = percentileRank === null ? "Riket" : fmt(percentileRank,0)+" %";
+  if (els.countyPercentileDetail) {
+    els.countyPercentileDetail.textContent = percentileRank === null
+      ? "rikssnittet ingår inte i rankingen"
+      : "cirka " + fmt(percentileRank,0) + " % av länen ligger på samma eller lägre nivå";
+  }
+
+  els.countyHistogram.innerHTML="";
+  rows.forEach(row => {
+    const bar=document.createElement("button");
+    bar.type="button";
+    bar.className="hist-bar";
+    const outlier=row.price<lowFence || row.price>highFence;
+    if (row.id===selectedCounty) bar.classList.add("selected");
+    else if (outlier) bar.classList.add("outlier");
+    bar.style.height=(18+((row.price-min)/range)*82)+"%";
+    bar.dataset.label=row.name.replace(" län","");
+    bar.title=row.name+": "+fmt(row.price)+" kr/l";
+    bar.setAttribute("aria-label",bar.title);
+    bar.addEventListener("click",()=>{
+      selectedCounty=row.id;
+      priceMode="county";
+      if (els.countySelect) els.countySelect.value=row.id;
+      applyCountyPrice({announceChange:true});
+    });
+    els.countyHistogram.appendChild(bar);
+  });
+
+  const outliers=rows.filter(row=>row.price<lowFence || row.price>highFence);
+  if (els.distributionNote) {
+    els.distributionNote.textContent = outliers.length
+      ? outliers.length + " län ligger statistiskt utanför kvartilspannet enligt 1,5×IQR-regeln. Det är en signal att granska rapporteringsunderlaget, inte ett bevis på fel data."
+      : "Inga län ligger utanför 1,5×IQR-regeln i den aktuella prisfördelningen.";
+  }
 }
 
 function renderCountyExplorer() {
@@ -671,6 +746,7 @@ function updateCountyUI() {
 
   renderRecentCounties();
   renderCountyExplorer();
+  renderCountyDistribution();
   updateCountyComparison();
 }
 
