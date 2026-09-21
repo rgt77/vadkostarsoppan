@@ -13,6 +13,8 @@ let compareA = "stockholm";
 let compareB = "ostergotland";
 let sourceRegistry = null;
 let sourceFilter = "all";
+let deferredInstallPrompt = null;
+let serviceWorkerRegistration = null;
 
 const els = {
   pumpPrice: document.querySelector("#pumpPrice"),
@@ -107,6 +109,11 @@ const els = {
   dataHealthDetail: document.querySelector("#dataHealthDetail"),
   dataHealthDot: document.querySelector("#dataHealthDot"),
   appVersion: document.querySelector("#appVersion"),
+  networkPill: document.querySelector("#networkPill"),
+  networkStatus: document.querySelector("#networkStatus"),
+  installApp: document.querySelector("#installApp"),
+  updateApp: document.querySelector("#updateApp"),
+  refreshData: document.querySelector("#refreshData"),
   registryList: document.querySelector("#registryList"),
   registryPlanned: document.querySelector("#registryPlanned"),
   registryCount: document.querySelector("#registryCount"),
@@ -552,6 +559,38 @@ async function loadSourceRegistry() {
   } catch {
     if (els.registryStatus) els.registryStatus.textContent = "Kunde inte ladda register";
     if (els.registryList) els.registryList.innerHTML = '<div class="registry-empty">Källregistret kunde inte laddas just nu.</div>';
+  }
+}
+
+function updateNetworkStatus() {
+  const online = navigator.onLine;
+  if (els.networkStatus) els.networkStatus.textContent = online ? "Online" : "Offline";
+  if (els.networkPill) els.networkPill.classList.toggle("offline", !online);
+}
+
+async function installPwa() {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  try {
+    await deferredInstallPrompt.userChoice;
+  } catch {}
+  deferredInstallPrompt = null;
+  if (els.installApp) els.installApp.hidden = true;
+}
+
+async function checkForAppUpdate({ reload = false } = {}) {
+  if (!serviceWorkerRegistration) {
+    if (reload) window.location.reload();
+    return;
+  }
+  try {
+    await serviceWorkerRegistration.update();
+    if (reload) {
+      showToast("Kontrollerade ny version.");
+      setTimeout(() => window.location.reload(), 350);
+    }
+  } catch {
+    if (reload) showToast("Kunde inte kontrollera ny version.");
   }
 }
 
@@ -1727,6 +1766,34 @@ els.contrastToggle?.addEventListener("click", () => {
   showToast(active ? "Hög kontrast är på." : "Hög kontrast är av.");
 });
 
+window.addEventListener("online", () => {
+  updateNetworkStatus();
+  showToast("Du är online igen.");
+});
+window.addEventListener("offline", () => {
+  updateNetworkStatus();
+  showToast("Du är offline. Cachad data används.");
+});
+window.addEventListener("beforeinstallprompt", event => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  if (els.installApp) els.installApp.hidden = false;
+});
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  if (els.installApp) els.installApp.hidden = true;
+  showToast("Appen är installerad.");
+});
+els.installApp?.addEventListener("click", installPwa);
+els.updateApp?.addEventListener("click", () => {
+  if (serviceWorkerRegistration?.waiting) {
+    serviceWorkerRegistration.waiting.postMessage({type:"SKIP_WAITING"});
+  } else {
+    checkForAppUpdate({reload:true});
+  }
+});
+els.refreshData?.addEventListener("click", () => checkForAppUpdate({reload:true}));
+
 document.addEventListener("keydown", event => {
   if (event.metaKey || event.ctrlKey || event.altKey) return;
   const tag = document.activeElement?.tagName;
@@ -1952,8 +2019,25 @@ updateHeroReferenceChips();
 update();
 
 
+updateNetworkStatus();
+
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  window.addEventListener("load", async () => {
+    try {
+      serviceWorkerRegistration = await navigator.serviceWorker.register("/sw.js");
+      serviceWorkerRegistration.addEventListener("updatefound", () => {
+        const worker = serviceWorkerRegistration.installing;
+        if (!worker) return;
+        worker.addEventListener("statechange", () => {
+          if (worker.state === "installed" && navigator.serviceWorker.controller) {
+            if (els.updateApp) els.updateApp.hidden = false;
+            showToast("En ny version av sidan finns.");
+          }
+        });
+      });
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        window.location.reload();
+      });
+    } catch {}
   });
 }
