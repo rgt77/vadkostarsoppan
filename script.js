@@ -26,6 +26,7 @@ let lowDataMode = false;
 let displayPrecision = 2;
 let commandActiveIndex = 0;
 let commandItems = [];
+let lastDiagnostics = null;
 let stateHistory = [];
 let redoHistory = [];
 let historyTimer = null;
@@ -201,6 +202,8 @@ const els = {
   diagnostics: document.querySelector("#diagnostics"),
   diagnosticsTitle: document.querySelector("#diagnosticsTitle"),
   diagnosticsOutput: document.querySelector("#diagnosticsOutput"),
+  diagnosticsSummary: document.querySelector("#diagnosticsSummary"),
+  downloadDiagnostics: document.querySelector("#downloadDiagnostics"),
   registryList: document.querySelector("#registryList"),
   registryPlanned: document.querySelector("#registryPlanned"),
   registryCount: document.querySelector("#registryCount"),
@@ -925,540 +928,92 @@ function redoCalculatorState() {
   showToast("Ändringen gjordes om.");
 }
 
+function dataFingerprint() {
+  const payload = JSON.stringify({
+    fuelData,
+    countyData,
+    marketData,
+    glossaryData,
+    policies: Object.keys(politicalScenarios).map(key => ({
+      key,
+      asOf: politicalScenarios[key]?.asOf,
+      source: politicalScenarios[key]?.source,
+      model: politicalScenarios[key]?.priceModel
+    }))
+  });
+  let hash = 5381;
+  for (let i=0;i<payload.length;i++) hash = ((hash << 5) + hash) ^ payload.charCodeAt(i);
+  return (hash >>> 0).toString(16).padStart(8,"0");
+}
+
 function runDiagnostics() {
   const checks = [];
-  const push = (name, ok, detail = "") => checks.push({name,ok,detail});
+  const push = (name, ok, detail = "", severity = "error") => checks.push({name,ok,detail,severity});
+
+  const counties = countyRows();
+  const allCountyIds = (countyData.counties || []).map(item=>item.id);
+  const glossaryIds = glossaryData.map(item=>item.id);
+  const policyValues = Object.values(politicalScenarios);
+  const sourceValues = Array.isArray(sourceRegistry?.sources) ? sourceRegistry.sources : [];
 
   push("Bränsledata", Boolean(fuelData.petrol && fuelData.diesel), "bensin + diesel");
-  push("Länstäckning", countyRows().length === 21, countyRows().length + " av 21 län");
-  push("Unika län", new Set(countyRows().map(item => item.id)).size === countyRows().length);
+  push("Skattefält bensin", [fuelData.petrol?.energyTax,fuelData.petrol?.carbonTax,fuelData.petrol?.vatRate].every(Number.isFinite));
+  push("Skattefält diesel", [fuelData.diesel?.energyTax,fuelData.diesel?.carbonTax,fuelData.diesel?.vatRate].every(Number.isFinite));
+  push("Skatteperiod", Boolean(fuelData.petrol?.validFrom && fuelData.petrol?.validTo && fuelData.diesel?.validFrom && fuelData.diesel?.validTo));
+  push("Länstäckning", counties.length === 21, counties.length + " av 21 län");
+  push("Unika län", new Set(allCountyIds).size === allCountyIds.length);
+  push("Numeriska länspriser", (countyData.counties || []).every(item => Number.isFinite(item.petrol) && Number.isFinite(item.diesel)));
   push("Rikssnitt", Number.isFinite(countyData.national?.petrol) && Number.isFinite(countyData.national?.diesel));
+  push("Rikssnitt inom länsspann bensin",
+    countyData.national?.petrol >= Math.min(...(countyData.counties||[]).map(x=>x.petrol)) &&
+    countyData.national?.petrol <= Math.max(...(countyData.counties||[]).map(x=>x.petrol)));
+  push("Rikssnitt inom länsspann diesel",
+    countyData.national?.diesel >= Math.min(...(countyData.counties||[]).map(x=>x.diesel)) &&
+    countyData.national?.diesel <= Math.max(...(countyData.counties||[]).map(x=>x.diesel)));
+  push("Icke-negativ marknadsdel bensin",
+    (countyData.counties||[]).every(item => item.petrol/(1+fuelData.petrol.vatRate/100) - fuelData.petrol.energyTax - fuelData.petrol.carbonTax >= 0));
+  push("Icke-negativ marknadsdel diesel",
+    (countyData.counties||[]).every(item => item.diesel/(1+fuelData.diesel.vatRate/100) - fuelData.diesel.energyTax - fuelData.diesel.carbonTax >= 0));
   push("Veckoreferens", Number.isFinite(marketData.weeklyReference?.petrol) && Number.isFinite(marketData.weeklyReference?.diesel));
-  push("Brent", Number.isFinite(marketData.brent?.usdPerBarrel));
-  push("USD/SEK", Number.isFinite(marketData.fx?.usdSek));
+  push("Brent", Number.isFinite(marketData.brent?.usdPerBarrel) && marketData.brent.usdPerBarrel > 0);
+  push("USD/SEK", Number.isFinite(marketData.fx?.usdSek) && marketData.fx.usdSek > 0);
+  push("Fatvolym", Number.isFinite(marketData.constants?.litersPerBarrel) && marketData.constants.litersPerBarrel > 150);
+  push("Ordlista", glossaryData.length >= 15, glossaryData.length + " begrepp");
+  push("Unika ordliste-ID:n", new Set(glossaryIds).size === glossaryIds.length);
   push("Politikreferens", Boolean(politicalScenarios.current));
+  push("Scenariokällor", policyValues.every(item => typeof item?.source === "string" && item.source.startsWith("https://")), policyValues.length + " scenarier");
+  push("Källregister laddat", sourceValues.length > 0, sourceValues.length ? sourceValues.length + " källor" : "inte laddat ännu", "warning");
+  push("Källregister HTTPS", !sourceValues.length || sourceValues.every(item => String(item.url||"").startsWith("https://")), "", "warning");
   push("Pumppris", getPrice() !== null, getPrice() !== null ? fmt(getPrice()) + " kr/l" : "ogiltigt");
-  push("Service worker", "serviceWorker" in navigator);
-  push("Online-status", typeof navigator.onLine === "boolean", navigator.onLine ? "online" : "offline");
+  push("Service worker-stöd", "serviceWorker" in navigator, "", "warning");
+  push("Lokal lagring", (()=>{ try { localStorage.setItem("__vks_test","1"); localStorage.removeItem("__vks_test"); return true; } catch { return false; } })(), "", "warning");
+  push("Online-status", typeof navigator.onLine === "boolean", navigator.onLine ? "online" : "offline", "warning");
 
-  const failed = checks.filter(item => !item.ok);
+  const hardFailed = checks.filter(item => !item.ok && item.severity !== "warning");
+  const warnings = checks.filter(item => !item.ok && item.severity === "warning");
+  lastDiagnostics = {
+    generatedAt:new Date().toISOString(),
+    appVersion:siteData.appVersion || null,
+    dataVersion:siteData.dataVersion || null,
+    fingerprint:dataFingerprint(),
+    checks,
+    hardFailed:hardFailed.length,
+    warnings:warnings.length
+  };
+
   if (els.diagnostics) els.diagnostics.hidden = false;
-  if (els.diagnosticsTitle) els.diagnosticsTitle.textContent = failed.length ? "Självtest: kontrollera" : "Självtest: PASS";
+  if (els.diagnosticsTitle) els.diagnosticsTitle.textContent = hardFailed.length ? "Självtest: kontrollera" : "Självtest: PASS";
+  if (els.diagnosticsSummary) els.diagnosticsSummary.textContent =
+    (checks.length-hardFailed.length-warnings.length) + "/" + checks.length + " godkända · " +
+    hardFailed.length + " fel · " + warnings.length + " varningar · #" + lastDiagnostics.fingerprint;
   if (els.diagnosticsOutput) {
-    els.diagnosticsOutput.textContent = checks.map(item =>
-      (item.ok ? "✓ " : "✕ ") + item.name + (item.detail ? " — " + item.detail : "")
-    ).join("\n");
+    els.diagnosticsOutput.textContent = checks.map(item => {
+      const icon = item.ok ? "✓" : item.severity === "warning" ? "!" : "✕";
+      return icon + " " + item.name + (item.detail ? " — " + item.detail : "");
+    }).join("\n");
   }
-  showToast(failed.length ? failed.length + " kontrollpunkter behöver ses över." : "Självtest klart: allt ser bra ut.");
-  return {checks, failed};
-}
-
-function applyViewMode() {
-  const expert = viewMode === "expert";
-  document.body.classList.toggle("expert-mode", expert);
-  document.body.classList.toggle("simple-mode", !expert);
-  if (els.simpleMode) els.simpleMode.setAttribute("aria-pressed", String(!expert));
-  if (els.expertMode) els.expertMode.setAttribute("aria-pressed", String(expert));
-}
-
-function applyPreferenceClasses() {
-  document.documentElement.classList.toggle("reduced-motion", reducedMotion);
-  document.documentElement.classList.toggle("low-data", lowDataMode);
-  if (els.reducedMotionToggle) els.reducedMotionToggle.checked = reducedMotion;
-  if (els.lowDataToggle) els.lowDataToggle.checked = lowDataMode;
-  if (els.expertModeToggle) els.expertModeToggle.checked = viewMode === "expert";
-  if (els.lightThemeToggle) els.lightThemeToggle.checked = lightTheme;
-  if (els.highContrastToggle) els.highContrastToggle.checked = document.documentElement.classList.contains("high-contrast");
-  if (els.precisionSelect) els.precisionSelect.value = String(displayPrecision);
-}
-
-function applyThemeState() {
-  document.documentElement.classList.toggle("light-theme", lightTheme);
-  if (els.themeToggle) {
-    els.themeToggle.setAttribute("aria-pressed", String(lightTheme));
-    els.themeToggle.textContent = lightTheme ? "☾" : "☼";
-    els.themeToggle.title = lightTheme ? "Växla till mörkt tema" : "Växla till ljust tema";
-  }
-  applyPreferenceClasses();
-}
-
-function updateSensitivityLab(price, reference) {
-  if (!els.marketShockSlider) return;
-  const shockPct = Number(els.marketShockSlider.value) || 0;
-  const factor = 1 + shockPct / 100;
-  const newMarket = Math.max(0, reference.marketBase * factor);
-  const pretax = newMarket + reference.fuel.energyTax + reference.fuel.carbonTax;
-  const scenarioPrice = pretax * (1 + reference.vatRate);
-  const scenarioVat = scenarioPrice - pretax;
-  const delta = scenarioPrice - price;
-  const passThrough = reference.marketBase > 0
-    ? delta / (reference.marketBase * shockPct / 100 || 1)
-    : 0;
-
-  if (els.marketShockLabel) els.marketShockLabel.textContent = (shockPct > 0 ? "+" : "") + fmt(shockPct,0) + " %";
-  if (els.shockBasePrice) els.shockBasePrice.textContent = fmt(price) + " kr/l";
-  if (els.shockBaseMarket) els.shockBaseMarket.textContent = "Marknad " + fmt(reference.marketBase) + " kr/l";
-  if (els.shockScenarioPrice) els.shockScenarioPrice.textContent = fmt(scenarioPrice) + " kr/l";
-  if (els.shockScenarioMarket) els.shockScenarioMarket.textContent = "Marknad " + fmt(newMarket) + " kr/l";
-  if (els.shockDelta) els.shockDelta.textContent = signed(delta);
-  if (els.shockPassThrough) {
-    els.shockPassThrough.textContent = shockPct === 0
-      ? "Ingen förändring"
-      : "Moms gör att pumpförändringen blir " + fmt(Math.abs(delta),2) + " kr/l.";
-  }
-
-  const total = Math.max(.01, scenarioPrice);
-  if (els.shockMarketBar) els.shockMarketBar.style.width = pct(newMarket,total) + "%";
-  if (els.shockTaxBar) els.shockTaxBar.style.width = pct(reference.excise,total) + "%";
-  if (els.shockVatBar) els.shockVatBar.style.width = pct(scenarioVat,total) + "%";
-}
-
-function updateTargetSolver(price, reference) {
-  if (!els.targetPriceInput || !els.targetPriceSlider) return;
-  let target = parseNumber(els.targetPriceInput.value);
-  if (!Number.isFinite(target)) target = Number(els.targetPriceSlider.value);
-  target = clamp(target, 1, 100);
-
-  const pretaxTarget = target / (1 + reference.vatRate);
-  const requiredMarketRaw = pretaxTarget - reference.excise;
-  const requiredMarket = Math.max(0, requiredMarketRaw);
-  const delta = requiredMarket - reference.marketBase;
-  const deltaPct = reference.marketBase > 0 ? delta / reference.marketBase * 100 : 0;
-  const floor = reference.excise * (1 + reference.vatRate);
-
-  if (els.targetCurrentMarket) els.targetCurrentMarket.textContent = fmt(reference.marketBase) + " kr/l";
-  if (els.targetRequiredMarket) els.targetRequiredMarket.textContent = fmt(requiredMarket) + " kr/l";
-  if (els.targetMarketDelta) els.targetMarketDelta.textContent = signed(delta);
-  if (els.targetMarketDeltaPct) els.targetMarketDeltaPct.textContent = signed(deltaPct," %");
-  if (els.targetMechanicalFloor) els.targetMechanicalFloor.textContent = fmt(floor) + " kr/l";
-
-  if (els.targetMessage) {
-    const impossible = requiredMarketRaw < 0;
-    els.targetMessage.classList.toggle("impossible", impossible);
-    els.targetMessage.textContent = impossible
-      ? "Det valda målpriset ligger under det mekaniska golvet i den här modellen. Med oförändrade punktskatter och momssats skulle marknad/kedja behöva bli negativ, vilket modellen inte tillåter."
-      : "För att nå " + fmt(target) + " kr/l med oförändrade skatter och momssats skulle marknad/kedja behöva " +
-        (Math.abs(deltaPct) < .05 ? "vara ungefär oförändrad." : (delta < 0 ? "minska med " : "öka med ") + fmt(Math.abs(deltaPct),1) + " %.");
-  }
-
-  const sliderValue = clamp(target, Number(els.targetPriceSlider.min), Number(els.targetPriceSlider.max));
-  if (Math.abs(Number(els.targetPriceSlider.value) - sliderValue) > .05) {
-    els.targetPriceSlider.value = sliderValue;
-  }
-}
-
-function taxShareAtPumpPrice(price, fuel) {
-  if (!Number.isFinite(price) || price <= 0 || !fuel) return null;
-  const vatRate = fuel.vatRate / 100;
-  const beforeVat = price / (1 + vatRate);
-  const vat = price - beforeVat;
-  const excise = fuel.energyTax + fuel.carbonTax;
-  return {
-    vat,
-    excise,
-    total: vat + excise,
-    share: (vat + excise) / price * 100
-  };
-}
-
-function curvePoint(price, share) {
-  const x = 50 + ((price - 10) / 25) * 685;
-  const y = 220 - ((clamp(share,20,60) - 20) / 40) * 200;
-  return {x,y};
-}
-
-function updateTaxShareCurve(price, reference) {
-  if (!els.taxSharePolyline) return;
-  const points = [];
-  for (let p = 10; p <= 35.0001; p += .5) {
-    const stats = taxShareAtPumpPrice(p, reference.fuel);
-    if (!stats) continue;
-    const point = curvePoint(p, stats.share);
-    points.push(point.x.toFixed(1) + "," + point.y.toFixed(1));
-  }
-  els.taxSharePolyline.setAttribute("points", points.join(" "));
-
-  const current = taxShareAtPumpPrice(price, reference.fuel);
-  if (!current) return;
-  const point = curvePoint(clamp(price,10,35), current.share);
-  els.taxShareDot.setAttribute("cx", point.x.toFixed(1));
-  els.taxShareDot.setAttribute("cy", point.y.toFixed(1));
-  els.curveDotLabel.setAttribute("x", Math.min(690,point.x+10).toFixed(1));
-  els.curveDotLabel.setAttribute("y", Math.max(18,point.y-10).toFixed(1));
-  els.curveDotLabel.textContent = fmt(current.share,1) + " %";
-
-  if (els.curveCurrentPrice) els.curveCurrentPrice.textContent = fmt(price) + " kr/l";
-  if (els.curveCurrentTax) els.curveCurrentTax.textContent = fmt(current.total) + " kr/l";
-  if (els.curveCurrentShare) els.curveCurrentShare.textContent = fmt(current.share,1) + " %";
-  if (els.curveExcise) els.curveExcise.textContent = fmt(current.excise) + " kr/l";
-}
-
-function currentReportData(price, reference) {
-  const location = countyEntry()?.name || "Hela Sverige";
-  const scenario = politicalScenarios[els.partyScenario?.value || "current"] || politicalScenarios.current;
-  const modeLabel = priceMode === "manual" ? "Eget pris" : priceMode === "weekly" ? "Veckoreferens" : (selectedCounty === "riket" ? "Rikssnitt" : "Länssnitt");
-  return {
-    location,
-    fuel: reference.fuel.label,
-    price,
-    market: reference.marketBase,
-    taxTotal: reference.politicalDirect,
-    energy: reference.fuel.energyTax,
-    carbon: reference.fuel.carbonTax,
-    vat: reference.vat,
-    modeLabel,
-    scenarioName: scenario?.name || "Nuvarande regler",
-    dataDate: countyData.updatedAt || siteData.dataVersion || "—"
-  };
-}
-
-function reportText(data, markdown = false) {
-  if (!data) return "";
-  const lines = markdown
-    ? [
-        "# Vad kostar soppan?",
-        "",
-        "**" + data.fuel + " · " + data.location + "**",
-        "",
-        "- Pumppris: **" + fmt(data.price) + " kr/l**",
-        "- Marknad/kedja: " + fmt(data.market) + " kr/l",
-        "- Energiskatt: " + fmt(data.energy) + " kr/l",
-        "- Koldioxidskatt: " + fmt(data.carbon) + " kr/l",
-        "- Moms: " + fmt(data.vat) + " kr/l",
-        "- Skatt + moms totalt: " + fmt(data.taxTotal) + " kr/l",
-        "- Prisreferens: " + data.modeLabel,
-        "- Politikscenario: " + data.scenarioName,
-        "- Datadatum: " + data.dataDate,
-        "",
-        window.location.href
-      ]
-    : [
-        "Vad kostar soppan?",
-        data.fuel + " · " + data.location,
-        "Pumppris: " + fmt(data.price) + " kr/l",
-        "Marknad/kedja: " + fmt(data.market) + " kr/l",
-        "Energiskatt: " + fmt(data.energy) + " kr/l",
-        "Koldioxidskatt: " + fmt(data.carbon) + " kr/l",
-        "Moms: " + fmt(data.vat) + " kr/l",
-        "Skatt + moms totalt: " + fmt(data.taxTotal) + " kr/l",
-        "Prisreferens: " + data.modeLabel,
-        "Politikscenario: " + data.scenarioName,
-        "Datadatum: " + data.dataDate,
-        window.location.href
-      ];
-  return lines.join("\n");
-}
-
-function updateReport(price, reference) {
-  if (!els.reportPrice) return;
-  const data = currentReportData(price, reference);
-  const share = pct(data.taxTotal, data.price);
-
-  els.reportHeading.textContent = data.fuel + " · " + data.location;
-  els.reportVersion.textContent = "v" + (siteData.appVersion || "—");
-  els.reportPrice.textContent = fmt(data.price) + " kr/l";
-  els.reportTax.textContent = fmt(data.taxTotal) + " kr/l";
-  els.reportMarket.textContent = fmt(data.market) + " kr/l";
-  els.reportEnergy.textContent = fmt(data.energy) + " kr/l";
-  els.reportCarbon.textContent = fmt(data.carbon) + " kr/l";
-  els.reportVat.textContent = fmt(data.vat) + " kr/l";
-  els.reportMode.textContent = data.modeLabel;
-  els.reportPolicy.textContent = data.scenarioName;
-  els.reportDate.textContent = data.dataDate;
-  els.reportSummary.textContent =
-    "Av pumppriset motsvarar cirka " + fmt(share,1) + " % skatt + moms. Marknad/kedja är en restpost tills fler verifierade kostnadsled kan särredovisas.";
-}
-
-function updateSimpleExplainer(price, marketBase, politicalDirect) {
-  if (!els.simpleExplainerText) return;
-  const taxPct = pct(politicalDirect, price);
-  const location = countyEntry()?.name || "Hela Sverige";
-  els.simpleExplainerText.textContent =
-    "För " + (fuelData[selectedFuel]?.label || "bränslet") + " i " + location +
-    " går ungefär " + fmt(taxPct,0) + " av 100 kronor till skatt + moms. Resten ligger i marknad och kedja.";
-}
-
-function jumpToSection(selector) {
-  document.querySelector(selector)?.scrollIntoView({behavior: reducedMotion ? "auto" : "smooth", block:"start"});
-}
-
-function closeCommandPalette() {
-  if (els.commandDialog?.open) els.commandDialog.close();
-}
-
-function runCommand(command) {
-  closeCommandPalette();
-  if (!command) return;
-
-  if (command.type === "section") {
-    jumpToSection(command.target);
-  } else if (command.type === "fuel") {
-    selectedFuel = command.value;
-    setFuelTabs();
-    syncCustomControlsFromFuel();
-    if (priceMode === "county") {
-      const local = countyPriceForFuel();
-      if (Number.isFinite(local)) els.pumpPrice.value = fmt(local);
-    }
-    update();
-    jumpToSection("#literpris");
-  } else if (command.type === "county") {
-    selectedCounty = command.value;
-    priceMode = "county";
-    if (els.countySelect) els.countySelect.value = selectedCounty;
-    applyCountyPrice({announceChange:true});
-    jumpToSection("#literpris");
-  } else if (command.type === "mode") {
-    viewMode = command.value;
-    applyViewMode();
-    applyPreferenceClasses();
-    savePreferences();
-  } else if (command.type === "settings") {
-    if (typeof els.settingsDialog?.showModal === "function") els.settingsDialog.showModal();
-  } else if (command.type === "tour") {
-    if (typeof els.welcomeDialog?.showModal === "function") els.welcomeDialog.showModal();
-  } else if (command.type === "action" && command.value === "copy-link") {
-    copyCurrentScenarioLink();
-  } else if (command.type === "action" && command.value === "reset") {
-    els.resetAll?.click();
-  } else if (command.type === "action" && command.value === "diagnostics") {
-    viewMode = "expert";
-    applyViewMode();
-    runDiagnostics();
-    jumpToSection("#kallor");
-  }
-}
-
-function buildCommandItems() {
-  const base = [
-    {title:"Literlabbet", subtitle:"Gå till kalkylatorn", icon:"⛽", type:"section", target:"#literpris"},
-    {title:"Sverigekollen", subtitle:"Jämför alla län", icon:"⌖", type:"section", target:"#lan"},
-    {title:"Marknadsmotorn", subtitle:"Råolja, valuta och benchmark", icon:"↗", type:"section", target:"#marknad"},
-    {title:"Kostnadskedjan", subtitle:"Följ kostnaderna per liter", icon:"≡", type:"section", target:"#kostnadskedja"},
-    {title:"Politiklabbet", subtitle:"Dokumenterade scenarier", icon:"⚙", type:"section", target:"#politik"},
-    {title:"Metod", subtitle:"Så räknar sidan", icon:"?", type:"section", target:"#metod"},
-    {title:"Bensin 95", subtitle:"Byt bränsletyp", icon:"95", type:"fuel", value:"petrol"},
-    {title:"Diesel", subtitle:"Byt bränsletyp", icon:"D", type:"fuel", value:"diesel"},
-    {title:"Enkelt läge", subtitle:"Visa kärnan", icon:"S", type:"mode", value:"simple"},
-    {title:"Expertläge", subtitle:"Visa avancerade verktyg", icon:"E", type:"mode", value:"expert"},
-    {title:"Inställningar", subtitle:"Tema, rörelse och precision", icon:"⚙", type:"settings"},
-    {title:"Snabbstart", subtitle:"Visa introduktionen igen", icon:"▶", type:"tour"},
-    {title:"Kopiera aktuell länk", subtitle:"Dela exakt det här läget", icon:"↗", type:"action", value:"copy-link"},
-    {title:"Återställ sidan", subtitle:"Till standardvärden", icon:"↺", type:"action", value:"reset"},
-    {title:"Kör självtest", subtitle:"Kontrollera data och appstatus", icon:"✓", type:"action", value:"diagnostics"}
-  ];
-
-  const counties = (countyData.counties || []).map(item => ({
-    title:item.name,
-    subtitle:"Välj länssnitt",
-    icon:"L",
-    type:"county",
-    value:item.id
-  }));
-
-  return [...base, ...counties];
-}
-
-function renderCommandPalette() {
-  if (!els.commandList) return;
-  const q = (els.commandSearch?.value || "").trim().toLocaleLowerCase("sv");
-  commandItems = buildCommandItems().filter(item =>
-    !q || (item.title + " " + item.subtitle).toLocaleLowerCase("sv").includes(q)
-  );
-  commandActiveIndex = clamp(commandActiveIndex, 0, Math.max(0,commandItems.length-1));
-  els.commandList.innerHTML = "";
-
-  commandItems.forEach((item,index) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "command-item" + (index === commandActiveIndex ? " active" : "");
-    button.setAttribute("role","option");
-    button.setAttribute("aria-selected", String(index === commandActiveIndex));
-    button.innerHTML = `
-      <span class="command-icon">${item.icon}</span>
-      <span class="command-copy"><strong>${item.title}</strong><small>${item.subtitle}</small></span>
-      ${index < 9 ? "<kbd>"+(index+1)+"</kbd>" : ""}
-    `;
-    button.addEventListener("mouseenter", () => {
-      commandActiveIndex = index;
-      renderCommandPalette();
-    });
-    button.addEventListener("click", () => runCommand(item));
-    els.commandList.appendChild(button);
-  });
-
-  if (!commandItems.length) {
-    const empty = document.createElement("div");
-    empty.className = "registry-empty";
-    empty.textContent = "Inga kommandon matchar sökningen.";
-    els.commandList.appendChild(empty);
-  }
-}
-
-function openCommandPalette() {
-  if (!els.commandDialog || typeof els.commandDialog.showModal !== "function") return;
-  commandActiveIndex = 0;
-  if (els.commandSearch) els.commandSearch.value = "";
-  renderCommandPalette();
-  els.commandDialog.showModal();
-  setTimeout(() => els.commandSearch?.focus(), 0);
-}
-
-function glossaryCategories() {
-  return [...new Set(glossaryData.map(item => item.category).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"sv"));
-}
-
-function showGlossarySpotlight(item) {
-  if (!item || !els.glossarySpotlight) return;
-  els.glossarySpotlight.hidden = false;
-  els.glossarySpotlightTerm.textContent = item.term;
-  els.glossarySpotlightText.textContent = item.short;
-}
-
-function renderGlossaryFilters() {
-  if (!els.glossaryFilters) return;
-  const categories = ["all", ...glossaryCategories()];
-  els.glossaryFilters.innerHTML = "";
-  categories.forEach(category => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "glossary-filter" + (category === glossaryFilter ? " active" : "");
-    button.textContent = category === "all" ? "Alla" : category.charAt(0).toUpperCase()+category.slice(1);
-    button.setAttribute("aria-pressed", String(category === glossaryFilter));
-    button.addEventListener("click", () => {
-      glossaryFilter = category;
-      renderGlossaryFilters();
-      renderGlossary();
-    });
-    els.glossaryFilters.appendChild(button);
-  });
-}
-
-function renderGlossary() {
-  if (!els.glossaryGrid) return;
-  const q = (els.glossarySearch?.value || "").trim().toLocaleLowerCase("sv");
-  let items = [...glossaryData];
-  if (glossaryFilter !== "all") items = items.filter(item => item.category === glossaryFilter);
-  if (q) items = items.filter(item =>
-    (item.term + " " + item.short + " " + item.category).toLocaleLowerCase("sv").includes(q)
-  );
-
-  els.glossaryGrid.innerHTML = "";
-  items.forEach(item => {
-    const card = document.createElement("button");
-    card.type = "button";
-    card.className = "glossary-card";
-    card.innerHTML = `
-      <span>${item.category || "begrepp"}</span>
-      <strong>${item.term}</strong>
-      <p>${item.short}</p>
-    `;
-    card.addEventListener("click", () => showGlossarySpotlight(item));
-    els.glossaryGrid.appendChild(card);
-  });
-
-  if (!items.length) {
-    const empty = document.createElement("div");
-    empty.className = "registry-empty";
-    empty.textContent = "Inga begrepp matchar sökningen.";
-    els.glossaryGrid.appendChild(empty);
-  }
-}
-
-function daysSinceIso(dateText) {
-  if (!dateText) return null;
-  const date = new Date(dateText + "T00:00:00");
-  if (Number.isNaN(date.getTime())) return null;
-  const now = new Date();
-  const today = Date.UTC(now.getFullYear(),now.getMonth(),now.getDate());
-  const then = Date.UTC(date.getFullYear(),date.getMonth(),date.getDate());
-  return Math.floor((today-then)/86400000);
-}
-
-function daysUntilIso(dateText) {
-  const since = daysSinceIso(dateText);
-  return since === null ? null : -since;
-}
-
-function setHealthBar(node, percent) {
-  if (node) node.style.width = clamp(percent,0,100) + "%";
-}
-
-function updateDataDashboard() {
-  const counties = Array.isArray(countyData.counties) ? countyData.counties : [];
-  const countyPct = clamp(counties.length / 21 * 100,0,100);
-  const countyAge = daysSinceIso(countyData.updatedAt);
-
-  const marketFields = [
-    Number.isFinite(marketData.weeklyReference?.petrol) && Number.isFinite(marketData.weeklyReference?.diesel),
-    Number.isFinite(marketData.brent?.usdPerBarrel),
-    Number.isFinite(marketData.fx?.usdSek)
-  ];
-  const marketPct = marketFields.filter(Boolean).length / marketFields.length * 100;
-  const marketAge = daysSinceIso(marketData.updatedAt);
-
-  const fuels = ["petrol","diesel"].map(key => fuelData[key]).filter(Boolean);
-  const taxFields = fuels.flatMap(fuel => [fuel.energyTax,fuel.carbonTax,fuel.vatRate]);
-  const taxPct = taxFields.length ? taxFields.filter(Number.isFinite).length / taxFields.length * 100 : 0;
-  const taxDaysLeft = daysUntilIso(fuelData[selectedFuel]?.validTo);
-
-  const scenarios = Object.values(politicalScenarios);
-  const withSources = scenarios.filter(item => Boolean(item?.source)).length;
-  const policyPct = scenarios.length ? withSources / scenarios.length * 100 : 0;
-
-  const glossaryPct = clamp(glossaryData.length / 20 * 100,0,100);
-
-  const sources = Array.isArray(sourceRegistry?.sources) ? sourceRegistry.sources : [];
-  const planned = Array.isArray(sourceRegistry?.planned_sources) ? sourceRegistry.planned_sources : [];
-  const sourcePct = sources.length ? 100 : 0;
-
-  if (els.healthCountyCoverage) els.healthCountyCoverage.textContent = counties.length + " / 21 län";
-  setHealthBar(els.healthCountyBar,countyPct);
-  if (els.healthCountyFreshness) els.healthCountyFreshness.textContent = countyAge === null ? "okänt datadatum" : countyAge <= 0 ? "uppdaterat idag" : countyAge + " dagar sedan";
-
-  if (els.healthMarketCoverage) els.healthMarketCoverage.textContent = marketFields.filter(Boolean).length + " / " + marketFields.length + " referenser";
-  setHealthBar(els.healthMarketBar,marketPct);
-  if (els.healthMarketFreshness) els.healthMarketFreshness.textContent = marketAge === null ? "okänt datadatum" : marketAge <= 0 ? "uppdaterat idag" : marketAge + " dagar sedan";
-
-  if (els.healthTaxCoverage) els.healthTaxCoverage.textContent = taxFields.filter(Number.isFinite).length + " / " + taxFields.length + " fält";
-  setHealthBar(els.healthTaxBar,taxPct);
-  if (els.healthTaxValidity) {
-    els.healthTaxValidity.textContent = taxDaysLeft === null
-      ? "giltighet okänd"
-      : taxDaysLeft >= 0 ? taxDaysLeft + " dagar kvar i angiven period" : "angiven period har passerat";
-  }
-
-  if (els.healthPolicyCoverage) els.healthPolicyCoverage.textContent = withSources + " / " + scenarios.length + " källhänvisade";
-  setHealthBar(els.healthPolicyBar,policyPct);
-  if (els.healthPolicySources) els.healthPolicySources.textContent = "Visar dokumenterad status, inte politiskt betyg.";
-
-  if (els.healthGlossaryCoverage) els.healthGlossaryCoverage.textContent = glossaryData.length + " begrepp";
-  setHealthBar(els.healthGlossaryBar,glossaryPct);
-
-  if (els.healthSourceCoverage) els.healthSourceCoverage.textContent = sources.length ? sources.length + " registrerade källor" : "register laddas";
-  setHealthBar(els.healthSourceBar,sourcePct);
-  if (els.healthSourceGaps) els.healthSourceGaps.textContent = planned.length + " identifierade dataluckor";
-
-  const componentScores = [countyPct,marketPct,taxPct,policyPct,glossaryPct,sourcePct].filter(Number.isFinite);
-  const score = componentScores.length ? componentScores.reduce((a,b)=>a+b,0)/componentScores.length : 0;
-  if (els.dataScore) els.dataScore.textContent = fmt(score,0) + " %";
-  if (els.dataScoreLabel) els.dataScoreLabel.textContent = "teknisk täckning, inte kvalitetsbetyg";
-
-  if (els.healthAlerts) {
-    els.healthAlerts.innerHTML = "";
-    const alerts = [];
-    if (countyAge !== null && countyAge > 3) alerts.push(["warning","Länspriserna är mer än 3 dagar gamla i datalagret."]);
-    if (marketAge !== null && marketAge > 7) alerts.push(["warning","Marknadsdatalagret är mer än 7 dagar gammalt."]);
-    if (taxDaysLeft !== null && taxDaysLeft < 0) alerts.push(["warning","Skattesatsernas angivna giltighetsperiod har passerat och behöver faktakontrolleras."]);
-    if (planned.length) alerts.push(["","Marknadsdelen har " + planned.length + " kända dataluckor innan hela literkostnaden kan särredovisas."]);
-    if (!alerts.length) alerts.push(["good","Inga automatiska färskhetsvarningar just nu."]);
-    alerts.forEach(([type,textValue]) => {
-      const div=document.createElement("div");
-      div.className="health-alert "+type;
-      div.textContent=textValue;
-      els.healthAlerts.appendChild(div);
-    });
-  }
+  showToast(hardFailed.length ? hardFailed.length + " kontrollpunkter behöver åtgärdas." : "Självtest klart: inga hårda fel.");
+  return lastDiagnostics;
 }
 
 function validPrice(value) {
@@ -2845,6 +2400,15 @@ els.updateApp?.addEventListener("click", () => {
 });
 els.refreshData?.addEventListener("click", () => checkForAppUpdate({reload:true}));
 els.runDiagnostics?.addEventListener("click", runDiagnostics);
+els.downloadDiagnostics?.addEventListener("click", () => {
+  const report = lastDiagnostics || runDiagnostics();
+  downloadTextFile(
+    "vadkostarsoppan-diagnostics-" + (siteData.appVersion || "app") + ".json",
+    JSON.stringify(report,null,2),
+    "application/json;charset=utf-8"
+  );
+  showToast("Självtestet exporterades.");
+});
 
 document.addEventListener("keydown", event => {
   const tag = document.activeElement?.tagName;
