@@ -417,6 +417,7 @@ function renderCountyExplorer() {
     button.className = "county-row" + (item.id === selectedCounty ? " selected" : "");
     button.dataset.county = item.id;
     button.setAttribute("role","listitem");
+    if (item.id === selectedCounty) button.setAttribute("aria-current","true");
     button.setAttribute("aria-label", item.name + ", " + fmt(item.price) + " kronor per liter, plats " + actualRank + " av " + stats.rows.length);
     button.innerHTML = `
       <span class="county-row-rank">#${actualRank}</span>
