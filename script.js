@@ -9,6 +9,8 @@ let selectedCounty = "riket";
 let priceMode = "county";
 let recentCounties = [];
 let partyFilter = "all";
+let compareA = "stockholm";
+let compareB = "ostergotland";
 
 const els = {
   pumpPrice: document.querySelector("#pumpPrice"),
@@ -65,6 +67,24 @@ const els = {
   countyDataAlertText: document.querySelector("#countyDataAlertText"),
   countyListCount: document.querySelector("#countyListCount"),
   countyFocusSelected: document.querySelector("#countyFocusSelected"),
+  compareCountyA: document.querySelector("#compareCountyA"),
+  compareCountyB: document.querySelector("#compareCountyB"),
+  swapCounties: document.querySelector("#swapCounties"),
+  compareNameA: document.querySelector("#compareNameA"),
+  compareNameB: document.querySelector("#compareNameB"),
+  comparePriceA: document.querySelector("#comparePriceA"),
+  comparePriceB: document.querySelector("#comparePriceB"),
+  compareBreakdownA: document.querySelector("#compareBreakdownA"),
+  compareBreakdownB: document.querySelector("#compareBreakdownB"),
+  compareCountyDelta: document.querySelector("#compareCountyDelta"),
+  compareCountyDeltaPct: document.querySelector("#compareCountyDeltaPct"),
+  compareBarNameA: document.querySelector("#compareBarNameA"),
+  compareBarNameB: document.querySelector("#compareBarNameB"),
+  compareBarA: document.querySelector("#compareBarA"),
+  compareBarB: document.querySelector("#compareBarB"),
+  useCompareA: document.querySelector("#useCompareA"),
+  useCompareB: document.querySelector("#useCompareB"),
+  copyCountyCompare: document.querySelector("#copyCountyCompare"),
   countyRecent: document.querySelector("#countyRecent"),
   priceModeBadge: document.querySelector("#priceModeBadge"),
   manualVsCounty: document.querySelector("#manualVsCounty"),
@@ -427,6 +447,20 @@ function countyPriceForFuel(id = selectedCounty, fuel = selectedFuel) {
   return Number.isFinite(value) ? value : null;
 }
 
+function populateCompareSelect(select, selected) {
+  if (!select) return;
+  select.innerHTML = "";
+  (Array.isArray(countyData.counties) ? countyData.counties : []).forEach(entry => {
+    const option = document.createElement("option");
+    option.value = entry.id;
+    option.textContent = entry.name;
+    select.appendChild(option);
+  });
+  if (selected && [...select.options].some(option => option.value === selected)) {
+    select.value = selected;
+  }
+}
+
 function populateCountySelect() {
   if (!els.countySelect) return;
   els.countySelect.innerHTML = "";
@@ -549,6 +583,42 @@ function renderCountyExplorer() {
   }
 }
 
+function compareCountyPayload(id) {
+  const entry = countyEntry(id);
+  const price = countyPriceForFuel(id);
+  if (!entry || !Number.isFinite(price)) return null;
+  const ref = getReference(price);
+  return {
+    entry,
+    price,
+    market: ref.marketBase,
+    tax: ref.politicalDirect
+  };
+}
+
+function updateCountyComparison() {
+  const a = compareCountyPayload(compareA);
+  const b = compareCountyPayload(compareB);
+  if (!a || !b) return;
+
+  const maxPrice = Math.max(a.price,b.price,.01);
+  const delta = b.price - a.price;
+  const deltaPct = a.price ? delta / a.price * 100 : 0;
+
+  if (els.compareNameA) els.compareNameA.textContent = a.entry.name;
+  if (els.compareNameB) els.compareNameB.textContent = b.entry.name;
+  if (els.comparePriceA) els.comparePriceA.textContent = fmt(a.price) + " kr/l";
+  if (els.comparePriceB) els.comparePriceB.textContent = fmt(b.price) + " kr/l";
+  if (els.compareBreakdownA) els.compareBreakdownA.textContent = "Skatt+moms " + fmt(a.tax) + " · Marknad " + fmt(a.market);
+  if (els.compareBreakdownB) els.compareBreakdownB.textContent = "Skatt+moms " + fmt(b.tax) + " · Marknad " + fmt(b.market);
+  if (els.compareCountyDelta) els.compareCountyDelta.textContent = signed(delta);
+  if (els.compareCountyDeltaPct) els.compareCountyDeltaPct.textContent = signed(deltaPct," %") + " (B mot A)";
+  if (els.compareBarNameA) els.compareBarNameA.textContent = a.entry.name.replace(" län","");
+  if (els.compareBarNameB) els.compareBarNameB.textContent = b.entry.name.replace(" län","");
+  if (els.compareBarA) els.compareBarA.style.width = (a.price/maxPrice*100) + "%";
+  if (els.compareBarB) els.compareBarB.style.width = (b.price/maxPrice*100) + "%";
+}
+
 function updateCountyUI() {
   const entry = countyEntry();
   const local = countyPriceForFuel();
@@ -601,6 +671,7 @@ function updateCountyUI() {
 
   renderRecentCounties();
   renderCountyExplorer();
+  updateCountyComparison();
 }
 
 function applyCountyPrice({ announceChange = false } = {}) {
@@ -980,6 +1051,8 @@ function updateUrl(price) {
   url.searchParams.set("price", price.toFixed(2));
   url.searchParams.set("county", selectedCounty);
   url.searchParams.set("mode", priceMode);
+  url.searchParams.set("cmpA", compareA);
+  url.searchParams.set("cmpB", compareB);
   if (els.partyScenario?.value && els.partyScenario.value !== "current") {
     url.searchParams.set("party", els.partyScenario.value);
   } else {
@@ -1121,6 +1194,8 @@ function loadStateFromUrl() {
   const party = params.get("party");
   const county = params.get("county");
   const mode = params.get("mode");
+  const cmpA = params.get("cmpA");
+  const cmpB = params.get("cmpB");
   const energy = parseNumber(params.get("energy"));
   const carbon = parseNumber(params.get("carbon"));
   const vat = parseNumber(params.get("vat"));
@@ -1128,6 +1203,8 @@ function loadStateFromUrl() {
 
   if (fuel && fuelData[fuel]) selectedFuel = fuel;
   if (county && allCountyEntries().some(item => item.id === county)) selectedCounty = county;
+  if (cmpA && countyEntry(cmpA)?.id !== "riket") compareA = cmpA;
+  if (cmpB && countyEntry(cmpB)?.id !== "riket") compareB = cmpB;
   if (["county","manual","weekly"].includes(mode)) priceMode = mode;
   if (party && politicalScenarios[party] && els.partyScenario) els.partyScenario.value = party;
 
@@ -1263,6 +1340,50 @@ els.useWeeklyReference?.addEventListener("click", () => {
   priceMode = "weekly";
   update();
   announce("Veckoreferensen " + fmt(reference) + " kronor per liter används för " + fuelData[selectedFuel].label + ".");
+});
+
+els.compareCountyA?.addEventListener("change", () => {
+  compareA = els.compareCountyA.value;
+  updateCountyComparison();
+  updateUrl(getPrice() ?? siteData.defaultPumpPrice);
+});
+els.compareCountyB?.addEventListener("change", () => {
+  compareB = els.compareCountyB.value;
+  updateCountyComparison();
+  updateUrl(getPrice() ?? siteData.defaultPumpPrice);
+});
+els.swapCounties?.addEventListener("click", () => {
+  [compareA,compareB] = [compareB,compareA];
+  els.compareCountyA.value = compareA;
+  els.compareCountyB.value = compareB;
+  updateCountyComparison();
+  updateUrl(getPrice() ?? siteData.defaultPumpPrice);
+});
+els.useCompareA?.addEventListener("click", () => {
+  selectedCounty = compareA;
+  priceMode = "county";
+  if (els.countySelect) els.countySelect.value = compareA;
+  applyCountyPrice({announceChange:true});
+});
+els.useCompareB?.addEventListener("click", () => {
+  selectedCounty = compareB;
+  priceMode = "county";
+  if (els.countySelect) els.countySelect.value = compareB;
+  applyCountyPrice({announceChange:true});
+});
+els.copyCountyCompare?.addEventListener("click", async () => {
+  const a = compareCountyPayload(compareA);
+  const b = compareCountyPayload(compareB);
+  if (!a || !b) return;
+  const message = a.entry.name + ": " + fmt(a.price) + " kr/l\n" +
+    b.entry.name + ": " + fmt(b.price) + " kr/l\nSkillnad: " + signed(b.price-a.price) + "\n" +
+    window.location.href;
+  try {
+    await navigator.clipboard.writeText(message);
+    showToast("Länsjämförelsen är kopierad.");
+  } catch {
+    showToast("Kunde inte kopiera jämförelsen.");
+  }
 });
 
 els.countySearch?.addEventListener("input", renderCountyExplorer);
@@ -1468,6 +1589,8 @@ els.resetAll?.addEventListener("click", () => {
 });
 
 populateCountySelect();
+populateCompareSelect(els.compareCountyA, compareA);
+populateCompareSelect(els.compareCountyB, compareB);
 loadSavedPreferences();
 loadStateFromUrl();
 updateCountyUI();
