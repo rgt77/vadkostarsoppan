@@ -3718,3 +3718,75 @@ body.expert-mode .simple-explainer { display: none; }
   opacity: .35;
   cursor: default;
 }
+
+
+/* Steps 451-500: favorite county comparison */
+.favorite-compare {
+  margin-top: 18px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255,255,255,.015);
+}
+.favorite-compare-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: end;
+}
+.favorite-compare-head > div {
+  display: grid;
+  gap: 4px;
+}
+.favorite-compare-head strong { font-size: 16px; }
+.favorite-compare-head small {
+  color: var(--muted);
+  font-size: 9px;
+}
+.favorite-compare-grid {
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+.favorite-compare-card {
+  position: relative;
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--surface);
+}
+.favorite-compare-card.lowest { border-color: rgba(87,209,139,.35); }
+.favorite-compare-card.highest { border-color: rgba(255,122,89,.35); }
+.favorite-compare-card span,
+.favorite-compare-card small {
+  color: var(--muted);
+  font-size: 8px;
+}
+.favorite-compare-card strong {
+  font-size: 20px;
+  letter-spacing: -.04em;
+}
+.favorite-compare-card button {
+  width: fit-content;
+  margin-top: 4px;
+  padding: 0;
+  border: 0;
+  color: var(--text);
+  background: transparent;
+  cursor: pointer;
+  font-size: 8px;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+@media (max-width: 880px) {
+  .favorite-compare-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 520px) {
+  .favorite-compare-head { align-items: flex-start; flex-direction: column; }
+  .favorite-compare-grid { grid-template-columns: 1fr; }
+}
