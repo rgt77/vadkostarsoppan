@@ -43,6 +43,7 @@ const els = {
   bridgePump: document.querySelector("#bridgePump"),
   bridgeMarket: document.querySelector("#bridgeMarket"),
   bridgeCrude: document.querySelector("#bridgeCrude"),
+  bridgeGap: document.querySelector("#bridgeGap"),
   tabs: [...document.querySelectorAll(".fuel-tab")],
 
   partyScenario: document.querySelector("#partyScenario"),
@@ -366,8 +367,14 @@ function update() {
     if (Number.isFinite(marketRefs.weeklyPrice)) {
       const weeklyReference = getReference(marketRefs.weeklyPrice);
       els.bridgeMarket.textContent = fmt(weeklyReference.marketBase) + " kr/l";
+      if (els.bridgeGap) {
+        els.bridgeGap.textContent = marketRefs.crudeSek === null
+          ? "—"
+          : fmt(Math.max(0, weeklyReference.marketBase - marketRefs.crudeSek)) + " kr/l";
+      }
     } else {
       els.bridgeMarket.textContent = "—";
+      if (els.bridgeGap) els.bridgeGap.textContent = "—";
     }
   }
 
