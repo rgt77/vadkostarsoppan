@@ -839,208 +839,32 @@ async function installPwa() {
 }
 
 async function checkForAppUpdate({ reload = false } = {}) {
-  if (!serviceWorkerRegistration) {
-    if (reload) window.location.reload();
-    return;
-  }
+  let remoteVersion = null;
   try {
-    await serviceWorkerRegistration.update();
-    if (reload) {
-      showToast("Kontrollerade ny version.");
-      setTimeout(() => window.location.reload(), 350);
+    const response = await fetch("/version.json?t=" + Date.now(), {cache:"no-store"});
+    if (response.ok) {
+      const data = await response.json();
+      remoteVersion = data.appVersion || null;
+      const different = remoteVersion && remoteVersion !== siteData.appVersion;
+      if (els.updateApp) els.updateApp.hidden = !different;
+      if (different) showToast("Ny version " + remoteVersion + " finns.");
     }
-  } catch {
-    if (reload) showToast("Kunde inte kontrollera ny version.");
+  } catch {}
+
+  if (serviceWorkerRegistration) {
+    try { await serviceWorkerRegistration.update(); } catch {}
   }
-}
 
-function captureHistoryState() {
-  const price = getPrice();
-  if (price === null) return null;
-  return {
-    fuel: selectedFuel,
-    county: selectedCounty,
-    priceMode,
-    price,
-    party: els.partyScenario?.value || "current",
-    compareA,
-    compareB,
-    energy: Number(els.energySlider?.value),
-    carbon: Number(els.carbonSlider?.value),
-    vat: Number(els.vatSlider?.value),
-    regulatory: Number(els.regulatorySlider?.value)
-  };
-}
-
-function historyKey(state) {
-  return state ? JSON.stringify(state) : "";
-}
-
-function updateHistoryControls() {
-  if (els.undoState) els.undoState.disabled = stateHistory.length < 2;
-  if (els.redoState) els.redoState.disabled = redoHistory.length === 0;
-  if (els.historyStatus) {
-    els.historyStatus.textContent = stateHistory.length
-      ? Math.min(stateHistory.length,20) + " lägen i historiken"
-      : "Historik redo";
+  if (reload) {
+    if (remoteVersion && remoteVersion !== siteData.appVersion) {
+      if (serviceWorkerRegistration?.waiting) {
+        serviceWorkerRegistration.waiting.postMessage({type:"SKIP_WAITING"});
+        return;
+      }
+    }
+    showToast("Versionskontrollen är klar.");
+    setTimeout(() => window.location.reload(), 350);
   }
-}
-
-function commitHistoryNow() {
-  if (isApplyingHistory) return;
-  const state = captureHistoryState();
-  if (!state) return;
-  const last = stateHistory[stateHistory.length - 1];
-  if (historyKey(last) === historyKey(state)) return;
-  stateHistory.push(state);
-  if (stateHistory.length > 20) stateHistory.shift();
-  redoHistory = [];
-  updateHistoryControls();
-}
-
-function scheduleHistoryCommit() {
-  if (isApplyingHistory) return;
-  clearTimeout(historyTimer);
-  historyTimer = setTimeout(commitHistoryNow, 450);
-}
-
-function applyHistoryState(state) {
-  if (!state) return;
-  isApplyingHistory = true;
-  selectedFuel = fuelData[state.fuel] ? state.fuel : selectedFuel;
-  selectedCounty = countyEntry(state.county) ? state.county : selectedCounty;
-  priceMode = ["county","manual","weekly"].includes(state.priceMode) ? state.priceMode : "manual";
-  compareA = countyEntry(state.compareA) ? state.compareA : compareA;
-  compareB = countyEntry(state.compareB) ? state.compareB : compareB;
-
-  if (els.countySelect) els.countySelect.value = selectedCounty;
-  if (els.compareCountyA) els.compareCountyA.value = compareA;
-  if (els.compareCountyB) els.compareCountyB.value = compareB;
-  if (validPrice(Number(state.price))) els.pumpPrice.value = fmt(Number(state.price));
-  if (els.partyScenario && politicalScenarios[state.party]) els.partyScenario.value = state.party;
-
-  const setControl = (range,number,value,min,max) => {
-    if (!range || !number || !Number.isFinite(Number(value))) return;
-    const safe = clamp(Number(value),min,max);
-    range.value = safe;
-    number.value = safe;
-  };
-  setControl(els.energySlider,els.energyNumber,state.energy,0,6);
-  setControl(els.carbonSlider,els.carbonNumber,state.carbon,0,6);
-  setControl(els.vatSlider,els.vatNumber,state.vat,0,30);
-  setControl(els.regulatorySlider,els.regulatoryNumber,state.regulatory,-3,8);
-
-  setFuelTabs();
-  syncPartyPills();
-  update();
-  isApplyingHistory = false;
-  updateHistoryControls();
-}
-
-function undoCalculatorState() {
-  if (stateHistory.length < 2) return;
-  clearTimeout(historyTimer);
-  const current = stateHistory.pop();
-  redoHistory.push(current);
-  applyHistoryState(stateHistory[stateHistory.length - 1]);
-  showToast("Senaste ändringen ångrades.");
-}
-
-function redoCalculatorState() {
-  if (!redoHistory.length) return;
-  clearTimeout(historyTimer);
-  const next = redoHistory.pop();
-  stateHistory.push(next);
-  applyHistoryState(next);
-  showToast("Ändringen gjordes om.");
-}
-
-function dataFingerprint() {
-  const payload = JSON.stringify({
-    fuelData,
-    countyData,
-    marketData,
-    glossaryData,
-    policies: Object.keys(politicalScenarios).map(key => ({
-      key,
-      asOf: politicalScenarios[key]?.asOf,
-      source: politicalScenarios[key]?.source,
-      model: politicalScenarios[key]?.priceModel
-    }))
-  });
-  let hash = 5381;
-  for (let i=0;i<payload.length;i++) hash = ((hash << 5) + hash) ^ payload.charCodeAt(i);
-  return (hash >>> 0).toString(16).padStart(8,"0");
-}
-
-function runDiagnostics() {
-  const checks = [];
-  const push = (name, ok, detail = "", severity = "error") => checks.push({name,ok,detail,severity});
-
-  const counties = countyRows();
-  const allCountyIds = (countyData.counties || []).map(item=>item.id);
-  const glossaryIds = glossaryData.map(item=>item.id);
-  const policyValues = Object.values(politicalScenarios);
-  const sourceValues = Array.isArray(sourceRegistry?.sources) ? sourceRegistry.sources : [];
-
-  push("Bränsledata", Boolean(fuelData.petrol && fuelData.diesel), "bensin + diesel");
-  push("Skattefält bensin", [fuelData.petrol?.energyTax,fuelData.petrol?.carbonTax,fuelData.petrol?.vatRate].every(Number.isFinite));
-  push("Skattefält diesel", [fuelData.diesel?.energyTax,fuelData.diesel?.carbonTax,fuelData.diesel?.vatRate].every(Number.isFinite));
-  push("Skatteperiod", Boolean(fuelData.petrol?.validFrom && fuelData.petrol?.validTo && fuelData.diesel?.validFrom && fuelData.diesel?.validTo));
-  push("Länstäckning", counties.length === 21, counties.length + " av 21 län");
-  push("Unika län", new Set(allCountyIds).size === allCountyIds.length);
-  push("Numeriska länspriser", (countyData.counties || []).every(item => Number.isFinite(item.petrol) && Number.isFinite(item.diesel)));
-  push("Rikssnitt", Number.isFinite(countyData.national?.petrol) && Number.isFinite(countyData.national?.diesel));
-  push("Rikssnitt inom länsspann bensin",
-    countyData.national?.petrol >= Math.min(...(countyData.counties||[]).map(x=>x.petrol)) &&
-    countyData.national?.petrol <= Math.max(...(countyData.counties||[]).map(x=>x.petrol)));
-  push("Rikssnitt inom länsspann diesel",
-    countyData.national?.diesel >= Math.min(...(countyData.counties||[]).map(x=>x.diesel)) &&
-    countyData.national?.diesel <= Math.max(...(countyData.counties||[]).map(x=>x.diesel)));
-  push("Icke-negativ marknadsdel bensin",
-    (countyData.counties||[]).every(item => item.petrol/(1+fuelData.petrol.vatRate/100) - fuelData.petrol.energyTax - fuelData.petrol.carbonTax >= 0));
-  push("Icke-negativ marknadsdel diesel",
-    (countyData.counties||[]).every(item => item.diesel/(1+fuelData.diesel.vatRate/100) - fuelData.diesel.energyTax - fuelData.diesel.carbonTax >= 0));
-  push("Veckoreferens", Number.isFinite(marketData.weeklyReference?.petrol) && Number.isFinite(marketData.weeklyReference?.diesel));
-  push("Brent", Number.isFinite(marketData.brent?.usdPerBarrel) && marketData.brent.usdPerBarrel > 0);
-  push("USD/SEK", Number.isFinite(marketData.fx?.usdSek) && marketData.fx.usdSek > 0);
-  push("Fatvolym", Number.isFinite(marketData.constants?.litersPerBarrel) && marketData.constants.litersPerBarrel > 150);
-  push("Ordlista", glossaryData.length >= 15, glossaryData.length + " begrepp");
-  push("Unika ordliste-ID:n", new Set(glossaryIds).size === glossaryIds.length);
-  push("Politikreferens", Boolean(politicalScenarios.current));
-  push("Scenariokällor", policyValues.every(item => typeof item?.source === "string" && item.source.startsWith("https://")), policyValues.length + " scenarier");
-  push("Källregister laddat", sourceValues.length > 0, sourceValues.length ? sourceValues.length + " källor" : "inte laddat ännu", "warning");
-  push("Källregister HTTPS", !sourceValues.length || sourceValues.every(item => String(item.url||"").startsWith("https://")), "", "warning");
-  push("Pumppris", getPrice() !== null, getPrice() !== null ? fmt(getPrice()) + " kr/l" : "ogiltigt");
-  push("Service worker-stöd", "serviceWorker" in navigator, "", "warning");
-  push("Lokal lagring", (()=>{ try { localStorage.setItem("__vks_test","1"); localStorage.removeItem("__vks_test"); return true; } catch { return false; } })(), "", "warning");
-  push("Online-status", typeof navigator.onLine === "boolean", navigator.onLine ? "online" : "offline", "warning");
-
-  const hardFailed = checks.filter(item => !item.ok && item.severity !== "warning");
-  const warnings = checks.filter(item => !item.ok && item.severity === "warning");
-  lastDiagnostics = {
-    generatedAt:new Date().toISOString(),
-    appVersion:siteData.appVersion || null,
-    dataVersion:siteData.dataVersion || null,
-    fingerprint:dataFingerprint(),
-    checks,
-    hardFailed:hardFailed.length,
-    warnings:warnings.length
-  };
-
-  if (els.diagnostics) els.diagnostics.hidden = false;
-  if (els.diagnosticsTitle) els.diagnosticsTitle.textContent = hardFailed.length ? "Självtest: kontrollera" : "Självtest: PASS";
-  if (els.diagnosticsSummary) els.diagnosticsSummary.textContent =
-    (checks.length-hardFailed.length-warnings.length) + "/" + checks.length + " godkända · " +
-    hardFailed.length + " fel · " + warnings.length + " varningar · #" + lastDiagnostics.fingerprint;
-  if (els.diagnosticsOutput) {
-    els.diagnosticsOutput.textContent = checks.map(item => {
-      const icon = item.ok ? "✓" : item.severity === "warning" ? "!" : "✕";
-      return icon + " " + item.name + (item.detail ? " — " + item.detail : "");
-    }).join("\n");
-  }
-  showToast(hardFailed.length ? hardFailed.length + " kontrollpunkter behöver åtgärdas." : "Självtest klart: inga hårda fel.");
-  return lastDiagnostics;
 }
 
 function validPrice(value) {
@@ -2828,6 +2652,7 @@ update();
 
 
 updateNetworkStatus();
+setTimeout(() => checkForAppUpdate(), 1800);
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
