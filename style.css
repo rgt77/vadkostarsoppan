@@ -2663,3 +2663,108 @@ footer {
     grid-template-columns: 90px 1fr;
   }
 }
+
+
+/* Steps 121-130: county distribution */
+.distribution-section {
+  padding: 0 0 120px;
+}
+.distribution-grid {
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 10px;
+  margin-top: 32px;
+}
+.distribution-grid article {
+  display: grid;
+  gap: 5px;
+  padding: 17px 18px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255,255,255,.018);
+}
+.distribution-grid span,
+.distribution-grid small {
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.35;
+}
+.distribution-grid strong {
+  font-size: 23px;
+  letter-spacing: -.04em;
+}
+.distribution-histogram {
+  height: 220px;
+  display: flex;
+  align-items: end;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 18px 16px 28px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background:
+    linear-gradient(to top, rgba(255,255,255,.03) 1px, transparent 1px) 0 0/100% 25%,
+    rgba(255,255,255,.012);
+}
+.hist-bar {
+  position: relative;
+  flex: 1;
+  min-width: 8px;
+  border-radius: 8px 8px 3px 3px;
+  background: var(--other);
+  transition: height .3s ease, background-color .2s ease, transform .2s ease;
+}
+.hist-bar:hover {
+  transform: translateY(-3px);
+  background: var(--accent);
+}
+.hist-bar.selected { background: var(--accent); }
+.hist-bar.outlier { background: var(--carbon); }
+.hist-bar::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 50%;
+  bottom: -20px;
+  transform: translateX(-50%) rotate(-55deg);
+  transform-origin: center;
+  color: var(--muted);
+  font-size: 7px;
+  white-space: nowrap;
+}
+.distribution-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 9px;
+}
+.distribution-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.hist-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.hist-dot.normal { background: var(--other); }
+.hist-dot.selected { background: var(--accent); }
+.hist-dot.outlier { background: var(--carbon); }
+.distribution-note {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+@media (max-width: 760px) {
+  .distribution-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .distribution-histogram {
+    height: 180px;
+    gap: 4px;
+    overflow-x: auto;
+  }
+  .hist-bar { min-width: 12px; }
+}
