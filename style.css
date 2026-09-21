@@ -4309,3 +4309,92 @@ body.expert-mode .simple-explainer { display: none; }
   color: var(--muted);
   font-size: 8px;
 }
+
+
+/* Steps 801-850: contextual number explanations */
+.breakdown-row { position: relative; }
+.explain-number {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--muted);
+  background: var(--surface-2);
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 900;
+}
+.explain-number:hover {
+  color: #111722;
+  border-color: var(--accent);
+  background: var(--accent);
+}
+.explain-dialog {
+  width: min(600px, calc(100vw - 28px));
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 22px;
+  color: var(--text);
+  background: var(--surface);
+  box-shadow: 0 30px 100px rgba(0,0,0,.48);
+}
+.explain-dialog::backdrop {
+  background: rgba(3,7,15,.72);
+  backdrop-filter: blur(8px);
+}
+.explain-dialog form { padding: 24px; }
+.explain-dialog-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+}
+.explain-dialog-head h2 {
+  margin-top: 7px;
+  font-size: clamp(28px,5vw,42px);
+}
+.explain-dialog-copy {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+.explain-dialog-current {
+  display: grid;
+  gap: 4px;
+  margin-top: 18px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: rgba(255,255,255,.018);
+}
+.explain-dialog-current span {
+  color: var(--muted);
+  font-size: 8px;
+}
+.explain-dialog-current strong {
+  font-size: 24px;
+  letter-spacing: -.04em;
+}
+.explain-dialog-extra {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
+}
+.explain-dialog-glossary {
+  min-height: 38px;
+  margin-top: 18px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--text);
+  background: transparent;
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 800;
+}
