@@ -1120,6 +1120,47 @@
     </section>
 
 
+
+    <section class="report-section" id="rapport" aria-labelledby="report-title">
+      <div class="section-heading">
+        <p class="section-label">MIN RAPPORT</p>
+        <h2 id="report-title">Sammanfatta läget med ett klick.</h2>
+        <p class="section-intro">Rapporten använder exakt det bränsle, län och pumppris som är valt just nu.</p>
+      </div>
+
+      <article class="report-card" id="reportCard">
+        <div class="report-header">
+          <div>
+            <span class="mini-label">VAD KOSTAR SOPPAN?</span>
+            <h3 id="reportHeading">—</h3>
+          </div>
+          <span class="report-version" id="reportVersion">v—</span>
+        </div>
+
+        <div class="report-hero">
+          <div><span>Pumppris</span><strong id="reportPrice">—</strong></div>
+          <div><span>Skatt + moms</span><strong id="reportTax">—</strong></div>
+          <div><span>Marknad/kedja</span><strong id="reportMarket">—</strong></div>
+        </div>
+
+        <div class="report-lines">
+          <div><span>Energiskatt</span><strong id="reportEnergy">—</strong></div>
+          <div><span>Koldioxidskatt</span><strong id="reportCarbon">—</strong></div>
+          <div><span>Moms</span><strong id="reportVat">—</strong></div>
+          <div><span>Prisreferens</span><strong id="reportMode">—</strong></div>
+          <div><span>Politikscenario</span><strong id="reportPolicy">—</strong></div>
+          <div><span>Datadatum</span><strong id="reportDate">—</strong></div>
+        </div>
+
+        <p class="report-summary" id="reportSummary">—</p>
+        <div class="report-actions">
+          <button id="copyReportText" type="button">Kopiera text</button>
+          <button id="copyReportMarkdown" type="button">Kopiera Markdown</button>
+          <button id="printReport" type="button">Skriv ut rapport</button>
+        </div>
+      </article>
+    </section>
+
     <section class="glossary-section" id="ordlista" aria-labelledby="glossary-title">
       <div class="section-heading glossary-heading">
         <div>
