@@ -7,6 +7,7 @@ const politicalScenarios = window.POLICY_SCENARIOS || {};
 let selectedFuel = siteData.defaultFuel || "petrol";
 let selectedCounty = "riket";
 let priceMode = "county";
+let recentCounties = [];
 
 const els = {
   pumpPrice: document.querySelector("#pumpPrice"),
@@ -59,6 +60,12 @@ const els = {
   countyDataAlertText: document.querySelector("#countyDataAlertText"),
   countyListCount: document.querySelector("#countyListCount"),
   countyFocusSelected: document.querySelector("#countyFocusSelected"),
+  countyRecent: document.querySelector("#countyRecent"),
+  priceModeBadge: document.querySelector("#priceModeBadge"),
+  manualVsCounty: document.querySelector("#manualVsCounty"),
+  manualVsNational: document.querySelector("#manualVsNational"),
+  clearPreferences: document.querySelector("#clearPreferences"),
+  dataFreshness: document.querySelector("#dataFreshness"),
   heroPetrolPrice: document.querySelector("#heroPetrolPrice"),
   heroDieselPrice: document.querySelector("#heroDieselPrice"),
   heroFuelChips: [...document.querySelectorAll("[data-hero-fuel]")],
@@ -163,6 +170,82 @@ function pct(part, total) {
 function signed(value, suffix = " kr/l") {
   if (Math.abs(value) < 0.005) return "0,00" + suffix;
   return (value > 0 ? "+" : "−") + fmt(Math.abs(value)) + suffix;
+}
+
+const STORAGE_KEY = "vadkostarsoppan.preferences.v1";
+
+function loadSavedPreferences() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    if (saved.fuel && fuelData[saved.fuel]) selectedFuel = saved.fuel;
+    if (saved.county && allCountyEntries().some(item => item.id === saved.county)) selectedCounty = saved.county;
+    if (["county","manual","weekly"].includes(saved.mode)) priceMode = saved.mode;
+    if (Array.isArray(saved.recent)) {
+      recentCounties = saved.recent.filter(id => allCountyEntries().some(item => item.id === id)).slice(0,4);
+    }
+    if (saved.manualPrice && validPrice(Number(saved.manualPrice)) && priceMode === "manual") {
+      els.pumpPrice.value = fmt(Number(saved.manualPrice));
+    }
+  } catch {}
+}
+
+function savePreferences() {
+  try {
+    const currentPrice = parseNumber(els.pumpPrice?.value);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      fuel: selectedFuel,
+      county: selectedCounty,
+      mode: priceMode,
+      manualPrice: priceMode === "manual" && validPrice(currentPrice) ? currentPrice : null,
+      recent: recentCounties
+    }));
+  } catch {}
+}
+
+function rememberCounty(id) {
+  if (!id || id === "riket") return;
+  recentCounties = [id, ...recentCounties.filter(item => item !== id)].slice(0,4);
+  savePreferences();
+  renderRecentCounties();
+}
+
+function renderRecentCounties() {
+  if (!els.countyRecent) return;
+  els.countyRecent.innerHTML = "";
+  if (!recentCounties.length) {
+    const span = document.createElement("span");
+    span.className = "recent-empty";
+    span.textContent = "Inga ännu";
+    els.countyRecent.appendChild(span);
+    return;
+  }
+  recentCounties.forEach(id => {
+    const item = countyEntry(id);
+    if (!item) return;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "recent-county" + (id === selectedCounty ? " active" : "");
+    button.textContent = item.name.replace(" län","");
+    button.addEventListener("click", () => {
+      selectedCounty = id;
+      priceMode = "county";
+      if (els.countySelect) els.countySelect.value = id;
+      applyCountyPrice({ announceChange: true });
+      rememberCounty(id);
+    });
+    els.countyRecent.appendChild(button);
+  });
+}
+
+function formatDataFreshness(dateText) {
+  if (!dateText) return "okänd färskhet";
+  const date = new Date(dateText + "T00:00:00");
+  if (Number.isNaN(date.getTime())) return "okänd färskhet";
+  const now = new Date();
+  const days = Math.round((Date.UTC(now.getFullYear(),now.getMonth(),now.getDate()) - Date.UTC(date.getFullYear(),date.getMonth(),date.getDate())) / 86400000);
+  if (days <= 0) return "prisdata uppdaterad idag";
+  if (days === 1) return "prisdata 1 dag gammal";
+  return "prisdata " + days + " dagar gammal";
 }
 
 function validPrice(value) {
@@ -374,6 +457,33 @@ function updateCountyUI() {
   if (els.useCountyAverage) {
     els.useCountyAverage.textContent = entry?.id === "riket" ? "Använd rikssnittet" : "Använd länssnittet";
   }
+
+  if (els.priceModeBadge) {
+    const labels = { county: entry?.id === "riket" ? "RIKSSNITT" : "LÄNSSNITT", manual: "EGET PRIS", weekly: "VECKOREFERENS" };
+    els.priceModeBadge.textContent = labels[priceMode] || "PRIS";
+    els.priceModeBadge.classList.toggle("manual", priceMode === "manual");
+    els.priceModeBadge.classList.toggle("weekly", priceMode === "weekly");
+  }
+
+  const current = parseNumber(els.pumpPrice?.value);
+  const local = countyPriceForFuel();
+  const national = countyPriceForFuel("riket");
+  const setDelta = (node, base, label) => {
+    if (!node) return;
+    node.classList.remove("up","down");
+    if (!validPrice(current) || !Number.isFinite(base)) {
+      node.textContent = label + ": —";
+      return;
+    }
+    const delta = current - base;
+    node.textContent = label + ": " + signed(delta);
+    if (delta > .005) node.classList.add("up");
+    if (delta < -.005) node.classList.add("down");
+  };
+  setDelta(els.manualVsCounty, local, "Mot länssnitt");
+  setDelta(els.manualVsNational, national, "Mot rikssnitt");
+
+  renderRecentCounties();
   renderCountyExplorer();
 }
 
@@ -382,6 +492,7 @@ function applyCountyPrice({ announceChange = false } = {}) {
   if (!Number.isFinite(price)) return false;
   priceMode = "county";
   els.pumpPrice.value = fmt(price);
+  rememberCounty(selectedCounty);
   updateCountyUI();
   update();
   if (announceChange) {
@@ -689,6 +800,7 @@ function updateUrl(price) {
   url.searchParams.set("rule", Number(els.regulatorySlider.value).toFixed(2));
 
   history.replaceState(null, "", url);
+  savePreferences();
 }
 
 function update() {
@@ -817,13 +929,16 @@ function loadStateFromUrl() {
 
   if (fuel && fuelData[fuel]) selectedFuel = fuel;
   if (county && allCountyEntries().some(item => item.id === county)) selectedCounty = county;
-  priceMode = mode === "manual" ? "manual" : "county";
+  if (["county","manual","weekly"].includes(mode)) priceMode = mode;
   if (party && politicalScenarios[party] && els.partyScenario) els.partyScenario.value = party;
 
   populateCountySelect();
   if (priceMode === "county") {
     const countyPrice = countyPriceForFuel();
     if (Number.isFinite(countyPrice)) els.pumpPrice.value = fmt(countyPrice);
+  } else if (priceMode === "weekly") {
+    const weekly = weeklyReferenceForFuel();
+    els.pumpPrice.value = fmt(Number.isFinite(weekly) ? weekly : price);
   } else if (validPrice(price)) {
     els.pumpPrice.value = fmt(price);
   }
@@ -922,7 +1037,7 @@ els.useWeeklyReference?.addEventListener("click", () => {
   const reference = weeklyReferenceForFuel();
   if (!Number.isFinite(reference)) return;
   els.pumpPrice.value = fmt(reference);
-  priceMode = "manual";
+  priceMode = "weekly";
   update();
   announce("Veckoreferensen " + fmt(reference) + " kronor per liter används för " + fuelData[selectedFuel].label + ".");
 });
@@ -943,10 +1058,18 @@ els.countyFocusSelected?.addEventListener("click", () => {
 els.countySelect?.addEventListener("change", () => {
   selectedCounty = els.countySelect.value;
   applyCountyPrice({ announceChange: true });
+  rememberCounty(selectedCounty);
 });
 
 els.useCountyAverage?.addEventListener("click", () => {
   applyCountyPrice({ announceChange: true });
+});
+
+els.clearPreferences?.addEventListener("click", () => {
+  try { localStorage.removeItem(STORAGE_KEY); } catch {}
+  recentCounties = [];
+  renderRecentCounties();
+  announce("Sparade val har rensats.");
 });
 
 if (els.partyScenario) {
@@ -1027,8 +1150,11 @@ els.resetAll?.addEventListener("click", () => {
 });
 
 populateCountySelect();
+loadSavedPreferences();
 loadStateFromUrl();
 updateCountyUI();
+renderRecentCounties();
+if (els.dataFreshness) els.dataFreshness.textContent = formatDataFreshness(countyData.updatedAt);
 
 if (els.dataVersion) els.dataVersion.textContent = siteData.dataVersion || "—";
 if (els.factCheckDate) els.factCheckDate.textContent = siteData.lastFactCheck || "—";
