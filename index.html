@@ -36,6 +36,51 @@
   <a class="skip-link" href="#main">Hoppa till innehållet</a>
   <div class="noise" aria-hidden="true"></div>
 
+  <dialog class="settings-dialog" id="settingsDialog" aria-labelledby="settingsTitle">
+    <form method="dialog">
+      <div class="settings-head">
+        <div>
+          <p class="section-label">INSTÄLLNINGAR</p>
+          <h2 id="settingsTitle">Gör sidan din.</h2>
+        </div>
+        <button class="dialog-close" value="close" aria-label="Stäng inställningar">×</button>
+      </div>
+      <div class="settings-grid">
+        <label class="setting-row">
+          <span><strong>Minska rörelse</strong><small>Stänger av nästan alla animationer.</small></span>
+          <input id="reducedMotionToggle" type="checkbox">
+        </label>
+        <label class="setting-row">
+          <span><strong>Datasnålt läge</strong><small>Tar bort dekorativa effekter och förenklar rendering.</small></span>
+          <input id="lowDataToggle" type="checkbox">
+        </label>
+        <label class="setting-row">
+          <span><strong>Expertläge</strong><small>Visar fördelning, källregister och avancerade verktyg.</small></span>
+          <input id="expertModeToggle" type="checkbox">
+        </label>
+        <label class="setting-row">
+          <span><strong>Ljust tema</strong><small>Byt mellan mörkt och ljust tema.</small></span>
+          <input id="lightThemeToggle" type="checkbox">
+        </label>
+        <label class="setting-row">
+          <span><strong>Hög kontrast</strong><small>Ökar kontrasten i gränssnittet.</small></span>
+          <input id="highContrastToggle" type="checkbox">
+        </label>
+        <label class="setting-row">
+          <span><strong>Decimaler</strong><small>Välj hur många decimaler priser ska visas med.</small></span>
+          <select id="precisionSelect">
+            <option value="2">2 decimaler</option>
+            <option value="1">1 decimal</option>
+          </select>
+        </label>
+      </div>
+      <div class="settings-actions">
+        <button type="button" id="resetSettings">Återställ inställningar</button>
+        <button class="primary" value="close">Klar</button>
+      </div>
+    </form>
+  </dialog>
+
   <dialog class="welcome-dialog" id="welcomeDialog" aria-labelledby="welcomeTitle">
     <form method="dialog">
       <div class="welcome-kicker">SNABBSTART</div>
@@ -72,6 +117,7 @@
       </div>
       <button class="contrast-toggle" id="themeToggle" type="button" aria-pressed="false" title="Växla ljust/mörkt tema">☼</button>
       <button class="contrast-toggle" id="contrastToggle" type="button" aria-pressed="false" title="Växla hög kontrast">◐</button>
+      <button class="contrast-toggle" id="settingsOpen" type="button" title="Inställningar">⚙</button>
     </div>
     <nav class="nav" aria-label="Huvudmeny">
       <a href="#literpris">Literpris</a>
