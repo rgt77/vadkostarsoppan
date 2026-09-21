@@ -15,6 +15,8 @@ let sourceRegistry = null;
 let sourceFilter = "all";
 let deferredInstallPrompt = null;
 let serviceWorkerRegistration = null;
+let viewMode = "simple";
+let lightTheme = false;
 let stateHistory = [];
 let redoHistory = [];
 let historyTimer = null;
@@ -27,6 +29,10 @@ const els = {
   mobileFuel: document.querySelector("#mobileFuel"),
   mobilePrice: document.querySelector("#mobilePrice"),
   contrastToggle: document.querySelector("#contrastToggle"),
+  themeToggle: document.querySelector("#themeToggle"),
+  simpleMode: document.querySelector("#simpleMode"),
+  expertMode: document.querySelector("#expertMode"),
+  simpleExplainerText: document.querySelector("#simpleExplainerText"),
   mobileNavLinks: [...document.querySelectorAll(".mobile-bottom-nav a")],
   priceError: document.querySelector("#priceError"),
   totalPrice: document.querySelector("#totalPrice"),
@@ -288,6 +294,11 @@ function loadSavedPreferences() {
       els.pumpPrice.value = fmt(Number(saved.manualPrice));
     }
     if (saved.highContrast) document.documentElement.classList.add("high-contrast");
+    if (saved.lightTheme) {
+      lightTheme = true;
+      document.documentElement.classList.add("light-theme");
+    }
+    if (saved.viewMode === "expert") viewMode = "expert";
   } catch {}
   if (els.contrastToggle) {
     const active = document.documentElement.classList.contains("high-contrast");
@@ -304,7 +315,9 @@ function savePreferences() {
       mode: priceMode,
       manualPrice: priceMode === "manual" && validPrice(currentPrice) ? currentPrice : null,
       recent: recentCounties,
-      highContrast: document.documentElement.classList.contains("high-contrast")
+      highContrast: document.documentElement.classList.contains("high-contrast"),
+      lightTheme,
+      viewMode
     }));
   } catch {}
 }
@@ -734,6 +747,32 @@ function runDiagnostics() {
   }
   showToast(failed.length ? failed.length + " kontrollpunkter behöver ses över." : "Självtest klart: allt ser bra ut.");
   return {checks, failed};
+}
+
+function applyViewMode() {
+  const expert = viewMode === "expert";
+  document.body.classList.toggle("expert-mode", expert);
+  document.body.classList.toggle("simple-mode", !expert);
+  if (els.simpleMode) els.simpleMode.setAttribute("aria-pressed", String(!expert));
+  if (els.expertMode) els.expertMode.setAttribute("aria-pressed", String(expert));
+}
+
+function applyThemeState() {
+  document.documentElement.classList.toggle("light-theme", lightTheme);
+  if (els.themeToggle) {
+    els.themeToggle.setAttribute("aria-pressed", String(lightTheme));
+    els.themeToggle.textContent = lightTheme ? "☾" : "☼";
+    els.themeToggle.title = lightTheme ? "Växla till mörkt tema" : "Växla till ljust tema";
+  }
+}
+
+function updateSimpleExplainer(price, marketBase, politicalDirect) {
+  if (!els.simpleExplainerText) return;
+  const taxPct = pct(politicalDirect, price);
+  const location = countyEntry()?.name || "Hela Sverige";
+  els.simpleExplainerText.textContent =
+    "För " + (fuelData[selectedFuel]?.label || "bränslet") + " i " + location +
+    " går ungefär " + fmt(taxPct,0) + " av 100 kronor till skatt + moms. Resten ligger i marknad och kedja.";
 }
 
 function validPrice(value) {
@@ -1617,6 +1656,7 @@ function update() {
   updateReceipt(price, parts);
   updatePriceStory(price, marketBase, politicalDirect);
   updateDuel(price, marketBase, politicalDirect);
+  updateSimpleExplainer(price, marketBase, politicalDirect);
 
   const colors = ["var(--other)", "var(--energy)", "var(--carbon)", "var(--vat)"];
   let cursor = 0;
@@ -1942,6 +1982,24 @@ els.useCountyAverage?.addEventListener("click", () => {
   applyCountyPrice({ announceChange: true });
 });
 
+els.simpleMode?.addEventListener("click", () => {
+  viewMode = "simple";
+  applyViewMode();
+  savePreferences();
+  showToast("Enkelt läge är aktivt.");
+});
+els.expertMode?.addEventListener("click", () => {
+  viewMode = "expert";
+  applyViewMode();
+  savePreferences();
+  showToast("Expertläge är aktivt.");
+});
+els.themeToggle?.addEventListener("click", () => {
+  lightTheme = !lightTheme;
+  applyThemeState();
+  savePreferences();
+});
+
 els.contrastToggle?.addEventListener("click", () => {
   const active = document.documentElement.classList.toggle("high-contrast");
   els.contrastToggle.setAttribute("aria-pressed", String(active));
@@ -2201,6 +2259,8 @@ renderSnapshots();
 populateCompareSelect(els.compareCountyA, compareA);
 populateCompareSelect(els.compareCountyB, compareB);
 loadSavedPreferences();
+applyViewMode();
+applyThemeState();
 loadStateFromUrl();
 updateCountyUI();
 renderRecentCounties();
