@@ -212,6 +212,26 @@ const els = {
   glossarySpotlight: document.querySelector("#glossarySpotlight"),
   glossarySpotlightTerm: document.querySelector("#glossarySpotlightTerm"),
   glossarySpotlightText: document.querySelector("#glossarySpotlightText"),
+  dataScore: document.querySelector("#dataScore"),
+  dataScoreLabel: document.querySelector("#dataScoreLabel"),
+  healthCountyCoverage: document.querySelector("#healthCountyCoverage"),
+  healthCountyBar: document.querySelector("#healthCountyBar"),
+  healthCountyFreshness: document.querySelector("#healthCountyFreshness"),
+  healthMarketCoverage: document.querySelector("#healthMarketCoverage"),
+  healthMarketBar: document.querySelector("#healthMarketBar"),
+  healthMarketFreshness: document.querySelector("#healthMarketFreshness"),
+  healthTaxCoverage: document.querySelector("#healthTaxCoverage"),
+  healthTaxBar: document.querySelector("#healthTaxBar"),
+  healthTaxValidity: document.querySelector("#healthTaxValidity"),
+  healthPolicyCoverage: document.querySelector("#healthPolicyCoverage"),
+  healthPolicyBar: document.querySelector("#healthPolicyBar"),
+  healthPolicySources: document.querySelector("#healthPolicySources"),
+  healthGlossaryCoverage: document.querySelector("#healthGlossaryCoverage"),
+  healthGlossaryBar: document.querySelector("#healthGlossaryBar"),
+  healthSourceCoverage: document.querySelector("#healthSourceCoverage"),
+  healthSourceBar: document.querySelector("#healthSourceBar"),
+  healthSourceGaps: document.querySelector("#healthSourceGaps"),
+  healthAlerts: document.querySelector("#healthAlerts"),
   welcomeDialog: document.querySelector("#welcomeDialog"),
   welcomeStart: document.querySelector("#welcomeStart"),
   welcomeSkip: document.querySelector("#welcomeSkip"),
@@ -765,6 +785,7 @@ async function loadSourceRegistry() {
     if (!response.ok) throw new Error("HTTP " + response.status);
     sourceRegistry = await response.json();
     renderSourceRegistry();
+    updateDataDashboard();
   } catch {
     if (els.registryStatus) els.registryStatus.textContent = "Kunde inte ladda register";
     if (els.registryList) els.registryList.innerHTML = '<div class="registry-empty">Källregistret kunde inte laddas just nu.</div>';
@@ -1341,6 +1362,102 @@ function renderGlossary() {
     empty.className = "registry-empty";
     empty.textContent = "Inga begrepp matchar sökningen.";
     els.glossaryGrid.appendChild(empty);
+  }
+}
+
+function daysSinceIso(dateText) {
+  if (!dateText) return null;
+  const date = new Date(dateText + "T00:00:00");
+  if (Number.isNaN(date.getTime())) return null;
+  const now = new Date();
+  const today = Date.UTC(now.getFullYear(),now.getMonth(),now.getDate());
+  const then = Date.UTC(date.getFullYear(),date.getMonth(),date.getDate());
+  return Math.floor((today-then)/86400000);
+}
+
+function daysUntilIso(dateText) {
+  const since = daysSinceIso(dateText);
+  return since === null ? null : -since;
+}
+
+function setHealthBar(node, percent) {
+  if (node) node.style.width = clamp(percent,0,100) + "%";
+}
+
+function updateDataDashboard() {
+  const counties = Array.isArray(countyData.counties) ? countyData.counties : [];
+  const countyPct = clamp(counties.length / 21 * 100,0,100);
+  const countyAge = daysSinceIso(countyData.updatedAt);
+
+  const marketFields = [
+    Number.isFinite(marketData.weeklyReference?.petrol) && Number.isFinite(marketData.weeklyReference?.diesel),
+    Number.isFinite(marketData.brent?.usdPerBarrel),
+    Number.isFinite(marketData.fx?.usdSek)
+  ];
+  const marketPct = marketFields.filter(Boolean).length / marketFields.length * 100;
+  const marketAge = daysSinceIso(marketData.updatedAt);
+
+  const fuels = ["petrol","diesel"].map(key => fuelData[key]).filter(Boolean);
+  const taxFields = fuels.flatMap(fuel => [fuel.energyTax,fuel.carbonTax,fuel.vatRate]);
+  const taxPct = taxFields.length ? taxFields.filter(Number.isFinite).length / taxFields.length * 100 : 0;
+  const taxDaysLeft = daysUntilIso(fuelData[selectedFuel]?.validTo);
+
+  const scenarios = Object.values(politicalScenarios);
+  const withSources = scenarios.filter(item => Boolean(item?.source)).length;
+  const policyPct = scenarios.length ? withSources / scenarios.length * 100 : 0;
+
+  const glossaryPct = clamp(glossaryData.length / 20 * 100,0,100);
+
+  const sources = Array.isArray(sourceRegistry?.sources) ? sourceRegistry.sources : [];
+  const planned = Array.isArray(sourceRegistry?.planned_sources) ? sourceRegistry.planned_sources : [];
+  const sourcePct = sources.length ? 100 : 0;
+
+  if (els.healthCountyCoverage) els.healthCountyCoverage.textContent = counties.length + " / 21 län";
+  setHealthBar(els.healthCountyBar,countyPct);
+  if (els.healthCountyFreshness) els.healthCountyFreshness.textContent = countyAge === null ? "okänt datadatum" : countyAge <= 0 ? "uppdaterat idag" : countyAge + " dagar sedan";
+
+  if (els.healthMarketCoverage) els.healthMarketCoverage.textContent = marketFields.filter(Boolean).length + " / " + marketFields.length + " referenser";
+  setHealthBar(els.healthMarketBar,marketPct);
+  if (els.healthMarketFreshness) els.healthMarketFreshness.textContent = marketAge === null ? "okänt datadatum" : marketAge <= 0 ? "uppdaterat idag" : marketAge + " dagar sedan";
+
+  if (els.healthTaxCoverage) els.healthTaxCoverage.textContent = taxFields.filter(Number.isFinite).length + " / " + taxFields.length + " fält";
+  setHealthBar(els.healthTaxBar,taxPct);
+  if (els.healthTaxValidity) {
+    els.healthTaxValidity.textContent = taxDaysLeft === null
+      ? "giltighet okänd"
+      : taxDaysLeft >= 0 ? taxDaysLeft + " dagar kvar i angiven period" : "angiven period har passerat";
+  }
+
+  if (els.healthPolicyCoverage) els.healthPolicyCoverage.textContent = withSources + " / " + scenarios.length + " källhänvisade";
+  setHealthBar(els.healthPolicyBar,policyPct);
+  if (els.healthPolicySources) els.healthPolicySources.textContent = "Visar dokumenterad status, inte politiskt betyg.";
+
+  if (els.healthGlossaryCoverage) els.healthGlossaryCoverage.textContent = glossaryData.length + " begrepp";
+  setHealthBar(els.healthGlossaryBar,glossaryPct);
+
+  if (els.healthSourceCoverage) els.healthSourceCoverage.textContent = sources.length ? sources.length + " registrerade källor" : "register laddas";
+  setHealthBar(els.healthSourceBar,sourcePct);
+  if (els.healthSourceGaps) els.healthSourceGaps.textContent = planned.length + " identifierade dataluckor";
+
+  const componentScores = [countyPct,marketPct,taxPct,policyPct,glossaryPct,sourcePct].filter(Number.isFinite);
+  const score = componentScores.length ? componentScores.reduce((a,b)=>a+b,0)/componentScores.length : 0;
+  if (els.dataScore) els.dataScore.textContent = fmt(score,0) + " %";
+  if (els.dataScoreLabel) els.dataScoreLabel.textContent = "teknisk täckning, inte kvalitetsbetyg";
+
+  if (els.healthAlerts) {
+    els.healthAlerts.innerHTML = "";
+    const alerts = [];
+    if (countyAge !== null && countyAge > 3) alerts.push(["warning","Länspriserna är mer än 3 dagar gamla i datalagret."]);
+    if (marketAge !== null && marketAge > 7) alerts.push(["warning","Marknadsdatalagret är mer än 7 dagar gammalt."]);
+    if (taxDaysLeft !== null && taxDaysLeft < 0) alerts.push(["warning","Skattesatsernas angivna giltighetsperiod har passerat och behöver faktakontrolleras."]);
+    if (planned.length) alerts.push(["","Marknadsdelen har " + planned.length + " kända dataluckor innan hela literkostnaden kan särredovisas."]);
+    if (!alerts.length) alerts.push(["good","Inga automatiska färskhetsvarningar just nu."]);
+    alerts.forEach(([type,textValue]) => {
+      const div=document.createElement("div");
+      div.className="health-alert "+type;
+      div.textContent=textValue;
+      els.healthAlerts.appendChild(div);
+    });
   }
 }
 
@@ -3007,6 +3124,7 @@ if (els.dataVersion) els.dataVersion.textContent = siteData.dataVersion || "—"
 if (els.factCheckDate) els.factCheckDate.textContent = siteData.lastFactCheck || "—";
 if (els.appVersion) els.appVersion.textContent = siteData.appVersion || "—";
 validateDatasets();
+updateDataDashboard();
 
 buildPartyPills();
 setupNavObserver();
