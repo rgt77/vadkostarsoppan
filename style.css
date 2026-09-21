@@ -3096,3 +3096,73 @@ footer {
   .network-pill,
   .install-button { display: none; }
 }
+
+
+/* Steps 171-180: neutral policy difference matrix */
+.policy-diff {
+  margin-top: 14px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255,255,255,.016);
+}
+.policy-diff-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: end;
+}
+.policy-diff-head > div {
+  display: grid;
+  gap: 4px;
+}
+.policy-diff-head strong {
+  font-size: 17px;
+}
+.policy-diff-head small {
+  color: var(--muted);
+  font-size: 9px;
+}
+.policy-diff-grid {
+  display: grid;
+  grid-template-columns: repeat(5,minmax(0,1fr));
+  gap: 8px;
+  margin-top: 16px;
+}
+.policy-diff-card {
+  display: grid;
+  gap: 6px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.policy-diff-card span {
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.policy-diff-card strong {
+  font-size: 10px;
+  line-height: 1.45;
+}
+.policy-diff-card small {
+  color: var(--muted);
+  font-size: 8px;
+  line-height: 1.4;
+}
+.policy-diff-card.changed {
+  border-color: rgba(244,208,63,.28);
+  background: rgba(244,208,63,.035);
+}
+.policy-diff-card.same {
+  opacity: .72;
+}
+@media (max-width: 900px) {
+  .policy-diff-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 520px) {
+  .policy-diff-grid { grid-template-columns: 1fr; }
+}
