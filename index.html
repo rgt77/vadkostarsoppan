@@ -199,7 +199,10 @@
           <strong id="taxPerLiter">— kr/l</strong>
           <small id="taxShare">— % av pumppriset</small>
           <div class="punchline" id="taxPunchline">till skatt + moms</div>
-          <button class="text-button" id="resetAll" type="button">↺ Börja om</button>
+          <div class="summary-actions">
+            <button class="text-button" id="saveSnapshot" type="button">☆ Spara läget</button>
+            <button class="text-button" id="resetAll" type="button">↺ Börja om</button>
+          </div>
         </div>
       </div>
 
@@ -323,6 +326,19 @@
     </section>
 
 
+
+
+    <section class="saved-section" id="sparat" aria-labelledby="saved-title">
+      <div class="saved-head">
+        <div>
+          <p class="section-label">SPARADE LÄGEN</p>
+          <h2 id="saved-title">Jämför med dig själv senare.</h2>
+          <p class="section-intro">Spara upp till fem kombinationer av län, bränsle, pris och simulatorvärden direkt i webbläsaren.</p>
+        </div>
+        <button id="clearSnapshots" type="button">Rensa sparade lägen</button>
+      </div>
+      <div class="saved-grid" id="savedSnapshots" aria-live="polite"></div>
+    </section>
 
     <section class="county-explorer" id="lan" aria-labelledby="county-explorer-title">
       <div class="section-heading county-heading">
