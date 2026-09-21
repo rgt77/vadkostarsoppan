@@ -43,6 +43,7 @@
     </div>
     <nav class="nav" aria-label="Huvudmeny">
       <a href="#literpris">Literpris</a>
+      <a href="#lan">Län</a>
       <a href="#marknad">Marknad</a>
       <a href="#kostnadskedja">Kostnadskedjan</a>
       <a href="#politik">Politik</a>
@@ -258,6 +259,84 @@
       </div>
     </section>
 
+
+
+    <section class="county-explorer" id="lan" aria-labelledby="county-explorer-title">
+      <div class="section-heading county-heading">
+        <div>
+          <p class="section-label">SVERIGEKOLLEN</p>
+          <h2 id="county-explorer-title">Samma liter. Olika pris.</h2>
+          <p class="section-intro">Jämför alla 21 län för vald bränsletyp. Klicka på ett län för att använda dess snittpris direkt i Literlabbet.</p>
+        </div>
+        <div class="county-explorer-status" aria-live="polite">
+          <span id="countyCoverage">21 / 21 län</span>
+          <strong id="countyUpdated">Uppdaterat —</strong>
+        </div>
+      </div>
+
+      <div class="county-toolbar">
+        <label class="county-search">
+          <span>Sök län</span>
+          <input id="countySearch" type="search" autocomplete="off" placeholder="Skriv t.ex. Östergötland" aria-controls="countyList">
+        </label>
+        <label class="county-sort">
+          <span>Sortera</span>
+          <select id="countySort">
+            <option value="price-asc">Lägst pris först</option>
+            <option value="price-desc">Högst pris först</option>
+            <option value="name">A–Ö</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="county-insights">
+        <article>
+          <span>Lägsta rapporterade länssnitt</span>
+          <strong id="countyLowest">—</strong>
+          <small id="countyLowestName">—</small>
+        </article>
+        <article>
+          <span>Valt läns placering</span>
+          <strong id="countyRank">—</strong>
+          <small id="countyRankDetail">—</small>
+        </article>
+        <article>
+          <span>Högsta rapporterade länssnitt</span>
+          <strong id="countyHighest">—</strong>
+          <small id="countyHighestName">—</small>
+        </article>
+        <article>
+          <span>Spridning mellan län</span>
+          <strong id="countySpread">—</strong>
+          <small>högsta minus lägsta</small>
+        </article>
+      </div>
+
+      <div class="county-position-card">
+        <div>
+          <span>Var ligger <strong id="countyPositionName">valt län</strong>?</span>
+          <small>Länets prisposition mellan lägsta och högsta rapporterade länssnitt.</small>
+        </div>
+        <div class="county-position-track" aria-hidden="true">
+          <span class="county-position-dot" id="countyPositionDot"></span>
+        </div>
+        <div class="county-position-labels">
+          <span id="countyPositionLow">—</span>
+          <span id="countyPositionHigh">—</span>
+        </div>
+      </div>
+
+      <div class="county-data-alert" id="countyDataAlert" hidden>
+        <strong>Stor avvikelse i rapporterad data</strong>
+        <span id="countyDataAlertText"></span>
+      </div>
+
+      <div class="county-list-head">
+        <span id="countyListCount">21 län</span>
+        <button id="countyFocusSelected" type="button">Visa valt län</button>
+      </div>
+      <div class="county-list" id="countyList" role="list" aria-label="Bränslepris per län"></div>
+    </section>
 
     <section class="market-section" id="marknad" aria-labelledby="market-title">
       <div class="section-heading">
