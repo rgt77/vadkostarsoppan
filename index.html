@@ -929,6 +929,38 @@
       </div>
     </section>
 
+
+    <section class="registry-section" id="kallregister" aria-labelledby="registry-title">
+      <div class="section-heading registry-heading">
+        <div>
+          <p class="section-label">KÄLLREGISTRET</p>
+          <h2 id="registry-title">Varifrån kommer siffrorna?</h2>
+          <p class="section-intro">Källorna laddas från projektets eget register och märks efter typ: officiell, härledd eller community-baserad.</p>
+        </div>
+        <div class="registry-health">
+          <span id="registryCount">— källor</span>
+          <strong id="registryStatus">Laddar…</strong>
+        </div>
+      </div>
+
+      <div class="registry-filters" aria-label="Filtrera källor">
+        <button type="button" class="registry-filter active" data-source-filter="all" aria-pressed="true">Alla</button>
+        <button type="button" class="registry-filter" data-source-filter="official" aria-pressed="false">Officiella</button>
+        <button type="button" class="registry-filter" data-source-filter="derived_from_official" aria-pressed="false">Härledda</button>
+        <button type="button" class="registry-filter" data-source-filter="community_reported_secondary" aria-pressed="false">Community</button>
+      </div>
+
+      <div class="registry-list" id="registryList"></div>
+
+      <div class="registry-gaps">
+        <div>
+          <p class="section-label">ÅTERSTÅR</p>
+          <h3>Vad saknas för att dela upp hela litern?</h3>
+        </div>
+        <div id="registryPlanned"></div>
+      </div>
+    </section>
+
     <section class="source-section" id="kallor">
       <div>
         <p class="section-label">KÄLLOR & DATASTATUS</p>
