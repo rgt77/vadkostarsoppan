@@ -3546,3 +3546,112 @@ body.expert-mode .simple-explainer { display: none; }
   font-size: 8px;
   text-align: right;
 }
+
+
+/* Steps 351-400: glossary */
+.glossary-section { padding: 0 0 120px; }
+.glossary-heading {
+  display: grid;
+  grid-template-columns: 1fr minmax(260px,.55fr);
+  gap: 28px;
+  align-items: end;
+  max-width: none;
+}
+.glossary-search {
+  display: grid;
+  gap: 7px;
+}
+.glossary-search span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+}
+.glossary-search input {
+  min-height: 46px;
+  padding: 0 13px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  color: var(--text);
+  background: var(--surface-2);
+}
+.glossary-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 22px;
+}
+.glossary-filter {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 8px;
+  font-weight: 800;
+}
+.glossary-filter.active {
+  color: #111722;
+  border-color: var(--accent);
+  background: var(--accent);
+}
+.glossary-grid {
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 9px;
+  margin-top: 14px;
+}
+.glossary-card {
+  min-width: 0;
+  display: grid;
+  gap: 7px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255,255,255,.016);
+  cursor: pointer;
+}
+.glossary-card:hover {
+  border-color: var(--line-strong);
+  background: rgba(255,255,255,.035);
+}
+.glossary-card span {
+  color: var(--accent);
+  font-size: 8px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+.glossary-card strong { font-size: 13px; }
+.glossary-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.5;
+}
+.glossary-spotlight {
+  margin-top: 12px;
+  padding: 18px;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  background: rgba(244,208,63,.035);
+}
+.glossary-spotlight strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 20px;
+}
+.glossary-spotlight p {
+  margin: 8px 0 0;
+  max-width: 760px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+@media (max-width: 940px) {
+  .glossary-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 620px) {
+  .glossary-heading,
+  .glossary-grid { grid-template-columns: 1fr; }
+}
