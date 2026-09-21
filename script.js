@@ -17,6 +17,9 @@ let deferredInstallPrompt = null;
 let serviceWorkerRegistration = null;
 let viewMode = "simple";
 let lightTheme = false;
+let reducedMotion = false;
+let lowDataMode = false;
+let displayPrecision = 2;
 let stateHistory = [];
 let redoHistory = [];
 let historyTimer = null;
@@ -33,6 +36,15 @@ const els = {
   simpleMode: document.querySelector("#simpleMode"),
   expertMode: document.querySelector("#expertMode"),
   simpleExplainerText: document.querySelector("#simpleExplainerText"),
+  settingsOpen: document.querySelector("#settingsOpen"),
+  settingsDialog: document.querySelector("#settingsDialog"),
+  reducedMotionToggle: document.querySelector("#reducedMotionToggle"),
+  lowDataToggle: document.querySelector("#lowDataToggle"),
+  expertModeToggle: document.querySelector("#expertModeToggle"),
+  lightThemeToggle: document.querySelector("#lightThemeToggle"),
+  highContrastToggle: document.querySelector("#highContrastToggle"),
+  precisionSelect: document.querySelector("#precisionSelect"),
+  resetSettings: document.querySelector("#resetSettings"),
   mobileNavLinks: [...document.querySelectorAll(".mobile-bottom-nav a")],
   priceError: document.querySelector("#priceError"),
   totalPrice: document.querySelector("#totalPrice"),
@@ -255,7 +267,7 @@ const els = {
   navLinks: [...document.querySelectorAll(".nav a")]
 };
 
-const fmt = (value, digits = 2) =>
+const fmt = (value, digits = displayPrecision) =>
   new Intl.NumberFormat("sv-SE", {
     minimumFractionDigits: digits,
     maximumFractionDigits: digits
@@ -299,6 +311,9 @@ function loadSavedPreferences() {
       document.documentElement.classList.add("light-theme");
     }
     if (saved.viewMode === "expert") viewMode = "expert";
+    reducedMotion = Boolean(saved.reducedMotion);
+    lowDataMode = Boolean(saved.lowDataMode);
+    if ([1,2].includes(Number(saved.displayPrecision))) displayPrecision = Number(saved.displayPrecision);
   } catch {}
   if (els.contrastToggle) {
     const active = document.documentElement.classList.contains("high-contrast");
@@ -317,7 +332,10 @@ function savePreferences() {
       recent: recentCounties,
       highContrast: document.documentElement.classList.contains("high-contrast"),
       lightTheme,
-      viewMode
+      viewMode,
+      reducedMotion,
+      lowDataMode,
+      displayPrecision
     }));
   } catch {}
 }
@@ -757,6 +775,17 @@ function applyViewMode() {
   if (els.expertMode) els.expertMode.setAttribute("aria-pressed", String(expert));
 }
 
+function applyPreferenceClasses() {
+  document.documentElement.classList.toggle("reduced-motion", reducedMotion);
+  document.documentElement.classList.toggle("low-data", lowDataMode);
+  if (els.reducedMotionToggle) els.reducedMotionToggle.checked = reducedMotion;
+  if (els.lowDataToggle) els.lowDataToggle.checked = lowDataMode;
+  if (els.expertModeToggle) els.expertModeToggle.checked = viewMode === "expert";
+  if (els.lightThemeToggle) els.lightThemeToggle.checked = lightTheme;
+  if (els.highContrastToggle) els.highContrastToggle.checked = document.documentElement.classList.contains("high-contrast");
+  if (els.precisionSelect) els.precisionSelect.value = String(displayPrecision);
+}
+
 function applyThemeState() {
   document.documentElement.classList.toggle("light-theme", lightTheme);
   if (els.themeToggle) {
@@ -764,6 +793,7 @@ function applyThemeState() {
     els.themeToggle.textContent = lightTheme ? "☾" : "☼";
     els.themeToggle.title = lightTheme ? "Växla till mörkt tema" : "Växla till ljust tema";
   }
+  applyPreferenceClasses();
 }
 
 function updateSimpleExplainer(price, marketBase, politicalDirect) {
@@ -1982,6 +2012,59 @@ els.useCountyAverage?.addEventListener("click", () => {
   applyCountyPrice({ announceChange: true });
 });
 
+els.settingsOpen?.addEventListener("click", () => {
+  applyPreferenceClasses();
+  if (typeof els.settingsDialog?.showModal === "function" && !els.settingsDialog.open) {
+    els.settingsDialog.showModal();
+  }
+});
+
+els.reducedMotionToggle?.addEventListener("change", () => {
+  reducedMotion = els.reducedMotionToggle.checked;
+  applyPreferenceClasses();
+  savePreferences();
+});
+els.lowDataToggle?.addEventListener("change", () => {
+  lowDataMode = els.lowDataToggle.checked;
+  applyPreferenceClasses();
+  savePreferences();
+});
+els.expertModeToggle?.addEventListener("change", () => {
+  viewMode = els.expertModeToggle.checked ? "expert" : "simple";
+  applyViewMode();
+  applyPreferenceClasses();
+  savePreferences();
+});
+els.lightThemeToggle?.addEventListener("change", () => {
+  lightTheme = els.lightThemeToggle.checked;
+  applyThemeState();
+  savePreferences();
+});
+els.highContrastToggle?.addEventListener("change", () => {
+  document.documentElement.classList.toggle("high-contrast", els.highContrastToggle.checked);
+  applyPreferenceClasses();
+  savePreferences();
+});
+els.precisionSelect?.addEventListener("change", () => {
+  displayPrecision = Number(els.precisionSelect.value) === 1 ? 1 : 2;
+  savePreferences();
+  update();
+});
+els.resetSettings?.addEventListener("click", () => {
+  viewMode = "simple";
+  lightTheme = false;
+  reducedMotion = false;
+  lowDataMode = false;
+  displayPrecision = 2;
+  document.documentElement.classList.remove("high-contrast","light-theme","reduced-motion","low-data");
+  applyViewMode();
+  applyThemeState();
+  applyPreferenceClasses();
+  savePreferences();
+  update();
+  showToast("Inställningarna är återställda.");
+});
+
 els.simpleMode?.addEventListener("click", () => {
   viewMode = "simple";
   applyViewMode();
@@ -2261,6 +2344,7 @@ populateCompareSelect(els.compareCountyB, compareB);
 loadSavedPreferences();
 applyViewMode();
 applyThemeState();
+applyPreferenceClasses();
 loadStateFromUrl();
 updateCountyUI();
 renderRecentCounties();
