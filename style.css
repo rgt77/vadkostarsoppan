@@ -1439,3 +1439,117 @@ footer {
 @media (max-width: 980px) {
   .header-live { display: none; }
 }
+
+
+/* County price selector */
+.county-panel {
+  display: grid;
+  grid-template-columns: 1fr minmax(340px,.9fr) auto;
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 14px;
+  padding: 20px 22px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 80% 0%, rgba(244,208,63,.07), transparent 18rem),
+    rgba(255,255,255,.018);
+}
+.county-copy {
+  display: grid;
+  gap: 4px;
+}
+.county-copy > strong {
+  font-size: 22px;
+  letter-spacing: -.035em;
+}
+.county-copy > small {
+  max-width: 470px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+.county-control {
+  display: grid;
+  grid-template-columns: minmax(180px,1fr) minmax(145px,.7fr);
+  gap: 10px;
+  align-items: stretch;
+}
+.county-control select {
+  width: 100%;
+  min-height: 58px;
+  padding: 0 42px 0 15px;
+  border: 1px solid var(--line-strong);
+  border-radius: 13px;
+  color: var(--text);
+  background: var(--surface-2);
+  font-weight: 750;
+  cursor: pointer;
+}
+.county-stat {
+  display: grid;
+  align-content: center;
+  gap: 2px;
+  min-height: 58px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--surface-3);
+}
+.county-stat span,
+.county-stat small {
+  color: var(--muted);
+  font-size: 9px;
+}
+.county-stat strong {
+  font-size: 18px;
+  letter-spacing: -.035em;
+  font-variant-numeric: tabular-nums;
+}
+.county-actions {
+  display: grid;
+  justify-items: start;
+  gap: 7px;
+}
+.county-actions button {
+  min-height: 42px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 11px;
+  color: #111722;
+  background: var(--accent);
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+.county-actions a {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 750;
+  text-decoration: none;
+}
+.county-actions a:hover { color: var(--text); }
+
+@media (max-width: 980px) {
+  .county-panel {
+    grid-template-columns: 1fr;
+  }
+  .county-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+}
+@media (max-width: 560px) {
+  .county-control {
+    grid-template-columns: 1fr;
+  }
+  .county-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .county-actions button {
+    width: 100%;
+  }
+}
