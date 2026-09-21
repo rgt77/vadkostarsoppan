@@ -39,6 +39,26 @@ const els = {
   countyDifference: document.querySelector("#countyDifference"),
   useCountyAverage: document.querySelector("#useCountyAverage"),
   countySource: document.querySelector("#countySource"),
+  countySearch: document.querySelector("#countySearch"),
+  countySort: document.querySelector("#countySort"),
+  countyList: document.querySelector("#countyList"),
+  countyCoverage: document.querySelector("#countyCoverage"),
+  countyUpdated: document.querySelector("#countyUpdated"),
+  countyLowest: document.querySelector("#countyLowest"),
+  countyLowestName: document.querySelector("#countyLowestName"),
+  countyHighest: document.querySelector("#countyHighest"),
+  countyHighestName: document.querySelector("#countyHighestName"),
+  countySpread: document.querySelector("#countySpread"),
+  countyRank: document.querySelector("#countyRank"),
+  countyRankDetail: document.querySelector("#countyRankDetail"),
+  countyPositionName: document.querySelector("#countyPositionName"),
+  countyPositionDot: document.querySelector("#countyPositionDot"),
+  countyPositionLow: document.querySelector("#countyPositionLow"),
+  countyPositionHigh: document.querySelector("#countyPositionHigh"),
+  countyDataAlert: document.querySelector("#countyDataAlert"),
+  countyDataAlertText: document.querySelector("#countyDataAlertText"),
+  countyListCount: document.querySelector("#countyListCount"),
+  countyFocusSelected: document.querySelector("#countyFocusSelected"),
   heroPetrolPrice: document.querySelector("#heroPetrolPrice"),
   heroDieselPrice: document.querySelector("#heroDieselPrice"),
   heroFuelChips: [...document.querySelectorAll("[data-hero-fuel]")],
@@ -220,6 +240,114 @@ function populateCountySelect() {
   if (els.countySource && countyData.source) els.countySource.href = countyData.source;
 }
 
+function countyRows() {
+  return (Array.isArray(countyData.counties) ? countyData.counties : [])
+    .map(item => ({ ...item, price: selectedFuel === "diesel" ? item.diesel : item.petrol }))
+    .filter(item => Number.isFinite(item.price));
+}
+
+function countyStats() {
+  const rows = countyRows().sort((a,b) => a.price - b.price || a.name.localeCompare(b.name, "sv"));
+  if (!rows.length) return null;
+  const selectedIndex = rows.findIndex(item => item.id === selectedCounty);
+  return {
+    rows,
+    lowest: rows[0],
+    highest: rows[rows.length - 1],
+    spread: rows[rows.length - 1].price - rows[0].price,
+    selectedRank: selectedIndex >= 0 ? selectedIndex + 1 : null
+  };
+}
+
+function renderCountyExplorer() {
+  if (!els.countyList) return;
+  const stats = countyStats();
+  if (!stats) {
+    els.countyList.innerHTML = '<div class="county-row empty">Ingen länsdata tillgänglig.</div>';
+    return;
+  }
+
+  const q = (els.countySearch?.value || "").trim().toLocaleLowerCase("sv");
+  const sortMode = els.countySort?.value || "price-asc";
+  const national = countyPriceForFuel("riket");
+
+  let rows = [...stats.rows];
+  if (sortMode === "price-desc") rows.sort((a,b) => b.price - a.price || a.name.localeCompare(b.name, "sv"));
+  if (sortMode === "name") rows.sort((a,b) => a.name.localeCompare(b.name, "sv"));
+  if (q) rows = rows.filter(item => item.name.toLocaleLowerCase("sv").includes(q));
+
+  els.countyList.innerHTML = "";
+  const range = Math.max(.01, stats.highest.price - stats.lowest.price);
+
+  rows.forEach(item => {
+    const delta = Number.isFinite(national) ? item.price - national : 0;
+    const normalized = 12 + ((item.price - stats.lowest.price) / range) * 88;
+    const actualRank = stats.rows.findIndex(row => row.id === item.id) + 1;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "county-row" + (item.id === selectedCounty ? " selected" : "");
+    button.dataset.county = item.id;
+    button.setAttribute("role","listitem");
+    button.setAttribute("aria-label", item.name + ", " + fmt(item.price) + " kronor per liter, plats " + actualRank + " av " + stats.rows.length);
+    button.innerHTML = `
+      <span class="county-row-rank">#${actualRank}</span>
+      <span class="county-row-name">${item.name}</span>
+      <span class="county-row-bar" aria-hidden="true"><span style="width:${normalized.toFixed(1)}%"></span></span>
+      <span class="county-row-price">${fmt(item.price)} kr/l</span>
+      <span class="county-row-delta ${delta > .005 ? "positive" : delta < -.005 ? "negative" : ""}">${signed(delta)}</span>
+    `;
+    button.addEventListener("click", () => {
+      selectedCounty = item.id;
+      priceMode = "county";
+      if (els.countySelect) els.countySelect.value = item.id;
+      applyCountyPrice({ announceChange: true });
+      renderCountyExplorer();
+      document.querySelector("#literpris")?.scrollIntoView({behavior:"smooth",block:"start"});
+    });
+    els.countyList.appendChild(button);
+  });
+
+  if (!rows.length) {
+    const empty = document.createElement("div");
+    empty.className = "county-row empty";
+    empty.textContent = "Inga län matchar sökningen.";
+    els.countyList.appendChild(empty);
+  }
+
+  const selected = countyEntry();
+  const selectedPrice = countyPriceForFuel();
+  const low = stats.lowest.price;
+  const high = stats.highest.price;
+  const position = Number.isFinite(selectedPrice) && high > low
+    ? clamp((selectedPrice - low) / (high - low) * 100, 0, 100)
+    : 50;
+
+  if (els.countyLowest) els.countyLowest.textContent = fmt(stats.lowest.price) + " kr/l";
+  if (els.countyLowestName) els.countyLowestName.textContent = stats.lowest.name;
+  if (els.countyHighest) els.countyHighest.textContent = fmt(stats.highest.price) + " kr/l";
+  if (els.countyHighestName) els.countyHighestName.textContent = stats.highest.name;
+  if (els.countySpread) els.countySpread.textContent = fmt(stats.spread) + " kr/l";
+  if (els.countyRank) els.countyRank.textContent = stats.selectedRank ? "#" + stats.selectedRank : "Riket";
+  if (els.countyRankDetail) els.countyRankDetail.textContent = stats.selectedRank ? "av " + stats.rows.length + " län, lägst till högst" : "rikssnittet rankas inte";
+  if (els.countyPositionName) els.countyPositionName.textContent = selected?.name || "valt län";
+  if (els.countyPositionDot) els.countyPositionDot.style.left = position + "%";
+  if (els.countyPositionLow) els.countyPositionLow.textContent = fmt(low) + " kr/l";
+  if (els.countyPositionHigh) els.countyPositionHigh.textContent = fmt(high) + " kr/l";
+  if (els.countyListCount) els.countyListCount.textContent = rows.length + (rows.length === 1 ? " län" : " län");
+  if (els.countyCoverage) els.countyCoverage.textContent = stats.rows.length + " / 21 län";
+  if (els.countyUpdated) els.countyUpdated.textContent = "Uppdaterat " + (countyData.updatedAt || "—");
+
+  const nationalPrice = countyPriceForFuel("riket");
+  const largeDeviation = Number.isFinite(selectedPrice) && Number.isFinite(nationalPrice) &&
+    selected?.id !== "riket" && Math.abs(selectedPrice - nationalPrice) / nationalPrice >= .15;
+
+  if (els.countyDataAlert) els.countyDataAlert.hidden = !largeDeviation;
+  if (largeDeviation && els.countyDataAlertText) {
+    els.countyDataAlertText.textContent =
+      (selected?.name || "Valt län") + " avviker mer än 15 % från rikssnittet. Se det som en signal att kontrollera källan och gärna jämföra med ett faktiskt stationspris.";
+  }
+}
+
 function updateCountyUI() {
   const entry = countyEntry();
   const local = countyPriceForFuel();
@@ -246,6 +374,7 @@ function updateCountyUI() {
   if (els.useCountyAverage) {
     els.useCountyAverage.textContent = entry?.id === "riket" ? "Använd rikssnittet" : "Använd länssnittet";
   }
+  renderCountyExplorer();
 }
 
 function applyCountyPrice({ announceChange = false } = {}) {
@@ -796,6 +925,19 @@ els.useWeeklyReference?.addEventListener("click", () => {
   priceMode = "manual";
   update();
   announce("Veckoreferensen " + fmt(reference) + " kronor per liter används för " + fuelData[selectedFuel].label + ".");
+});
+
+els.countySearch?.addEventListener("input", renderCountyExplorer);
+els.countySort?.addEventListener("change", renderCountyExplorer);
+els.countyFocusSelected?.addEventListener("click", () => {
+  if (selectedCounty === "riket") {
+    if (els.countySearch) els.countySearch.value = "";
+    renderCountyExplorer();
+    return;
+  }
+  const selected = countyEntry();
+  if (els.countySearch && selected) els.countySearch.value = selected.name.replace(" län","");
+  renderCountyExplorer();
 });
 
 els.countySelect?.addEventListener("change", () => {
