@@ -1,18 +1,38 @@
 {
+  "id": "/",
   "name": "Vad kostar soppan?",
   "short_name": "Soppan",
   "description": "Se vad en liter bensin eller diesel faktiskt består av.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#090f1d",
   "theme_color": "#0a0f1d",
   "lang": "sv",
+  "categories": ["finance", "utilities", "education"],
+  "shortcuts": [
+    {
+      "name": "Literlabbet",
+      "short_name": "Literpris",
+      "url": "/#literpris"
+    },
+    {
+      "name": "Länsjämförelse",
+      "short_name": "Län",
+      "url": "/#lan"
+    },
+    {
+      "name": "Politiklabbet",
+      "short_name": "Politik",
+      "url": "/#politik"
+    }
+  ],
   "icons": [
     {
       "src": "/favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any"
+      "purpose": "any maskable"
     }
   ]
 }
