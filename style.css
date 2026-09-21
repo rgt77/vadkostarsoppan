@@ -3337,3 +3337,105 @@ body.expert-mode .simple-explainer { display: none; }
 @media (max-width: 620px) {
   .simple-explainer { grid-template-columns: 1fr; }
 }
+
+
+/* Steps 251-300: settings dialog */
+.settings-dialog {
+  width: min(700px, calc(100vw - 28px));
+  max-height: min(820px, calc(100vh - 28px));
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 22px;
+  color: var(--text);
+  background: var(--surface);
+  box-shadow: 0 30px 100px rgba(0,0,0,.48);
+}
+.settings-dialog::backdrop {
+  background: rgba(3,7,15,.72);
+  backdrop-filter: blur(8px);
+}
+.settings-dialog form { padding: 24px; }
+.settings-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+}
+.settings-head h2 { font-size: clamp(30px,5vw,44px); }
+.dialog-close {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 22px;
+}
+.settings-grid {
+  display: grid;
+  gap: 8px;
+  margin-top: 20px;
+}
+.setting-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items: center;
+  min-height: 66px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255,255,255,.015);
+}
+.setting-row > span {
+  display: grid;
+  gap: 4px;
+}
+.setting-row strong { font-size: 11px; }
+.setting-row small {
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.45;
+}
+.setting-row input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+}
+.setting-row select {
+  min-height: 38px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--text);
+  background: var(--surface-2);
+}
+.settings-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 18px;
+}
+.settings-actions button {
+  min-height: 40px;
+  padding: 0 13px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--text);
+  background: transparent;
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 850;
+}
+.settings-actions .primary {
+  color: #111722;
+  border-color: var(--accent);
+  background: var(--accent);
+}
+@media (max-width: 520px) {
+  .setting-row { grid-template-columns: 1fr; }
+  .settings-actions { flex-direction: column; }
+}
