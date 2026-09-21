@@ -92,6 +92,15 @@ const els = {
   meterDeltaLabel: document.querySelector("#meterDeltaLabel"),
   presetButtons: [...document.querySelectorAll("[data-preset]")],
   useWeeklyReference: document.querySelector("#useWeeklyReference"),
+  useNationalAverage: document.querySelector("#useNationalAverage"),
+  priceNudges: [...document.querySelectorAll("[data-price-nudge]")],
+  priceStory: document.querySelector("#priceStory"),
+  duelWinner: document.querySelector("#duelWinner"),
+  duelMarket: document.querySelector("#duelMarket"),
+  duelTax: document.querySelector("#duelTax"),
+  duelMarketLabel: document.querySelector("#duelMarketLabel"),
+  duelTaxLabel: document.querySelector("#duelTaxLabel"),
+  hundredKronaAnalogy: document.querySelector("#hundredKronaAnalogy"),
   weeklyReferenceLabel: document.querySelector("#weeklyReferenceLabel"),
   weeklyPumpReference: document.querySelector("#weeklyPumpReference"),
   weeklyPumpDate: document.querySelector("#weeklyPumpDate"),
@@ -580,6 +589,38 @@ function updateQuickChips(parts) {
   if (els.chipVat) els.chipVat.textContent = fmt(vat) + " kr/l";
 }
 
+function updatePriceStory(price, marketBase, politicalDirect) {
+  if (!els.priceStory) return;
+  const county = countyEntry();
+  const localLabel = county?.id === "riket" ? "rikssnittet" : (county?.name || "valt län");
+  const taxPct = pct(politicalDirect, price);
+  const marketPct = pct(marketBase, price);
+  els.priceStory.textContent =
+    "I " + localLabel + " blir " + fmt(price) + " kr/l ungefär " +
+    fmt(marketBase) + " kr till marknad/kedja och " + fmt(politicalDirect) +
+    " kr till skatt + moms. Det motsvarar " + fmt(marketPct,1) + " % respektive " + fmt(taxPct,1) + " %.";
+}
+
+function updateDuel(price, marketBase, politicalDirect) {
+  const marketPct = pct(marketBase, price);
+  const taxPct = pct(politicalDirect, price);
+  if (els.duelMarket) els.duelMarket.style.width = marketPct + "%";
+  if (els.duelTax) els.duelTax.style.width = taxPct + "%";
+  if (els.duelMarketLabel) els.duelMarketLabel.textContent = fmt(marketPct,1) + " %";
+  if (els.duelTaxLabel) els.duelTaxLabel.textContent = fmt(taxPct,1) + " %";
+  if (els.duelWinner) {
+    const gap = Math.abs(marketPct - taxPct);
+    els.duelWinner.textContent = gap < .5
+      ? "Nästan jämnt"
+      : marketPct > taxPct ? "Marknad/kedja är större" : "Skatt + moms är större";
+  }
+  if (els.hundredKronaAnalogy) {
+    els.hundredKronaAnalogy.textContent =
+      "Av varje 100 kr vid pumpen motsvarar cirka " + fmt(taxPct,0) +
+      " kr skatt + moms och " + fmt(marketPct,0) + " kr marknad/kedja.";
+  }
+}
+
 function updateReceipt(price, parts) {
   const [marketBase, energy, carbon, vat] = parts;
   if (els.receiptFuel) els.receiptFuel.textContent = fuelData[selectedFuel]?.label || "Bränsle";
@@ -863,6 +904,8 @@ function update() {
   updateGauge(price, parts);
   updateQuickChips(parts);
   updateReceipt(price, parts);
+  updatePriceStory(price, marketBase, politicalDirect);
+  updateDuel(price, marketBase, politicalDirect);
 
   const colors = ["var(--other)", "var(--energy)", "var(--carbon)", "var(--vat)"];
   let cursor = 0;
@@ -1032,6 +1075,26 @@ els.pumpPrice.addEventListener("input", () => {
   update();
 });
 els.pumpPrice.addEventListener("blur", normalizePumpPrice);
+
+els.useNationalAverage?.addEventListener("click", () => {
+  selectedCounty = "riket";
+  priceMode = "county";
+  if (els.countySelect) els.countySelect.value = "riket";
+  applyCountyPrice({ announceChange: true });
+});
+
+els.priceNudges.forEach(button => {
+  button.addEventListener("click", () => {
+    const current = getPrice();
+    const delta = Number(button.dataset.priceNudge);
+    if (current === null || !Number.isFinite(delta)) return;
+    const next = clamp(current + delta, 1, 100);
+    priceMode = "manual";
+    els.pumpPrice.value = fmt(next);
+    update();
+    announce("Pumppriset justerades till " + fmt(next) + " kronor per liter.");
+  });
+});
 
 els.useWeeklyReference?.addEventListener("click", () => {
   const reference = weeklyReferenceForFuel();
