@@ -71,3 +71,18 @@ Skattesatserna i nuvarande version gäller perioden 1 juli–30 september 2026.
 - Moms: 25 %.
 
 Senast faktakontrollerad i applikationens datalager: 21 september 2026.
+
+
+## Marknadsdatalager – fas 2
+
+Marknadsdelen har nu ett separat lager i `market-data.js`.
+
+Nuvarande referenser:
+- svensk veckoreferens för pumppris från EU-kommissionens Weekly Oil Bulletin,
+- Brent-råolja från U.S. EIA,
+- USD/SEK för valutaomräkning,
+- beräknad råoljeekvivalent i SEK/l.
+
+Råoljeekvivalenten är **inte** samma sak som produktkostnaden för färdig bensin eller diesel. Den visas endast som marknadsdrivare. Skillnaden mellan råoljeekvivalent och marknad/kedja får inte beskrivas som vinst eftersom den även innehåller raffinering, produktpremier, biodrivmedel, import, terminal, logistik, station och marginaler.
+
+`data-sources.json` fungerar som källregister och anger även vilka datakällor som fortfarande behöver anskaffas för att hela marknadsdelen ska kunna delas upp.
