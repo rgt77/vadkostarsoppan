@@ -11,6 +11,8 @@ let recentCounties = [];
 let partyFilter = "all";
 let compareA = "stockholm";
 let compareB = "ostergotland";
+let sourceRegistry = null;
+let sourceFilter = "all";
 
 const els = {
   pumpPrice: document.querySelector("#pumpPrice"),
@@ -105,6 +107,11 @@ const els = {
   dataHealthDetail: document.querySelector("#dataHealthDetail"),
   dataHealthDot: document.querySelector("#dataHealthDot"),
   appVersion: document.querySelector("#appVersion"),
+  registryList: document.querySelector("#registryList"),
+  registryPlanned: document.querySelector("#registryPlanned"),
+  registryCount: document.querySelector("#registryCount"),
+  registryStatus: document.querySelector("#registryStatus"),
+  registryFilters: [...document.querySelectorAll("[data-source-filter]")],
   welcomeDialog: document.querySelector("#welcomeDialog"),
   welcomeStart: document.querySelector("#welcomeStart"),
   welcomeSkip: document.querySelector("#welcomeSkip"),
@@ -482,6 +489,70 @@ function applySnapshot(snap) {
   update();
   showToast("Sparat läge öppnat.");
   document.querySelector("#literpris")?.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function sourceTypeLabel(type) {
+  return {
+    official: "OFFICIELL",
+    derived_from_official: "HÄRLEDD",
+    community_reported_secondary: "COMMUNITY"
+  }[type] || String(type || "KÄLLA").toUpperCase();
+}
+
+function renderSourceRegistry() {
+  if (!els.registryList) return;
+  const sources = Array.isArray(sourceRegistry?.sources) ? sourceRegistry.sources : [];
+  const planned = Array.isArray(sourceRegistry?.planned_sources) ? sourceRegistry.planned_sources : [];
+  const visible = sourceFilter === "all" ? sources : sources.filter(source => source.authority === sourceFilter);
+
+  els.registryList.innerHTML = "";
+  visible.forEach(source => {
+    const card = document.createElement("article");
+    card.className = "registry-card";
+    card.innerHTML = `
+      <div class="registry-card-top">
+        <span class="registry-type ${source.authority || ""}">${sourceTypeLabel(source.authority)}</span>
+        <small>${source.update_frequency || "—"}</small>
+      </div>
+      <strong>${source.name || source.id}</strong>
+      <p>Roll: ${String(source.role || "—").replaceAll("_"," ")}</p>
+      ${source.note ? "<p>"+source.note+"</p>" : ""}
+      <a href="${source.url}" target="_blank" rel="noopener">Öppna källa ↗</a>
+    `;
+    els.registryList.appendChild(card);
+  });
+
+  if (!visible.length) {
+    const empty = document.createElement("div");
+    empty.className = "registry-empty";
+    empty.textContent = "Inga källor i det här filtret.";
+    els.registryList.appendChild(empty);
+  }
+
+  if (els.registryPlanned) {
+    els.registryPlanned.innerHTML = "";
+    planned.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "registry-gap";
+      div.innerHTML = "<strong>" + String(item.role || "Datakälla").replaceAll("_"," ") + "</strong><br>" + (item.note || "");
+      els.registryPlanned.appendChild(div);
+    });
+  }
+  if (els.registryCount) els.registryCount.textContent = sources.length + " källor";
+  if (els.registryStatus) els.registryStatus.textContent = sources.length ? "Register laddat" : "Register saknas";
+}
+
+async function loadSourceRegistry() {
+  if (!els.registryList) return;
+  try {
+    const response = await fetch("/data-sources.json", {cache:"no-store"});
+    if (!response.ok) throw new Error("HTTP " + response.status);
+    sourceRegistry = await response.json();
+    renderSourceRegistry();
+  } catch {
+    if (els.registryStatus) els.registryStatus.textContent = "Kunde inte ladda register";
+    if (els.registryList) els.registryList.innerHTML = '<div class="registry-empty">Källregistret kunde inte laddas just nu.</div>';
+  }
 }
 
 function validPrice(value) {
@@ -1708,6 +1779,18 @@ bindPair(els.carbonSlider, els.carbonNumber);
 bindPair(els.vatSlider, els.vatNumber);
 bindPair(els.regulatorySlider, els.regulatoryNumber);
 
+els.registryFilters.forEach(button => {
+  button.addEventListener("click", () => {
+    sourceFilter = button.dataset.sourceFilter || "all";
+    els.registryFilters.forEach(item => {
+      const active = item === button;
+      item.classList.toggle("active", active);
+      item.setAttribute("aria-pressed", String(active));
+    });
+    renderSourceRegistry();
+  });
+});
+
 els.partyFilterButtons.forEach(button => {
   button.addEventListener("click", () => {
     partyFilter = button.dataset.partyFilter || "all";
@@ -1863,6 +1946,7 @@ validateDatasets();
 buildPartyPills();
 setupNavObserver();
 maybeShowWelcome();
+loadSourceRegistry();
 updateMarketReferences();
 updateHeroReferenceChips();
 update();
