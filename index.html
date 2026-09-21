@@ -111,6 +111,28 @@
         </div>
       </div>
 
+      <div class="county-panel">
+        <div class="county-copy">
+          <span class="mini-label">VAR TANKAR DU?</span>
+          <strong>Välj län</strong>
+          <small>Vi använder länets aktuella snittpris som utgångspunkt. Du kan fortfarande skriva in ett eget stationspris.</small>
+        </div>
+        <div class="county-control">
+          <select id="countySelect" aria-label="Välj län">
+            <option value="riket">Hela Sverige</option>
+          </select>
+          <div class="county-stat">
+            <span id="countyPriceLabel">Rikssnitt</span>
+            <strong id="countyPrice">— kr/l</strong>
+            <small id="countyDifference">—</small>
+          </div>
+        </div>
+        <div class="county-actions">
+          <button id="useCountyAverage" type="button">Använd länssnittet</button>
+          <a id="countySource" href="https://www.carculated.se/bensinpriser" target="_blank" rel="noopener">Priskälla ↗</a>
+        </div>
+      </div>
+
       <div class="input-grid">
         <label class="input-card" for="pumpPrice">
           <span>Pumppris per liter</span>
@@ -118,7 +140,7 @@
             <input id="pumpPrice" inputmode="decimal" autocomplete="off" value="17,09" aria-describedby="priceHelp priceError">
             <strong>kr/l</strong>
           </div>
-          <small id="priceHelp">Skriv priset du vill analysera. Alla resultat nedan är per liter.</small>
+          <small id="priceHelp">Skriv priset du vill analysera, eller använd länssnittet ovan. Alla resultat nedan är per liter.</small>
           <div class="input-actions">
             <button class="reference-button" id="useWeeklyReference" type="button">Använd veckoreferens</button>
             <span id="weeklyReferenceLabel">—</span>
@@ -583,6 +605,7 @@
           <a href="https://www.skatteverket.se/privat/skatter/beloppochprocent/2026.4.1522bf3f19aea8075ba21.html" target="_blank" rel="noopener">Skatteverket – moms 2026 ↗</a>
           <a href="https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en" target="_blank" rel="noopener">EU-kommissionen – Weekly Oil Bulletin ↗</a>
           <a href="https://www.eia.gov/dnav/pet/PET_PRI_SPT_S1_D.htm" target="_blank" rel="noopener">EIA – Brent spotpris ↗</a>
+          <a href="https://www.carculated.se/bensinpriser" target="_blank" rel="noopener">Länssnitt – rapporterade stationspriser ↗</a>
         </div>
         <p class="verified">Dataversion: <span id="dataVersion">2026-09-21</span> · Senast faktakontrollerad: <span id="factCheckDate">21 september 2026</span>.</p>
       </div>
@@ -598,6 +621,7 @@
 
   <script src="/fuel-data.js"></script>
   <script src="/market-data.js"></script>
+  <script src="/county-data.js"></script>
   <script src="/policy-data.js"></script>
   <script src="/script.js"></script>
 </body>
