@@ -1,5 +1,6 @@
 const fuelData = window.FUEL_DATA || {};
 const siteData = window.SITE_DATA || {};
+const marketData = window.MARKET_DATA || {};
 const politicalScenarios = window.POLICY_SCENARIOS || {};
 
 let selectedFuel = siteData.defaultFuel || "petrol";
@@ -27,6 +28,21 @@ const els = {
   dataVersion: document.querySelector("#dataVersion"),
   factCheckDate: document.querySelector("#factCheckDate"),
   chainTotal: document.querySelector("#chainTotal"),
+  useWeeklyReference: document.querySelector("#useWeeklyReference"),
+  weeklyReferenceLabel: document.querySelector("#weeklyReferenceLabel"),
+  weeklyPumpReference: document.querySelector("#weeklyPumpReference"),
+  weeklyPumpDate: document.querySelector("#weeklyPumpDate"),
+  weeklyPumpSource: document.querySelector("#weeklyPumpSource"),
+  brentPrice: document.querySelector("#brentPrice"),
+  brentDate: document.querySelector("#brentDate"),
+  brentSource: document.querySelector("#brentSource"),
+  usdSek: document.querySelector("#usdSek"),
+  fxDate: document.querySelector("#fxDate"),
+  fxSource: document.querySelector("#fxSource"),
+  crudeSekPerLiter: document.querySelector("#crudeSekPerLiter"),
+  bridgePump: document.querySelector("#bridgePump"),
+  bridgeMarket: document.querySelector("#bridgeMarket"),
+  bridgeCrude: document.querySelector("#bridgeCrude"),
   tabs: [...document.querySelectorAll(".fuel-tab")],
 
   partyScenario: document.querySelector("#partyScenario"),
@@ -128,6 +144,50 @@ function getReference(price) {
     marketBase,
     politicalDirect: vat + excise
   };
+}
+
+function weeklyReferenceForFuel() {
+  const weekly = marketData.weeklyReference || {};
+  return selectedFuel === "diesel" ? weekly.diesel : weekly.petrol;
+}
+
+function crudeEquivalentSekPerLiter() {
+  const brent = marketData.brent?.usdPerBarrel;
+  const usdSek = marketData.fx?.usdSek;
+  const liters = marketData.constants?.litersPerBarrel;
+  if (![brent, usdSek, liters].every(Number.isFinite) || liters <= 0) return null;
+  return brent * usdSek / liters;
+}
+
+function updateMarketReferences() {
+  const weeklyPrice = weeklyReferenceForFuel();
+  const weekly = marketData.weeklyReference || {};
+  const brent = marketData.brent || {};
+  const fx = marketData.fx || {};
+  const crudeSek = crudeEquivalentSekPerLiter();
+
+  if (els.weeklyReferenceLabel) {
+    els.weeklyReferenceLabel.textContent = Number.isFinite(weeklyPrice)
+      ? fmt(weeklyPrice) + " kr/l · " + (weekly.asOf || "")
+      : "Referens saknas";
+  }
+  if (els.weeklyPumpReference) els.weeklyPumpReference.textContent = Number.isFinite(weeklyPrice) ? fmt(weeklyPrice) + " kr/l" : "—";
+  if (els.weeklyPumpDate) els.weeklyPumpDate.textContent = weekly.asOf || "—";
+  if (els.weeklyPumpSource && weekly.source) els.weeklyPumpSource.href = weekly.source;
+
+  if (els.brentPrice) els.brentPrice.textContent = Number.isFinite(brent.usdPerBarrel) ? fmt(brent.usdPerBarrel) + " USD/fat" : "—";
+  if (els.brentDate) els.brentDate.textContent = brent.asOf || "—";
+  if (els.brentSource && brent.source) els.brentSource.href = brent.source;
+
+  if (els.usdSek) els.usdSek.textContent = Number.isFinite(fx.usdSek) ? fmt(fx.usdSek, 4) + " SEK/USD" : "—";
+  if (els.fxDate) els.fxDate.textContent = fx.asOf || "—";
+  if (els.fxSource && fx.source) els.fxSource.href = fx.source;
+
+  if (els.crudeSekPerLiter) els.crudeSekPerLiter.textContent = crudeSek === null ? "—" : fmt(crudeSek) + " kr/l";
+  if (els.bridgePump) els.bridgePump.textContent = Number.isFinite(weeklyPrice) ? fmt(weeklyPrice) + " kr/l" : "—";
+  if (els.bridgeCrude) els.bridgeCrude.textContent = crudeSek === null ? "—" : fmt(crudeSek) + " kr/l";
+
+  return { weeklyPrice, crudeSek };
 }
 
 function setBar(parts, total) {
@@ -301,6 +361,16 @@ function update() {
   els.politicalSharePct.textContent = fmt(taxPct, 1) + " % av pumppriset";
   els.marketBaseKr.textContent = fmt(marketBase) + " kr/l";
 
+  const marketRefs = updateMarketReferences();
+  if (els.bridgeMarket) {
+    if (Number.isFinite(marketRefs.weeklyPrice)) {
+      const weeklyReference = getReference(marketRefs.weeklyPrice);
+      els.bridgeMarket.textContent = fmt(weeklyReference.marketBase) + " kr/l";
+    } else {
+      els.bridgeMarket.textContent = "—";
+    }
+  }
+
   const parts = [marketBase, energy, carbon, vat];
   const colors = ["var(--other)", "var(--energy)", "var(--carbon)", "var(--vat)"];
   let cursor = 0;
@@ -406,6 +476,7 @@ els.tabs.forEach(tab => {
     selectedFuel = tab.dataset.fuel;
     setFuelTabs();
     syncCustomControlsFromFuel();
+    updateMarketReferences();
     update();
     announce("Bränsle ändrat till " + fuelData[selectedFuel].label + ".");
   });
@@ -424,6 +495,14 @@ els.tabs.forEach(tab => {
 
 els.pumpPrice.addEventListener("input", update);
 els.pumpPrice.addEventListener("blur", normalizePumpPrice);
+
+els.useWeeklyReference?.addEventListener("click", () => {
+  const reference = weeklyReferenceForFuel();
+  if (!Number.isFinite(reference)) return;
+  els.pumpPrice.value = fmt(reference);
+  update();
+  announce("Veckoreferensen " + fmt(reference) + " kronor per liter används för " + fuelData[selectedFuel].label + ".");
+});
 
 if (els.partyScenario) {
   els.partyScenario.addEventListener("change", () => {
@@ -485,4 +564,5 @@ if (els.dataVersion) els.dataVersion.textContent = siteData.dataVersion || "—"
 if (els.factCheckDate) els.factCheckDate.textContent = siteData.lastFactCheck || "—";
 
 setupNavObserver();
+updateMarketReferences();
 update();
