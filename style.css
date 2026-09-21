@@ -4294,3 +4294,18 @@ body.expert-mode .simple-explainer { display: none; }
   .dashboard-grid { grid-template-columns: 1fr; }
   .dashboard-score { justify-items: start; }
 }
+
+
+/* Steps 751-800: diagnostics detail */
+.diagnostics-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.diagnostics-head strong { margin: 0; }
+.diagnostics-head span {
+  color: var(--muted);
+  font-size: 8px;
+}
