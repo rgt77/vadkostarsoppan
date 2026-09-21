@@ -22,6 +22,7 @@ window.FUEL_DATA = {
 };
 
 window.SITE_DATA = {
+  appVersion: "0.5.0",
   dataVersion: "2026-09-21",
   lastFactCheck: "21 september 2026",
   defaultFuel: "petrol",
