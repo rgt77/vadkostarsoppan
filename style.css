@@ -3655,3 +3655,56 @@ body.expert-mode .simple-explainer { display: none; }
   .glossary-heading,
   .glossary-grid { grid-template-columns: 1fr; }
 }
+
+
+/* Steps 401-450: favorite counties */
+.county-list-head > div {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.favorite-star {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+}
+.favorite-star.active {
+  color: #111722;
+  border-color: var(--accent);
+  background: var(--accent);
+}
+.county-row.has-star {
+  grid-template-columns: 30px 34px minmax(150px,.8fr) minmax(220px,1.4fr) 90px 96px;
+}
+.county-favorite-empty {
+  color: var(--muted);
+  font-size: 9px;
+}
+@media (max-width: 860px) {
+  .county-row.has-star {
+    grid-template-columns: 28px 28px minmax(130px,1fr) 84px 80px;
+  }
+  .county-row.has-star .county-row-bar { display: none; }
+}
+@media (max-width: 620px) {
+  .county-row.has-star {
+    grid-template-columns: 24px 28px minmax(0,1fr) 80px;
+  }
+  .county-row.has-star .county-row-delta {
+    grid-column: 3 / -1;
+  }
+  .county-list-head {
+    align-items: flex-start;
+  }
+  .county-list-head > div {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
