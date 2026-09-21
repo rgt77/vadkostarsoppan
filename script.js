@@ -75,6 +75,10 @@ const els = {
   dataHealthDetail: document.querySelector("#dataHealthDetail"),
   dataHealthDot: document.querySelector("#dataHealthDot"),
   appVersion: document.querySelector("#appVersion"),
+  welcomeDialog: document.querySelector("#welcomeDialog"),
+  welcomeStart: document.querySelector("#welcomeStart"),
+  welcomeSkip: document.querySelector("#welcomeSkip"),
+  openTour: document.querySelector("#openTour"),
   heroPetrolPrice: document.querySelector("#heroPetrolPrice"),
   heroDieselPrice: document.querySelector("#heroDieselPrice"),
   heroFuelChips: [...document.querySelectorAll("[data-hero-fuel]")],
@@ -207,6 +211,7 @@ function signed(value, suffix = " kr/l") {
 }
 
 const STORAGE_KEY = "vadkostarsoppan.preferences.v1";
+const TOUR_KEY = "vadkostarsoppan.tourSeen.v1";
 
 function loadSavedPreferences() {
   try {
@@ -329,6 +334,25 @@ function validateDatasets() {
 
   if (els.countyCoverage) els.countyCoverage.textContent = counties.length + " / 21 län";
   return errors;
+}
+
+function maybeShowWelcome() {
+  if (!els.welcomeDialog || typeof els.welcomeDialog.showModal !== "function") return;
+  try {
+    if (localStorage.getItem(TOUR_KEY) === "1") return;
+  } catch {}
+  requestAnimationFrame(() => els.welcomeDialog.showModal());
+}
+
+function closeWelcome({ remember = false, jump = false } = {}) {
+  if (remember) {
+    try { localStorage.setItem(TOUR_KEY, "1"); } catch {}
+  }
+  if (els.welcomeDialog?.open) els.welcomeDialog.close();
+  if (jump) {
+    document.querySelector("#literpris")?.scrollIntoView({behavior:"smooth",block:"start"});
+    setTimeout(() => els.countySelect?.focus(), 350);
+  }
 }
 
 function validPrice(value) {
@@ -1286,6 +1310,22 @@ document.addEventListener("keydown", event => {
   }
 });
 
+els.openTour?.addEventListener("click", () => {
+  if (typeof els.welcomeDialog?.showModal === "function" && !els.welcomeDialog.open) {
+    els.welcomeDialog.showModal();
+  }
+});
+
+els.welcomeStart?.addEventListener("click", event => {
+  event.preventDefault();
+  closeWelcome({ remember: true, jump: true });
+});
+
+els.welcomeSkip?.addEventListener("click", event => {
+  event.preventDefault();
+  closeWelcome({ remember: true, jump: false });
+});
+
 els.clearPreferences?.addEventListener("click", () => {
   try { localStorage.removeItem(STORAGE_KEY); } catch {}
   recentCounties = [];
@@ -1441,6 +1481,7 @@ validateDatasets();
 
 buildPartyPills();
 setupNavObserver();
+maybeShowWelcome();
 updateMarketReferences();
 updateHeroReferenceChips();
 update();
