@@ -7,6 +7,8 @@ let selectedFuel = siteData.defaultFuel || "petrol";
 
 const els = {
   pumpPrice: document.querySelector("#pumpPrice"),
+  headerFuel: document.querySelector("#headerFuel"),
+  headerPrice: document.querySelector("#headerPrice"),
   priceError: document.querySelector("#priceError"),
   totalPrice: document.querySelector("#totalPrice"),
   energyTax: document.querySelector("#energyTax"),
@@ -136,6 +138,13 @@ function signed(value, suffix = " kr/l") {
 
 function validPrice(value) {
   return Number.isFinite(value) && value >= 1 && value <= 100;
+}
+
+function popValue(node) {
+  if (!node) return;
+  node.classList.remove("value-pop");
+  void node.offsetWidth;
+  node.classList.add("value-pop");
 }
 
 function announce(message) {
@@ -443,6 +452,7 @@ function updatePoliticalScenario(price) {
   }
 
   els.scenarioPrice.textContent = result === null ? "Ej exakt beräkningsbart" : fmt(result) + " kr/l";
+  if (result !== null) popValue(els.scenarioPrice);
   els.compareReference.textContent = fmt(price) + " kr/l";
   els.compareScenario.textContent = result === null ? "Ej beräkningsbart" : fmt(result) + " kr/l";
   updateScenarioMeter(delta);
@@ -480,6 +490,8 @@ function update() {
   const taxPct = pct(politicalDirect, price);
 
   els.totalPrice.textContent = fmt(price);
+  if (els.headerFuel) els.headerFuel.textContent = fuel.label;
+  if (els.headerPrice) els.headerPrice.textContent = fmt(price) + " kr/l";
   els.energyTax.textContent = fmt(energy) + " kr";
   els.carbonTax.textContent = fmt(carbon) + " kr";
   els.vat.textContent = fmt(vat) + " kr";
@@ -492,6 +504,8 @@ function update() {
 
   els.taxShare.textContent = fmt(taxPct, 1) + " % av pumppriset";
   els.taxPerLiter.textContent = fmt(politicalDirect) + " kr/l";
+  popValue(els.totalPrice);
+  popValue(els.taxPerLiter);
   els.vatLabel.textContent = fmt(fuel.vatRate, 0) + " % på priset före moms";
   els.periodText.textContent = "Skattesatserna på sidan gäller " + fuel.period + ".";
   els.dataPeriod.textContent = "Skattesatser: " + fuel.period;
