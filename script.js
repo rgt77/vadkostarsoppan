@@ -63,6 +63,13 @@ const els = {
   targetMechanicalFloor: document.querySelector("#targetMechanicalFloor"),
   targetMessage: document.querySelector("#targetMessage"),
   targetPresets: [...document.querySelectorAll("[data-target-delta]")],
+  curveCurrentPrice: document.querySelector("#curveCurrentPrice"),
+  curveCurrentTax: document.querySelector("#curveCurrentTax"),
+  curveCurrentShare: document.querySelector("#curveCurrentShare"),
+  curveExcise: document.querySelector("#curveExcise"),
+  taxSharePolyline: document.querySelector("#taxSharePolyline"),
+  taxShareDot: document.querySelector("#taxShareDot"),
+  curveDotLabel: document.querySelector("#curveDotLabel"),
   settingsOpen: document.querySelector("#settingsOpen"),
   commandOpen: document.querySelector("#commandOpen"),
   commandDialog: document.querySelector("#commandDialog"),
@@ -1002,6 +1009,52 @@ function updateTargetSolver(price, reference) {
   if (Math.abs(Number(els.targetPriceSlider.value) - sliderValue) > .05) {
     els.targetPriceSlider.value = sliderValue;
   }
+}
+
+function taxShareAtPumpPrice(price, fuel) {
+  if (!Number.isFinite(price) || price <= 0 || !fuel) return null;
+  const vatRate = fuel.vatRate / 100;
+  const beforeVat = price / (1 + vatRate);
+  const vat = price - beforeVat;
+  const excise = fuel.energyTax + fuel.carbonTax;
+  return {
+    vat,
+    excise,
+    total: vat + excise,
+    share: (vat + excise) / price * 100
+  };
+}
+
+function curvePoint(price, share) {
+  const x = 50 + ((price - 10) / 25) * 685;
+  const y = 220 - ((clamp(share,20,60) - 20) / 40) * 200;
+  return {x,y};
+}
+
+function updateTaxShareCurve(price, reference) {
+  if (!els.taxSharePolyline) return;
+  const points = [];
+  for (let p = 10; p <= 35.0001; p += .5) {
+    const stats = taxShareAtPumpPrice(p, reference.fuel);
+    if (!stats) continue;
+    const point = curvePoint(p, stats.share);
+    points.push(point.x.toFixed(1) + "," + point.y.toFixed(1));
+  }
+  els.taxSharePolyline.setAttribute("points", points.join(" "));
+
+  const current = taxShareAtPumpPrice(price, reference.fuel);
+  if (!current) return;
+  const point = curvePoint(clamp(price,10,35), current.share);
+  els.taxShareDot.setAttribute("cx", point.x.toFixed(1));
+  els.taxShareDot.setAttribute("cy", point.y.toFixed(1));
+  els.curveDotLabel.setAttribute("x", Math.min(690,point.x+10).toFixed(1));
+  els.curveDotLabel.setAttribute("y", Math.max(18,point.y-10).toFixed(1));
+  els.curveDotLabel.textContent = fmt(current.share,1) + " %";
+
+  if (els.curveCurrentPrice) els.curveCurrentPrice.textContent = fmt(price) + " kr/l";
+  if (els.curveCurrentTax) els.curveCurrentTax.textContent = fmt(current.total) + " kr/l";
+  if (els.curveCurrentShare) els.curveCurrentShare.textContent = fmt(current.share,1) + " %";
+  if (els.curveExcise) els.curveExcise.textContent = fmt(current.excise) + " kr/l";
 }
 
 function updateSimpleExplainer(price, marketBase, politicalDirect) {
@@ -2092,6 +2145,7 @@ function update() {
   updateSimpleExplainer(price, marketBase, politicalDirect);
   updateSensitivityLab(price, reference);
   updateTargetSolver(price, reference);
+  updateTaxShareCurve(price, reference);
 
   const colors = ["var(--other)", "var(--energy)", "var(--carbon)", "var(--vat)"];
   let cursor = 0;
