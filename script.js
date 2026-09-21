@@ -89,6 +89,8 @@ const els = {
   printReport: document.querySelector("#printReport"),
   settingsOpen: document.querySelector("#settingsOpen"),
   commandOpen: document.querySelector("#commandOpen"),
+  keyboardHelpOpen: document.querySelector("#keyboardHelpOpen"),
+  keyboardDialog: document.querySelector("#keyboardDialog"),
   commandDialog: document.querySelector("#commandDialog"),
   commandSearch: document.querySelector("#commandSearch"),
   commandList: document.querySelector("#commandList"),
@@ -2332,6 +2334,9 @@ els.backToTop?.addEventListener("click", () => {
   window.scrollTo({top:0,behavior:reducedMotion ? "auto" : "smooth"});
 });
 
+els.keyboardHelpOpen?.addEventListener("click", () => {
+  if (typeof els.keyboardDialog?.showModal === "function" && !els.keyboardDialog.open) els.keyboardDialog.showModal();
+});
 els.commandOpen?.addEventListener("click", openCommandPalette);
 els.commandSearch?.addEventListener("input", () => {
   commandActiveIndex = 0;
@@ -2492,6 +2497,11 @@ document.addEventListener("keydown", event => {
   }
 
   if (event.metaKey || event.ctrlKey || event.altKey) return;
+  if (event.key === "?" && !typing) {
+    event.preventDefault();
+    if (typeof els.keyboardDialog?.showModal === "function" && !els.keyboardDialog.open) els.keyboardDialog.showModal();
+    return;
+  }
   if (event.key === "/" && !typing) {
     event.preventDefault();
     els.countySearch?.focus();
