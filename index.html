@@ -59,6 +59,9 @@
       <span>Vad kostar soppan?</span>
     </a>
     <div class="header-tools">
+      <div class="network-pill" id="networkPill" aria-live="polite"><span></span><strong id="networkStatus">Online</strong></div>
+      <button class="install-button" id="installApp" type="button" hidden>Installera</button>
+      <button class="install-button update" id="updateApp" type="button" hidden>Ny version</button>
       <div class="header-live" aria-live="polite">
         <span id="headerFuel">Bensin 95</span>
         <strong id="headerPrice">— kr/l</strong>
@@ -984,7 +987,10 @@
           </div>
         </div>
         <p class="verified">Dataversion: <span id="dataVersion">2026-09-21</span> · Senast faktakontrollerad: <span id="factCheckDate">21 september 2026</span> · <span id="dataFreshness">—</span>.</p>
-        <button class="text-button" id="clearPreferences" type="button">Rensa sparade val</button>
+        <div class="data-actions">
+          <button class="text-button" id="clearPreferences" type="button">Rensa sparade val</button>
+          <button class="text-button" id="refreshData" type="button">↻ Kontrollera ny version</button>
+        </div>
         <details class="changelog">
           <summary>Vad har byggts i den här versionen?</summary>
           <p>Länsväljare och länsjämförelse, marknadsreferenser, politiska scenarier, delbart kvitto, mobilnavigation, tillgänglighetsläge, offline-stöd och sparade användarval.</p>
