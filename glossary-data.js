@@ -1,0 +1,22 @@
+window.GLOSSARY_DATA = [
+  { id:"pumppris", term:"Pumppris", short:"Priset du ser på stationens skylt, inklusive skatt och moms.", category:"pris" },
+  { id:"marknadsdel", term:"Marknad/kedja", short:"Resten av pumppriset före skatt: produkt, import, terminal, distribution, station och marginaler.", category:"kostnad" },
+  { id:"energiskatt", term:"Energiskatt", short:"En punktskatt som anges i kronor per liter för bränslet.", category:"skatt" },
+  { id:"koldioxidskatt", term:"Koldioxidskatt", short:"En punktskatt kopplad till bränslets fossila koldioxidinnehåll.", category:"skatt" },
+  { id:"moms", term:"Moms", short:"Mervärdesskatt. På sidan beräknas den på priset före moms.", category:"skatt" },
+  { id:"brent", term:"Brent", short:"En internationell referens för priset på råolja.", category:"marknad" },
+  { id:"raolja", term:"Råolja", short:"Obearbetad petroleum. Råolja är inte samma sak som färdig bensin eller diesel.", category:"marknad" },
+  { id:"usdsek", term:"USD/SEK", short:"Växelkursen mellan amerikanska dollar och svenska kronor.", category:"marknad" },
+  { id:"benchmark", term:"Benchmark", short:"En referenspunkt som används för att jämföra pris eller utveckling.", category:"metod" },
+  { id:"restpost", term:"Restpost", short:"Den del som återstår när verifierade poster har räknats bort. Den är inte automatiskt samma sak som vinst.", category:"metod" },
+  { id:"reduktionsplikt", term:"Reduktionsplikt", short:"Regler som styr hur utsläppsintensiteten från vissa drivmedel ska minska, bland annat genom förnybara komponenter.", category:"regel" },
+  { id:"biodrivmedel", term:"Biodrivmedel", short:"Drivmedel eller komponenter som produceras från biologiska råvaror.", category:"regel" },
+  { id:"distribution", term:"Distributionskedja", short:"Transport, terminal, lager, station och andra led mellan produkt och kund.", category:"kostnad" },
+  { id:"lanssnitt", term:"Länssnitt", short:"Genomsnittet av rapporterade stationspriser i ett län. Ett riktvärde, inte ett garanterat stationspris.", category:"pris" },
+  { id:"rikssnitt", term:"Rikssnitt", short:"Genomsnittlig prisreferens för hela Sverige i den använda datakällan.", category:"pris" },
+  { id:"percentil", term:"Percentil", short:"Visar hur ett värde ligger placerat i en fördelning. 50:e percentilen motsvarar medianen.", category:"statistik" },
+  { id:"median", term:"Median", short:"Mittenvärdet när alla länspriser sorteras från lägst till högst.", category:"statistik" },
+  { id:"iqr", term:"IQR", short:"Interkvartilavstånd: skillnaden mellan 75:e och 25:e percentilen. Används för att flagga statistiska avvikare.", category:"statistik" },
+  { id:"veckoreferens", term:"Veckoreferens", short:"En nationell prisreferens publicerad för en viss vecka. Den behöver inte matcha dagens pris på en viss station.", category:"pris" },
+  { id:"scenario", term:"Scenario", short:"En mekanisk beräkning som visar hur priset skulle förändras om vissa indata ändras.", category:"metod" }
+];
