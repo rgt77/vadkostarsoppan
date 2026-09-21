@@ -4,34 +4,56 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Vad kostar soppan? – Se skatt, moms och resten av literpriset</title>
-  <meta name="description" content="Se hur priset på bensin och diesel i Sverige fördelas på energiskatt, koldioxidskatt, moms och övriga kostnader.">
-  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="Bryt ner priset på bensin och diesel i Sverige i energiskatt, koldioxidskatt, moms och övrigt före skatt.">
+  <meta name="theme-color" content="#0a0f1d">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <div class="noise"></div>
+  <div class="noise" aria-hidden="true"></div>
 
   <header class="site-header">
-    <a class="brand" href="/" aria-label="Vad kostar soppan?">
+    <a class="brand" href="/" aria-label="Vad kostar soppan? startsida">
       <span class="brand-mark" aria-hidden="true">⛽</span>
       <span>Vad kostar soppan?</span>
     </a>
-    <a class="source-link" href="#kallor">Källor</a>
+    <nav class="nav" aria-label="Huvudmeny">
+      <a href="#kalkylator">Kalkylator</a>
+      <a href="#metod">Så räknar vi</a>
+      <a href="#kallor">Källor</a>
+    </nav>
   </header>
 
   <main>
     <section class="hero">
-      <p class="eyebrow">BRÄNSLEPRISET, UPPDELAT</p>
-      <h1>Vart går pengarna<br>när du tankar?</h1>
-      <p class="hero-copy">Skriv in priset vid pumpen så räknar vi ut hur mycket som är energiskatt, koldioxidskatt, moms och resten av literpriset.</p>
+      <div>
+        <div class="status-pill">
+          <span class="status-dot" aria-hidden="true"></span>
+          Skattesatser: 1 juli–30 september 2026
+        </div>
+        <p class="eyebrow">BRÄNSLEPRISET, UTAN KRÅNGEL</p>
+        <h1>Vad kostar<br><span>soppan?</span></h1>
+        <p class="hero-copy">Se hur mycket av literpriset som är skatt och moms – och hur mycket som återstår till själva bränslet, distributionen och marginalerna.</p>
+        <a class="hero-cta" href="#kalkylator">Räkna på ett pumppris <span>↓</span></a>
+      </div>
+
+      <aside class="hero-card" aria-label="Så fungerar sidan">
+        <span class="hero-card-kicker">TRANSPARENT BERÄKNING</span>
+        <strong>4 delar.</strong>
+        <ol>
+          <li><span>01</span>Energiskatt</li>
+          <li><span>02</span>Koldioxidskatt</li>
+          <li><span>03</span>Moms</li>
+          <li><span>04</span>Övrigt före skatt</li>
+        </ol>
+      </aside>
     </section>
 
-    <section class="calculator" aria-labelledby="calculator-title">
+    <section class="calculator" id="kalkylator" aria-labelledby="calculator-title">
       <div class="calculator-head">
         <div>
-          <p class="section-label">RÄKNA PÅ DITT PRIS</p>
-          <h2 id="calculator-title">Vad kostar en liter?</h2>
+          <p class="section-label">KALKYLATOR</p>
+          <h2 id="calculator-title">Bryt ner literpriset.</h2>
         </div>
 
         <div class="fuel-switch" role="tablist" aria-label="Bränsletyp">
@@ -40,103 +62,161 @@
         </div>
       </div>
 
-      <div class="price-panel">
-        <label for="pumpPrice">Pris vid pumpen</label>
-        <div class="price-input-wrap">
-          <input id="pumpPrice" inputmode="decimal" autocomplete="off" value="16,49" aria-describedby="priceHelp">
-          <span>kr/l</span>
-        </div>
-        <p id="priceHelp">Ändra till priset du ser på din station.</p>
+      <div class="input-grid">
+        <label class="input-card" for="pumpPrice">
+          <span>Pumppris</span>
+          <div class="input-line">
+            <input id="pumpPrice" inputmode="decimal" autocomplete="off" value="16,49" aria-describedby="priceHelp">
+            <strong>kr/l</strong>
+          </div>
+          <small id="priceHelp">Skriv priset du ser på stationen.</small>
+        </label>
+
+        <label class="input-card compact" for="tankLiters">
+          <span>Tankvolym</span>
+          <div class="input-line">
+            <input id="tankLiters" inputmode="decimal" autocomplete="off" value="50">
+            <strong>liter</strong>
+          </div>
+          <small>Används för tankkostnaden nedan.</small>
+        </label>
       </div>
 
-      <div class="breakdown-grid">
+      <div class="result-grid">
         <div class="visual-card">
-          <div class="donut-wrap">
-            <div class="donut" id="donut" aria-label="Fördelning av literpriset">
-              <div class="donut-center">
-                <span class="donut-label">Totalt</span>
-                <strong id="totalPrice">16,49</strong>
-                <span>kr/l</span>
-              </div>
+          <div class="donut" id="donut" aria-label="Fördelning av literpriset">
+            <div class="donut-center">
+              <span>Totalt</span>
+              <strong id="totalPrice">16,49</strong>
+              <small>kr/l</small>
             </div>
           </div>
-
           <div class="tax-callout">
             <span>Skatt + moms</span>
             <strong id="taxShare">—</strong>
-            <small>av priset vid pumpen</small>
+            <small id="taxPerLiter">— kr/l</small>
           </div>
         </div>
 
-        <div class="breakdown-list" id="breakdownList">
+        <div class="breakdown-card">
+          <div class="breakdown-header">
+            <span>Del av literpriset</span>
+            <span>kr/l</span>
+          </div>
+
           <article class="breakdown-row">
-            <div class="dot dot-energy"></div>
-            <div class="breakdown-text">
-              <span>Energiskatt</span>
-              <small>Fast skatt per liter</small>
+            <div class="swatch energy"></div>
+            <div>
+              <strong>Energiskatt</strong>
+              <small>Fast punktskatt</small>
             </div>
-            <strong id="energyTax">—</strong>
+            <div class="row-value">
+              <strong id="energyTax">—</strong>
+              <small id="energyPct">—</small>
+            </div>
           </article>
 
           <article class="breakdown-row">
-            <div class="dot dot-carbon"></div>
-            <div class="breakdown-text">
-              <span>Koldioxidskatt</span>
-              <small>Fast skatt per liter</small>
+            <div class="swatch carbon"></div>
+            <div>
+              <strong>Koldioxidskatt</strong>
+              <small>Fast punktskatt</small>
             </div>
-            <strong id="carbonTax">—</strong>
+            <div class="row-value">
+              <strong id="carbonTax">—</strong>
+              <small id="carbonPct">—</small>
+            </div>
           </article>
 
           <article class="breakdown-row">
-            <div class="dot dot-vat"></div>
-            <div class="breakdown-text">
-              <span>Moms</span>
-              <small>25 % moms = 20 % av priset inklusive moms</small>
+            <div class="swatch vat"></div>
+            <div>
+              <strong>Moms</strong>
+              <small>25 % på priset före moms</small>
             </div>
-            <strong id="vat">—</strong>
+            <div class="row-value">
+              <strong id="vat">—</strong>
+              <small id="vatPct">—</small>
+            </div>
           </article>
 
           <article class="breakdown-row">
-            <div class="dot dot-other"></div>
-            <div class="breakdown-text">
-              <span>Övrigt före skatt</span>
+            <div class="swatch other"></div>
+            <div>
+              <strong>Övrigt före skatt</strong>
               <small>Produkt, distribution, inblandning och marginaler m.m.</small>
             </div>
-            <strong id="other">—</strong>
+            <div class="row-value">
+              <strong id="other">—</strong>
+              <small id="otherPct">—</small>
+            </div>
           </article>
+        </div>
+      </div>
+
+      <div class="price-bar-wrap" aria-label="Visuell fördelning av literpriset">
+        <div class="price-bar" id="priceBar">
+          <span class="bar-energy"></span>
+          <span class="bar-carbon"></span>
+          <span class="bar-vat"></span>
+          <span class="bar-other"></span>
+        </div>
+        <div class="bar-caption">
+          <span>0 kr</span>
+          <span id="barTotal">16,49 kr/l</span>
         </div>
       </div>
 
       <div class="tank-card">
         <div>
-          <p class="section-label">EN HEL TANK</p>
-          <h3>Om du tankar 50 liter</h3>
+          <p class="section-label">EN TANK</p>
+          <h3><span id="tankLitersLabel">50</span> liter</h3>
         </div>
         <div class="tank-stats">
-          <div><span>Du betalar</span><strong id="tankTotal">—</strong></div>
-          <div><span>Skatt + moms</span><strong id="tankTax">—</strong></div>
+          <div>
+            <span>Du betalar</span>
+            <strong id="tankTotal">—</strong>
+          </div>
+          <div>
+            <span>Varav skatt + moms</span>
+            <strong id="tankTax">—</strong>
+          </div>
+          <div>
+            <span>Övrigt före skatt</span>
+            <strong id="tankOther">—</strong>
+          </div>
         </div>
       </div>
+
+      <p class="method-note">“Övrigt före skatt” är en restpost. Den är inte samma sak som drivmedelsbolagets inköpspris eller vinst.</p>
     </section>
 
-    <section class="explain">
-      <p class="section-label">SÅ RÄKNAR VI</p>
-      <h2>Priset är mer än bara bensin eller diesel.</h2>
+    <section class="explain" id="metod">
+      <div class="section-heading">
+        <p class="section-label">SÅ RÄKNAR VI</p>
+        <h2>Från pumppris till fyra delar.</h2>
+      </div>
+
       <div class="explain-grid">
         <article>
           <span class="step">01</span>
-          <h3>Pumppriset</h3>
-          <p>Du anger det pris per liter som visas på bensinstationen. Det är priset inklusive moms.</p>
+          <h3>Du anger pumppriset</h3>
+          <p>Priset du ser på stationens skylt är ett konsumentpris inklusive moms.</p>
         </article>
         <article>
           <span class="step">02</span>
-          <h3>Punktskatter</h3>
-          <p>Energi- och koldioxidskatt läggs på bränslet med fasta belopp per liter.</p>
+          <h3>Vi räknar bort moms</h3>
+          <p>Vid 25 procents moms utgör momsdelen 20 procent av ett pris som redan inkluderar moms.</p>
         </article>
         <article>
           <span class="step">03</span>
-          <h3>Moms</h3>
-          <p>Den generella momsen är 25 procent. I ett pris som redan innehåller moms motsvarar momsen 20 procent av slutpriset.</p>
+          <h3>Vi drar av punktskatterna</h3>
+          <p>Energi- och koldioxidskatten är fasta belopp per liter och beror på bränsletyp och period.</p>
+        </article>
+        <article>
+          <span class="step">04</span>
+          <h3>Resten visas separat</h3>
+          <p>Det som återstår före skatt samlar bland annat produktkostnad, logistik, inblandning och marginaler.</p>
         </article>
       </div>
     </section>
@@ -144,22 +224,23 @@
     <section class="source-section" id="kallor">
       <div>
         <p class="section-label">KÄLLOR & METOD</p>
-        <h2>Öppet med siffrorna.</h2>
+        <h2>Du ska kunna kontrollera siffrorna.</h2>
       </div>
       <div class="source-copy">
         <p id="periodText">Skattesatserna på sidan gäller 1 juli–30 september 2026.</p>
-        <p>För bensin används motorbensin miljöklass 1. För diesel används diesel miljöklass 1. “Övrigt före skatt” är en restpost och ska inte tolkas som oljebolagets rena inköpspris eller vinst.</p>
+        <p>För bensin används motorbensin miljöklass 1. För diesel används omärkt diesel miljöklass 1. Beloppen anges per liter även när Skatteverket publicerar dieselskatten per kubikmeter.</p>
         <div class="source-buttons">
           <a href="https://www.skatteverket.se/foretag/skatterochavdrag/punktskatter/energiskatter/skattpabransle.4.15532c7b1442f256bae5e56.html" target="_blank" rel="noopener">Skatteverket – skatt på bränsle ↗</a>
           <a href="https://www.skatteverket.se/privat/skatter/beloppochprocent/2026.4.1522bf3f19aea8075ba21.html" target="_blank" rel="noopener">Skatteverket – moms 2026 ↗</a>
         </div>
+        <p class="verified">Senast faktakontrollerad: 21 september 2026.</p>
       </div>
     </section>
   </main>
 
   <footer>
     <span>vadkostarsoppan.se</span>
-    <span>Ett oberoende hobbyprojekt för att göra literpriset lättare att förstå.</span>
+    <span>Ett oberoende hobbyprojekt för att göra svenska drivmedelspriser lättare att förstå.</span>
   </footer>
 
   <script src="/script.js"></script>
