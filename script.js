@@ -17,8 +17,6 @@ let selectedFuel = "petrol";
 
 const els = {
   pumpPrice: document.querySelector("#pumpPrice"),
-  tankLiters: document.querySelector("#tankLiters"),
-  tankLitersLabel: document.querySelector("#tankLitersLabel"),
   totalPrice: document.querySelector("#totalPrice"),
   energyTax: document.querySelector("#energyTax"),
   carbonTax: document.querySelector("#carbonTax"),
@@ -30,9 +28,6 @@ const els = {
   otherPct: document.querySelector("#otherPct"),
   taxShare: document.querySelector("#taxShare"),
   taxPerLiter: document.querySelector("#taxPerLiter"),
-  tankTotal: document.querySelector("#tankTotal"),
-  tankTax: document.querySelector("#tankTax"),
-  tankOther: document.querySelector("#tankOther"),
   donut: document.querySelector("#donut"),
   priceBar: document.querySelector("#priceBar"),
   barTotal: document.querySelector("#barTotal"),
@@ -63,8 +58,6 @@ function setBar(parts, total) {
 
 function update() {
   const price = parseNumber(els.pumpPrice.value);
-  const litersRaw = parseNumber(els.tankLiters.value);
-  const liters = Number.isFinite(litersRaw) && litersRaw > 0 ? litersRaw : 50;
   const fuel = fuelData[selectedFuel];
 
   if (!Number.isFinite(price) || price <= 0) return;
@@ -90,11 +83,6 @@ function update() {
 
   els.taxShare.textContent = fmt(taxPct, 1) + " %";
   els.taxPerLiter.textContent = fmt(totalTax) + " kr/l";
-
-  els.tankLitersLabel.textContent = fmt(liters, Number.isInteger(liters) ? 0 : 1);
-  els.tankTotal.textContent = fmt(price * liters) + " kr";
-  els.tankTax.textContent = fmt(totalTax * liters) + " kr";
-  els.tankOther.textContent = fmt(other * liters) + " kr";
 
   els.periodText.textContent = "Skattesatserna på sidan gäller " + fuel.period + ".";
   els.barTotal.textContent = fmt(price) + " kr/l";
@@ -138,18 +126,8 @@ els.tabs.forEach(tab => {
 });
 
 els.pumpPrice.addEventListener("input", update);
-els.tankLiters.addEventListener("input", update);
-
 els.pumpPrice.addEventListener("blur", () => {
   normalizeInput(els.pumpPrice, 2);
-  update();
-});
-
-els.tankLiters.addEventListener("blur", () => {
-  const value = parseNumber(els.tankLiters.value);
-  if (Number.isFinite(value) && value > 0) {
-    els.tankLiters.value = fmt(value, Number.isInteger(value) ? 0 : 1);
-  }
   update();
 });
 
