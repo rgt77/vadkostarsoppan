@@ -87,6 +87,10 @@ const els = {
   receiptCarbon: document.querySelector("#receiptCarbon"),
   receiptVat: document.querySelector("#receiptVat"),
   receiptTotal: document.querySelector("#receiptTotal"),
+  copyReceipt: document.querySelector("#copyReceipt"),
+  shareReceipt: document.querySelector("#shareReceipt"),
+  printReceipt: document.querySelector("#printReceipt"),
+  toast: document.querySelector("#toast"),
   partyPills: document.querySelector("#partyPills"),
   scenarioMeterDot: document.querySelector("#scenarioMeterDot"),
   meterDeltaLabel: document.querySelector("#meterDeltaLabel"),
@@ -266,6 +270,16 @@ function popValue(node) {
   node.classList.remove("value-pop");
   void node.offsetWidth;
   node.classList.add("value-pop");
+}
+
+let toastTimer = null;
+
+function showToast(message) {
+  if (!els.toast) return;
+  els.toast.textContent = message;
+  els.toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => els.toast.classList.remove("show"), 2200);
 }
 
 function announce(message) {
@@ -629,6 +643,24 @@ function updateReceipt(price, parts) {
   if (els.receiptCarbon) els.receiptCarbon.textContent = fmt(carbon) + " kr";
   if (els.receiptVat) els.receiptVat.textContent = fmt(vat) + " kr";
   if (els.receiptTotal) els.receiptTotal.textContent = fmt(price) + " kr";
+}
+
+function receiptSummaryText() {
+  const price = getPrice();
+  if (price === null) return "";
+  const ref = getReference(price);
+  const county = countyEntry();
+  return [
+    "Vad kostar soppan? – 1 liter",
+    (fuelData[selectedFuel]?.label || "Bränsle") + " · " + (county?.name || "Hela Sverige"),
+    "Pumppris: " + fmt(price) + " kr/l",
+    "Marknad/kedja: " + fmt(ref.marketBase) + " kr/l",
+    "Energiskatt: " + fmt(ref.fuel.energyTax) + " kr/l",
+    "Koldioxidskatt: " + fmt(ref.fuel.carbonTax) + " kr/l",
+    "Moms: " + fmt(ref.vat) + " kr/l",
+    "Skatt + moms: " + fmt(ref.politicalDirect) + " kr/l",
+    window.location.href
+  ].join("\n");
 }
 
 function updateScenarioMeter(delta) {
@@ -1191,12 +1223,53 @@ async function copyCurrentScenarioLink() {
     }
     els.copyStatus.textContent = "Länken är kopierad.";
     announce("Länken till scenariot är kopierad.");
+    showToast("Länken är kopierad.");
   } catch {
     els.copyStatus.textContent = "Kunde inte kopiera länken.";
   }
 }
 
 els.copyScenarioLink?.addEventListener("click", copyCurrentScenarioLink);
+
+els.copyReceipt?.addEventListener("click", async () => {
+  const textValue = receiptSummaryText();
+  if (!textValue) return;
+  try {
+    await navigator.clipboard.writeText(textValue);
+    showToast("Kvittot är kopierat.");
+    announce("Kvittot är kopierat.");
+  } catch {
+    showToast("Kunde inte kopiera kvittot.");
+  }
+});
+
+els.shareReceipt?.addEventListener("click", async () => {
+  const textValue = receiptSummaryText();
+  if (!textValue) return;
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: "Vad kostar soppan?",
+        text: textValue,
+        url: window.location.href
+      });
+      showToast("Delningsrutan öppnades.");
+      return;
+    } catch (error) {
+      if (error?.name === "AbortError") return;
+    }
+  }
+  try {
+    await navigator.clipboard.writeText(window.location.href);
+    showToast("Delning stöds inte här – länken kopierades.");
+  } catch {
+    showToast("Kunde inte dela.");
+  }
+});
+
+els.printReceipt?.addEventListener("click", () => {
+  window.print();
+});
 
 els.resetAll?.addEventListener("click", () => {
   selectedFuel = siteData.defaultFuel || "petrol";
