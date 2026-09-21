@@ -28,6 +28,31 @@ const els = {
   dataVersion: document.querySelector("#dataVersion"),
   factCheckDate: document.querySelector("#factCheckDate"),
   chainTotal: document.querySelector("#chainTotal"),
+  heroPetrolPrice: document.querySelector("#heroPetrolPrice"),
+  heroDieselPrice: document.querySelector("#heroDieselPrice"),
+  heroFuelChips: [...document.querySelectorAll("[data-hero-fuel]")],
+  gaugeFuelLabel: document.querySelector("#gaugeFuelLabel"),
+  gaugeTotal: document.querySelector("#gaugeTotal"),
+  gaugeMarket: document.querySelector("#gaugeMarket"),
+  gaugeEnergy: document.querySelector("#gaugeEnergy"),
+  gaugeCarbon: document.querySelector("#gaugeCarbon"),
+  gaugeVat: document.querySelector("#gaugeVat"),
+  chipMarket: document.querySelector("#chipMarket"),
+  chipEnergy: document.querySelector("#chipEnergy"),
+  chipCarbon: document.querySelector("#chipCarbon"),
+  chipVat: document.querySelector("#chipVat"),
+  costChips: [...document.querySelectorAll(".cost-chip")],
+  breakdownRows: [...document.querySelectorAll(".breakdown-row")],
+  receiptFuel: document.querySelector("#receiptFuel"),
+  receiptMarket: document.querySelector("#receiptMarket"),
+  receiptEnergy: document.querySelector("#receiptEnergy"),
+  receiptCarbon: document.querySelector("#receiptCarbon"),
+  receiptVat: document.querySelector("#receiptVat"),
+  receiptTotal: document.querySelector("#receiptTotal"),
+  partyPills: document.querySelector("#partyPills"),
+  scenarioMeterDot: document.querySelector("#scenarioMeterDot"),
+  meterDeltaLabel: document.querySelector("#meterDeltaLabel"),
+  presetButtons: [...document.querySelectorAll("[data-preset]")],
   useWeeklyReference: document.querySelector("#useWeeklyReference"),
   weeklyReferenceLabel: document.querySelector("#weeklyReferenceLabel"),
   weeklyPumpReference: document.querySelector("#weeklyPumpReference"),
@@ -191,6 +216,119 @@ function updateMarketReferences() {
   return { weeklyPrice, crudeSek };
 }
 
+function updateHeroReferenceChips() {
+  const weekly = marketData.weeklyReference || {};
+  if (els.heroPetrolPrice) els.heroPetrolPrice.textContent = Number.isFinite(weekly.petrol) ? fmt(weekly.petrol) + " kr/l" : "—";
+  if (els.heroDieselPrice) els.heroDieselPrice.textContent = Number.isFinite(weekly.diesel) ? fmt(weekly.diesel) + " kr/l" : "—";
+
+  els.heroFuelChips.forEach(chip => {
+    chip.classList.toggle("active", chip.dataset.heroFuel === selectedFuel);
+  });
+}
+
+function updateGauge(price, parts) {
+  const [marketBase, energy, carbon, vat] = parts;
+  const total = Math.max(price, .01);
+  const map = [
+    [els.gaugeMarket, marketBase],
+    [els.gaugeEnergy, energy],
+    [els.gaugeCarbon, carbon],
+    [els.gaugeVat, vat]
+  ];
+  map.forEach(([node, value]) => {
+    if (node) node.style.height = Math.max(0, pct(value, total)) + "%";
+  });
+  if (els.gaugeFuelLabel) els.gaugeFuelLabel.textContent = (fuelData[selectedFuel]?.label || "").toUpperCase();
+  if (els.gaugeTotal) els.gaugeTotal.textContent = fmt(price);
+}
+
+function updateQuickChips(parts) {
+  const [marketBase, energy, carbon, vat] = parts;
+  if (els.chipMarket) els.chipMarket.textContent = fmt(marketBase) + " kr/l";
+  if (els.chipEnergy) els.chipEnergy.textContent = fmt(energy) + " kr/l";
+  if (els.chipCarbon) els.chipCarbon.textContent = fmt(carbon) + " kr/l";
+  if (els.chipVat) els.chipVat.textContent = fmt(vat) + " kr/l";
+}
+
+function updateReceipt(price, parts) {
+  const [marketBase, energy, carbon, vat] = parts;
+  if (els.receiptFuel) els.receiptFuel.textContent = fuelData[selectedFuel]?.label || "Bränsle";
+  if (els.receiptMarket) els.receiptMarket.textContent = fmt(marketBase) + " kr";
+  if (els.receiptEnergy) els.receiptEnergy.textContent = fmt(energy) + " kr";
+  if (els.receiptCarbon) els.receiptCarbon.textContent = fmt(carbon) + " kr";
+  if (els.receiptVat) els.receiptVat.textContent = fmt(vat) + " kr";
+  if (els.receiptTotal) els.receiptTotal.textContent = fmt(price) + " kr";
+}
+
+function updateScenarioMeter(delta) {
+  if (!els.scenarioMeterDot || !els.meterDeltaLabel) return;
+  if (!Number.isFinite(delta)) {
+    els.scenarioMeterDot.style.left = "50%";
+    els.scenarioMeterDot.style.background = "var(--muted)";
+    els.meterDeltaLabel.textContent = "Ej kvantifierat";
+    return;
+  }
+  const limited = clamp(delta, -5, 5);
+  const left = 50 + limited / 5 * 45;
+  els.scenarioMeterDot.style.left = left + "%";
+  els.scenarioMeterDot.style.background = delta < -.005 ? "var(--good)" : delta > .005 ? "var(--carbon)" : "var(--text)";
+  els.meterDeltaLabel.textContent = Math.abs(delta) < .005 ? "Referens" : signed(delta);
+}
+
+function buildPartyPills() {
+  if (!els.partyPills) return;
+  els.partyPills.innerHTML = "";
+  const order = ["current","m","s","sd","c","v","kd","l","mp"];
+  order.forEach(key => {
+    const scenario = politicalScenarios[key];
+    if (!scenario) return;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "party-pill";
+    button.dataset.party = key;
+    button.textContent = key === "current" ? "Nuvarande" : scenario.name;
+    button.addEventListener("click", () => {
+      if (els.partyScenario) els.partyScenario.value = key;
+      syncPartyPills();
+      update();
+      announce("Politiskt scenario ändrat till " + scenario.name + ".");
+    });
+    els.partyPills.appendChild(button);
+  });
+  syncPartyPills();
+}
+
+function syncPartyPills() {
+  const selected = els.partyScenario?.value || "current";
+  els.partyPills?.querySelectorAll(".party-pill").forEach(button => {
+    const active = button.dataset.party === selected;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+}
+
+function focusCostPart(part) {
+  const indexMap = { market: 0, energy: 1, carbon: 2, vat: 3 };
+  const target = indexMap[part];
+
+  els.costChips.forEach(chip => chip.classList.toggle("active", chip.dataset.focusPart === part));
+  els.breakdownRows.forEach((row, index) => row.classList.toggle("is-focused", index === target));
+
+  [els.gaugeMarket, els.gaugeEnergy, els.gaugeCarbon, els.gaugeVat].forEach((slice, index) => {
+    if (!slice) return;
+    slice.classList.toggle("is-focused", index === target);
+    slice.classList.toggle("is-dimmed", index !== target);
+  });
+}
+
+function clearCostFocus() {
+  els.costChips.forEach(chip => chip.classList.remove("active"));
+  els.breakdownRows.forEach(row => row.classList.remove("is-focused"));
+  [els.gaugeMarket, els.gaugeEnergy, els.gaugeCarbon, els.gaugeVat].forEach(slice => {
+    slice?.classList.remove("is-focused","is-dimmed");
+  });
+}
+
 function setBar(parts, total) {
   if (!els.priceBar) return;
   const spans = [...els.priceBar.children];
@@ -307,6 +445,8 @@ function updatePoliticalScenario(price) {
   els.scenarioPrice.textContent = result === null ? "Ej exakt beräkningsbart" : fmt(result) + " kr/l";
   els.compareReference.textContent = fmt(price) + " kr/l";
   els.compareScenario.textContent = result === null ? "Ej beräkningsbart" : fmt(result) + " kr/l";
+  updateScenarioMeter(delta);
+  syncPartyPills();
 
   return { scenario, result, delta };
 }
@@ -379,6 +519,11 @@ function update() {
   }
 
   const parts = [marketBase, energy, carbon, vat];
+  updateHeroReferenceChips();
+  updateGauge(price, parts);
+  updateQuickChips(parts);
+  updateReceipt(price, parts);
+
   const colors = ["var(--other)", "var(--energy)", "var(--carbon)", "var(--vat)"];
   let cursor = 0;
   const gradient = parts.map((part, index) => {
@@ -500,6 +645,29 @@ els.tabs.forEach(tab => {
   });
 });
 
+els.heroFuelChips.forEach(chip => {
+  chip.addEventListener("click", () => {
+    const fuel = chip.dataset.heroFuel;
+    if (!fuelData[fuel]) return;
+    selectedFuel = fuel;
+    setFuelTabs();
+    syncCustomControlsFromFuel();
+    const reference = weeklyReferenceForFuel();
+    if (Number.isFinite(reference)) els.pumpPrice.value = fmt(reference);
+    update();
+    document.querySelector("#literpris")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    announce("Visar " + fuelData[selectedFuel].label + " med veckoreferensen.");
+  });
+});
+
+els.costChips.forEach(chip => {
+  chip.addEventListener("click", () => {
+    const part = chip.dataset.focusPart;
+    if (chip.classList.contains("active")) clearCostFocus();
+    else focusCostPart(part);
+  });
+});
+
 els.pumpPrice.addEventListener("input", update);
 els.pumpPrice.addEventListener("blur", normalizePumpPrice);
 
@@ -513,6 +681,7 @@ els.useWeeklyReference?.addEventListener("click", () => {
 
 if (els.partyScenario) {
   els.partyScenario.addEventListener("change", () => {
+    syncPartyPills();
     update();
     const scenario = politicalScenarios[els.partyScenario.value];
     announce("Politiskt scenario ändrat till " + (scenario?.name || "valt scenario") + ".");
@@ -523,6 +692,24 @@ bindPair(els.energySlider, els.energyNumber);
 bindPair(els.carbonSlider, els.carbonNumber);
 bindPair(els.vatSlider, els.vatNumber);
 bindPair(els.regulatorySlider, els.regulatoryNumber);
+
+els.presetButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    const fuel = fuelData[selectedFuel];
+    if (!fuel) return;
+    if (button.dataset.preset === "zero-excise") {
+      els.energySlider.value = 0;
+      els.carbonSlider.value = 0;
+    } else if (button.dataset.preset === "half-excise") {
+      els.energySlider.value = (fuel.energyTax / 2).toFixed(2);
+      els.carbonSlider.value = (fuel.carbonTax / 2).toFixed(2);
+    }
+    syncPair(els.energySlider, els.energyNumber);
+    syncPair(els.carbonSlider, els.carbonNumber);
+    update();
+    announce(button.textContent + " är aktiverat i det egna scenariot.");
+  });
+});
 
 els.resetPolicy?.addEventListener("click", () => {
   syncCustomControlsFromFuel();
@@ -570,6 +757,8 @@ loadStateFromUrl();
 if (els.dataVersion) els.dataVersion.textContent = siteData.dataVersion || "—";
 if (els.factCheckDate) els.factCheckDate.textContent = siteData.lastFactCheck || "—";
 
+buildPartyPills();
 setupNavObserver();
 updateMarketReferences();
+updateHeroReferenceChips();
 update();
