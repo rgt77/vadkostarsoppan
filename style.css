@@ -2866,3 +2866,49 @@ footer {
   .saved-head > button { width: fit-content; }
   .saved-grid { grid-template-columns: 1fr; }
 }
+
+
+/* Steps 141-150: data export */
+.county-export {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: center;
+  margin-top: 18px;
+  padding: 17px 18px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: rgba(255,255,255,.015);
+}
+.county-export > div:first-child {
+  display: grid;
+  gap: 4px;
+}
+.county-export strong {
+  font-size: 14px;
+}
+.county-export-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 7px;
+}
+.county-export-actions button {
+  min-height: 36px;
+  padding: 0 11px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 800;
+}
+.county-export-actions button:hover {
+  color: var(--text);
+  background: rgba(255,255,255,.04);
+}
+@media (max-width: 680px) {
+  .county-export { grid-template-columns: 1fr; }
+  .county-export-actions { justify-content: flex-start; }
+}
