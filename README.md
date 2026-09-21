@@ -24,3 +24,18 @@ Projektet är byggt som statiska filer och kan publiceras direkt med Cloudflare 
 Production branch: `main`  
 Build command: lämnas tomt  
 Build output directory: `/`
+
+
+## Politiska scenarier
+
+Partidelen är byggd som en separat policy-motor i `policy-data.js`.
+
+Principer:
+- endast officiella partikällor används för partipositioner,
+- exakta kr/l-resultat visas bara när underlaget innehåller en kvantifierbar nivå eller partiets egen publicerade priseffekt,
+- partiets eget mål eller egen beräkning märks uttryckligen som sådan,
+- när ett förslag saknar tillräcklig numerik visas "ej exakt beräkningsbart",
+- marknadsdelen hålls oförändrad i scenarier om inget annat är kvantifierat,
+- hushållsstöd och andra kompensationer hålls separata från pumppriset.
+
+Det egna scenariot låter användaren simulera energiskatt, koldioxidskatt, moms och en separat regel-/inblandningskostnad utan att koppla simuleringen till något parti.
