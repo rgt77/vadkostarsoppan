@@ -71,6 +71,10 @@ const els = {
   manualVsNational: document.querySelector("#manualVsNational"),
   clearPreferences: document.querySelector("#clearPreferences"),
   dataFreshness: document.querySelector("#dataFreshness"),
+  dataHealth: document.querySelector("#dataHealth"),
+  dataHealthDetail: document.querySelector("#dataHealthDetail"),
+  dataHealthDot: document.querySelector("#dataHealthDot"),
+  appVersion: document.querySelector("#appVersion"),
   heroPetrolPrice: document.querySelector("#heroPetrolPrice"),
   heroDieselPrice: document.querySelector("#heroDieselPrice"),
   heroFuelChips: [...document.querySelectorAll("[data-hero-fuel]")],
@@ -282,6 +286,49 @@ function formatDataFreshness(dateText) {
   if (days <= 0) return "prisdata uppdaterad idag";
   if (days === 1) return "prisdata 1 dag gammal";
   return "prisdata " + days + " dagar gammal";
+}
+
+function validateDatasets() {
+  const errors = [];
+
+  const fuelKeys = ["petrol","diesel"];
+  fuelKeys.forEach(key => {
+    const fuel = fuelData[key];
+    if (!fuel) errors.push("Saknar bränsledata: " + key);
+    else if (![fuel.energyTax, fuel.carbonTax, fuel.vatRate].every(Number.isFinite)) {
+      errors.push("Ogiltiga skattevärden: " + key);
+    }
+  });
+
+  const counties = Array.isArray(countyData.counties) ? countyData.counties : [];
+  if (counties.length !== 21) errors.push("Länsdata är inte 21 län.");
+  const ids = counties.map(item => item.id);
+  if (new Set(ids).size !== ids.length) errors.push("Dubbla läns-ID:n.");
+  counties.forEach(item => {
+    if (!Number.isFinite(item.petrol) || !Number.isFinite(item.diesel)) {
+      errors.push("Ogiltigt länspris: " + (item.name || item.id));
+    }
+  });
+
+  const weekly = marketData.weeklyReference || {};
+  if (!Number.isFinite(weekly.petrol) || !Number.isFinite(weekly.diesel)) {
+    errors.push("Veckoreferens saknas.");
+  }
+  if (!Number.isFinite(marketData.brent?.usdPerBarrel)) errors.push("Brentdata saknas.");
+  if (!Number.isFinite(marketData.fx?.usdSek)) errors.push("Valutadata saknas.");
+  if (!politicalScenarios.current) errors.push("Referensscenario för politik saknas.");
+
+  if (els.dataHealth) {
+    const ok = errors.length === 0;
+    els.dataHealth.textContent = ok ? "Datakontroll: OK" : "Datakontroll: kontrollera";
+    els.dataHealthDetail.textContent = ok
+      ? "Bränsledata, 21 län, marknadsreferenser och referensscenario är laddade."
+      : errors.join(" ");
+    els.dataHealth.parentElement?.classList.toggle("error", !ok);
+  }
+
+  if (els.countyCoverage) els.countyCoverage.textContent = counties.length + " / 21 län";
+  return errors;
 }
 
 function validPrice(value) {
@@ -1391,6 +1438,8 @@ if (els.dataFreshness) els.dataFreshness.textContent = formatDataFreshness(count
 
 if (els.dataVersion) els.dataVersion.textContent = siteData.dataVersion || "—";
 if (els.factCheckDate) els.factCheckDate.textContent = siteData.lastFactCheck || "—";
+if (els.appVersion) els.appVersion.textContent = siteData.appVersion || "—";
+validateDatasets();
 
 buildPartyPills();
 setupNavObserver();
