@@ -42,6 +42,18 @@ const els = {
   simpleMode: document.querySelector("#simpleMode"),
   expertMode: document.querySelector("#expertMode"),
   simpleExplainerText: document.querySelector("#simpleExplainerText"),
+  marketShockSlider: document.querySelector("#marketShockSlider"),
+  marketShockLabel: document.querySelector("#marketShockLabel"),
+  marketShockPresets: [...document.querySelectorAll("[data-market-shock]")],
+  shockBasePrice: document.querySelector("#shockBasePrice"),
+  shockBaseMarket: document.querySelector("#shockBaseMarket"),
+  shockScenarioPrice: document.querySelector("#shockScenarioPrice"),
+  shockScenarioMarket: document.querySelector("#shockScenarioMarket"),
+  shockDelta: document.querySelector("#shockDelta"),
+  shockPassThrough: document.querySelector("#shockPassThrough"),
+  shockMarketBar: document.querySelector("#shockMarketBar"),
+  shockTaxBar: document.querySelector("#shockTaxBar"),
+  shockVatBar: document.querySelector("#shockVatBar"),
   settingsOpen: document.querySelector("#settingsOpen"),
   commandOpen: document.querySelector("#commandOpen"),
   commandDialog: document.querySelector("#commandDialog"),
@@ -916,6 +928,37 @@ function applyThemeState() {
     els.themeToggle.title = lightTheme ? "Växla till mörkt tema" : "Växla till ljust tema";
   }
   applyPreferenceClasses();
+}
+
+function updateSensitivityLab(price, reference) {
+  if (!els.marketShockSlider) return;
+  const shockPct = Number(els.marketShockSlider.value) || 0;
+  const factor = 1 + shockPct / 100;
+  const newMarket = Math.max(0, reference.marketBase * factor);
+  const pretax = newMarket + reference.fuel.energyTax + reference.fuel.carbonTax;
+  const scenarioPrice = pretax * (1 + reference.vatRate);
+  const scenarioVat = scenarioPrice - pretax;
+  const delta = scenarioPrice - price;
+  const passThrough = reference.marketBase > 0
+    ? delta / (reference.marketBase * shockPct / 100 || 1)
+    : 0;
+
+  if (els.marketShockLabel) els.marketShockLabel.textContent = (shockPct > 0 ? "+" : "") + fmt(shockPct,0) + " %";
+  if (els.shockBasePrice) els.shockBasePrice.textContent = fmt(price) + " kr/l";
+  if (els.shockBaseMarket) els.shockBaseMarket.textContent = "Marknad " + fmt(reference.marketBase) + " kr/l";
+  if (els.shockScenarioPrice) els.shockScenarioPrice.textContent = fmt(scenarioPrice) + " kr/l";
+  if (els.shockScenarioMarket) els.shockScenarioMarket.textContent = "Marknad " + fmt(newMarket) + " kr/l";
+  if (els.shockDelta) els.shockDelta.textContent = signed(delta);
+  if (els.shockPassThrough) {
+    els.shockPassThrough.textContent = shockPct === 0
+      ? "Ingen förändring"
+      : "Moms gör att pumpförändringen blir " + fmt(Math.abs(delta),2) + " kr/l.";
+  }
+
+  const total = Math.max(.01, scenarioPrice);
+  if (els.shockMarketBar) els.shockMarketBar.style.width = pct(newMarket,total) + "%";
+  if (els.shockTaxBar) els.shockTaxBar.style.width = pct(reference.excise,total) + "%";
+  if (els.shockVatBar) els.shockVatBar.style.width = pct(scenarioVat,total) + "%";
 }
 
 function updateSimpleExplainer(price, marketBase, politicalDirect) {
@@ -2004,6 +2047,7 @@ function update() {
   updatePriceStory(price, marketBase, politicalDirect);
   updateDuel(price, marketBase, politicalDirect);
   updateSimpleExplainer(price, marketBase, politicalDirect);
+  updateSensitivityLab(price, reference);
 
   const colors = ["var(--other)", "var(--energy)", "var(--carbon)", "var(--vat)"];
   let cursor = 0;
@@ -2188,6 +2232,15 @@ els.useNationalAverage?.addEventListener("click", () => {
   priceMode = "county";
   if (els.countySelect) els.countySelect.value = "riket";
   applyCountyPrice({ announceChange: true });
+});
+
+els.marketShockSlider?.addEventListener("input", update);
+els.marketShockPresets.forEach(button => {
+  button.addEventListener("click", () => {
+    if (!els.marketShockSlider) return;
+    els.marketShockSlider.value = button.dataset.marketShock;
+    update();
+  });
 });
 
 els.priceNudges.forEach(button => {
