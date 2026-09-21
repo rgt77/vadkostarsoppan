@@ -4004,3 +4004,82 @@ body.expert-mode .simple-explainer { display: none; }
 @media (max-width: 520px) {
   .target-results { grid-template-columns: 1fr; }
 }
+
+
+/* Steps 601-650: tax-share curve */
+.curve-section { padding: 0 0 120px; }
+.curve-card {
+  margin-top: 34px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: rgba(255,255,255,.018);
+}
+.curve-metrics {
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 9px;
+}
+.curve-metrics article {
+  display: grid;
+  gap: 5px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--surface);
+}
+.curve-metrics span {
+  color: var(--muted);
+  font-size: 8px;
+}
+.curve-metrics strong {
+  font-size: 19px;
+  letter-spacing: -.04em;
+}
+.curve-chart-wrap {
+  margin-top: 16px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface-3);
+}
+.curve-chart {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.curve-grid line {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+.curve-line {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.curve-dot {
+  fill: var(--vat);
+  stroke: var(--surface);
+  stroke-width: 3;
+}
+.curve-dot-label,
+.curve-axis-label {
+  fill: var(--muted);
+  font-size: 10px;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+.curve-dot-label {
+  fill: var(--text);
+  font-weight: 800;
+}
+.curve-note {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.5;
+}
+@media (max-width: 720px) {
+  .curve-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
