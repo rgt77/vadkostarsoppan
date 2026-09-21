@@ -9,7 +9,11 @@
   "background_color": "#090f1d",
   "theme_color": "#0a0f1d",
   "lang": "sv",
-  "categories": ["finance", "utilities", "education"],
+  "categories": [
+    "finance",
+    "utilities",
+    "education"
+  ],
   "shortcuts": [
     {
       "name": "Literlabbet",
@@ -22,9 +26,24 @@
       "url": "/#lan"
     },
     {
+      "name": "Marknadsmotorn",
+      "short_name": "Marknad",
+      "url": "/#marknad"
+    },
+    {
       "name": "Politiklabbet",
       "short_name": "Politik",
       "url": "/#politik"
+    },
+    {
+      "name": "Ordlistan",
+      "short_name": "Ordlista",
+      "url": "/#ordlista"
+    },
+    {
+      "name": "Min rapport",
+      "short_name": "Rapport",
+      "url": "/#rapport"
     }
   ],
   "icons": [
