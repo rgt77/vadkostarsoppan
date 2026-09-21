@@ -3439,3 +3439,110 @@ body.expert-mode .simple-explainer { display: none; }
   .setting-row { grid-template-columns: 1fr; }
   .settings-actions { flex-direction: column; }
 }
+
+
+/* Steps 301-350: command palette */
+.command-dialog {
+  width: min(720px, calc(100vw - 28px));
+  max-height: min(780px, calc(100vh - 28px));
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 22px;
+  color: var(--text);
+  background: var(--surface);
+  box-shadow: 0 30px 100px rgba(0,0,0,.48);
+}
+.command-dialog::backdrop {
+  background: rgba(3,7,15,.72);
+  backdrop-filter: blur(8px);
+}
+.command-dialog form { padding: 22px; }
+.command-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+}
+.command-head h2 { font-size: clamp(28px,5vw,42px); }
+.command-search {
+  display: grid;
+  gap: 7px;
+  margin-top: 18px;
+}
+.command-search span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+}
+.command-search input {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  color: var(--text);
+  background: var(--surface-2);
+  font-size: 14px;
+}
+.command-list {
+  display: grid;
+  gap: 6px;
+  max-height: 420px;
+  margin-top: 12px;
+  overflow-y: auto;
+}
+.command-item {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  min-height: 50px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  color: var(--text);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+.command-item:hover,
+.command-item.active {
+  border-color: var(--line);
+  background: rgba(255,255,255,.035);
+}
+.command-item .command-icon {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  color: #111722;
+  background: var(--accent);
+  font-size: 12px;
+  font-weight: 900;
+}
+.command-copy {
+  display: grid;
+  gap: 2px;
+}
+.command-copy strong { font-size: 11px; }
+.command-copy small {
+  color: var(--muted);
+  font-size: 8px;
+}
+.command-item kbd {
+  padding: 4px 6px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  background: var(--surface-3);
+  font-size: 8px;
+}
+.command-help {
+  display: block;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 8px;
+  text-align: right;
+}
