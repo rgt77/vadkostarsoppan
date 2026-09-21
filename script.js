@@ -101,6 +101,9 @@ const els = {
   precisionSelect: document.querySelector("#precisionSelect"),
   resetSettings: document.querySelector("#resetSettings"),
   mobileNavLinks: [...document.querySelectorAll(".mobile-bottom-nav a")],
+  pageProgressBar: document.querySelector("#pageProgressBar"),
+  sectionIndicator: document.querySelector("#sectionIndicator"),
+  backToTop: document.querySelector("#backToTop"),
   priceError: document.querySelector("#priceError"),
   totalPrice: document.querySelector("#totalPrice"),
   energyTax: document.querySelector("#energyTax"),
@@ -2017,6 +2020,48 @@ function loadStateFromUrl() {
   syncPair(els.regulatorySlider, els.regulatoryNumber);
 }
 
+function sectionLabel(id) {
+  return {
+    literpris:"Literlabbet",
+    sparat:"Sparade lägen",
+    prischock:"Prischockslabbet",
+    malpris:"Målprislabbet",
+    skattekurva:"Skatteandelskurvan",
+    lan:"Sverigekollen",
+    lanjamforelse:"Län mot län",
+    prisfordelning:"Prisfördelning",
+    marknad:"Marknadsmotorn",
+    kostnadskedja:"Kostnadskedjan",
+    politik:"Politiklabbet",
+    rapport:"Min rapport",
+    ordlista:"Ordlistan",
+    metod:"Metod",
+    datapuls:"Datapulsen",
+    kallregister:"Källregistret",
+    kallor:"Källor"
+  }[id] || "Vad kostar soppan?";
+}
+
+function setupScrollFeedback() {
+  let ticking = false;
+  const updateScroll = () => {
+    ticking = false;
+    const doc = document.documentElement;
+    const max = Math.max(1, doc.scrollHeight - window.innerHeight);
+    const progress = clamp(window.scrollY / max * 100,0,100);
+    if (els.pageProgressBar) els.pageProgressBar.style.width = progress + "%";
+    if (els.backToTop) els.backToTop.classList.toggle("show", window.scrollY > 650);
+    if (els.sectionIndicator) els.sectionIndicator.classList.toggle("show", window.scrollY > 300);
+  };
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(updateScroll);
+    }
+  }, {passive:true});
+  updateScroll();
+}
+
 function setupNavObserver() {
   if (!("IntersectionObserver" in window)) return;
   const allNavLinks = [...els.navLinks, ...els.mobileNavLinks];
@@ -2030,6 +2075,7 @@ function setupNavObserver() {
       .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
     if (!visible) return;
+    if (els.sectionIndicator) els.sectionIndicator.textContent = sectionLabel(visible.target.id);
     allNavLinks.forEach(link => {
       const active = link.getAttribute("href") === "#" + visible.target.id;
       link.classList.toggle("active", active);
@@ -2280,6 +2326,10 @@ els.countySelect?.addEventListener("change", () => {
 
 els.useCountyAverage?.addEventListener("click", () => {
   applyCountyPrice({ announceChange: true });
+});
+
+els.backToTop?.addEventListener("click", () => {
+  window.scrollTo({top:0,behavior:reducedMotion ? "auto" : "smooth"});
 });
 
 els.commandOpen?.addEventListener("click", openCommandPalette);
@@ -2714,6 +2764,7 @@ updateDataDashboard();
 
 buildPartyPills();
 setupNavObserver();
+setupScrollFeedback();
 maybeShowWelcome();
 loadSourceRegistry();
 renderGlossaryFilters();
