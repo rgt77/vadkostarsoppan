@@ -14,6 +14,10 @@ const els = {
   pumpPrice: document.querySelector("#pumpPrice"),
   headerFuel: document.querySelector("#headerFuel"),
   headerPrice: document.querySelector("#headerPrice"),
+  mobileFuel: document.querySelector("#mobileFuel"),
+  mobilePrice: document.querySelector("#mobilePrice"),
+  contrastToggle: document.querySelector("#contrastToggle"),
+  mobileNavLinks: [...document.querySelectorAll(".mobile-bottom-nav a")],
   priceError: document.querySelector("#priceError"),
   totalPrice: document.querySelector("#totalPrice"),
   energyTax: document.querySelector("#energyTax"),
@@ -212,7 +216,12 @@ function loadSavedPreferences() {
     if (saved.manualPrice && validPrice(Number(saved.manualPrice)) && priceMode === "manual") {
       els.pumpPrice.value = fmt(Number(saved.manualPrice));
     }
+    if (saved.highContrast) document.documentElement.classList.add("high-contrast");
   } catch {}
+  if (els.contrastToggle) {
+    const active = document.documentElement.classList.contains("high-contrast");
+    els.contrastToggle.setAttribute("aria-pressed", String(active));
+  }
 }
 
 function savePreferences() {
@@ -223,7 +232,8 @@ function savePreferences() {
       county: selectedCounty,
       mode: priceMode,
       manualPrice: priceMode === "manual" && validPrice(currentPrice) ? currentPrice : null,
-      recent: recentCounties
+      recent: recentCounties,
+      highContrast: document.documentElement.classList.contains("high-contrast")
     }));
   } catch {}
 }
@@ -930,6 +940,8 @@ function update() {
   els.totalPrice.textContent = fmt(price);
   if (els.headerFuel) els.headerFuel.textContent = fuel.label;
   if (els.headerPrice) els.headerPrice.textContent = fmt(price) + " kr/l";
+  if (els.mobileFuel) els.mobileFuel.textContent = fuel.shortLabel || fuel.label;
+  if (els.mobilePrice) els.mobilePrice.textContent = fmt(price) + " kr";
   els.energyTax.textContent = fmt(energy) + " kr";
   els.carbonTax.textContent = fmt(carbon) + " kr";
   els.vat.textContent = fmt(vat) + " kr";
@@ -1076,7 +1088,8 @@ function loadStateFromUrl() {
 
 function setupNavObserver() {
   if (!("IntersectionObserver" in window)) return;
-  const sections = els.navLinks
+  const allNavLinks = [...els.navLinks, ...els.mobileNavLinks];
+  const sections = allNavLinks
     .map(link => document.querySelector(link.getAttribute("href")))
     .filter(Boolean);
 
@@ -1086,8 +1099,11 @@ function setupNavObserver() {
       .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
     if (!visible) return;
-    els.navLinks.forEach(link => {
-      link.classList.toggle("active", link.getAttribute("href") === "#" + visible.target.id);
+    allNavLinks.forEach(link => {
+      const active = link.getAttribute("href") === "#" + visible.target.id;
+      link.classList.toggle("active", active);
+      if (active) link.setAttribute("aria-current","page");
+      else link.removeAttribute("aria-current");
     });
   }, { rootMargin: "-20% 0px -68% 0px", threshold: [0, .2, .5] });
 
@@ -1200,6 +1216,28 @@ els.countySelect?.addEventListener("change", () => {
 
 els.useCountyAverage?.addEventListener("click", () => {
   applyCountyPrice({ announceChange: true });
+});
+
+els.contrastToggle?.addEventListener("click", () => {
+  const active = document.documentElement.classList.toggle("high-contrast");
+  els.contrastToggle.setAttribute("aria-pressed", String(active));
+  savePreferences();
+  showToast(active ? "Hög kontrast är på." : "Hög kontrast är av.");
+});
+
+document.addEventListener("keydown", event => {
+  if (event.metaKey || event.ctrlKey || event.altKey) return;
+  const tag = document.activeElement?.tagName;
+  const typing = ["INPUT","TEXTAREA","SELECT"].includes(tag);
+  if (event.key === "/" && !typing) {
+    event.preventDefault();
+    els.countySearch?.focus();
+  }
+  if (event.key.toLowerCase() === "p" && !typing) {
+    event.preventDefault();
+    els.pumpPrice?.focus();
+    els.pumpPrice?.select();
+  }
 });
 
 els.clearPreferences?.addEventListener("click", () => {
