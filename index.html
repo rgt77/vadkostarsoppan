@@ -1362,9 +1362,13 @@
           <button class="text-button" id="clearPreferences" type="button">Rensa sparade val</button>
           <button class="text-button" id="refreshData" type="button">↻ Kontrollera ny version</button>
           <button class="text-button" id="runDiagnostics" type="button">Kör självtest</button>
+          <button class="text-button" id="downloadDiagnostics" type="button">Exportera självtest</button>
         </div>
         <div class="diagnostics" id="diagnostics" hidden>
-          <strong id="diagnosticsTitle">Självtest</strong>
+          <div class="diagnostics-head">
+            <strong id="diagnosticsTitle">Självtest</strong>
+            <span id="diagnosticsSummary">—</span>
+          </div>
           <pre id="diagnosticsOutput"></pre>
         </div>
         <details class="changelog">
