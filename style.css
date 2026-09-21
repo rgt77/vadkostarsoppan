@@ -3708,3 +3708,13 @@ body.expert-mode .simple-explainer { display: none; }
     flex-direction: column;
   }
 }
+
+.county-actions .secondary-county-action {
+  color: var(--text);
+  border: 1px solid var(--line);
+  background: transparent;
+}
+.county-actions .secondary-county-action:disabled {
+  opacity: .35;
+  cursor: default;
+}
