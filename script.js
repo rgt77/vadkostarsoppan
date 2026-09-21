@@ -65,6 +65,8 @@ const els = {
   customScenarioDelta: document.querySelector("#customScenarioDelta"),
   resetPolicy: document.querySelector("#resetPolicy"),
   liveRegion: document.querySelector("#liveRegion"),
+  copyScenarioLink: document.querySelector("#copyScenarioLink"),
+  copyStatus: document.querySelector("#copyStatus"),
   navLinks: [...document.querySelectorAll(".nav a")]
 };
 
@@ -256,6 +258,12 @@ function updateUrl(price) {
   } else {
     url.searchParams.delete("party");
   }
+
+  url.searchParams.set("energy", Number(els.energySlider.value).toFixed(2));
+  url.searchParams.set("carbon", Number(els.carbonSlider.value).toFixed(2));
+  url.searchParams.set("vat", Number(els.vatSlider.value).toFixed(0));
+  url.searchParams.set("rule", Number(els.regulatorySlider.value).toFixed(2));
+
   history.replaceState(null, "", url);
 }
 
@@ -349,12 +357,27 @@ function loadStateFromUrl() {
   const fuel = params.get("fuel");
   const price = parseNumber(params.get("price"));
   const party = params.get("party");
+  const energy = parseNumber(params.get("energy"));
+  const carbon = parseNumber(params.get("carbon"));
+  const vat = parseNumber(params.get("vat"));
+  const rule = parseNumber(params.get("rule"));
 
   if (fuel && fuelData[fuel]) selectedFuel = fuel;
   if (validPrice(price)) els.pumpPrice.value = fmt(price);
   if (party && politicalScenarios[party] && els.partyScenario) els.partyScenario.value = party;
 
   setFuelTabs();
+  syncCustomControlsFromFuel();
+
+  if (Number.isFinite(energy)) els.energySlider.value = clamp(energy, 0, 6);
+  if (Number.isFinite(carbon)) els.carbonSlider.value = clamp(carbon, 0, 6);
+  if (Number.isFinite(vat)) els.vatSlider.value = clamp(vat, 0, 30);
+  if (Number.isFinite(rule)) els.regulatorySlider.value = clamp(rule, -3, 8);
+
+  syncPair(els.energySlider, els.energyNumber);
+  syncPair(els.carbonSlider, els.carbonNumber);
+  syncPair(els.vatSlider, els.vatNumber);
+  syncPair(els.regulatorySlider, els.regulatoryNumber);
 }
 
 function setupNavObserver() {
@@ -420,8 +443,32 @@ els.resetPolicy?.addEventListener("click", () => {
   announce("Det egna politiska scenariot är återställt till dagens nivå.");
 });
 
+async function copyCurrentScenarioLink() {
+  const url = window.location.href;
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(url);
+    } else {
+      const textarea = document.createElement("textarea");
+      textarea.value = url;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "absolute";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+    }
+    els.copyStatus.textContent = "Länken är kopierad.";
+    announce("Länken till scenariot är kopierad.");
+  } catch {
+    els.copyStatus.textContent = "Kunde inte kopiera länken.";
+  }
+}
+
+els.copyScenarioLink?.addEventListener("click", copyCurrentScenarioLink);
+
 loadStateFromUrl();
-syncCustomControlsFromFuel();
 
 if (els.dataVersion) els.dataVersion.textContent = siteData.dataVersion || "—";
 if (els.factCheckDate) els.factCheckDate.textContent = siteData.lastFactCheck || "—";
