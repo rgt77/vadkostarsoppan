@@ -518,6 +518,45 @@
       </div>
     </section>
 
+
+    <section class="curve-section expert-only" id="skattekurva" aria-labelledby="curve-title">
+      <div class="section-heading">
+        <p class="section-label">SKATTEANDELSKURVAN</p>
+        <h2 id="curve-title">När pumppriset rör sig förändras skatteandelen.</h2>
+        <p class="section-intro">Punktskatterna är fasta kronor per liter medan momsen följer priset. Kurvan visar den mekaniska andelen skatt + moms vid olika pumppriser med samma skattesatser.</p>
+      </div>
+
+      <div class="curve-card">
+        <div class="curve-metrics">
+          <article><span>Aktuellt pris</span><strong id="curveCurrentPrice">—</strong></article>
+          <article><span>Skatt + moms</span><strong id="curveCurrentTax">—</strong></article>
+          <article><span>Andel</span><strong id="curveCurrentShare">—</strong></article>
+          <article><span>Punktskatt</span><strong id="curveExcise">—</strong></article>
+        </div>
+        <div class="curve-chart-wrap">
+          <svg id="taxShareCurve" class="curve-chart" viewBox="0 0 760 260" role="img" aria-labelledby="curveSvgTitle curveSvgDesc">
+            <title id="curveSvgTitle">Skatt och moms som andel av pumppriset</title>
+            <desc id="curveSvgDesc">Kurva för vald bränsletyp vid olika pumppriser.</desc>
+            <g class="curve-grid" aria-hidden="true">
+              <line x1="50" y1="20" x2="50" y2="220"></line>
+              <line x1="50" y1="220" x2="735" y2="220"></line>
+              <line x1="50" y1="70" x2="735" y2="70"></line>
+              <line x1="50" y1="120" x2="735" y2="120"></line>
+              <line x1="50" y1="170" x2="735" y2="170"></line>
+            </g>
+            <polyline id="taxSharePolyline" class="curve-line" points=""></polyline>
+            <circle id="taxShareDot" class="curve-dot" cx="0" cy="0" r="7"></circle>
+            <text id="curveDotLabel" class="curve-dot-label" x="0" y="0">—</text>
+            <text class="curve-axis-label" x="50" y="245">10 kr</text>
+            <text class="curve-axis-label" x="710" y="245">35 kr</text>
+            <text class="curve-axis-label" x="5" y="25">60 %</text>
+            <text class="curve-axis-label" x="5" y="225">20 %</text>
+          </svg>
+        </div>
+        <p class="curve-note">Kurvan ändrar inte skattesatserna. Den visar bara hur fasta punktskatter och procentuell moms fördelas över olika pumppriser.</p>
+      </div>
+    </section>
+
     <section class="saved-section expert-only" id="sparat" aria-labelledby="saved-title">
       <div class="saved-head">
         <div>
