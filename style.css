@@ -2509,3 +2509,157 @@ footer {
   .welcome-actions { flex-direction: column; }
   .welcome-actions button { width: 100%; }
 }
+
+
+/* Steps 111-120: county-to-county comparison */
+.county-compare-section {
+  padding: 0 0 120px;
+}
+.county-compare-card {
+  margin-top: 34px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: rgba(255,255,255,.018);
+}
+.county-compare-controls {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 12px;
+  align-items: end;
+}
+.county-compare-controls label {
+  display: grid;
+  gap: 7px;
+}
+.county-compare-controls label > span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+}
+.county-compare-controls select {
+  min-height: 48px;
+  padding: 0 13px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--text);
+  background: var(--surface-2);
+  font-weight: 750;
+}
+.county-compare-controls > button {
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--accent);
+  background: var(--surface-2);
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 900;
+}
+.county-compare-summary {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 14px;
+  align-items: stretch;
+  margin-top: 18px;
+}
+.county-compare-summary article,
+.county-compare-delta {
+  display: grid;
+  gap: 4px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+}
+.county-compare-summary article:last-child {
+  text-align: right;
+}
+.county-compare-summary span,
+.county-compare-summary small {
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.4;
+}
+.county-compare-summary strong {
+  font-size: 25px;
+  letter-spacing: -.045em;
+}
+.county-compare-delta {
+  place-content: center;
+  min-width: 120px;
+  text-align: center;
+}
+.county-compare-delta strong {
+  color: var(--accent);
+  font-size: 20px;
+}
+.county-compare-bars {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+.county-compare-bars > div {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+.county-compare-bars span {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.compare-bar {
+  height: 12px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: var(--surface-3);
+}
+.compare-bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg,var(--good),var(--accent),var(--carbon));
+  transition: width .3s cubic-bezier(.2,.8,.2,1);
+}
+.county-compare-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+.county-compare-actions button {
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--text);
+  background: transparent;
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 800;
+}
+.county-compare-actions button:hover {
+  background: rgba(255,255,255,.04);
+}
+
+@media (max-width: 720px) {
+  .county-compare-controls,
+  .county-compare-summary {
+    grid-template-columns: 1fr;
+  }
+  .county-compare-controls > button {
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+  .county-compare-summary article:last-child {
+    text-align: left;
+  }
+  .county-compare-bars > div {
+    grid-template-columns: 90px 1fr;
+  }
+}
