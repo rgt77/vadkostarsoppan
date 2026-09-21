@@ -1905,3 +1905,103 @@ footer {
     gap: 7px;
   }
 }
+
+
+/* Steps 21-30: calculator playfulness and dynamic story */
+.price-nudges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 4px;
+}
+.price-nudges button {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--muted);
+  background: rgba(255,255,255,.018);
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 800;
+}
+.price-nudges button:hover {
+  color: var(--text);
+  border-color: var(--line-strong);
+  background: rgba(255,255,255,.045);
+}
+.price-story {
+  margin-top: 14px;
+  padding: 16px 18px;
+  border: 1px solid rgba(244,208,63,.18);
+  border-radius: 14px;
+  color: var(--text);
+  background: linear-gradient(90deg, rgba(244,208,63,.07), rgba(255,255,255,.015));
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.55;
+}
+.duel-card {
+  margin-top: 14px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255,255,255,.018);
+}
+.duel-head,
+.duel-labels {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+}
+.duel-head {
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-size: 10px;
+}
+.duel-head strong {
+  color: var(--text);
+  font-size: 12px;
+}
+.duel-bar {
+  display: flex;
+  height: 18px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: var(--surface-3);
+}
+.duel-market,
+.duel-tax {
+  display: block;
+  transition: width .3s cubic-bezier(.2,.8,.2,1);
+}
+.duel-market { background: var(--other); }
+.duel-tax {
+  background:
+    linear-gradient(90deg, var(--energy), var(--carbon), var(--vat));
+}
+.duel-labels {
+  margin-top: 9px;
+  color: var(--muted);
+  font-size: 9px;
+}
+.duel-labels b {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.duel-card > small {
+  display: block;
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+@media (max-width: 560px) {
+  .duel-labels {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+}
