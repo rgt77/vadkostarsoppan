@@ -1810,3 +1810,98 @@ footer {
   .county-row-delta { grid-column: 2 / -1; text-align: left; }
   .county-data-alert { flex-direction: column; }
 }
+
+
+/* Steps 11-20: preferences, recent counties and price mode */
+.county-recent-wrap {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 4px;
+}
+.county-recent-wrap > span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.county-recent {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.recent-county {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  color: var(--muted);
+  background: rgba(255,255,255,.018);
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 750;
+}
+.recent-county:hover,
+.recent-county.active {
+  color: #111722;
+  border-color: var(--accent);
+  background: var(--accent);
+}
+.input-label-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+}
+.input-label-row > span:first-child {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 750;
+}
+.price-mode-badge {
+  padding: 5px 7px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  color: var(--accent);
+  background: rgba(244,208,63,.06);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+.price-mode-badge.manual {
+  color: var(--vat);
+  background: rgba(105,199,240,.06);
+}
+.price-mode-badge.weekly {
+  color: var(--good);
+  background: rgba(87,209,139,.06);
+}
+.manual-deltas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 9px;
+}
+.manual-deltas span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+}
+.manual-deltas .up { color: #ff9a88; }
+.manual-deltas .down { color: #82dca7; }
+
+@media (max-width: 560px) {
+  .county-recent-wrap {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .input-label-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 7px;
+  }
+}
