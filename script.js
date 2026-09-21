@@ -17,6 +17,7 @@ let compareB = "ostergotland";
 let sourceRegistry = null;
 let sourceFilter = "all";
 let glossaryFilter = "all";
+let currentExplainTerm = null;
 let deferredInstallPrompt = null;
 let serviceWorkerRegistration = null;
 let viewMode = "simple";
@@ -215,6 +216,13 @@ const els = {
   glossarySpotlight: document.querySelector("#glossarySpotlight"),
   glossarySpotlightTerm: document.querySelector("#glossarySpotlightTerm"),
   glossarySpotlightText: document.querySelector("#glossarySpotlightText"),
+  explainDialog: document.querySelector("#explainDialog"),
+  explainDialogTitle: document.querySelector("#explainDialogTitle"),
+  explainDialogCopy: document.querySelector("#explainDialogCopy"),
+  explainDialogValue: document.querySelector("#explainDialogValue"),
+  explainDialogExtra: document.querySelector("#explainDialogExtra"),
+  explainOpenGlossary: document.querySelector("#explainOpenGlossary"),
+  explainButtons: [...document.querySelectorAll("[data-explain]")],
   dataScore: document.querySelector("#dataScore"),
   dataScoreLabel: document.querySelector("#dataScoreLabel"),
   healthCountyCoverage: document.querySelector("#healthCountyCoverage"),
@@ -2484,6 +2492,20 @@ bindPair(els.energySlider, els.energyNumber);
 bindPair(els.carbonSlider, els.carbonNumber);
 bindPair(els.vatSlider, els.vatNumber);
 bindPair(els.regulatorySlider, els.regulatoryNumber);
+
+els.explainButtons.forEach(button => {
+  button.addEventListener("click", () => openNumberExplanation(button.dataset.explain));
+});
+els.explainOpenGlossary?.addEventListener("click", () => {
+  if (!currentExplainTerm) return;
+  if (els.explainDialog?.open) els.explainDialog.close();
+  glossaryFilter = "all";
+  if (els.glossarySearch) els.glossarySearch.value = currentExplainTerm.term;
+  renderGlossaryFilters();
+  renderGlossary();
+  showGlossarySpotlight(currentExplainTerm);
+  jumpToSection("#ordlista");
+});
 
 els.glossarySearch?.addEventListener("input", renderGlossary);
 
