@@ -530,6 +530,16 @@
         </div>
       </div>
 
+      <div class="politics-reference-strip">
+        <span>Referens för scenarierna</span>
+        <strong id="politicsReferenceLocation">—</strong>
+        <small id="politicsReferencePrice">— kr/l</small>
+      </div>
+
+      <div class="party-filter" aria-label="Filtrera politiska scenarier">
+        <button type="button" class="party-filter-button active" data-party-filter="all" aria-pressed="true">Alla</button>
+        <button type="button" class="party-filter-button" data-party-filter="quantified" aria-pressed="false">Endast beräkningsbara</button>
+      </div>
       <div class="party-pills" id="partyPills" aria-label="Välj politiskt scenario"></div>
 
       <div class="politics-grid">
@@ -590,6 +600,7 @@
         <div>
           <span>Valt scenario</span>
           <strong id="compareScenario">—</strong>
+          <small id="compareScenarioPct">—</small>
         </div>
       </div>
 
@@ -602,6 +613,8 @@
           <div class="simulator-head-actions">
             <button class="preset-button" type="button" data-preset="zero-excise">Noll punktskatt</button>
             <button class="preset-button" type="button" data-preset="half-excise">Halv punktskatt</button>
+            <button class="preset-button" type="button" data-preset="zero-vat">0 % moms</button>
+            <button class="preset-button" type="button" data-preset="standard-vat">25 % moms</button>
             <button id="resetPolicy" type="button">Dagens nivå</button>
           </div>
         </div>
@@ -657,6 +670,11 @@
         <button id="copyScenarioLink" type="button">Kopiera länk till scenariot</button>
         <span id="copyStatus" role="status" aria-live="polite"></span>
       </div>
+
+      <details class="politics-why">
+        <summary>Varför saknar vissa partier ett exakt pris?</summary>
+        <p>För att ett exakt scenario kräver exakta, publicerade nivåer. Om underlaget bara beskriver en riktning, ambition eller villkorad åtgärd visar sidan det utan att fylla i egna antaganden.</p>
+      </details>
 
       <div class="politics-note">
         <strong>Metod:</strong>
