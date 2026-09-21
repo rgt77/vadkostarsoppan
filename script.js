@@ -121,6 +121,10 @@ const els = {
   installApp: document.querySelector("#installApp"),
   updateApp: document.querySelector("#updateApp"),
   refreshData: document.querySelector("#refreshData"),
+  runDiagnostics: document.querySelector("#runDiagnostics"),
+  diagnostics: document.querySelector("#diagnostics"),
+  diagnosticsTitle: document.querySelector("#diagnosticsTitle"),
+  diagnosticsOutput: document.querySelector("#diagnosticsOutput"),
   registryList: document.querySelector("#registryList"),
   registryPlanned: document.querySelector("#registryPlanned"),
   registryCount: document.querySelector("#registryCount"),
@@ -702,6 +706,34 @@ function redoCalculatorState() {
   stateHistory.push(next);
   applyHistoryState(next);
   showToast("Ändringen gjordes om.");
+}
+
+function runDiagnostics() {
+  const checks = [];
+  const push = (name, ok, detail = "") => checks.push({name,ok,detail});
+
+  push("Bränsledata", Boolean(fuelData.petrol && fuelData.diesel), "bensin + diesel");
+  push("Länstäckning", countyRows().length === 21, countyRows().length + " av 21 län");
+  push("Unika län", new Set(countyRows().map(item => item.id)).size === countyRows().length);
+  push("Rikssnitt", Number.isFinite(countyData.national?.petrol) && Number.isFinite(countyData.national?.diesel));
+  push("Veckoreferens", Number.isFinite(marketData.weeklyReference?.petrol) && Number.isFinite(marketData.weeklyReference?.diesel));
+  push("Brent", Number.isFinite(marketData.brent?.usdPerBarrel));
+  push("USD/SEK", Number.isFinite(marketData.fx?.usdSek));
+  push("Politikreferens", Boolean(politicalScenarios.current));
+  push("Pumppris", getPrice() !== null, getPrice() !== null ? fmt(getPrice()) + " kr/l" : "ogiltigt");
+  push("Service worker", "serviceWorker" in navigator);
+  push("Online-status", typeof navigator.onLine === "boolean", navigator.onLine ? "online" : "offline");
+
+  const failed = checks.filter(item => !item.ok);
+  if (els.diagnostics) els.diagnostics.hidden = false;
+  if (els.diagnosticsTitle) els.diagnosticsTitle.textContent = failed.length ? "Självtest: kontrollera" : "Självtest: PASS";
+  if (els.diagnosticsOutput) {
+    els.diagnosticsOutput.textContent = checks.map(item =>
+      (item.ok ? "✓ " : "✕ ") + item.name + (item.detail ? " — " + item.detail : "")
+    ).join("\n");
+  }
+  showToast(failed.length ? failed.length + " kontrollpunkter behöver ses över." : "Självtest klart: allt ser bra ut.");
+  return {checks, failed};
 }
 
 function validPrice(value) {
@@ -1944,6 +1976,7 @@ els.updateApp?.addEventListener("click", () => {
   }
 });
 els.refreshData?.addEventListener("click", () => checkForAppUpdate({reload:true}));
+els.runDiagnostics?.addEventListener("click", runDiagnostics);
 
 document.addEventListener("keydown", event => {
   const tag = document.activeElement?.tagName;
