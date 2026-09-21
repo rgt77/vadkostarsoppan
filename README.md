@@ -86,3 +86,12 @@ Nuvarande referenser:
 Råoljeekvivalenten är **inte** samma sak som produktkostnaden för färdig bensin eller diesel. Den visas endast som marknadsdrivare. Skillnaden mellan råoljeekvivalent och marknad/kedja får inte beskrivas som vinst eftersom den även innehåller raffinering, produktpremier, biodrivmedel, import, terminal, logistik, station och marginaler.
 
 `data-sources.json` fungerar som källregister och anger även vilka datakällor som fortfarande behöver anskaffas för att hela marknadsdelen ska kunna delas upp.
+
+
+## Länspriser
+
+`county-data.js` innehåller aktuella snittpriser för Bensin 95 och diesel för samtliga 21 svenska län samt rikssnittet.
+
+Källa: Carculated, som beräknar länssnitt från rapporterade stationspriser hos Bensinpriser.nu. Data är ett riktvärde och kan avvika från en enskild station. Uppenbara felrapporter filtreras enligt källans metodik.
+
+I gränssnittet kan användaren välja län. Valet uppdaterar pumppriset till länets snitt för vald bränsletyp. Man kan därefter fortfarande skriva in ett eget stationspris manuellt.
