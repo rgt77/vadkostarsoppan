@@ -15,6 +15,10 @@ let sourceRegistry = null;
 let sourceFilter = "all";
 let deferredInstallPrompt = null;
 let serviceWorkerRegistration = null;
+let stateHistory = [];
+let redoHistory = [];
+let historyTimer = null;
+let isApplyingHistory = false;
 
 const els = {
   pumpPrice: document.querySelector("#pumpPrice"),
@@ -92,6 +96,9 @@ const els = {
   downloadCountyCsv: document.querySelector("#downloadCountyCsv"),
   copyCountyTable: document.querySelector("#copyCountyTable"),
   downloadScenarioJson: document.querySelector("#downloadScenarioJson"),
+  undoState: document.querySelector("#undoState"),
+  redoState: document.querySelector("#redoState"),
+  historyStatus: document.querySelector("#historyStatus"),
   countyMedian: document.querySelector("#countyMedian"),
   countyQ1: document.querySelector("#countyQ1"),
   countyQ3: document.querySelector("#countyQ3"),
@@ -594,6 +601,107 @@ async function checkForAppUpdate({ reload = false } = {}) {
   } catch {
     if (reload) showToast("Kunde inte kontrollera ny version.");
   }
+}
+
+function captureHistoryState() {
+  const price = getPrice();
+  if (price === null) return null;
+  return {
+    fuel: selectedFuel,
+    county: selectedCounty,
+    priceMode,
+    price,
+    party: els.partyScenario?.value || "current",
+    compareA,
+    compareB,
+    energy: Number(els.energySlider?.value),
+    carbon: Number(els.carbonSlider?.value),
+    vat: Number(els.vatSlider?.value),
+    regulatory: Number(els.regulatorySlider?.value)
+  };
+}
+
+function historyKey(state) {
+  return state ? JSON.stringify(state) : "";
+}
+
+function updateHistoryControls() {
+  if (els.undoState) els.undoState.disabled = stateHistory.length < 2;
+  if (els.redoState) els.redoState.disabled = redoHistory.length === 0;
+  if (els.historyStatus) {
+    els.historyStatus.textContent = stateHistory.length
+      ? Math.min(stateHistory.length,20) + " lägen i historiken"
+      : "Historik redo";
+  }
+}
+
+function commitHistoryNow() {
+  if (isApplyingHistory) return;
+  const state = captureHistoryState();
+  if (!state) return;
+  const last = stateHistory[stateHistory.length - 1];
+  if (historyKey(last) === historyKey(state)) return;
+  stateHistory.push(state);
+  if (stateHistory.length > 20) stateHistory.shift();
+  redoHistory = [];
+  updateHistoryControls();
+}
+
+function scheduleHistoryCommit() {
+  if (isApplyingHistory) return;
+  clearTimeout(historyTimer);
+  historyTimer = setTimeout(commitHistoryNow, 450);
+}
+
+function applyHistoryState(state) {
+  if (!state) return;
+  isApplyingHistory = true;
+  selectedFuel = fuelData[state.fuel] ? state.fuel : selectedFuel;
+  selectedCounty = countyEntry(state.county) ? state.county : selectedCounty;
+  priceMode = ["county","manual","weekly"].includes(state.priceMode) ? state.priceMode : "manual";
+  compareA = countyEntry(state.compareA) ? state.compareA : compareA;
+  compareB = countyEntry(state.compareB) ? state.compareB : compareB;
+
+  if (els.countySelect) els.countySelect.value = selectedCounty;
+  if (els.compareCountyA) els.compareCountyA.value = compareA;
+  if (els.compareCountyB) els.compareCountyB.value = compareB;
+  if (validPrice(Number(state.price))) els.pumpPrice.value = fmt(Number(state.price));
+  if (els.partyScenario && politicalScenarios[state.party]) els.partyScenario.value = state.party;
+
+  const setControl = (range,number,value,min,max) => {
+    if (!range || !number || !Number.isFinite(Number(value))) return;
+    const safe = clamp(Number(value),min,max);
+    range.value = safe;
+    number.value = safe;
+  };
+  setControl(els.energySlider,els.energyNumber,state.energy,0,6);
+  setControl(els.carbonSlider,els.carbonNumber,state.carbon,0,6);
+  setControl(els.vatSlider,els.vatNumber,state.vat,0,30);
+  setControl(els.regulatorySlider,els.regulatoryNumber,state.regulatory,-3,8);
+
+  setFuelTabs();
+  syncPartyPills();
+  update();
+  isApplyingHistory = false;
+  updateHistoryControls();
+}
+
+function undoCalculatorState() {
+  if (stateHistory.length < 2) return;
+  clearTimeout(historyTimer);
+  const current = stateHistory.pop();
+  redoHistory.push(current);
+  applyHistoryState(stateHistory[stateHistory.length - 1]);
+  showToast("Senaste ändringen ångrades.");
+}
+
+function redoCalculatorState() {
+  if (!redoHistory.length) return;
+  clearTimeout(historyTimer);
+  const next = redoHistory.pop();
+  stateHistory.push(next);
+  applyHistoryState(next);
+  showToast("Ändringen gjordes om.");
 }
 
 function validPrice(value) {
@@ -1496,6 +1604,7 @@ function update() {
   updatePoliticalScenario(price);
   updateCustomSimulator(price, reference);
   updateUrl(price);
+  scheduleHistoryCommit();
 }
 
 function normalizePumpPrice() {
@@ -1837,9 +1946,23 @@ els.updateApp?.addEventListener("click", () => {
 els.refreshData?.addEventListener("click", () => checkForAppUpdate({reload:true}));
 
 document.addEventListener("keydown", event => {
-  if (event.metaKey || event.ctrlKey || event.altKey) return;
   const tag = document.activeElement?.tagName;
   const typing = ["INPUT","TEXTAREA","SELECT"].includes(tag);
+
+  if ((event.ctrlKey || event.metaKey) && !event.altKey && !typing) {
+    if (event.key.toLowerCase() === "z" && !event.shiftKey) {
+      event.preventDefault();
+      undoCalculatorState();
+      return;
+    }
+    if ((event.key.toLowerCase() === "z" && event.shiftKey) || event.key.toLowerCase() === "y") {
+      event.preventDefault();
+      redoCalculatorState();
+      return;
+    }
+  }
+
+  if (event.metaKey || event.ctrlKey || event.altKey) return;
   if (event.key === "/" && !typing) {
     event.preventDefault();
     els.countySearch?.focus();
@@ -1850,6 +1973,9 @@ document.addEventListener("keydown", event => {
     els.pumpPrice?.select();
   }
 });
+
+els.undoState?.addEventListener("click", undoCalculatorState);
+els.redoState?.addEventListener("click", redoCalculatorState);
 
 els.openTour?.addEventListener("click", () => {
   if (typeof els.welcomeDialog?.showModal === "function" && !els.welcomeDialog.open) {
