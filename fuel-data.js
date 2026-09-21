@@ -25,5 +25,5 @@ window.SITE_DATA = {
   dataVersion: "2026-09-21",
   lastFactCheck: "21 september 2026",
   defaultFuel: "petrol",
-  defaultPumpPrice: 16.49
+  defaultPumpPrice: 17.09
 };
