@@ -2,6 +2,7 @@ const fuelData = window.FUEL_DATA || {};
 const siteData = window.SITE_DATA || {};
 const marketData = window.MARKET_DATA || {};
 const countyData = window.COUNTY_PRICES || {};
+const glossaryData = window.GLOSSARY_DATA || [];
 const politicalScenarios = window.POLICY_SCENARIOS || {};
 
 let selectedFuel = siteData.defaultFuel || "petrol";
@@ -13,6 +14,7 @@ let compareA = "stockholm";
 let compareB = "ostergotland";
 let sourceRegistry = null;
 let sourceFilter = "all";
+let glossaryFilter = "all";
 let deferredInstallPrompt = null;
 let serviceWorkerRegistration = null;
 let viewMode = "simple";
@@ -154,6 +156,12 @@ const els = {
   registryCount: document.querySelector("#registryCount"),
   registryStatus: document.querySelector("#registryStatus"),
   registryFilters: [...document.querySelectorAll("[data-source-filter]")],
+  glossarySearch: document.querySelector("#glossarySearch"),
+  glossaryFilters: document.querySelector("#glossaryFilters"),
+  glossaryGrid: document.querySelector("#glossaryGrid"),
+  glossarySpotlight: document.querySelector("#glossarySpotlight"),
+  glossarySpotlightTerm: document.querySelector("#glossarySpotlightTerm"),
+  glossarySpotlightText: document.querySelector("#glossarySpotlightText"),
   welcomeDialog: document.querySelector("#welcomeDialog"),
   welcomeStart: document.querySelector("#welcomeStart"),
   welcomeSkip: document.querySelector("#welcomeSkip"),
@@ -935,6 +943,67 @@ function openCommandPalette() {
   renderCommandPalette();
   els.commandDialog.showModal();
   setTimeout(() => els.commandSearch?.focus(), 0);
+}
+
+function glossaryCategories() {
+  return [...new Set(glossaryData.map(item => item.category).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"sv"));
+}
+
+function showGlossarySpotlight(item) {
+  if (!item || !els.glossarySpotlight) return;
+  els.glossarySpotlight.hidden = false;
+  els.glossarySpotlightTerm.textContent = item.term;
+  els.glossarySpotlightText.textContent = item.short;
+}
+
+function renderGlossaryFilters() {
+  if (!els.glossaryFilters) return;
+  const categories = ["all", ...glossaryCategories()];
+  els.glossaryFilters.innerHTML = "";
+  categories.forEach(category => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "glossary-filter" + (category === glossaryFilter ? " active" : "");
+    button.textContent = category === "all" ? "Alla" : category.charAt(0).toUpperCase()+category.slice(1);
+    button.setAttribute("aria-pressed", String(category === glossaryFilter));
+    button.addEventListener("click", () => {
+      glossaryFilter = category;
+      renderGlossaryFilters();
+      renderGlossary();
+    });
+    els.glossaryFilters.appendChild(button);
+  });
+}
+
+function renderGlossary() {
+  if (!els.glossaryGrid) return;
+  const q = (els.glossarySearch?.value || "").trim().toLocaleLowerCase("sv");
+  let items = [...glossaryData];
+  if (glossaryFilter !== "all") items = items.filter(item => item.category === glossaryFilter);
+  if (q) items = items.filter(item =>
+    (item.term + " " + item.short + " " + item.category).toLocaleLowerCase("sv").includes(q)
+  );
+
+  els.glossaryGrid.innerHTML = "";
+  items.forEach(item => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "glossary-card";
+    card.innerHTML = `
+      <span>${item.category || "begrepp"}</span>
+      <strong>${item.term}</strong>
+      <p>${item.short}</p>
+    `;
+    card.addEventListener("click", () => showGlossarySpotlight(item));
+    els.glossaryGrid.appendChild(card);
+  });
+
+  if (!items.length) {
+    const empty = document.createElement("div");
+    empty.className = "registry-empty";
+    empty.textContent = "Inga begrepp matchar sökningen.";
+    els.glossaryGrid.appendChild(empty);
+  }
 }
 
 function validPrice(value) {
@@ -2346,6 +2415,8 @@ bindPair(els.carbonSlider, els.carbonNumber);
 bindPair(els.vatSlider, els.vatNumber);
 bindPair(els.regulatorySlider, els.regulatoryNumber);
 
+els.glossarySearch?.addEventListener("input", renderGlossary);
+
 els.registryFilters.forEach(button => {
   button.addEventListener("click", () => {
     sourceFilter = button.dataset.sourceFilter || "all";
@@ -2517,6 +2588,8 @@ buildPartyPills();
 setupNavObserver();
 maybeShowWelcome();
 loadSourceRegistry();
+renderGlossaryFilters();
+renderGlossary();
 updateMarketReferences();
 updateHeroReferenceChips();
 update();
