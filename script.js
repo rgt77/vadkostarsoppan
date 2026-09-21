@@ -205,6 +205,8 @@ const els = {
   policyBio: document.querySelector("#policyBio"),
   policyVat: document.querySelector("#policyVat"),
   policySupport: document.querySelector("#policySupport"),
+  policyDiffGrid: document.querySelector("#policyDiffGrid"),
+  policyDiffStatus: document.querySelector("#policyDiffStatus"),
   politicalShareKr: document.querySelector("#politicalShareKr"),
   politicalSharePct: document.querySelector("#politicalSharePct"),
   marketBaseKr: document.querySelector("#marketBaseKr"),
@@ -1283,6 +1285,45 @@ function updateCustomSimulator(price, reference) {
   return { scenarioPrice, delta, energy, carbon, vatPercent, regulatory };
 }
 
+function renderPolicyDiff(selectedScenario) {
+  if (!els.policyDiffGrid) return;
+  const reference = politicalScenarios.current;
+  if (!reference || !selectedScenario) return;
+
+  const fields = [
+    ["tax","Drivmedelsskatt"],
+    ["reduction","Reduktionsplikt"],
+    ["bio","Biodrivmedel"],
+    ["vat","Moms"],
+    ["support","Stöd"]
+  ];
+
+  els.policyDiffGrid.innerHTML = "";
+  let changedCount = 0;
+
+  fields.forEach(([key,label]) => {
+    const currentText = reference.policies?.[key] || "Ej angivet";
+    const selectedText = selectedScenario.policies?.[key] || "Ej angivet";
+    const changed = currentText.trim() !== selectedText.trim();
+    if (changed) changedCount += 1;
+
+    const card = document.createElement("article");
+    card.className = "policy-diff-card " + (changed ? "changed" : "same");
+    card.innerHTML = `
+      <span>${label}</span>
+      <strong>${selectedText}</strong>
+      <small>${changed ? "Skiljer sig från referenstexten." : "Samma som referensen i nuvarande datamodell."}</small>
+    `;
+    els.policyDiffGrid.appendChild(card);
+  });
+
+  if (els.policyDiffStatus) {
+    els.policyDiffStatus.textContent = selectedScenario === reference
+      ? "Referensscenario"
+      : changedCount + " av " + fields.length + " poster skiljer sig i det dokumenterade underlaget";
+  }
+}
+
 function updatePoliticalScenario(price) {
   const key = els.partyScenario?.value || "current";
   const scenario = politicalScenarios[key] || politicalScenarios.current;
@@ -1300,6 +1341,7 @@ function updatePoliticalScenario(price) {
   els.policyBio.textContent = scenario.policies?.bio || "Ej angivet";
   els.policyVat.textContent = scenario.policies?.vat || "Ej angivet";
   els.policySupport.textContent = scenario.policies?.support || "Ej angivet";
+  renderPolicyDiff(scenario);
 
   if (scenario.source) {
     els.scenarioSource.hidden = false;
