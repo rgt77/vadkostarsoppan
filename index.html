@@ -233,6 +233,10 @@
           <a id="countySource" href="https://www.carculated.se/bensinpriser" target="_blank" rel="noopener">Priskälla ↗</a>
         </div>
         <div class="county-recent-wrap">
+          <span>Favoriter</span>
+          <div class="county-recent" id="countyFavorites"></div>
+        </div>
+        <div class="county-recent-wrap">
           <span>Senast valda</span>
           <div class="county-recent" id="countyRecent"></div>
         </div>
@@ -497,7 +501,10 @@
 
       <div class="county-list-head">
         <span id="countyListCount">21 län</span>
-        <button id="countyFocusSelected" type="button">Visa valt län</button>
+        <div>
+          <button id="countyFavoritesOnly" type="button" aria-pressed="false">☆ Bara favoriter</button>
+          <button id="countyFocusSelected" type="button">Visa valt län</button>
+        </div>
       </div>
       <div class="county-list" id="countyList" role="list" aria-label="Bränslepris per län"></div>
 
