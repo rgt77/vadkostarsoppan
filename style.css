@@ -2068,3 +2068,75 @@ footer {
   }
   .receipt-actions { display: none !important; }
 }
+
+
+/* Steps 41-50: market comparison and source quality */
+.market-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+.source-quality {
+  padding: 5px 7px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+.source-quality.official { color: var(--good); }
+.source-quality.derived { color: var(--vat); }
+.source-quality.model { color: var(--accent); }
+.market-local-compare {
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+.market-local-compare article {
+  display: grid;
+  gap: 5px;
+  padding: 16px 17px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: rgba(255,255,255,.018);
+}
+.market-local-compare span,
+.market-local-compare small {
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.35;
+}
+.market-local-compare strong {
+  font-size: 20px;
+  letter-spacing: -.04em;
+}
+.market-explainer {
+  margin-top: 14px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.market-explainer summary {
+  padding: 16px 0;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 800;
+}
+.market-explainer div {
+  max-width: 860px;
+  padding-bottom: 18px;
+}
+.market-explainer p {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+.market-explainer strong { color: var(--text); }
+
+@media (max-width: 880px) {
+  .market-local-compare { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 520px) {
+  .market-local-compare { grid-template-columns: 1fr; }
+}
