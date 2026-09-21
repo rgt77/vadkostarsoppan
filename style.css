@@ -832,3 +832,21 @@ footer {
   .chain-card { min-height: auto; }
   .chain-card h3 { margin-top: 34px; }
 }
+
+.input-grid.single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.input-grid.single .input-card {
+  max-width: 560px;
+}
+
+.input-grid.single .input-line input {
+  width: min(100%, 300px);
+}
+
+@media (max-width: 720px) {
+  .input-grid.single .input-card {
+    max-width: none;
+  }
+}
