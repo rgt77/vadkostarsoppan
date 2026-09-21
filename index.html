@@ -66,6 +66,11 @@
         <span id="headerFuel">Bensin 95</span>
         <strong id="headerPrice">— kr/l</strong>
       </div>
+      <div class="view-toggle" aria-label="Visningsläge">
+        <button id="simpleMode" type="button" aria-pressed="true">Enkel</button>
+        <button id="expertMode" type="button" aria-pressed="false">Expert</button>
+      </div>
+      <button class="contrast-toggle" id="themeToggle" type="button" aria-pressed="false" title="Växla ljust/mörkt tema">☼</button>
       <button class="contrast-toggle" id="contrastToggle" type="button" aria-pressed="false" title="Växla hög kontrast">◐</button>
     </div>
     <nav class="nav" aria-label="Huvudmeny">
@@ -336,7 +341,7 @@
 
 
 
-    <section class="saved-section" id="sparat" aria-labelledby="saved-title">
+    <section class="saved-section expert-only" id="sparat" aria-labelledby="saved-title">
       <div class="saved-head">
         <div>
           <p class="section-label">SPARADE LÄGEN</p>
@@ -448,7 +453,7 @@
     </section>
 
 
-    <section class="county-compare-section" id="lanjamforelse" aria-labelledby="county-compare-title">
+    <section class="county-compare-section expert-only" id="lanjamforelse" aria-labelledby="county-compare-title">
       <div class="section-heading">
         <p class="section-label">LÄN MOT LÄN</p>
         <h2 id="county-compare-title">Jämför två län direkt.</h2>
@@ -506,7 +511,7 @@
     </section>
 
 
-    <section class="distribution-section" id="prisfordelning" aria-labelledby="distribution-title">
+    <section class="distribution-section expert-only" id="prisfordelning" aria-labelledby="distribution-title">
       <div class="section-heading">
         <p class="section-label">PRISFÖRDELNING</p>
         <h2 id="distribution-title">Hur ligger ditt län till?</h2>
@@ -949,7 +954,7 @@
     </section>
 
 
-    <section class="registry-section" id="kallregister" aria-labelledby="registry-title">
+    <section class="registry-section expert-only" id="kallregister" aria-labelledby="registry-title">
       <div class="section-heading registry-heading">
         <div>
           <p class="section-label">KÄLLREGISTRET</p>
