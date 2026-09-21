@@ -120,6 +120,14 @@ const els = {
   bridgeMarket: document.querySelector("#bridgeMarket"),
   bridgeCrude: document.querySelector("#bridgeCrude"),
   bridgeGap: document.querySelector("#bridgeGap"),
+  marketCountyPrice: document.querySelector("#marketCountyPrice"),
+  marketCountyName: document.querySelector("#marketCountyName"),
+  marketNationalPrice: document.querySelector("#marketNationalPrice"),
+  marketCountyVsNational: document.querySelector("#marketCountyVsNational"),
+  marketWeeklyCompare: document.querySelector("#marketWeeklyCompare"),
+  marketCountyVsWeekly: document.querySelector("#marketCountyVsWeekly"),
+  crudeShareOfPump: document.querySelector("#crudeShareOfPump"),
+  marketDataAge: document.querySelector("#marketDataAge"),
   tabs: [...document.querySelectorAll(".fuel-tab")],
 
   partyScenario: document.querySelector("#partyScenario"),
@@ -566,6 +574,22 @@ function updateMarketReferences() {
   if (els.bridgePump) els.bridgePump.textContent = Number.isFinite(weeklyPrice) ? fmt(weeklyPrice) + " kr/l" : "—";
   if (els.bridgeCrude) els.bridgeCrude.textContent = crudeSek === null ? "—" : fmt(crudeSek) + " kr/l";
 
+  const local = countyPriceForFuel();
+  const national = countyPriceForFuel("riket");
+  const entry = countyEntry();
+
+  if (els.marketCountyPrice) els.marketCountyPrice.textContent = Number.isFinite(local) ? fmt(local) + " kr/l" : "—";
+  if (els.marketCountyName) els.marketCountyName.textContent = entry?.name || "—";
+  if (els.marketNationalPrice) els.marketNationalPrice.textContent = Number.isFinite(national) ? fmt(national) + " kr/l" : "—";
+  if (els.marketCountyVsNational) {
+    els.marketCountyVsNational.textContent = Number.isFinite(local) && Number.isFinite(national) ? signed(local - national) + " mot rikssnitt" : "—";
+  }
+  if (els.marketWeeklyCompare) els.marketWeeklyCompare.textContent = Number.isFinite(weeklyPrice) ? fmt(weeklyPrice) + " kr/l" : "—";
+  if (els.marketCountyVsWeekly) {
+    els.marketCountyVsWeekly.textContent = Number.isFinite(local) && Number.isFinite(weeklyPrice) ? signed(local - weeklyPrice) + " mot länssnitt" : "—";
+  }
+  if (els.marketDataAge) els.marketDataAge.textContent = formatDataFreshness(countyData.updatedAt);
+
   return { weeklyPrice, crudeSek };
 }
 
@@ -916,6 +940,9 @@ function update() {
   els.marketBaseKr.textContent = fmt(marketBase) + " kr/l";
 
   const marketRefs = updateMarketReferences();
+  if (els.crudeShareOfPump) {
+    els.crudeShareOfPump.textContent = marketRefs.crudeSek === null ? "—" : fmt(pct(marketRefs.crudeSek, price),1) + " %";
+  }
   if (els.bridgeMarket) {
     if (Number.isFinite(marketRefs.weeklyPrice)) {
       const weeklyReference = getReference(marketRefs.weeklyPrice);
