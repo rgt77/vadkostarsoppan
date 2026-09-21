@@ -54,6 +54,15 @@ const els = {
   shockMarketBar: document.querySelector("#shockMarketBar"),
   shockTaxBar: document.querySelector("#shockTaxBar"),
   shockVatBar: document.querySelector("#shockVatBar"),
+  targetPriceInput: document.querySelector("#targetPriceInput"),
+  targetPriceSlider: document.querySelector("#targetPriceSlider"),
+  targetCurrentMarket: document.querySelector("#targetCurrentMarket"),
+  targetRequiredMarket: document.querySelector("#targetRequiredMarket"),
+  targetMarketDelta: document.querySelector("#targetMarketDelta"),
+  targetMarketDeltaPct: document.querySelector("#targetMarketDeltaPct"),
+  targetMechanicalFloor: document.querySelector("#targetMechanicalFloor"),
+  targetMessage: document.querySelector("#targetMessage"),
+  targetPresets: [...document.querySelectorAll("[data-target-delta]")],
   settingsOpen: document.querySelector("#settingsOpen"),
   commandOpen: document.querySelector("#commandOpen"),
   commandDialog: document.querySelector("#commandDialog"),
@@ -959,6 +968,40 @@ function updateSensitivityLab(price, reference) {
   if (els.shockMarketBar) els.shockMarketBar.style.width = pct(newMarket,total) + "%";
   if (els.shockTaxBar) els.shockTaxBar.style.width = pct(reference.excise,total) + "%";
   if (els.shockVatBar) els.shockVatBar.style.width = pct(scenarioVat,total) + "%";
+}
+
+function updateTargetSolver(price, reference) {
+  if (!els.targetPriceInput || !els.targetPriceSlider) return;
+  let target = parseNumber(els.targetPriceInput.value);
+  if (!Number.isFinite(target)) target = Number(els.targetPriceSlider.value);
+  target = clamp(target, 1, 100);
+
+  const pretaxTarget = target / (1 + reference.vatRate);
+  const requiredMarketRaw = pretaxTarget - reference.excise;
+  const requiredMarket = Math.max(0, requiredMarketRaw);
+  const delta = requiredMarket - reference.marketBase;
+  const deltaPct = reference.marketBase > 0 ? delta / reference.marketBase * 100 : 0;
+  const floor = reference.excise * (1 + reference.vatRate);
+
+  if (els.targetCurrentMarket) els.targetCurrentMarket.textContent = fmt(reference.marketBase) + " kr/l";
+  if (els.targetRequiredMarket) els.targetRequiredMarket.textContent = fmt(requiredMarket) + " kr/l";
+  if (els.targetMarketDelta) els.targetMarketDelta.textContent = signed(delta);
+  if (els.targetMarketDeltaPct) els.targetMarketDeltaPct.textContent = signed(deltaPct," %");
+  if (els.targetMechanicalFloor) els.targetMechanicalFloor.textContent = fmt(floor) + " kr/l";
+
+  if (els.targetMessage) {
+    const impossible = requiredMarketRaw < 0;
+    els.targetMessage.classList.toggle("impossible", impossible);
+    els.targetMessage.textContent = impossible
+      ? "Det valda målpriset ligger under det mekaniska golvet i den här modellen. Med oförändrade punktskatter och momssats skulle marknad/kedja behöva bli negativ, vilket modellen inte tillåter."
+      : "För att nå " + fmt(target) + " kr/l med oförändrade skatter och momssats skulle marknad/kedja behöva " +
+        (Math.abs(deltaPct) < .05 ? "vara ungefär oförändrad." : (delta < 0 ? "minska med " : "öka med ") + fmt(Math.abs(deltaPct),1) + " %.");
+  }
+
+  const sliderValue = clamp(target, Number(els.targetPriceSlider.min), Number(els.targetPriceSlider.max));
+  if (Math.abs(Number(els.targetPriceSlider.value) - sliderValue) > .05) {
+    els.targetPriceSlider.value = sliderValue;
+  }
 }
 
 function updateSimpleExplainer(price, marketBase, politicalDirect) {
@@ -2048,6 +2091,7 @@ function update() {
   updateDuel(price, marketBase, politicalDirect);
   updateSimpleExplainer(price, marketBase, politicalDirect);
   updateSensitivityLab(price, reference);
+  updateTargetSolver(price, reference);
 
   const colors = ["var(--other)", "var(--energy)", "var(--carbon)", "var(--vat)"];
   let cursor = 0;
@@ -2232,6 +2276,28 @@ els.useNationalAverage?.addEventListener("click", () => {
   priceMode = "county";
   if (els.countySelect) els.countySelect.value = "riket";
   applyCountyPrice({ announceChange: true });
+});
+
+els.targetPriceSlider?.addEventListener("input", () => {
+  els.targetPriceInput.value = fmt(Number(els.targetPriceSlider.value));
+  update();
+});
+els.targetPriceInput?.addEventListener("input", update);
+els.targetPriceInput?.addEventListener("blur", () => {
+  const value = parseNumber(els.targetPriceInput.value);
+  if (Number.isFinite(value)) els.targetPriceInput.value = fmt(clamp(value,1,100));
+  update();
+});
+els.targetPresets.forEach(button => {
+  button.addEventListener("click", () => {
+    const current = getPrice();
+    const delta = Number(button.dataset.targetDelta);
+    if (current === null || !Number.isFinite(delta)) return;
+    const target = clamp(current + delta, 1, 100);
+    els.targetPriceInput.value = fmt(target);
+    els.targetPriceSlider.value = clamp(target, Number(els.targetPriceSlider.min), Number(els.targetPriceSlider.max));
+    update();
+  });
 });
 
 els.marketShockSlider?.addEventListener("input", update);
