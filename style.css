@@ -786,3 +786,31 @@ footer {
   font-size: 18px;
   line-height: 1.6;
 }
+
+
+.politics-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+.politics-actions button {
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  color: var(--text);
+  background: var(--surface-2);
+  cursor: pointer;
+  font-weight: 750;
+}
+.politics-actions span {
+  color: var(--muted);
+  font-size: 11px;
+}
+@media (max-width: 560px) {
+  .politics-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
