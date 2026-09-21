@@ -36,6 +36,24 @@
   <a class="skip-link" href="#main">Hoppa till innehållet</a>
   <div class="noise" aria-hidden="true"></div>
 
+  <dialog class="command-dialog" id="commandDialog" aria-labelledby="commandTitle">
+    <form method="dialog">
+      <div class="command-head">
+        <div>
+          <p class="section-label">SNABBSÖK</p>
+          <h2 id="commandTitle">Vad vill du göra?</h2>
+        </div>
+        <button class="dialog-close" value="close" aria-label="Stäng snabbkommandon">×</button>
+      </div>
+      <label class="command-search">
+        <span>Sök åtgärd, län eller sektion</span>
+        <input id="commandSearch" type="search" autocomplete="off" placeholder="Exempel: diesel, Östergötland, politik…">
+      </label>
+      <div class="command-list" id="commandList" role="listbox" aria-label="Snabbkommandon"></div>
+      <small class="command-help">↑ ↓ navigera · Enter kör · Esc stänger</small>
+    </form>
+  </dialog>
+
   <dialog class="settings-dialog" id="settingsDialog" aria-labelledby="settingsTitle">
     <form method="dialog">
       <div class="settings-head">
@@ -117,6 +135,7 @@
       </div>
       <button class="contrast-toggle" id="themeToggle" type="button" aria-pressed="false" title="Växla ljust/mörkt tema">☼</button>
       <button class="contrast-toggle" id="contrastToggle" type="button" aria-pressed="false" title="Växla hög kontrast">◐</button>
+      <button class="contrast-toggle" id="commandOpen" type="button" title="Snabbkommandon">⌘</button>
       <button class="contrast-toggle" id="settingsOpen" type="button" title="Inställningar">⚙</button>
     </div>
     <nav class="nav" aria-label="Huvudmeny">
