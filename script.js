@@ -70,6 +70,21 @@ const els = {
   taxSharePolyline: document.querySelector("#taxSharePolyline"),
   taxShareDot: document.querySelector("#taxShareDot"),
   curveDotLabel: document.querySelector("#curveDotLabel"),
+  reportHeading: document.querySelector("#reportHeading"),
+  reportVersion: document.querySelector("#reportVersion"),
+  reportPrice: document.querySelector("#reportPrice"),
+  reportTax: document.querySelector("#reportTax"),
+  reportMarket: document.querySelector("#reportMarket"),
+  reportEnergy: document.querySelector("#reportEnergy"),
+  reportCarbon: document.querySelector("#reportCarbon"),
+  reportVat: document.querySelector("#reportVat"),
+  reportMode: document.querySelector("#reportMode"),
+  reportPolicy: document.querySelector("#reportPolicy"),
+  reportDate: document.querySelector("#reportDate"),
+  reportSummary: document.querySelector("#reportSummary"),
+  copyReportText: document.querySelector("#copyReportText"),
+  copyReportMarkdown: document.querySelector("#copyReportMarkdown"),
+  printReport: document.querySelector("#printReport"),
   settingsOpen: document.querySelector("#settingsOpen"),
   commandOpen: document.querySelector("#commandOpen"),
   commandDialog: document.querySelector("#commandDialog"),
@@ -1055,6 +1070,82 @@ function updateTaxShareCurve(price, reference) {
   if (els.curveCurrentTax) els.curveCurrentTax.textContent = fmt(current.total) + " kr/l";
   if (els.curveCurrentShare) els.curveCurrentShare.textContent = fmt(current.share,1) + " %";
   if (els.curveExcise) els.curveExcise.textContent = fmt(current.excise) + " kr/l";
+}
+
+function currentReportData(price, reference) {
+  const location = countyEntry()?.name || "Hela Sverige";
+  const scenario = politicalScenarios[els.partyScenario?.value || "current"] || politicalScenarios.current;
+  const modeLabel = priceMode === "manual" ? "Eget pris" : priceMode === "weekly" ? "Veckoreferens" : (selectedCounty === "riket" ? "Rikssnitt" : "Länssnitt");
+  return {
+    location,
+    fuel: reference.fuel.label,
+    price,
+    market: reference.marketBase,
+    taxTotal: reference.politicalDirect,
+    energy: reference.fuel.energyTax,
+    carbon: reference.fuel.carbonTax,
+    vat: reference.vat,
+    modeLabel,
+    scenarioName: scenario?.name || "Nuvarande regler",
+    dataDate: countyData.updatedAt || siteData.dataVersion || "—"
+  };
+}
+
+function reportText(data, markdown = false) {
+  if (!data) return "";
+  const lines = markdown
+    ? [
+        "# Vad kostar soppan?",
+        "",
+        "**" + data.fuel + " · " + data.location + "**",
+        "",
+        "- Pumppris: **" + fmt(data.price) + " kr/l**",
+        "- Marknad/kedja: " + fmt(data.market) + " kr/l",
+        "- Energiskatt: " + fmt(data.energy) + " kr/l",
+        "- Koldioxidskatt: " + fmt(data.carbon) + " kr/l",
+        "- Moms: " + fmt(data.vat) + " kr/l",
+        "- Skatt + moms totalt: " + fmt(data.taxTotal) + " kr/l",
+        "- Prisreferens: " + data.modeLabel,
+        "- Politikscenario: " + data.scenarioName,
+        "- Datadatum: " + data.dataDate,
+        "",
+        window.location.href
+      ]
+    : [
+        "Vad kostar soppan?",
+        data.fuel + " · " + data.location,
+        "Pumppris: " + fmt(data.price) + " kr/l",
+        "Marknad/kedja: " + fmt(data.market) + " kr/l",
+        "Energiskatt: " + fmt(data.energy) + " kr/l",
+        "Koldioxidskatt: " + fmt(data.carbon) + " kr/l",
+        "Moms: " + fmt(data.vat) + " kr/l",
+        "Skatt + moms totalt: " + fmt(data.taxTotal) + " kr/l",
+        "Prisreferens: " + data.modeLabel,
+        "Politikscenario: " + data.scenarioName,
+        "Datadatum: " + data.dataDate,
+        window.location.href
+      ];
+  return lines.join("\n");
+}
+
+function updateReport(price, reference) {
+  if (!els.reportPrice) return;
+  const data = currentReportData(price, reference);
+  const share = pct(data.taxTotal, data.price);
+
+  els.reportHeading.textContent = data.fuel + " · " + data.location;
+  els.reportVersion.textContent = "v" + (siteData.appVersion || "—");
+  els.reportPrice.textContent = fmt(data.price) + " kr/l";
+  els.reportTax.textContent = fmt(data.taxTotal) + " kr/l";
+  els.reportMarket.textContent = fmt(data.market) + " kr/l";
+  els.reportEnergy.textContent = fmt(data.energy) + " kr/l";
+  els.reportCarbon.textContent = fmt(data.carbon) + " kr/l";
+  els.reportVat.textContent = fmt(data.vat) + " kr/l";
+  els.reportMode.textContent = data.modeLabel;
+  els.reportPolicy.textContent = data.scenarioName;
+  els.reportDate.textContent = data.dataDate;
+  els.reportSummary.textContent =
+    "Av pumppriset motsvarar cirka " + fmt(share,1) + " % skatt + moms. Marknad/kedja är en restpost tills fler verifierade kostnadsled kan särredovisas.";
 }
 
 function updateSimpleExplainer(price, marketBase, politicalDirect) {
@@ -2146,6 +2237,7 @@ function update() {
   updateSensitivityLab(price, reference);
   updateTargetSolver(price, reference);
   updateTaxShareCurve(price, reference);
+  updateReport(price, reference);
 
   const colors = ["var(--other)", "var(--energy)", "var(--carbon)", "var(--vat)"];
   let cursor = 0;
@@ -2791,6 +2883,39 @@ async function copyCurrentScenarioLink() {
 }
 
 els.copyScenarioLink?.addEventListener("click", copyCurrentScenarioLink);
+
+els.copyReportText?.addEventListener("click", async () => {
+  const price = getPrice();
+  if (price === null) return;
+  const value = reportText(currentReportData(price,getReference(price)),false);
+  try {
+    await navigator.clipboard.writeText(value);
+    showToast("Rapporttexten är kopierad.");
+  } catch {
+    showToast("Kunde inte kopiera rapporten.");
+  }
+});
+els.copyReportMarkdown?.addEventListener("click", async () => {
+  const price = getPrice();
+  if (price === null) return;
+  const value = reportText(currentReportData(price,getReference(price)),true);
+  try {
+    await navigator.clipboard.writeText(value);
+    showToast("Markdown-rapporten är kopierad.");
+  } catch {
+    showToast("Kunde inte kopiera rapporten.");
+  }
+});
+els.printReport?.addEventListener("click", () => {
+  document.body.classList.add("print-report");
+  const cleanup = () => {
+    document.body.classList.remove("print-report");
+    window.removeEventListener("afterprint",cleanup);
+  };
+  window.addEventListener("afterprint",cleanup);
+  window.print();
+  setTimeout(cleanup,1500);
+});
 
 els.copyReceipt?.addEventListener("click", async () => {
   const textValue = receiptSummaryText();
