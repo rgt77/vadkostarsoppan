@@ -416,6 +416,60 @@
 
 
 
+
+    <section class="sensitivity-section" id="prischock" aria-labelledby="sensitivity-title">
+      <div class="section-heading">
+        <p class="section-label">PRISCHOCKSLABBET</p>
+        <h2 id="sensitivity-title">Vad händer om marknadsdelen rör sig?</h2>
+        <p class="section-intro">Här ändras bara marknad/kedja före skatt. Energiskatt, koldioxidskatt och momssats hålls oförändrade. Det är en mekanisk känslighetsanalys, inte en prognos.</p>
+      </div>
+
+      <div class="sensitivity-card">
+        <div class="sensitivity-control">
+          <div class="sensitivity-control-head">
+            <span>Förändring av marknad/kedja</span>
+            <strong id="marketShockLabel">0 %</strong>
+          </div>
+          <input id="marketShockSlider" type="range" min="-40" max="40" step="1" value="0" aria-label="Förändring av marknad och kedja i procent">
+          <div class="sensitivity-presets">
+            <button type="button" data-market-shock="-20">−20 %</button>
+            <button type="button" data-market-shock="-10">−10 %</button>
+            <button type="button" data-market-shock="0">Nollställ</button>
+            <button type="button" data-market-shock="10">+10 %</button>
+            <button type="button" data-market-shock="20">+20 %</button>
+          </div>
+        </div>
+
+        <div class="sensitivity-results">
+          <article>
+            <span>Referens</span>
+            <strong id="shockBasePrice">— kr/l</strong>
+            <small id="shockBaseMarket">Marknad —</small>
+          </article>
+          <div class="sensitivity-arrow">→</div>
+          <article>
+            <span>Efter förändring</span>
+            <strong id="shockScenarioPrice">— kr/l</strong>
+            <small id="shockScenarioMarket">Marknad —</small>
+          </article>
+          <article class="sensitivity-delta">
+            <span>Skillnad vid pump</span>
+            <strong id="shockDelta">—</strong>
+            <small id="shockPassThrough">—</small>
+          </article>
+        </div>
+
+        <div class="sensitivity-stack">
+          <span id="shockMarketBar"></span>
+          <span id="shockTaxBar"></span>
+          <span id="shockVatBar"></span>
+        </div>
+        <div class="sensitivity-stack-labels">
+          <span>Marknad/kedja</span><span>Punktskatter</span><span>Moms</span>
+        </div>
+      </div>
+    </section>
+
     <section class="saved-section expert-only" id="sparat" aria-labelledby="saved-title">
       <div class="saved-head">
         <div>
