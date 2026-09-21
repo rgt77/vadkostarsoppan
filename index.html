@@ -29,6 +29,9 @@
   </script>
 </head>
 <body>
+  <noscript>
+    <div class="noscript-warning">JavaScript behöver vara aktiverat för att kalkylen och länsjämförelsen ska fungera.</div>
+  </noscript>
   <a class="skip-link" href="#main">Hoppa till innehållet</a>
   <div class="noise" aria-hidden="true"></div>
 
@@ -254,10 +257,10 @@
 
       <div class="chip-helper">Tryck på en kostnadsdel för att lysa upp den i litern ↓</div>
       <div class="cost-chips" aria-label="Snabböversikt kostnadsposter">
-        <button type="button" class="cost-chip market" data-focus-part="market"><span>Marknad/kedja</span><strong id="chipMarket">—</strong></button>
-        <button type="button" class="cost-chip energy" data-focus-part="energy"><span>Energiskatt</span><strong id="chipEnergy">—</strong></button>
-        <button type="button" class="cost-chip carbon" data-focus-part="carbon"><span>Koldioxidskatt</span><strong id="chipCarbon">—</strong></button>
-        <button type="button" class="cost-chip vat" data-focus-part="vat"><span>Moms</span><strong id="chipVat">—</strong></button>
+        <button type="button" class="cost-chip market" data-focus-part="market" title="Markera marknad och kedja i litern"><span>Marknad/kedja</span><strong id="chipMarket">—</strong></button>
+        <button type="button" class="cost-chip energy" data-focus-part="energy" title="Markera energiskatten i litern"><span>Energiskatt</span><strong id="chipEnergy">—</strong></button>
+        <button type="button" class="cost-chip carbon" data-focus-part="carbon" title="Markera koldioxidskatten i litern"><span>Koldioxidskatt</span><strong id="chipCarbon">—</strong></button>
+        <button type="button" class="cost-chip vat" data-focus-part="vat" title="Markera momsen i litern"><span>Moms</span><strong id="chipVat">—</strong></button>
       </div>
 
       <div class="price-story" id="priceStory" aria-live="polite">—</div>
@@ -313,10 +316,12 @@
         </div>
       </div>
 
+      <div class="keyboard-hint"><span>/</span> sök län · <span>P</span> fokusera pumppris</div>
       <div class="county-toolbar">
         <label class="county-search">
           <span>Sök län</span>
-          <input id="countySearch" type="search" autocomplete="off" placeholder="Skriv t.ex. Östergötland" aria-controls="countyList">
+          <input id="countySearch" type="search" autocomplete="off" placeholder="Skriv t.ex. Östergötland" aria-controls="countyList" aria-describedby="countySearchHelp">
+          <small id="countySearchHelp">Sök bland samtliga 21 län.</small>
         </label>
         <label class="county-sort">
           <span>Sortera</span>
@@ -375,6 +380,14 @@
         <button id="countyFocusSelected" type="button">Visa valt län</button>
       </div>
       <div class="county-list" id="countyList" role="list" aria-label="Bränslepris per län"></div>
+
+      <details class="county-method">
+        <summary>Hur ska länspriserna tolkas?</summary>
+        <div>
+          <p>Länsvärdena är snitt av rapporterade stationspriser och är därför riktvärden, inte ett löfte om priset på en viss station.</p>
+          <p>En stor avvikelse kan bero på få rapporter, lokal konkurrens eller andra lokala förhållanden. Ange ditt faktiska stationspris i Literlabbet om du vill räkna på exakt det pris du möter.</p>
+        </div>
+      </details>
     </section>
 
     <section class="market-section" id="marknad" aria-labelledby="market-title">
@@ -757,6 +770,10 @@
         <details>
           <summary>Kan ett parti bestämma pumppriset?</summary>
           <p>Nej. Politiska beslut kan direkt ändra skatt, moms och regelverk, men inte ensidigt sätta internationella produktpriser, valutakurs eller alla kommersiella kostnader.</p>
+        </details>
+        <details>
+          <summary>Varför skiljer priset mellan olika län?</summary>
+          <p>Stationspriser kan skilja sig mellan orter och län beroende på bland annat konkurrens, logistik och lokal prissättning. Därför använder sidan länssnitt som valbar referens och låter dig skriva in ditt eget stationspris.</p>
         </details>
         <details>
           <summary>Varför visas inget exakt partipris för vissa partier?</summary>
