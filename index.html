@@ -469,6 +469,46 @@
       </div>
     </section>
 
+
+    <section class="distribution-section" id="prisfordelning" aria-labelledby="distribution-title">
+      <div class="section-heading">
+        <p class="section-label">PRISFÖRDELNING</p>
+        <h2 id="distribution-title">Hur ligger ditt län till?</h2>
+        <p class="section-intro">Se median, kvartiler och hur länspriserna fördelar sig för vald bränsletyp.</p>
+      </div>
+
+      <div class="distribution-grid">
+        <article>
+          <span>Median</span>
+          <strong id="countyMedian">— kr/l</strong>
+          <small>mitten av alla län</small>
+        </article>
+        <article>
+          <span>25:e percentilen</span>
+          <strong id="countyQ1">— kr/l</strong>
+          <small>en fjärdedel ligger lägre</small>
+        </article>
+        <article>
+          <span>75:e percentilen</span>
+          <strong id="countyQ3">— kr/l</strong>
+          <small>tre fjärdedelar ligger lägre</small>
+        </article>
+        <article>
+          <span>Valt län</span>
+          <strong id="countyPercentile">—</strong>
+          <small id="countyPercentileDetail">—</small>
+        </article>
+      </div>
+
+      <div class="distribution-histogram" id="countyHistogram" aria-label="Fördelning av länspriser"></div>
+      <div class="distribution-legend">
+        <span><i class="hist-dot normal"></i>Län</span>
+        <span><i class="hist-dot selected"></i>Valt län</span>
+        <span><i class="hist-dot outlier"></i>Statistisk avvikare</span>
+      </div>
+      <p class="distribution-note" id="distributionNote">—</p>
+    </section>
+
     <section class="market-section" id="marknad" aria-labelledby="market-title">
       <div class="section-heading">
         <p class="section-label">MARKNADSMOTORN</p>
