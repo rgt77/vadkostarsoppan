@@ -3166,3 +3166,37 @@ footer {
 @media (max-width: 520px) {
   .policy-diff-grid { grid-template-columns: 1fr; }
 }
+
+
+/* Steps 181-190: undo / redo */
+.history-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  margin-top: 3px;
+}
+.history-controls button {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  background: rgba(255,255,255,.018);
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 800;
+}
+.history-controls button:not(:disabled):hover {
+  color: var(--text);
+  background: rgba(255,255,255,.045);
+}
+.history-controls button:disabled {
+  opacity: .35;
+  cursor: default;
+}
+.history-controls span {
+  margin-left: 2px;
+  color: var(--muted);
+  font-size: 8px;
+}
