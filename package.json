@@ -1,0 +1,9 @@
+{
+  "name": "vadkostarsoppan",
+  "private": true,
+  "version": "0.7.0",
+  "type": "module",
+  "scripts": {
+    "qa": "node qa.mjs"
+  }
+}
