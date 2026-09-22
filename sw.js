@@ -1,4 +1,4 @@
-const CACHE_NAME = "vadkostarsoppan-v4";
+const CACHE_NAME = "vadkostarsoppan-v5";
 const CORE_ASSETS = [
   "/",
   "/index.html",
