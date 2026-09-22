@@ -3,33 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Vad kostar soppan? – pris per liter och partiscenario</title>
-  <meta name="description" content="Se vad en liter bensin eller diesel kostar i Sverige, vad priset består av och hur ett dokumenterat partiscenario påverkar priset där det går att räkna exakt.">
+  <title>Vad kostar en typisk tankning? – vadkostarsoppan.se</title>
+  <meta name="description" content="Se vad en typisk tankning på 40 liter kostar i Sverige, vad kostnaden består av och hur dokumenterade partiscenarier skulle påverka priset där underlaget räcker.">
   <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
-  <meta name="theme-color" content="#f7f7f4">
+  <meta name="theme-color" content="#f6f6f2">
   <meta name="color-scheme" content="light">
   <link rel="canonical" href="https://vadkostarsoppan.se/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Vad kostar soppan?">
-  <meta property="og:description" content="En liter. Dagens pris. Vad den består av. Och vad dokumenterade partiförslag skulle innebära där underlaget räcker.">
+  <meta property="og:title" content="Vad kostar en typisk tankning?">
+  <meta property="og:description" content="40 liter. Total kostnad, kostnadsdelar och dokumenterade partiscenarier.">
   <meta property="og:url" content="https://vadkostarsoppan.se/">
   <meta property="og:locale" content="sv_SE">
   <meta property="og:site_name" content="Vad kostar soppan?">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="stylesheet" href="/style.css">
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"WebApplication",
-    "name":"Vad kostar soppan?",
-    "url":"https://vadkostarsoppan.se/",
-    "applicationCategory":"FinanceApplication",
-    "operatingSystem":"Web",
-    "inLanguage":"sv",
-    "description":"Visar svenskt bränslepris per liter, kostnadsdelar och neutrala partiscenarier där underlaget är kvantifierbart."
-  }
-  </script>
 </head>
 <body>
   <noscript><div class="noscript">JavaScript behöver vara aktiverat för att kalkylen ska fungera.</div></noscript>
@@ -39,14 +27,14 @@
       <span class="brand-dot" aria-hidden="true"></span>
       <span>Vad kostar soppan?</span>
     </a>
-    <span class="updated" id="updatedLabel">Uppdaterat —</span>
+    <span class="updated" id="updatedLabel">Prisdata —</span>
   </header>
 
   <main class="shell">
-    <section class="intro" aria-labelledby="pageTitle">
-      <p class="eyebrow">PRIS PER LITER</p>
-      <h1 id="pageTitle">Vad kostar en liter?</h1>
-      <p>Välj bränsle. Resten är klart.</p>
+    <section class="intro">
+      <p class="eyebrow">TYPISK TANKNING · 40 LITER</p>
+      <h1>Vad kostar det att tanka?</h1>
+      <p>Välj bränsle och område. Du får kostnaden direkt.</p>
     </section>
 
     <section class="controls" aria-label="Välj bränsle och område">
@@ -56,52 +44,63 @@
       </div>
 
       <label class="area-control">
-        <span>Prisområde</span>
+        <span>Område</span>
         <select id="countySelect" aria-label="Välj prisområde">
           <option value="riket">Hela Sverige</option>
         </select>
       </label>
     </section>
 
-    <section class="price-card" aria-labelledby="currentPriceTitle">
-      <div class="price-head">
+    <section class="tank-card" aria-labelledby="tankTitle">
+      <div class="tank-main">
         <div>
-          <span class="overline">NUVARANDE PRIS</span>
-          <h2 id="currentPriceTitle"><span id="fuelLabel">Bensin 95</span> · <span id="areaLabel">Hela Sverige</span></h2>
+          <span class="overline">40 LITER · <span id="fuelLabel">Bensin 95</span> · <span id="areaLabel">Hela Sverige</span></span>
+          <h2 id="tankTitle">Typisk tankning</h2>
         </div>
-        <div class="main-price"><strong id="currentPrice">—</strong><span>kr/l</span></div>
+        <div class="tank-total">
+          <strong id="tankTotal">—</strong>
+          <span>kr</span>
+          <small><span id="literPrice">—</span> kr/l</small>
+        </div>
       </div>
 
-      <div class="breakdown-bar" aria-label="Fördelning av literpriset">
-        <span class="bar-market" id="barMarket"></span>
-        <span class="bar-energy" id="barEnergy"></span>
-        <span class="bar-carbon" id="barCarbon"></span>
-        <span class="bar-vat" id="barVat"></span>
+      <div class="breakdown-list" aria-label="Kostnadsfördelning för 40 liter">
+        <div>
+          <span>Marknad + kedja</span>
+          <strong id="marketTank">— kr</strong>
+        </div>
+        <div>
+          <span>Energiskatt</span>
+          <strong id="energyTank">— kr</strong>
+        </div>
+        <div>
+          <span>Koldioxidskatt</span>
+          <strong id="carbonTank">— kr</strong>
+        </div>
+        <div>
+          <span>Moms</span>
+          <strong id="vatTank">— kr</strong>
+        </div>
       </div>
 
-      <div class="breakdown-grid">
-        <div><span>Marknad + kedja</span><strong id="marketValue">—</strong></div>
-        <div><span>Energiskatt</span><strong id="energyValue">—</strong></div>
-        <div><span>Koldioxidskatt</span><strong id="carbonValue">—</strong></div>
-        <div><span>Moms</span><strong id="vatValue">—</strong></div>
-      </div>
-
-      <div class="tax-total">
-        <span>Skatt + moms</span>
-        <strong><span id="taxTotal">—</span> kr/l</strong>
-        <small id="taxShare">— av priset</small>
+      <div class="tax-summary">
+        <div>
+          <span>Skatt + moms totalt</span>
+          <strong id="taxTank">— kr</strong>
+        </div>
+        <small id="taxShare">— av tankningen</small>
       </div>
     </section>
 
     <section class="party-card" aria-labelledby="partyTitle">
-      <div class="party-head">
+      <div class="party-top">
         <div>
-          <span class="overline">PARTISCENARIO</span>
-          <h2 id="partyTitle">Vad skulle litern kosta?</h2>
+          <span class="overline">OM PARTIET FICK IGENOM SIN DOKUMENTERADE LINJE</span>
+          <h2 id="partyTitle">Vad skulle 40 liter kosta?</h2>
         </div>
 
         <label class="party-control">
-          <span>Välj parti</span>
+          <span>Parti</span>
           <select id="partySelect">
             <option value="">Välj parti…</option>
           </select>
@@ -109,27 +108,31 @@
       </div>
 
       <div class="party-result empty" id="partyResult" aria-live="polite">
-        <div>
+        <div class="party-price-wrap">
           <span class="result-label" id="scenarioLabel">Välj ett parti</span>
-          <strong class="scenario-price" id="scenarioPrice">—</strong>
-          <span class="scenario-unit" id="scenarioUnit">kr/l</span>
+          <div class="party-price-line">
+            <strong id="scenarioTankPrice">—</strong>
+            <span id="scenarioTankUnit">kr</span>
+          </div>
+          <small id="scenarioLiterPrice">— kr/l</small>
         </div>
-        <div class="scenario-delta" id="scenarioDelta">—</div>
+        <div class="party-delta" id="scenarioDelta">—</div>
       </div>
 
       <p class="scenario-note" id="scenarioNote">
-        När ett parti inte har publicerat tillräckligt exakta nivåer visar vi inget påhittat pris.
+        Om ett parti inte har publicerat tillräckligt exakta nivåer visar vi inget påhittat pris.
       </p>
 
-      <a class="source-link" id="partySource" href="#" target="_blank" rel="noopener" hidden>Se partiets källa ↗</a>
+      <a class="source-link" id="partySource" href="#" target="_blank" rel="noopener" hidden>Officiell källa ↗</a>
     </section>
 
     <details class="method">
       <summary>Så räknar vi</summary>
       <div class="method-content">
-        <p><strong>Nuvarande pris</strong> är ett rikssnitt eller länssnitt från rapporterade stationspriser. Det kan skilja sig från en enskild station.</p>
-        <p><strong>Marknad + kedja</strong> är en restpost: pumppris före moms minus energi- och koldioxidskatt. Den ska inte tolkas som ren vinst.</p>
-        <p><strong>Partiscenario</strong> är en mekanisk beräkning från dokumenterade förslag eller partiets egen priseffekt där sådan finns. Det är inte en prognos över vad ett framtida marknadspris faktiskt blir.</p>
+        <p><strong>Typisk tankning</strong> är satt till 40 liter som ett praktiskt riktvärde. Det är inte en officiell aktuell statistikserie över varje svensk tankning.</p>
+        <p><strong>Nuvarande pris</strong> är valt rikssnitt eller länssnitt från rapporterade stationspriser och kan skilja sig från priset på en viss station.</p>
+        <p><strong>Marknad + kedja</strong> är en restpost: pris före moms minus energi- och koldioxidskatt. Det är inte samma sak som ren vinst.</p>
+        <p><strong>Partiscenario</strong> använder bara dokumenterade och kvantifierbara uppgifter. Partier utan tillräckligt exakt underlag får därför inget konstruerat pris.</p>
         <div class="method-links">
           <a id="priceSource" href="#" target="_blank" rel="noopener">Priskälla ↗</a>
           <a id="taxSource" href="#" target="_blank" rel="noopener">Skattekälla ↗</a>
@@ -140,7 +143,7 @@
 
   <footer class="footer">
     <span>vadkostarsoppan.se</span>
-    <span>1 liter. Inget mer.</span>
+    <span>40 liter · tydligt och direkt</span>
   </footer>
 
   <script defer src="/fuel-data.js"></script>
