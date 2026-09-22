@@ -16,7 +16,7 @@
     fuelButtons: [...document.querySelectorAll("[data-fuel]")],
     tankLiterLabels: [...document.querySelectorAll("[data-tank-liters]")],
     countySelect: $("countySelect"),
-    partySelect: $("partySelect"),
+    partyGrid: $("partyGrid"),
     updatedLabel: $("updatedLabel"),
     fuelLabel: $("fuelLabel"),
     areaLabel: $("areaLabel"),
@@ -103,6 +103,90 @@
     if (selected) select.value = selected;
   }
 
+  const partyLogos = {
+    c: {
+      abbr: "C",
+      url: "https://commons.wikimedia.org/wiki/Special:FilePath/C%20v1.svg"
+    },
+    kd: {
+      abbr: "KD",
+      url: "https://commons.wikimedia.org/wiki/Special:FilePath/Kd%20v1.svg"
+    },
+    l: {
+      abbr: "L",
+      url: "https://commons.wikimedia.org/wiki/Special:FilePath/L%20v1.svg"
+    },
+    mp: {
+      abbr: "MP",
+      url: "https://www.mp.se/wp-content/uploads/2022/02/logo-miljopartiet.svg"
+    },
+    m: {
+      abbr: "M",
+      url: "https://commons.wikimedia.org/wiki/Special:FilePath/Moderate%20Party%20logo.svg"
+    },
+    s: {
+      abbr: "S",
+      url: "https://www.socialdemokraterna.se/images/18.5b29f63d180b3590dddc5c/1652441108612/logo_socialdemokraterna_white.svg"
+    },
+    sd: {
+      abbr: "SD",
+      url: "https://commons.wikimedia.org/wiki/Special:FilePath/Sweden%20Democrats%20textlogo.svg"
+    },
+    v: {
+      abbr: "V",
+      url: "https://commons.wikimedia.org/wiki/Special:FilePath/V%C3%A4nsterpartiet%20logo.svg"
+    }
+  };
+
+  function renderPartyButtons() {
+    const fragment = document.createDocumentFragment();
+
+    for (const key of partyOrder) {
+      const scenario = scenarios[key];
+      const logo = partyLogos[key];
+      if (!scenario || !logo) continue;
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "party-button";
+      button.dataset.party = key;
+      button.setAttribute("aria-label", scenario.name);
+      button.setAttribute("aria-pressed", String(state.party === key));
+
+      const logoBox = document.createElement("span");
+      logoBox.className = "party-logo-box " + key;
+
+      const image = document.createElement("img");
+      image.className = "party-logo";
+      image.src = logo.url;
+      image.alt = "";
+      image.decoding = "async";
+      image.addEventListener("error", () => button.classList.add("logo-failed"), { once: true });
+
+      const fallback = document.createElement("span");
+      fallback.className = "party-abbr";
+      fallback.textContent = logo.abbr;
+
+      const name = document.createElement("span");
+      name.className = "party-name";
+      name.textContent = logo.abbr;
+
+      logoBox.append(image, fallback);
+      button.append(logoBox, name);
+
+      button.addEventListener("click", () => {
+        state.party = key;
+        renderPartyButtons();
+        renderScenario(getPrice());
+        syncUrl();
+      });
+
+      fragment.append(button);
+    }
+
+    els.partyGrid.replaceChildren(fragment);
+  }
+
   function initializeControls() {
     populateSelect(
       els.countySelect,
@@ -110,11 +194,7 @@
       state.county
     );
 
-    const partyEntries = [["", "Välj parti…"]];
-    for (const key of partyOrder) {
-      if (scenarios[key]) partyEntries.push([key, scenarios[key].name]);
-    }
-    populateSelect(els.partySelect, partyEntries, state.party);
+    renderPartyButtons();
 
     for (const node of els.tankLiterLabels) setText(node, String(tankLiters));
   }
@@ -258,11 +338,7 @@
       render();
     });
 
-    els.partySelect.addEventListener("change", () => {
-      state.party = els.partySelect.value;
-      renderScenario(getPrice());
-      syncUrl();
-    });
+
   }
 
   function clearLegacyOfflineLayer() {
@@ -281,7 +357,6 @@
   loadStateFromUrl();
   initializeControls();
   els.countySelect.value = state.county;
-  els.partySelect.value = state.party;
   bindEvents();
   render();
   clearLegacyOfflineLayer();
