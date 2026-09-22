@@ -1,246 +1,288 @@
-const fuelData = window.FUEL_DATA || {};
-const siteData = window.SITE_DATA || {};
-const countyData = window.COUNTY_PRICES || {};
-const politicalScenarios = window.POLICY_SCENARIOS || {};
+(() => {
+  "use strict";
 
-const TANK_LITERS = 40;
+  const fuelData = window.FUEL_DATA ?? {};
+  const siteData = window.SITE_DATA ?? {};
+  const countyData = window.COUNTY_PRICES ?? {};
+  const scenarios = window.POLICY_SCENARIOS ?? {};
 
-const els = {
-  fuelButtons: [...document.querySelectorAll("[data-fuel]")],
-  countySelect: document.querySelector("#countySelect"),
-  partySelect: document.querySelector("#partySelect"),
-  updatedLabel: document.querySelector("#updatedLabel"),
-  fuelLabel: document.querySelector("#fuelLabel"),
-  areaLabel: document.querySelector("#areaLabel"),
-  tankTotal: document.querySelector("#tankTotal"),
-  literPrice: document.querySelector("#literPrice"),
-  marketTank: document.querySelector("#marketTank"),
-  energyTank: document.querySelector("#energyTank"),
-  carbonTank: document.querySelector("#carbonTank"),
-  vatTank: document.querySelector("#vatTank"),
-  taxTank: document.querySelector("#taxTank"),
-  taxShare: document.querySelector("#taxShare"),
-  partyResult: document.querySelector("#partyResult"),
-  scenarioLabel: document.querySelector("#scenarioLabel"),
-  scenarioTankPrice: document.querySelector("#scenarioTankPrice"),
-  scenarioTankUnit: document.querySelector("#scenarioTankUnit"),
-  scenarioLiterPrice: document.querySelector("#scenarioLiterPrice"),
-  scenarioDelta: document.querySelector("#scenarioDelta"),
-  scenarioNote: document.querySelector("#scenarioNote"),
-  partySource: document.querySelector("#partySource"),
-  priceSource: document.querySelector("#priceSource"),
-  taxSource: document.querySelector("#taxSource")
-};
+  const tankLiters = Number(siteData.typicalTankLiters) || 40;
+  const areas = [countyData.national, ...(countyData.counties ?? [])].filter(Boolean);
+  const areasById = new Map(areas.map(area => [area.id, area]));
+  const partyOrder = ["c", "kd", "l", "mp", "m", "s", "sd", "v"];
 
-let selectedFuel = siteData.defaultFuel || "petrol";
-let selectedCounty = "riket";
+  const $ = id => document.getElementById(id);
+  const els = {
+    fuelButtons: [...document.querySelectorAll("[data-fuel]")],
+    tankLiterLabels: [...document.querySelectorAll("[data-tank-liters]")],
+    countySelect: $("countySelect"),
+    partySelect: $("partySelect"),
+    updatedLabel: $("updatedLabel"),
+    fuelLabel: $("fuelLabel"),
+    areaLabel: $("areaLabel"),
+    tankTotal: $("tankTotal"),
+    literPrice: $("literPrice"),
+    marketTank: $("marketTank"),
+    energyTank: $("energyTank"),
+    carbonTank: $("carbonTank"),
+    vatTank: $("vatTank"),
+    taxTank: $("taxTank"),
+    taxShare: $("taxShare"),
+    partyResult: $("partyResult"),
+    scenarioLabel: $("scenarioLabel"),
+    scenarioTankPrice: $("scenarioTankPrice"),
+    scenarioTankUnit: $("scenarioTankUnit"),
+    scenarioLiterPrice: $("scenarioLiterPrice"),
+    scenarioDelta: $("scenarioDelta"),
+    scenarioNote: $("scenarioNote"),
+    partySource: $("partySource"),
+    priceSource: $("priceSource"),
+    taxSource: $("taxSource")
+  };
 
-const money = new Intl.NumberFormat("sv-SE", {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2
-});
+  const state = {
+    fuel: fuelData[siteData.defaultFuel] ? siteData.defaultFuel : "petrol",
+    county: areasById.has("riket") ? "riket" : areas[0]?.id,
+    party: ""
+  };
 
-const percent = new Intl.NumberFormat("sv-SE", {
-  maximumFractionDigits: 0
-});
+  const money = new Intl.NumberFormat("sv-SE", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+  const wholePercent = new Intl.NumberFormat("sv-SE", { maximumFractionDigits: 0 });
 
-function fmt(value) {
-  return Number.isFinite(value) ? money.format(value) : "—";
-}
+  const fmt = value => Number.isFinite(value) ? money.format(value) : "—";
+  const setText = (node, value) => {
+    if (node && node.textContent !== value) node.textContent = value;
+  };
 
-function areaEntries() {
-  return [countyData.national, ...(countyData.counties || [])].filter(Boolean);
-}
-
-function areaEntry(id = selectedCounty) {
-  return areaEntries().find(item => item.id === id) || countyData.national;
-}
-
-function pumpPrice() {
-  return Number(areaEntry()?.[selectedFuel]);
-}
-
-function getReference(price) {
-  const fuel = fuelData[selectedFuel];
-  if (!fuel || !Number.isFinite(price)) return null;
-
-  const vatRate = fuel.vatRate / 100;
-  const beforeVat = price / (1 + vatRate);
-  const vat = price - beforeVat;
-  const energy = fuel.energyTax;
-  const carbon = fuel.carbonTax;
-  const market = Math.max(0, beforeVat - energy - carbon);
-  const tax = energy + carbon + vat;
-
-  return { fuel, price, vat, energy, carbon, market, tax };
-}
-
-function populateCounties() {
-  els.countySelect.innerHTML = "";
-  for (const item of areaEntries()) {
-    const option = document.createElement("option");
-    option.value = item.id;
-    option.textContent = item.name;
-    els.countySelect.appendChild(option);
-  }
-}
-
-function populateParties() {
-  const partyOrder = ["c","kd","l","mp","m","s","sd","v"];
-  for (const key of partyOrder) {
-    const scenario = politicalScenarios[key];
-    if (!scenario) continue;
-    const option = document.createElement("option");
-    option.value = key;
-    option.textContent = scenario.name;
-    els.partySelect.appendChild(option);
-  }
-}
-
-function scenarioPricePerLiter(basePrice, scenario) {
-  const model = scenario?.priceModel;
-  if (!model) return null;
-
-  if (model.type === "baseline") return basePrice;
-  if ((model.type === "party_delta" || model.type === "stated_target") && Number.isFinite(model.delta)) {
-    return basePrice + model.delta;
-  }
-  return null;
-}
-
-function renderPartyScenario(basePrice) {
-  const key = els.partySelect.value;
-  const scenario = politicalScenarios[key];
-
-  els.partyResult.className = "party-result";
-  els.scenarioTankPrice.className = "";
-  els.scenarioDelta.className = "party-delta";
-
-  if (!scenario) {
-    els.partyResult.classList.add("empty");
-    els.scenarioLabel.textContent = "Välj ett parti";
-    els.scenarioTankPrice.textContent = "—";
-    els.scenarioTankUnit.hidden = false;
-    els.scenarioLiterPrice.textContent = "— kr/l";
-    els.scenarioDelta.textContent = "—";
-    els.scenarioNote.textContent = "Om ett parti inte har publicerat tillräckligt exakta nivåer visar vi inget påhittat pris.";
-    els.partySource.hidden = true;
-    return;
+  function getArea() {
+    return areasById.get(state.county) ?? areas[0];
   }
 
-  const resultLiter = scenarioPricePerLiter(basePrice, scenario);
-  els.scenarioLabel.textContent = scenario.name;
+  function getPrice() {
+    return Number(getArea()?.[state.fuel]);
+  }
 
-  if (resultLiter === null) {
-    els.partyResult.classList.add("unavailable");
-    els.scenarioTankPrice.classList.add("text-result");
-    els.scenarioTankPrice.textContent = "Ej möjligt att räkna exakt";
-    els.scenarioTankUnit.hidden = true;
-    els.scenarioLiterPrice.textContent = "";
-    els.scenarioDelta.textContent = "";
-    els.scenarioNote.textContent = scenario.method || "Det saknas tillräckligt exakta publicerade nivåer för att räkna fram en kostnad.";
-  } else {
-    const resultTank = resultLiter * TANK_LITERS;
-    const baseTank = basePrice * TANK_LITERS;
-    const deltaTank = resultTank - baseTank;
-    const deltaLiter = resultLiter - basePrice;
+  function calculate(price) {
+    const fuel = fuelData[state.fuel];
+    if (!fuel || !Number.isFinite(price)) return null;
 
-    els.scenarioTankPrice.textContent = fmt(resultTank);
-    els.scenarioTankUnit.hidden = false;
-    els.scenarioLiterPrice.textContent = fmt(resultLiter) + " kr/l";
-    els.scenarioDelta.textContent =
-      Math.abs(deltaTank) < 0.005
-        ? "Samma tankkostnad"
-        : (deltaTank > 0 ? "+" : "−") + fmt(Math.abs(deltaTank)) + " kr per 40 l";
+    const vatRate = fuel.vatRate / 100;
+    const beforeVat = price / (1 + vatRate);
+    const vat = price - beforeVat;
+    const energy = fuel.energyTax;
+    const carbon = fuel.carbonTax;
+    const market = beforeVat - energy - carbon;
 
-    if (deltaTank > 0.005) els.scenarioDelta.classList.add("positive");
-    if (deltaTank < -0.005) els.scenarioDelta.classList.add("negative");
+    if (![vat, energy, carbon, market].every(Number.isFinite) || market < 0) return null;
 
-    if (scenario.priceModel?.type === "party_delta") {
-      els.scenarioNote.textContent =
-        (scenario.method || "") +
-        " För 40 liter motsvarar " +
-        (deltaLiter >= 0 ? "+" : "−") + fmt(Math.abs(deltaLiter)) +
-        " kr/l en skillnad på " + fmt(Math.abs(deltaTank)) + " kr per tankning.";
+    return { fuel, price, vat, energy, carbon, market, tax: energy + carbon + vat };
+  }
+
+  function scenarioPrice(basePrice, scenario) {
+    const model = scenario?.priceModel;
+    if (!model) return null;
+    if (model.type === "baseline") return basePrice;
+    if (["party_delta", "stated_target"].includes(model.type) && Number.isFinite(model.delta)) {
+      return basePrice + model.delta;
+    }
+    return null;
+  }
+
+  function populateSelect(select, entries, selected) {
+    const fragment = document.createDocumentFragment();
+    for (const [value, label] of entries) {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = label;
+      fragment.append(option);
+    }
+    select.replaceChildren(fragment);
+    if (selected) select.value = selected;
+  }
+
+  function initializeControls() {
+    populateSelect(
+      els.countySelect,
+      areas.map(area => [area.id, area.name]),
+      state.county
+    );
+
+    const partyEntries = [["", "Välj parti…"]];
+    for (const key of partyOrder) {
+      if (scenarios[key]) partyEntries.push([key, scenarios[key].name]);
+    }
+    populateSelect(els.partySelect, partyEntries, state.party);
+
+    for (const node of els.tankLiterLabels) setText(node, String(tankLiters));
+  }
+
+  function renderScenario(basePrice) {
+    const scenario = scenarios[state.party];
+
+    els.partyResult.className = "party-result";
+    els.scenarioTankPrice.className = "";
+    els.scenarioDelta.className = "party-delta";
+
+    if (!scenario) {
+      els.partyResult.classList.add("empty");
+      setText(els.scenarioLabel, "Välj ett parti");
+      setText(els.scenarioTankPrice, "—");
+      els.scenarioTankUnit.hidden = false;
+      setText(els.scenarioLiterPrice, "— kr/l");
+      setText(els.scenarioDelta, "—");
+      setText(els.scenarioNote, "Om ett parti inte har publicerat tillräckligt exakta nivåer visar vi inget påhittat pris.");
+      els.partySource.hidden = true;
+      return;
+    }
+
+    setText(els.scenarioLabel, scenario.name);
+    const resultLiter = scenarioPrice(basePrice, scenario);
+
+    if (resultLiter === null) {
+      els.partyResult.classList.add("unavailable");
+      els.scenarioTankPrice.classList.add("text-result");
+      setText(els.scenarioTankPrice, "Ej möjligt att räkna exakt");
+      els.scenarioTankUnit.hidden = true;
+      setText(els.scenarioLiterPrice, "");
+      setText(els.scenarioDelta, "");
+      setText(els.scenarioNote, scenario.method || "Det saknas tillräckligt exakta publicerade nivåer för att räkna fram en kostnad.");
     } else {
-      els.scenarioNote.textContent = scenario.method || "";
+      const resultTank = resultLiter * tankLiters;
+      const baseTank = basePrice * tankLiters;
+      const deltaTank = resultTank - baseTank;
+      const deltaLiter = resultLiter - basePrice;
+
+      setText(els.scenarioTankPrice, fmt(resultTank));
+      els.scenarioTankUnit.hidden = false;
+      setText(els.scenarioLiterPrice, fmt(resultLiter) + " kr/l");
+
+      if (Math.abs(deltaTank) < 0.005) {
+        setText(els.scenarioDelta, "Samma tankkostnad");
+      } else {
+        const sign = deltaTank > 0 ? "+" : "−";
+        setText(els.scenarioDelta, sign + fmt(Math.abs(deltaTank)) + " kr per " + tankLiters + " l");
+        els.scenarioDelta.classList.add(deltaTank > 0 ? "positive" : "negative");
+      }
+
+      if (scenario.priceModel?.type === "party_delta") {
+        const sign = deltaLiter >= 0 ? "+" : "−";
+        setText(
+          els.scenarioNote,
+          (scenario.method || "") +
+          " För " + tankLiters + " liter motsvarar " + sign + fmt(Math.abs(deltaLiter)) +
+          " kr/l en skillnad på " + fmt(Math.abs(deltaTank)) + " kr."
+        );
+      } else {
+        setText(els.scenarioNote, scenario.method || "");
+      }
+    }
+
+    if (scenario.source) {
+      els.partySource.href = scenario.source;
+      els.partySource.hidden = false;
+    } else {
+      els.partySource.hidden = true;
     }
   }
 
-  if (scenario.source) {
-    els.partySource.href = scenario.source;
-    els.partySource.hidden = false;
-  } else {
-    els.partySource.hidden = true;
+  function syncUrl() {
+    const url = new URL(location.href);
+    url.searchParams.set("fuel", state.fuel);
+    url.searchParams.set("county", state.county);
+    state.party ? url.searchParams.set("party", state.party) : url.searchParams.delete("party");
+
+    const next = url.pathname + url.search + url.hash;
+    const current = location.pathname + location.search + location.hash;
+    if (next !== current) history.replaceState(null, "", next);
   }
-}
 
-function render() {
-  const price = pumpPrice();
-  const ref = getReference(price);
-  const area = areaEntry();
-  if (!ref || !area) return;
+  function render() {
+    const price = getPrice();
+    const ref = calculate(price);
+    const area = getArea();
 
-  els.fuelButtons.forEach(button => {
-    const active = button.dataset.fuel === selectedFuel;
-    button.classList.toggle("active", active);
-    button.setAttribute("aria-selected", String(active));
-  });
+    if (!ref || !area) {
+      setText(els.tankTotal, "Data saknas");
+      return;
+    }
 
-  els.fuelLabel.textContent = ref.fuel.label;
-  els.areaLabel.textContent = area.name;
+    for (const button of els.fuelButtons) {
+      const active = button.dataset.fuel === state.fuel;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", String(active));
+    }
 
-  els.tankTotal.textContent = fmt(price * TANK_LITERS);
-  els.literPrice.textContent = fmt(price);
+    setText(els.fuelLabel, ref.fuel.label);
+    setText(els.areaLabel, area.name);
+    setText(els.tankTotal, fmt(price * tankLiters));
+    setText(els.literPrice, fmt(price));
+    setText(els.marketTank, fmt(ref.market * tankLiters) + " kr");
+    setText(els.energyTank, fmt(ref.energy * tankLiters) + " kr");
+    setText(els.carbonTank, fmt(ref.carbon * tankLiters) + " kr");
+    setText(els.vatTank, fmt(ref.vat * tankLiters) + " kr");
+    setText(els.taxTank, fmt(ref.tax * tankLiters) + " kr");
+    setText(els.taxShare, wholePercent.format(ref.tax / price * 100) + " % av tankningen");
+    setText(els.updatedLabel, countyData.updatedAt ? "Prisdata " + countyData.updatedAt : "Prisdata");
 
-  els.marketTank.textContent = fmt(ref.market * TANK_LITERS) + " kr";
-  els.energyTank.textContent = fmt(ref.energy * TANK_LITERS) + " kr";
-  els.carbonTank.textContent = fmt(ref.carbon * TANK_LITERS) + " kr";
-  els.vatTank.textContent = fmt(ref.vat * TANK_LITERS) + " kr";
-  els.taxTank.textContent = fmt(ref.tax * TANK_LITERS) + " kr";
-  els.taxShare.textContent = percent.format(ref.tax / price * 100) + " % av tankningen";
+    if (countyData.source) els.priceSource.href = countyData.source;
+    if (ref.fuel.taxSource) els.taxSource.href = ref.fuel.taxSource;
 
-  els.updatedLabel.textContent = countyData.updatedAt ? "Prisdata " + countyData.updatedAt : "Prisdata";
-  if (countyData.source) els.priceSource.href = countyData.source;
-  if (ref.fuel.taxSource) els.taxSource.href = ref.fuel.taxSource;
+    renderScenario(price);
+    syncUrl();
+  }
 
-  renderPartyScenario(price);
+  function loadStateFromUrl() {
+    const params = new URLSearchParams(location.search);
+    const fuel = params.get("fuel");
+    const county = params.get("county");
+    const party = params.get("party");
 
-  const url = new URL(window.location.href);
-  url.searchParams.set("fuel", selectedFuel);
-  url.searchParams.set("county", selectedCounty);
-  if (els.partySelect.value) url.searchParams.set("party", els.partySelect.value);
-  else url.searchParams.delete("party");
-  history.replaceState(null, "", url);
-}
+    if (fuelData[fuel]) state.fuel = fuel;
+    if (areasById.has(county)) state.county = county;
+    if (scenarios[party] && partyOrder.includes(party)) state.party = party;
+  }
 
-function loadFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  const fuel = params.get("fuel");
-  const county = params.get("county");
-  const party = params.get("party");
+  function bindEvents() {
+    for (const button of els.fuelButtons) {
+      button.addEventListener("click", () => {
+        state.fuel = button.dataset.fuel;
+        render();
+      });
+    }
 
-  if (fuelData[fuel]) selectedFuel = fuel;
-  if (areaEntries().some(item => item.id === county)) selectedCounty = county;
-  if (party && politicalScenarios[party]) els.partySelect.value = party;
-}
+    els.countySelect.addEventListener("change", () => {
+      state.county = els.countySelect.value;
+      render();
+    });
 
-els.fuelButtons.forEach(button => {
-  button.addEventListener("click", () => {
-    selectedFuel = button.dataset.fuel;
-    render();
-  });
-});
+    els.partySelect.addEventListener("change", () => {
+      state.party = els.partySelect.value;
+      renderScenario(getPrice());
+      syncUrl();
+    });
+  }
 
-els.countySelect.addEventListener("change", () => {
-  selectedCounty = els.countySelect.value;
+  function clearLegacyOfflineLayer() {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.getRegistrations()
+        .then(registrations => Promise.all(registrations.map(registration => registration.unregister())))
+        .catch(() => {});
+    }
+    if ("caches" in window) {
+      caches.keys()
+        .then(keys => Promise.all(keys.filter(key => key.startsWith("vadkostarsoppan-")).map(key => caches.delete(key))))
+        .catch(() => {});
+    }
+  }
+
+  loadStateFromUrl();
+  initializeControls();
+  els.countySelect.value = state.county;
+  els.partySelect.value = state.party;
+  bindEvents();
   render();
-});
-
-els.partySelect.addEventListener("change", render);
-
-populateCounties();
-populateParties();
-loadFromUrl();
-els.countySelect.value = selectedCounty;
-render();
+  clearLegacyOfflineLayer();
+})();
