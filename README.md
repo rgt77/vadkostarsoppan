@@ -166,3 +166,17 @@ Den tredje större utvecklingsrundan omfattar 1 000 produkt-, UX-, data- och tek
 Principen är fortsatt densamma: sajten får gärna vara lekfull, men den ska skilja verifierade fakta, härledda värden, modeller och restposter tydligt från varandra.
 
 Aktuell applikationsversion: **0.7.0**.
+
+
+## Minimalistisk omstart v0.8.0
+
+Gränssnittet har skalats ned kraftigt. Startsidan ska nu svara på två frågor utan extra produktlager:
+
+1. **Vad kostar en liter bensin eller diesel och vad består priset av?**
+2. **Vad blir priset i ett valt partiscenario när partiets dokumenterade underlag är tillräckligt kvantifierat?**
+
+Den publika sidan visar endast bränsleval, prisområde, literprisets fyra kostnadsdelar, skatt + moms samt ett neutralt partival. Om ett parti saknar exakta publicerade nivåer visas **Ej möjligt att räkna exakt** i stället för ett antaget pris.
+
+Tidigare labb, kommandopaletter, favoritfunktioner, rapportverktyg, avancerade grafer och inställningspaneler har tagits bort från det publika gränssnittet. Datafiler kan ligga kvar i repositoryt för framtida utveckling, men laddas inte av startsidan.
+
+Aktuell applikationsversion: **0.8.0**.
