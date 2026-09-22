@@ -55,8 +55,8 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = [w.FUEL_DATA?.petrol,w.FUEL_DATA?.diesel].filter(Boolean);
 
-  w.SITE_DATA?.appVersion === "0.11.0"
-    ? passes.push("App version 0.11.0")
+  w.SITE_DATA?.appVersion === "0.12.0"
+    ? passes.push("App version 0.12.0")
     : failures.push("App version mismatch");
 
   Number(w.SITE_DATA?.typicalTankLiters) === 40
