@@ -302,8 +302,8 @@ select {
 }
 
 .party-logo-box.s {
-  padding: 7px;
-  background: #d71920;
+  padding: 0;
+  background: transparent;
 }
 
 .party-logo {
@@ -314,13 +314,20 @@ select {
 }
 
 .party-logo-box.s .party-logo {
-  max-width: 42px;
-  max-height: 32px;
+  max-width: 36px;
+  max-height: 36px;
+}
+
+.party-logo-box.mp .party-logo {
+  max-width: 34px;
+  max-height: 34px;
+  margin: auto;
+  object-position: center;
 }
 
 .party-logo-box.sd .party-logo {
-  max-width: 50px;
-  max-height: 26px;
+  max-width: 38px;
+  max-height: 38px;
 }
 
 .party-name {
