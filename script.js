@@ -3,6 +3,8 @@ const siteData = window.SITE_DATA || {};
 const countyData = window.COUNTY_PRICES || {};
 const politicalScenarios = window.POLICY_SCENARIOS || {};
 
+const TANK_LITERS = 40;
+
 const els = {
   fuelButtons: [...document.querySelectorAll("[data-fuel]")],
   countySelect: document.querySelector("#countySelect"),
@@ -10,21 +12,19 @@ const els = {
   updatedLabel: document.querySelector("#updatedLabel"),
   fuelLabel: document.querySelector("#fuelLabel"),
   areaLabel: document.querySelector("#areaLabel"),
-  currentPrice: document.querySelector("#currentPrice"),
-  marketValue: document.querySelector("#marketValue"),
-  energyValue: document.querySelector("#energyValue"),
-  carbonValue: document.querySelector("#carbonValue"),
-  vatValue: document.querySelector("#vatValue"),
-  taxTotal: document.querySelector("#taxTotal"),
+  tankTotal: document.querySelector("#tankTotal"),
+  literPrice: document.querySelector("#literPrice"),
+  marketTank: document.querySelector("#marketTank"),
+  energyTank: document.querySelector("#energyTank"),
+  carbonTank: document.querySelector("#carbonTank"),
+  vatTank: document.querySelector("#vatTank"),
+  taxTank: document.querySelector("#taxTank"),
   taxShare: document.querySelector("#taxShare"),
-  barMarket: document.querySelector("#barMarket"),
-  barEnergy: document.querySelector("#barEnergy"),
-  barCarbon: document.querySelector("#barCarbon"),
-  barVat: document.querySelector("#barVat"),
   partyResult: document.querySelector("#partyResult"),
   scenarioLabel: document.querySelector("#scenarioLabel"),
-  scenarioPrice: document.querySelector("#scenarioPrice"),
-  scenarioUnit: document.querySelector("#scenarioUnit"),
+  scenarioTankPrice: document.querySelector("#scenarioTankPrice"),
+  scenarioTankUnit: document.querySelector("#scenarioTankUnit"),
+  scenarioLiterPrice: document.querySelector("#scenarioLiterPrice"),
   scenarioDelta: document.querySelector("#scenarioDelta"),
   scenarioNote: document.querySelector("#scenarioNote"),
   partySource: document.querySelector("#partySource"),
@@ -35,17 +35,17 @@ const els = {
 let selectedFuel = siteData.defaultFuel || "petrol";
 let selectedCounty = "riket";
 
-const nf = new Intl.NumberFormat("sv-SE", {
+const money = new Intl.NumberFormat("sv-SE", {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2
 });
-const pf = new Intl.NumberFormat("sv-SE", {
-  minimumFractionDigits: 0,
+
+const percent = new Intl.NumberFormat("sv-SE", {
   maximumFractionDigits: 0
 });
 
 function fmt(value) {
-  return Number.isFinite(value) ? nf.format(value) : "—";
+  return Number.isFinite(value) ? money.format(value) : "—";
 }
 
 function areaEntries() {
@@ -57,11 +57,10 @@ function areaEntry(id = selectedCounty) {
 }
 
 function pumpPrice() {
-  const area = areaEntry();
-  return Number(area?.[selectedFuel]);
+  return Number(areaEntry()?.[selectedFuel]);
 }
 
-function reference(price) {
+function getReference(price) {
   const fuel = fuelData[selectedFuel];
   if (!fuel || !Number.isFinite(price)) return null;
 
@@ -76,13 +75,7 @@ function reference(price) {
   return { fuel, price, vat, energy, carbon, market, tax };
 }
 
-function setBar(node, value, total) {
-  if (!node) return;
-  node.style.width = total > 0 ? Math.max(0, value / total * 100) + "%" : "0%";
-}
-
 function populateCounties() {
-  if (!els.countySelect) return;
   els.countySelect.innerHTML = "";
   for (const item of areaEntries()) {
     const option = document.createElement("option");
@@ -90,11 +83,9 @@ function populateCounties() {
     option.textContent = item.name;
     els.countySelect.appendChild(option);
   }
-  els.countySelect.value = selectedCounty;
 }
 
 function populateParties() {
-  if (!els.partySelect) return;
   const partyOrder = ["c","kd","l","mp","m","s","sd","v"];
   for (const key of partyOrder) {
     const scenario = politicalScenarios[key];
@@ -106,7 +97,7 @@ function populateParties() {
   }
 }
 
-function scenarioPriceFor(basePrice, scenario) {
+function scenarioPricePerLiter(basePrice, scenario) {
   const model = scenario?.priceModel;
   if (!model) return null;
 
@@ -117,50 +108,60 @@ function scenarioPriceFor(basePrice, scenario) {
   return null;
 }
 
-function renderScenario(basePrice) {
-  const key = els.partySelect?.value || "";
+function renderPartyScenario(basePrice) {
+  const key = els.partySelect.value;
   const scenario = politicalScenarios[key];
 
-  els.scenarioDelta.className = "scenario-delta";
   els.partyResult.className = "party-result";
-  els.scenarioPrice.className = "scenario-price";
+  els.scenarioTankPrice.className = "";
+  els.scenarioDelta.className = "party-delta";
 
   if (!scenario) {
     els.partyResult.classList.add("empty");
     els.scenarioLabel.textContent = "Välj ett parti";
-    els.scenarioPrice.textContent = "—";
-    els.scenarioUnit.hidden = false;
+    els.scenarioTankPrice.textContent = "—";
+    els.scenarioTankUnit.hidden = false;
+    els.scenarioLiterPrice.textContent = "— kr/l";
     els.scenarioDelta.textContent = "—";
-    els.scenarioNote.textContent = "När ett parti inte har publicerat tillräckligt exakta nivåer visar vi inget påhittat pris.";
+    els.scenarioNote.textContent = "Om ett parti inte har publicerat tillräckligt exakta nivåer visar vi inget påhittat pris.";
     els.partySource.hidden = true;
     return;
   }
 
-  const result = scenarioPriceFor(basePrice, scenario);
+  const resultLiter = scenarioPricePerLiter(basePrice, scenario);
   els.scenarioLabel.textContent = scenario.name;
 
-  if (result === null) {
+  if (resultLiter === null) {
     els.partyResult.classList.add("unavailable");
-    els.scenarioPrice.classList.add("text-result");
-    els.scenarioPrice.textContent = "Ej möjligt att räkna exakt";
-    els.scenarioUnit.hidden = true;
+    els.scenarioTankPrice.classList.add("text-result");
+    els.scenarioTankPrice.textContent = "Ej möjligt att räkna exakt";
+    els.scenarioTankUnit.hidden = true;
+    els.scenarioLiterPrice.textContent = "";
     els.scenarioDelta.textContent = "";
-    els.scenarioNote.textContent = scenario.method || "Det saknas tillräckligt exakta, publicerade nivåer för ett kr/l-resultat.";
+    els.scenarioNote.textContent = scenario.method || "Det saknas tillräckligt exakta publicerade nivåer för att räkna fram en kostnad.";
   } else {
-    const delta = result - basePrice;
-    els.scenarioPrice.textContent = fmt(result);
-    els.scenarioUnit.hidden = false;
+    const resultTank = resultLiter * TANK_LITERS;
+    const baseTank = basePrice * TANK_LITERS;
+    const deltaTank = resultTank - baseTank;
+    const deltaLiter = resultLiter - basePrice;
+
+    els.scenarioTankPrice.textContent = fmt(resultTank);
+    els.scenarioTankUnit.hidden = false;
+    els.scenarioLiterPrice.textContent = fmt(resultLiter) + " kr/l";
     els.scenarioDelta.textContent =
-      Math.abs(delta) < 0.005
-        ? "0,00 kr/l mot idag"
-        : (delta > 0 ? "+" : "−") + fmt(Math.abs(delta)) + " kr/l mot idag";
-    if (delta > 0.005) els.scenarioDelta.classList.add("positive");
-    if (delta < -0.005) els.scenarioDelta.classList.add("negative");
+      Math.abs(deltaTank) < 0.005
+        ? "Samma tankkostnad"
+        : (deltaTank > 0 ? "+" : "−") + fmt(Math.abs(deltaTank)) + " kr per 40 l";
+
+    if (deltaTank > 0.005) els.scenarioDelta.classList.add("positive");
+    if (deltaTank < -0.005) els.scenarioDelta.classList.add("negative");
 
     if (scenario.priceModel?.type === "party_delta") {
-      els.scenarioNote.textContent = (scenario.method || "") + " Detta är partiets angivna priseffekt applicerad på dagens referenspris.";
-    } else if (scenario.priceModel?.type === "stated_target") {
-      els.scenarioNote.textContent = scenario.method || "Detta bygger på partiets uttalade mål, inte en oberoende prognos.";
+      els.scenarioNote.textContent =
+        (scenario.method || "") +
+        " För 40 liter motsvarar " +
+        (deltaLiter >= 0 ? "+" : "−") + fmt(Math.abs(deltaLiter)) +
+        " kr/l en skillnad på " + fmt(Math.abs(deltaTank)) + " kr per tankning.";
     } else {
       els.scenarioNote.textContent = scenario.method || "";
     }
@@ -176,7 +177,7 @@ function renderScenario(basePrice) {
 
 function render() {
   const price = pumpPrice();
-  const ref = reference(price);
+  const ref = getReference(price);
   const area = areaEntry();
   if (!ref || !area) return;
 
@@ -188,31 +189,27 @@ function render() {
 
   els.fuelLabel.textContent = ref.fuel.label;
   els.areaLabel.textContent = area.name;
-  els.currentPrice.textContent = fmt(price);
 
-  els.marketValue.textContent = fmt(ref.market) + " kr";
-  els.energyValue.textContent = fmt(ref.energy) + " kr";
-  els.carbonValue.textContent = fmt(ref.carbon) + " kr";
-  els.vatValue.textContent = fmt(ref.vat) + " kr";
+  els.tankTotal.textContent = fmt(price * TANK_LITERS);
+  els.literPrice.textContent = fmt(price);
 
-  els.taxTotal.textContent = fmt(ref.tax);
-  els.taxShare.textContent = pf.format(ref.tax / price * 100) + " % av literpriset";
-
-  setBar(els.barMarket, ref.market, price);
-  setBar(els.barEnergy, ref.energy, price);
-  setBar(els.barCarbon, ref.carbon, price);
-  setBar(els.barVat, ref.vat, price);
+  els.marketTank.textContent = fmt(ref.market * TANK_LITERS) + " kr";
+  els.energyTank.textContent = fmt(ref.energy * TANK_LITERS) + " kr";
+  els.carbonTank.textContent = fmt(ref.carbon * TANK_LITERS) + " kr";
+  els.vatTank.textContent = fmt(ref.vat * TANK_LITERS) + " kr";
+  els.taxTank.textContent = fmt(ref.tax * TANK_LITERS) + " kr";
+  els.taxShare.textContent = percent.format(ref.tax / price * 100) + " % av tankningen";
 
   els.updatedLabel.textContent = countyData.updatedAt ? "Prisdata " + countyData.updatedAt : "Prisdata";
-  if (els.priceSource && countyData.source) els.priceSource.href = countyData.source;
-  if (els.taxSource && ref.fuel.taxSource) els.taxSource.href = ref.fuel.taxSource;
+  if (countyData.source) els.priceSource.href = countyData.source;
+  if (ref.fuel.taxSource) els.taxSource.href = ref.fuel.taxSource;
 
-  renderScenario(price);
+  renderPartyScenario(price);
 
   const url = new URL(window.location.href);
   url.searchParams.set("fuel", selectedFuel);
   url.searchParams.set("county", selectedCounty);
-  if (els.partySelect?.value) url.searchParams.set("party", els.partySelect.value);
+  if (els.partySelect.value) url.searchParams.set("party", els.partySelect.value);
   else url.searchParams.delete("party");
   history.replaceState(null, "", url);
 }
@@ -225,7 +222,7 @@ function loadFromUrl() {
 
   if (fuelData[fuel]) selectedFuel = fuel;
   if (areaEntries().some(item => item.id === county)) selectedCounty = county;
-  if (party && politicalScenarios[party] && els.partySelect) els.partySelect.value = party;
+  if (party && politicalScenarios[party]) els.partySelect.value = party;
 }
 
 els.fuelButtons.forEach(button => {
@@ -235,15 +232,15 @@ els.fuelButtons.forEach(button => {
   });
 });
 
-els.countySelect?.addEventListener("change", () => {
+els.countySelect.addEventListener("change", () => {
   selectedCounty = els.countySelect.value;
   render();
 });
 
-els.partySelect?.addEventListener("change", render);
+els.partySelect.addEventListener("change", render);
 
 populateCounties();
 populateParties();
 loadFromUrl();
-if (els.countySelect) els.countySelect.value = selectedCounty;
+els.countySelect.value = selectedCounty;
 render();
