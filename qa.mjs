@@ -55,8 +55,8 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = [w.FUEL_DATA?.petrol,w.FUEL_DATA?.diesel].filter(Boolean);
 
-  w.SITE_DATA?.appVersion === "0.10.0"
-    ? passes.push("App version 0.10.0")
+  w.SITE_DATA?.appVersion === "0.11.0"
+    ? passes.push("App version 0.11.0")
     : failures.push("App version mismatch");
 
   Number(w.SITE_DATA?.typicalTankLiters) === 40
@@ -121,6 +121,12 @@ try {
     : failures.push("Unexpected party model type");
 } catch (error) {
   failures.push("Policy data evaluation: " + error.message);
+}
+
+if (!html.includes('id="partyGrid"') || html.includes('id="partySelect"')) {
+  failures.push("Clickable party logo selector not correctly wired");
+} else {
+  passes.push("Clickable party logos");
 }
 
 const forbiddenRuntimeFiles = [
