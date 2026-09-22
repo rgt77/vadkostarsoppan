@@ -249,7 +249,99 @@ select {
 }
 
 .party-head { align-items: end; }
-.party-control { width: min(260px, 46%); }
+
+.party-choice-label {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.party-grid {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.party-button {
+  min-width: 0;
+  min-height: 82px;
+  padding: 8px 5px 7px;
+  display: grid;
+  grid-template-rows: 48px auto;
+  place-items: center;
+  gap: 5px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--text);
+  background: #fff;
+  cursor: pointer;
+  transition: border-color .12s ease, box-shadow .12s ease, transform .12s ease;
+}
+
+.party-button:hover {
+  border-color: #a9aaa5;
+}
+
+.party-button:active {
+  transform: scale(.98);
+}
+
+.party-button[aria-pressed="true"] {
+  border-color: var(--text);
+  box-shadow: 0 0 0 2px var(--text);
+}
+
+.party-logo-box {
+  width: 52px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.party-logo-box.s {
+  padding: 7px;
+  background: #d71920;
+}
+
+.party-logo {
+  max-width: 46px;
+  max-height: 42px;
+  display: block;
+  object-fit: contain;
+}
+
+.party-logo-box.s .party-logo {
+  max-width: 42px;
+  max-height: 32px;
+}
+
+.party-logo-box.sd .party-logo {
+  max-width: 50px;
+  max-height: 26px;
+}
+
+.party-name {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 750;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.party-abbr {
+  display: none;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.party-button.logo-failed .party-logo { display: none; }
+.party-button.logo-failed .party-abbr { display: block; }
 
 .party-result {
   min-height: 132px;
@@ -391,7 +483,14 @@ select {
   .tank-total > div { justify-content: flex-start; }
   .tank-total strong { font-size: 50px; }
 
-  .party-control { width: 100%; }
+  .party-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .party-button {
+    min-height: 78px;
+  }
 
   .party-result {
     min-height: 0;
