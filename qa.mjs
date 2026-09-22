@@ -52,8 +52,8 @@ if (!order.every((value,index) => value >= 0 && (index === 0 || value > order[in
 } else ok.push("Minimal script load order");
 
 const requiredMarkers = [
-  "countySelect","currentPrice","marketValue","energyValue","carbonValue","vatValue",
-  "taxTotal","partySelect","partyResult","scenarioPrice","scenarioNote","partySource"
+  "countySelect","tankTotal","literPrice","marketTank","energyTank","carbonTank","vatTank",
+  "taxTank","partySelect","partyResult","scenarioTankPrice","scenarioNote","partySource"
 ];
 for (const id of requiredMarkers) {
   if (!html.includes(`id="${id}"`)) fail.push("Missing minimal feature marker: " + id);
@@ -86,8 +86,8 @@ try {
   const w = {};
   new Function("window",read("fuel-data.js"))(w);
   const version = JSON.parse(read("version.json"));
-  if (w.SITE_DATA?.appVersion !== "0.8.0" || version.appVersion !== "0.8.0") fail.push("App version mismatch");
-  else ok.push("App version 0.8.0");
+  if (w.SITE_DATA?.appVersion !== "0.9.0" || version.appVersion !== "0.9.0") fail.push("App version mismatch");
+  else ok.push("App version 0.9.0");
 
   const fuels = [w.FUEL_DATA.petrol,w.FUEL_DATA.diesel];
   if (!fuels.every(f => Number.isFinite(f.energyTax) && Number.isFinite(f.carbonTax) && Number.isFinite(f.vatRate))) {
