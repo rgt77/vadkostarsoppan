@@ -408,3 +408,12 @@ select {
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; }
 }
+
+.back-link {
+  display: inline-block;
+  margin-top: 4px;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 750;
+  text-underline-offset: 3px;
+}
