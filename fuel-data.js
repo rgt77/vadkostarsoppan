@@ -26,9 +26,10 @@ window.FUEL_DATA = {
 };
 
 window.SITE_DATA = {
-  appVersion: "0.9.0",
+  appVersion: "0.10.0",
   dataVersion: "2026-09-21",
   lastFactCheck: "21 september 2026",
   defaultFuel: "petrol",
-  defaultPumpPrice: 17.43
+  defaultPumpPrice: 17.43,
+  typicalTankLiters: 40
 };
