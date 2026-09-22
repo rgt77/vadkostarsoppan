@@ -130,7 +130,7 @@
     },
     sd: {
       abbr: "SD",
-      url: "https://commons.wikimedia.org/wiki/Special:FilePath/Sweden%20Democrats%20textlogo.svg"
+      url: "https://www.sd.se/wp-content/uploads/2022/07/logo_sd_logo_blasippa.png"
     },
     v: {
       abbr: "V",
