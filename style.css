@@ -314,13 +314,15 @@ select {
 }
 
 .party-logo-box.s .party-logo {
-  max-width: 36px;
-  max-height: 36px;
+  max-width: 42px;
+  max-height: 42px;
+  margin: auto;
+  object-position: center;
 }
 
 .party-logo-box.mp .party-logo {
-  max-width: 34px;
-  max-height: 34px;
+  max-width: 42px;
+  max-height: 42px;
   margin: auto;
   object-position: center;
 }
