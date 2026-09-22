@@ -118,7 +118,7 @@
     },
     mp: {
       abbr: "MP",
-      url: "https://www.mp.se/wp-content/uploads/2022/02/logo-miljopartiet.svg"
+      url: "/party-logos/mp.png"
     },
     m: {
       abbr: "M",
@@ -126,7 +126,7 @@
     },
     s: {
       abbr: "S",
-      url: "https://www.socialdemokraterna.se/images/18.5b29f63d180b3590dddc5c/1652441108612/logo_socialdemokraterna_white.svg"
+      url: "/party-logos/s.png"
     },
     sd: {
       abbr: "SD",
