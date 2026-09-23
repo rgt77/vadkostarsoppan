@@ -309,6 +309,14 @@
       }
     }
 
+    if (state.party === "l" && els.policyFacts) {
+      els.policyFacts.hidden = false;
+      const title = document.createElement("strong");
+      title.textContent = "Dokumenterad bakgrund";
+      const text = document.createElement("p");
+      text.textContent = "Liberalernas klimatrapport beskriver reduktionsplikten som en övergångslösning medan fordonsflottan elektrifieras och att biodrivmedel på sikt bör prioriteras till sektorer som är svårare att elektrifiera. Senare liberal dokumentation anger 10 % reduktionsplikt för bensin och diesel, kombinerad med sänkt drivmedelsskatt för att motverka priseffekten. Underlaget anger ingen tillräckligt specificerad aktuell kr/l-nivå, därför konstrueras inget L-pris.";
+      els.policyFacts.append(title, text);
+    }
     if (state.party === "kd" && els.policyFacts) {
       els.policyFacts.hidden = false;
       const title = document.createElement("strong");
