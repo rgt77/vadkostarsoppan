@@ -10,12 +10,12 @@ const rows = Array.isArray(payload) ? payload : payload?.observations ?? payload
 const row = rows.find(x => Number.isFinite(Number(x?.value ?? x?.Value))) ?? rows[0];
 const value = Number(row?.value ?? row?.Value);
 const date = row?.date ?? row?.Date ?? row?.observationDate ?? row?.ObservationDate;
-if (!Number.isFinite(value) || value <= 0) throw new Error("Invalid USD/SEK value");
+if (!Number.isFinite(value) || value < 5 || value > 20) throw new Error("Implausible USD/SEK value");
 if (!/^\d{4}-\d{2}-\d{2}/.test(String(date ?? ""))) throw new Error("Invalid USD/SEK observation date");
 
 const data = {
   version: 1,
-  updatedAt: new Date().toISOString(),
+  updatedAt: String(date).slice(0, 10),
   fx: {
     usdSek: value,
     observationDate: String(date).slice(0, 10),
