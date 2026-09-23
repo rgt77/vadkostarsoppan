@@ -52,8 +52,9 @@ window.POLICY_SCENARIOS = {
     priceModel: { type: "not_quantified" },
     evidence: "not_quantified",
     verifiedAt: "2026-09-23",
-    method: "Partiet anger sänkt skatt och minskad reduktionsplikt som inriktning, men utan exakta framtida nivåer kan ett kr/l-pris inte beräknas utan egna antaganden.",
-    source: "https://www.sd.se/vad-vi-vill/folder-vi-gor-sverige-till-sverige-igen/"
+    method: "Partiet publicerar numeriska historiska drivmedelsdata och genomförda/tidsbegränsade åtgärder. De används som bakgrund, men inte som ett permanent framtida kr/l-pris utan en uttrycklig framtida nivå.",
+    source: "https://val2026.sd.se/drivmedel/",
+    facts: "data/policy-facts-sd.json"
   },
   v: {
     name: "Vänsterpartiet",
