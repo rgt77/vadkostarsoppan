@@ -32,9 +32,9 @@ jobs:
         run: node -e 'const d=require("./data/market-data.json"); if(!(d.fx.usdSek>5&&d.fx.usdSek<20)) process.exit(1)'
       - name: Commit market data
         run: |
-          if git diff --quiet -- data/market-data.json; then exit 0; fi
+          if git diff --quiet -- data/market-data.json data/market-history.json; then exit 0; fi
           git config user.name "vadkostarsoppan-data"
           git config user.email "actions@users.noreply.github.com"
-          git add data/market-data.json
+          git add data/market-data.json data/market-history.json
           git commit -m "Data: refresh market inputs"
           git push
