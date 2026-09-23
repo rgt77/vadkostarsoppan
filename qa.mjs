@@ -14,7 +14,7 @@ const required = [
   "data/data-health.json",
   "data/price-history.json",
   "data/calculation-model.json", "data/reduction-duty.json", "data/market-data.json", "data/market-history.json", "lib/calculation.mjs",
-  "404.html", "data/phase3-status.json", "data/phase4-status.json", "lib/simulator.mjs", "tests/simulator.mjs", "data/policy-facts-sd.json", "data/policy-facts-m.json", "data/policy-facts-kd.json"
+  "404.html", "data/phase3-status.json", "data/phase4-status.json", "lib/simulator.mjs", "tests/simulator.mjs", "data/policy-facts-sd.json", "data/policy-facts-m.json", "data/policy-facts-kd.json", "data/policy-facts-l.json"
 ];
 const failures = [];
 const warnings = [];
@@ -284,6 +284,14 @@ try {
   kdFacts.facts?.every(x => String(x.source ?? "").startsWith("https://kristdemokraterna.se/")) ? pass("KD official fact sources") : fail("KD fact source invalid");
   script.includes('state.party === "kd"') ? pass("KD contextual evidence UI") : fail("KD contextual evidence UI missing");
 } catch (error) { fail("KD policy facts: " + error.message); }
+
+try {
+  const lFacts = JSON.parse(read("data/policy-facts-l.json"));
+  const ids = new Set(lFacts.facts?.map(x => x.id));
+  ["climate_report_2022","reduction_duty_2025"].every(x => ids.has(x)) ? pass("L sourced policy facts") : fail("L policy facts incomplete");
+  lFacts.facts?.every(x => String(x.source ?? "").startsWith("https://www.liberalerna.se/")) ? pass("L official fact sources") : fail("L fact source invalid");
+  script.includes('state.party === "l"') ? pass("L contextual evidence UI") : fail("L contextual evidence UI missing");
+} catch (error) { fail("L policy facts: " + error.message); }
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
 if (failures.length) {
