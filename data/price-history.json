@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "snapshots": [
+    {
+      "date": "2026-09-23",
+      "national": {
+        "id": "riket",
+        "name": "Hela Sverige",
+        "petrol": 17.26,
+        "petrol98": 18.1,
+        "e85": 14.89,
+        "diesel": 22.18
+      },
+      "counties": [
+        {
+          "id": "blekinge",
+          "name": "Blekinge län",
+          "petrol": 17.25,
+          "diesel": 22.2
+        },
+        {
+          "id": "dalarna",
+          "name": "Dalarnas län",
+          "petrol": 17.28,
+          "diesel": 22.18
+        },
+        {
+          "id": "gotland",
+          "name": "Gotlands län",
+          "petrol": 15.07,
+          "diesel": 15.79
+        },
+        {
+          "id": "gavleborg",
+          "name": "Gävleborgs län",
+          "petrol": 17.33,
+          "diesel": 22.22
+        },
+        {
+          "id": "halland",
+          "name": "Hallands län",
+          "petrol": 17.38,
+          "diesel": 22.38
+        },
+        {
+          "id": "jamtland",
+          "name": "Jämtlands län",
+          "petrol": 17.24,
+          "diesel": 22.28
+        },
+        {
+          "id": "jonkoping",
+          "name": "Jönköpings län",
+          "petrol": 17.28,
+          "diesel": 22.17
+        },
+        {
+          "id": "kalmar",
+          "name": "Kalmar län",
+          "petrol": 17.33,
+          "diesel": 22.38
+        },
+        {
+          "id": "kronoberg",
+          "name": "Kronobergs län",
+          "petrol": 17.36,
+          "diesel": 22.36
+        },
+        {
+          "id": "norrbotten",
+          "name": "Norrbottens län",
+          "petrol": 17.25,
+          "diesel": 22.14
+        },
+        {
+          "id": "skane",
+          "name": "Skåne län",
+          "petrol": 17.22,
+          "diesel": 22.12
+        },
+        {
+          "id": "stockholm",
+          "name": "Stockholms län",
+          "petrol": 17.29,
+          "diesel": 22.27
+        },
+        {
+          "id": "sodermanland",
+          "name": "Södermanlands län",
+          "petrol": 17.29,
+          "diesel": 22.16
+        },
+        {
+          "id": "uppsala",
+          "name": "Uppsala län",
+          "petrol": 17.31,
+          "diesel": 22.15
+        },
+        {
+          "id": "varmland",
+          "name": "Värmlands län",
+          "petrol": 17.24,
+          "diesel": 22.14
+        },
+        {
+          "id": "vasterbotten",
+          "name": "Västerbottens län",
+          "petrol": 17.24,
+          "diesel": 22.28
+        },
+        {
+          "id": "vasternorrland",
+          "name": "Västernorrlands län",
+          "petrol": 17.23,
+          "diesel": 22.11
+        },
+        {
+          "id": "vastmanland",
+          "name": "Västmanlands län",
+          "petrol": 17.24,
+          "diesel": 22.14
+        },
+        {
+          "id": "vastra-gotaland",
+          "name": "Västra Götalands län",
+          "petrol": 17.22,
+          "diesel": 22.13
+        },
+        {
+          "id": "orebro",
+          "name": "Örebro län",
+          "petrol": 17.39,
+          "diesel": 22.46
+        },
+        {
+          "id": "ostergotland",
+          "name": "Östergötlands län",
+          "petrol": 17.25,
+          "diesel": 22.19
+        }
+      ]
+    }
+  ]
+}
