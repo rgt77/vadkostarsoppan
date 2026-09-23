@@ -92,7 +92,11 @@
   }
 
   function getPrice() {
-    return Number(getArea()?.[state.fuel]);
+    const area = getArea();
+    const local = Number(area?.[state.fuel]);
+    if (Number.isFinite(local) && local > 0) return local;
+    const national = Number(countyData.national?.[state.fuel]);
+    return Number.isFinite(national) ? national : NaN;
   }
 
   function getTaxPeriod(fuel, date = todayIso()) {
@@ -326,7 +330,8 @@
     }
 
     setText(els.fuelLabel, ref.fuel.label);
-    setText(els.areaLabel, area.name);
+    const hasLocalPrice = Number.isFinite(Number(area?.[state.fuel])) && Number(area?.[state.fuel]) > 0;
+    setText(els.areaLabel, hasLocalPrice || area.id === "riket" ? area.name : area.name + " · rikssnitt");
     setText(els.tankTotal, fmt(price * tankLiters));
     setText(els.literPrice, fmt(price));
     setText(els.marketTank, fmt(ref.market * tankLiters) + " kr");
