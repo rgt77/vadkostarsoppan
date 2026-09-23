@@ -30,7 +30,9 @@
     "reduction_duty": {
       "kind": "official_rule",
       "political": true,
-      "note": "GHG reduction obligation; not interpreted as a direct volume blend percentage."
+      "note": "GHG reduction obligation; not interpreted as a direct volume blend percentage.",
+      "status": "active_reference",
+      "sourceData": "data/reduction-duty.json"
     },
     "usd_sek": {
       "kind": "official_market_input",
