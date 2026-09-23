@@ -202,7 +202,7 @@ try {
   const market = JSON.parse(read("data/market-data.json"));
   market.fx?.seriesId === "SEKUSDPMI" ? pass("Riksbank FX series") : fail("Riksbank FX series invalid");
   String(market.fx?.source ?? "").startsWith("https://api.riksbank.se/") ? pass("Official FX source") : fail("FX source invalid");
-  market.updatedAt === null || /^\\d{4}-\\d{2}-\\d{2}$/.test(market.updatedAt) ? pass("Market snapshot date") : fail("Market updatedAt invalid");
+  market.updatedAt === null || /^\d{4}-\d{2}-\d{2}$/.test(market.updatedAt) ? pass("Market snapshot date") : fail("Market updatedAt invalid");
   if (market.fx?.usdSek !== null) {
     Number.isFinite(market.fx.usdSek) && market.fx.usdSek > 0 ? pass("USD/SEK value") : fail("USD/SEK value invalid");
     /^\d{4}-\d{2}-\d{2}$/.test(market.fx.observationDate ?? "") ? pass("USD/SEK date") : fail("USD/SEK date invalid");
@@ -213,14 +213,14 @@ try {
   const registry = JSON.parse(read("data/source-registry.json"));
   const ids = registry.sources?.map(x => x.id) ?? [];
   new Set(ids).size === ids.length ? pass("Unique source IDs") : fail("Duplicate source IDs");
-  registry.sources?.every(x => /^https:\\/\\//.test(x.url) && Array.isArray(x.requiredFor)) ? pass("Source registry schema") : fail("Source registry invalid");
+  registry.sources?.every(x => /^https:\/\//.test(x.url) && Array.isArray(x.requiredFor)) ? pass("Source registry schema") : fail("Source registry invalid");
 } catch (error) { fail("Source registry: " + error.message); }
 
 try {
   const history = JSON.parse(read("data/market-history.json"));
   const rows = history.snapshots ?? [];
   rows.length <= 730 ? pass("Market history bounded") : fail("Market history too large");
-  rows.every((x,i) => /^\\d{4}-\\d{2}-\\d{2}$/.test(x.date) && Number.isFinite(x.usdSek) && (i===0 || rows[i-1].date < x.date)) ? pass("Market history schema") : rows.length === 0 ? warn("Market history awaits first ingestion") : fail("Market history invalid");
+  rows.every((x,i) => /^\d{4}-\d{2}-\d{2}$/.test(x.date) && Number.isFinite(x.usdSek) && (i===0 || rows[i-1].date < x.date)) ? pass("Market history schema") : rows.length === 0 ? warn("Market history awaits first ingestion") : fail("Market history invalid");
 } catch (error) { fail("Market history: " + error.message); }
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
