@@ -47,8 +47,9 @@ window.POLICY_SCENARIOS = {
     priceModel: { type: "not_quantified" },
     evidence: "not_quantified",
     verifiedAt: "2026-09-23",
-    method: "Partiet uppger att det inte föreslår höjda drivmedelsskatter eller höjd reduktionsplikt i nuläget, men anger inte ett komplett framtida kr/l-pris.",
-    source: "https://www.socialdemokraterna.se/var-politik/a-till-o/branslepriser/fakta-om-socialdemokraternas-politik-kring-drivmedelsskatt"
+    method: "Socialdemokraterna kräver en tillfällig skattesänkning på bensin och diesel, men den officiella källan anger ingen exakt skattesänkning eller kr/l-effekt. Därför konstrueras inget numeriskt S-scenario.",
+    source: "https://www.socialdemokraterna.se/nyheter/nyheter/2026-03-20-s-kraver-tillfallig-skattesankning-pa-bensin-och-diesel",
+    facts: "data/policy-facts-s.json"
   },
   sd: {
     name: "Sverigedemokraterna",
