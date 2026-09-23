@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-23",
+  "party": "l",
+  "name": "Liberalerna",
+  "facts": [
+    {
+      "id": "climate_report_2022",
+      "kind": "policy_direction",
+      "published": "2022-03",
+      "adopted": "2021",
+      "source": "https://www.liberalerna.se/wp-content/uploads/klimatomstallning-i-en-vaxande-ekonomi.pdf",
+      "note": "Liberalernas klimatrapport beskriver reduktionsplikten som en övergångslösning medan fordonsflottan elektrifieras och att biodrivmedel på sikt bör prioriteras till sektorer som är svårare att elektrifiera. Ingen exakt kr/l-effekt anges."
+    },
+    {
+      "id": "reduction_duty_2025",
+      "kind": "policy_level",
+      "date": "2025-07-01",
+      "petrolPct": 10,
+      "dieselPct": 10,
+      "source": "https://www.liberalerna.se/nyheter/ny-reduktionsplikt-en-liberal-budgetvinst-for-klimatet",
+      "note": "Senare liberal dokumentation beskriver höjning från 6 till 10 procent kombinerad med sänkt drivmedelsskatt för att motverka priseffekten."
+    }
+  ]
+}
