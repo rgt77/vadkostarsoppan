@@ -113,30 +113,6 @@ a { -webkit-tap-highlight-color: transparent; }
   gap: 10px;
 }
 
-.fuel-toggle {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  padding: 3px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: var(--card);
-}
-
-.fuel-button {
-  min-height: 44px;
-  border: 0;
-  border-radius: 9px;
-  color: var(--muted);
-  background: transparent;
-  cursor: pointer;
-  font-weight: 750;
-}
-
-.fuel-button[aria-pressed="true"] {
-  color: #fff;
-  background: var(--text);
-}
-
 .select-control {
   display: grid;
   gap: 5px;
@@ -506,7 +482,11 @@ select {
 .fuel-toggle {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 3px;
   overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
 }
 .fuel-button {
   width: 100%;
