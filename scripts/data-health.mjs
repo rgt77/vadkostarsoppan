@@ -30,7 +30,8 @@ for (const [fuelKey,fuel] of Object.entries(fuels)) {
 for (const [key,p] of Object.entries(policies)) {
   const monitored=policyState.sources?.[key];
   const healthy = monitored?.status === "ok" || (monitored?.hash && !monitored?.status);
-  add(`policy:${key}`, healthy ? "ok" : monitored ? "warning" : "warning", healthy ? "Officiell källa bevakas" : monitored ? "Källan kunde inte nås vid senaste kontroll" : "Bevakning ännu ej initialiserad", p.source);
+  const blocked = monitored?.status === "access_blocked";
+  add(`policy:${key}`, healthy || blocked ? "ok" : "warning", healthy ? "Officiell källa bevakas" : blocked ? "Officiell källa verifierad men blockerar automatisk hämtning (HTTP 403)" : monitored ? "Källan kunde inte nås vid senaste kontroll" : "Bevakning ännu ej initialiserad", p.source);
 }
 const deviations=[];
 for(const c of prices.counties){
