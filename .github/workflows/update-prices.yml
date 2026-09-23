@@ -37,12 +37,12 @@ jobs:
       - name: Commit updated prices
         shell: bash
         run: |
-          if git diff --quiet -- county-data.js; then
+          if git diff --quiet -- county-data.js data/price-history.json; then
             echo "No price changes."
             exit 0
           fi
           git config user.name "vadkostarsoppan-data"
           git config user.email "actions@users.noreply.github.com"
-          git add county-data.js
+          git add county-data.js data/price-history.json
           git commit -m "Data: refresh fuel prices"
           git push
