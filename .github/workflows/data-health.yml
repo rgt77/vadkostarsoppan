@@ -4,6 +4,10 @@ on:
   schedule:
     - cron: "43 */6 * * *"
   workflow_dispatch:
+  push:
+    paths:
+      - "scripts/data-health.mjs"
+      - ".github/workflows/data-health.yml"
 
 permissions:
   contents: write
