@@ -311,7 +311,7 @@
       els.dataStatus.innerHTML =
         "<strong>Datastatus</strong> Prisdata " + priceStatus +
         ". Skattesatsen gäller " + ref.taxPeriod.validFrom + "–" + ref.taxPeriod.validTo +
-        ". Partikällorna kontrollerades 2026-09-23.";
+        ". Partikällorna är källmärkta med verifieringsdatum.";
     } else {
       els.dataStatus.innerHTML =
         "<strong>Datastatus</strong> Ingen giltig skatteperiod finns för dagens datum. Kalkylen behöver uppdateras.";
