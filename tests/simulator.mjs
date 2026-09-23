@@ -7,3 +7,11 @@ r=simulateScenario({...base,scenario:{priceModel:{type:"not_quantified"},source:
 assert.equal(r.available,false);
 assert.equal(simulateScenario({...base,scenario:{priceModel:{type:"party_delta",delta:undefined}}}).available,false);
 console.log("simulator fixtures PASS");
+
+const bounded = {
+  priceModel: { type: "party_delta", delta: -3, validFrom: "2026-07-01", validTo: "2026-11-30", fuels: ["petrol","diesel"] },
+  source: "https://example.test/m", verifiedAt: "2026-09-23", evidence: "party_estimate"
+};
+assert.equal(simulateScenario({ basePrice: 17.24, tankLiters: 40, scenario: bounded, referenceDate: "2026-09-23", fuel: "petrol" }).available, true);
+assert.equal(simulateScenario({ basePrice: 17.24, tankLiters: 40, scenario: bounded, referenceDate: "2026-12-01", fuel: "petrol" }).available, false);
+assert.equal(simulateScenario({ basePrice: 14.89, tankLiters: 40, scenario: bounded, referenceDate: "2026-09-23", fuel: "e85" }).available, false);
