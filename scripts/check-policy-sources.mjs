@@ -33,7 +33,7 @@ for (const [key, item] of Object.entries(scenarios)) {
     next.sources[key] = { name: item.name, url: item.source, hash, contentType, status: "ok" };
     if (old?.hash && old.hash !== hash) changes.push({ key, name: item.name, url: item.source, oldHash: old.hash, newHash: hash });
   } catch (error) {
-    next.sources[key] = { name: item.name, url: item.source, hash: old?.hash ?? null, contentType: old?.contentType ?? null, status: "unreachable", error: String(error.message ?? error) };
+    next.sources[key] = { name: item.name, url: item.source, hash: old?.hash ?? null, contentType: old?.contentType ?? null, status: String(error.message ?? error).includes("HTTP 403") ? "access_blocked" : "unreachable", error: String(error.message ?? error) };
   }
 }
 fs.mkdirSync("data", { recursive: true });
