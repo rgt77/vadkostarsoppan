@@ -143,9 +143,12 @@
 
   function scenarioPrice(basePrice, scenario) {
     const model = scenario?.priceModel;
-    return ["party_delta", "stated_target"].includes(model?.type) && Number.isFinite(model.delta)
-      ? basePrice + model.delta
-      : null;
+    if (!["party_delta", "stated_target"].includes(model?.type) || !Number.isFinite(model.delta)) return null;
+    const referenceDate = countyData.updatedAt || todayIso();
+    if (model.validFrom && referenceDate < model.validFrom) return null;
+    if (model.validTo && referenceDate > model.validTo) return null;
+    if (Array.isArray(model.fuels) && !model.fuels.includes(state.fuel)) return null;
+    return basePrice + model.delta;
   }
 
   function loadStateFromUrl() {
@@ -271,7 +274,7 @@
       els.scenarioTankUnit.hidden = true;
       setText(els.scenarioLiterPrice, "");
       setText(els.scenarioDelta, "");
-      setText(els.scenarioNote, scenario.method);
+      setText(els.scenarioNote, scenario.method + (scenario.priceModel?.validFrom ? " Den valda bränsletypen eller referensdagen ligger utanför det dokumenterade scenariots giltighet." : ""));
     } else {
       const baseTank = basePrice * tankLiters;
       const resultTank = resultLiter * tankLiters;
