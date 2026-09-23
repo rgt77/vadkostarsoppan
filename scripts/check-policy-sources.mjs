@@ -19,18 +19,22 @@ const normalize = text => text
   .trim();
 
 for (const [key, item] of Object.entries(scenarios)) {
-  const response = await fetch(item.source, {
-    redirect: "follow",
-    headers: { "user-agent": "vadkostarsoppan-source-monitor/1.0" }
-  });
-  if (!response.ok) throw new Error(`${key}: HTTP ${response.status} for ${item.source}`);
-  const body = Buffer.from(await response.arrayBuffer());
-  const contentType = response.headers.get("content-type") ?? "";
-  const normalized = contentType.includes("text/html") ? normalize(body.toString("utf8")) : body;
-  const hash = crypto.createHash("sha256").update(normalized).digest("hex");
   const old = previous.sources?.[key];
-  next.sources[key] = { name: item.name, url: item.source, hash, contentType };
-  if (old?.hash && old.hash !== hash) changes.push({ key, name: item.name, url: item.source, oldHash: old.hash, newHash: hash });
+  try {
+    const response = await fetch(item.source, {
+      redirect: "follow",
+      headers: { "user-agent": "vadkostarsoppan-source-monitor/1.0" }
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const body = Buffer.from(await response.arrayBuffer());
+    const contentType = response.headers.get("content-type") ?? "";
+    const normalized = contentType.includes("text/html") ? normalize(body.toString("utf8")) : body;
+    const hash = crypto.createHash("sha256").update(normalized).digest("hex");
+    next.sources[key] = { name: item.name, url: item.source, hash, contentType, status: "ok" };
+    if (old?.hash && old.hash !== hash) changes.push({ key, name: item.name, url: item.source, oldHash: old.hash, newHash: hash });
+  } catch (error) {
+    next.sources[key] = { name: item.name, url: item.source, hash: old?.hash ?? null, contentType: old?.contentType ?? null, status: "unreachable", error: String(error.message ?? error) };
+  }
 }
 fs.mkdirSync("data", { recursive: true });
 fs.writeFileSync(statePath, JSON.stringify(next, null, 2) + "\n");
