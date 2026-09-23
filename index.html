@@ -48,6 +48,10 @@
         <span>Område</span>
         <select id="countySelect" aria-label="Välj prisområde"></select>
       </label>
+          <div class="tank-size-control" role="group" aria-label="Välj tankstorlek">
+        <span>Tankstorlek</span>
+        <div><button type="button" data-tank-size="30">30 L</button><button type="button" data-tank-size="40" aria-pressed="true">40 L</button><button type="button" data-tank-size="50">50 L</button><button type="button" data-tank-size="60">60 L</button></div>
+      </div>
     </section>
 
     <section class="card" aria-labelledby="tankTitle">
@@ -63,7 +67,7 @@
       </div>
 
       <dl class="breakdown-list" aria-label="Kostnadsfördelning">
-        <div><dt>Marknad + kedja</dt><dd id="marketTank">— kr</dd></div>
+        <div><dt>Pris före skatt &amp; moms <span class="info-hint" title="Pumppris före moms minus energi- och koldioxidskatt. Det är inte samma sak som bensinbolagens vinst." aria-label="Förklaring: Pumppris före moms minus energi- och koldioxidskatt. Det är inte samma sak som bensinbolagens vinst.">ⓘ</span></dt><dd id="marketTank">— kr</dd></div>
         <div><dt>Energiskatt</dt><dd id="energyTank">— kr</dd></div>
         <div><dt>Koldioxidskatt</dt><dd id="carbonTank">— kr</dd></div>
         <div><dt>Moms</dt><dd id="vatTank">— kr</dd></div>
@@ -76,7 +80,7 @@
 
       <div class="tax-summary">
         <div><span>Skatt + moms totalt</span><strong id="taxTank">— kr</strong></div>
-        <small id="taxShare">— av tankningen</small>
+        <small id="taxShare">— av tankningen</small><div class="tax-bar" aria-hidden="true"><span id="taxBarFill"></span></div>
       </div>
     </section>
 
@@ -107,8 +111,7 @@
 
       <div class="scenario-meta" id="scenarioMeta" hidden></div>
       <p class="scenario-note" id="scenarioNote">Om ett parti inte har publicerat tillräckligt exakta nivåer visar vi inget påhittat pris.</p>
-      <div class="policy-facts" id="policyFacts" hidden></div>
-      <a class="source-link" id="partySource" href="#" target="_blank" rel="noopener noreferrer" hidden>Visa partiets källa ↗</a>
+      <details class="policy-details" id="policyDetails" hidden><summary>Visa underlag</summary><div class="policy-facts" id="policyFacts"></div><a class="source-link" id="partySource" href="#" target="_blank" rel="noopener noreferrer">Visa partiets källa ↗</a></details>
     </section>
 
     <details class="method">
@@ -116,7 +119,7 @@
       <div class="method-content">
         <p><strong>Typisk tankning</strong> är satt till <span data-tank-liters>40</span> liter som ett praktiskt riktvärde.</p>
         <p><strong>Nuvarande pris</strong> är valt rikssnitt eller länssnitt från rapporterade stationspriser och kan skilja sig från en viss station.</p>
-        <p><strong>Marknad + kedja</strong> är pumppris före moms minus energi- och koldioxidskatt. Restposten är inte samma sak som ren vinst.</p>
+        <p><strong>Pris före skatt &amp; moms</strong> är pumppris före moms minus energi- och koldioxidskatt. Det är inte samma sak som bensinbolagens vinst.</p>
         <p><strong>Partiscenario</strong> räknas bara när det finns dokumenterade numeriska uppgifter. Annars visas inget konstruerat pris.</p>
         <p><strong>Marknadsdata</strong> hålls separat från pumppriset. Valutakurs och reduktionsplikt används inte för att konstruera ett spotpris när en verifierad raffinerad produktreferens saknas.</p>
         <p id="dataStatus"><strong>Datastatus</strong> kontrolleras…</p>
