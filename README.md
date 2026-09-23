@@ -64,7 +64,7 @@ QA körs även automatiskt via GitHub Actions på push till `main`.
 
 Projektet publiceras som statiska assets via Cloudflare Workers från `main`.
 
-Aktuell applikationsversion: **0.14.0**.
+Aktuell applikationsversion: **0.15.0**.
 
 
 ## Dataautomatik
@@ -74,3 +74,5 @@ Aktuell applikationsversion: **0.14.0**.
 - Skattesatser lagras som giltighetsperioder och rätt period väljs automatiskt efter svenskt datum.
 - QA stoppar publicering om länspriserna blir mer än tre dagar gamla eller om dagens datum saknar giltig skatteperiod.
 - Partidata har verifieringsdatum och evidenstyp. Exakt pris visas bara för kvantifierbara modeller.
+- Officiella partikällor bevakas automatiskt utan att politiska uppgifter ändras automatiskt.
+- Ambitionen är att prioritera öppna, kostnadsfria och officiella källor där de ger tillräcklig aktualitet och detaljnivå.
