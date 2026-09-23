@@ -93,6 +93,11 @@ const stockholmDate = new Intl.DateTimeFormat("sv-SE", {
   day: "2-digit"
 }).format(new Date());
 
+const validPrice = (value, label) => {
+  if (!Number.isFinite(value) || value < 5 || value > 50) throw new Error(`Implausible ${label}: ${value}`);
+  return value;
+};
+
 const next = {
   updatedAt: updatedMatch[1],
   retrievedAt: stockholmDate,
@@ -107,6 +112,9 @@ const next = {
   },
   counties
 };
+
+for (const key of ["petrol","petrol98","e85","diesel"]) validPrice(next.national[key], `national ${key}`);
+for (const county of counties) for (const key of ["petrol","diesel"]) validPrice(county[key], `${county.id} ${key}`);
 
 const row = county =>
   '    { id: "' + county.id + '", name: "' + county.name + '", petrol: ' +
