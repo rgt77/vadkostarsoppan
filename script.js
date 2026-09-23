@@ -309,6 +309,14 @@
       }
     }
 
+    if (state.party === "kd" && els.policyFacts) {
+      els.policyFacts.hidden = false;
+      const title = document.createElement("strong");
+      title.textContent = "Dokumenterad bakgrund";
+      const text = document.createElement("p");
+      text.textContent = "KD:s officiella underlag från 27 augusti 2024 beskriver en ändrad mix mellan drivmedelsskatt och reduktionsplikt. Ett tidigare KD-underlag anger 6 % reduktionsplikt för både bensin och diesel från 1 januari 2024 och uppskattade då att diesel kunde bli 5,50 kr/l billigare. 5,50 kr/l visas endast som KD:s historiska uppskattning och används inte som ett aktuellt 2026-prisscenario.";
+      els.policyFacts.append(title, text);
+    }
     if (state.party === "m" && els.policyFacts) {
       els.policyFacts.hidden = false;
       const title = document.createElement("strong");
