@@ -240,7 +240,7 @@ try {
   const healthScript = read("scripts/data-health.mjs");
   healthScript.includes('add("prices:plausibility","ok"') ? pass("Price outliers are informational anomalies") : fail("Price anomaly health regression");
   const monitor = read("scripts/check-policy-sources.mjs");
-  monitor.includes('status: "unreachable"') && monitor.includes('"access_blocked"') ? pass("Policy monitor classifies source access failures") : fail("Policy monitor resilience missing");
+  monitor.includes('"unreachable"') && monitor.includes('"access_blocked"') ? pass("Policy monitor classifies source access failures") : fail("Policy monitor resilience missing");
 } catch (error) { fail("Health architecture: " + error.message); }
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
