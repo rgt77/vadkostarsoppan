@@ -70,6 +70,10 @@ try {
     }
 
     const periods = fuel.taxPeriods ?? [];
+    if (fuel.taxModel === "blend_dependent") {
+      periods.length === 0 ? pass("Blend-dependent tax model: " + fuel.label) : warn("Blend-dependent fuel has fixed periods: " + fuel.label);
+      continue;
+    }
     periods.length ? pass("Tax periods: " + fuel.label) : fail("Tax periods missing: " + fuel.label);
 
     for (const period of periods) {
