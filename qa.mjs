@@ -7,6 +7,11 @@ const required = [
   "party-logos/mp.png", "party-logos/s.png",
   "scripts/update-price-data.mjs",
   ".github/workflows/update-prices.yml",
+  ".github/workflows/data-health.yml",
+  "scripts/data-health.mjs",
+  "scripts/check-official-sources.mjs",
+  "data/source-registry.json",
+  "data/data-health.json",
   "404.html"
 ];
 const failures = [];
@@ -53,7 +58,7 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = Object.values(w.FUEL_DATA ?? {});
 
-  w.SITE_DATA?.appVersion === "0.15.0" ? pass("Version 0.15.0") : fail("Version mismatch");
+  w.SITE_DATA?.appVersion === "0.16.0" ? pass("Version 0.16.0") : fail("Version mismatch");
   w.SITE_DATA?.typicalTankLiters === 40 ? pass("Tank size 40 L") : fail("Tank size invalid");
 
   for (const fuel of fuels) {
