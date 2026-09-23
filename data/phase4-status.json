@@ -13,7 +13,17 @@
     "accessible_scenario_state",
     "responsive_scenario_layout",
     "phase4_qa_guards",
-    "release_0_40_0"
+    "release_0_40_0",
+    "current_vs_scenario_comparison",
+    "neutral_scenario_copy",
+    "source_accessibility_label",
+    "url_popstate_restore",
+    "compact_comparison_layout",
+    "evidence_type_labels",
+    "party_keyboard_navigation",
+    "history_reference_date_guard",
+    "phase4_second_qa_guards",
+    "release_0_41_0"
   ],
   "safeguards": [
     "No undocumented political values are inferred.",
