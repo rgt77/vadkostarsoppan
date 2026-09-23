@@ -500,3 +500,28 @@ select {
 
   .party-delta { text-align: left; }
 }
+
+
+/* EN 16942 fuel identifiers: official geometry/notation. */
+.fuel-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+}
+.fuel-id {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 2rem;
+  border: 2px solid currentColor;
+  font-size: .72rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -.02em;
+}
+.fuel-id--petrol { border-radius: 50%; }
+.fuel-id--diesel { border-radius: 0; }
