@@ -18,6 +18,10 @@ add("prices:freshness", days(prices.updatedAt)<=3 ? "ok":"error", `Prisdata är 
 add("prices:counties", prices.counties.length===21 ? "ok":"error", `${prices.counties.length}/21 län`, prices.source);
 for (const [fuelKey,fuel] of Object.entries(fuels)) {
   const today = now.slice(0,10);
+  if (fuel.taxModel === "blend_dependent") {
+    add(`tax:${fuelKey}`,"ok","Blandningsberoende punktskatt hanteras utan konstruerad fast skattesats",fuel.taxSource);
+    continue;
+  }
   const active=(fuel.taxPeriods||[]).find(p=>p.validFrom<=today&&today<=p.validTo);
   add(`tax:${fuelKey}`,active?"ok":"error",active?`Giltig skatteperiod ${active.validFrom}–${active.validTo}`:"Ingen giltig skatteperiod",fuel.taxSource);
 }
@@ -27,7 +31,8 @@ for (const [key,p] of Object.entries(policies)) {
 }
 const deviations=[];
 for(const c of prices.counties){
-  for(const k of ["petrol","diesel"]){
+  for(const k of ["petrol","petrol98","e85","diesel"]){
+    if (!Number.isFinite(c[k]) || !Number.isFinite(prices.national[k])) continue;
     const base=prices.national[k];
     const pct=Math.abs(c[k]-base)/base;
     if(pct>0.20) deviations.push({county:c.name,fuel:k,value:c[k],national:base,deviationPct:Number((pct*100).toFixed(1))});
