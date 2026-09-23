@@ -12,8 +12,9 @@ window.POLICY_SCENARIOS = {
     priceModel: { type: "not_quantified" },
     evidence: "not_quantified",
     verifiedAt: "2026-09-23",
-    method: "Partiets aktuella sida anger riktning för lägre drivmedelskostnader men inte ett komplett numeriskt förslag som kan översättas till ett exakt kr/l-pris.",
-    source: "https://kristdemokraterna.se/var-politik/politik-a-till-o/drivmedelspriser"
+    method: "KD:s officiella källor dokumenterar skatte- och reduktionspliktsåtgärder samt en historisk partiuppskattning för diesel, men ger inte en tillräckligt specificerad aktuell 2026-nivå för ett exakt framtida kr/l-scenario.",
+    source: "https://kristdemokraterna.se/arkiv/nyheter/2024/2024-08-27-vi-sanker-drivmedelsskatten-och-utslappen",
+    facts: "data/policy-facts-kd.json"
   },
   l: {
     name: "Liberalerna",
