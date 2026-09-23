@@ -49,6 +49,9 @@
     scenarioReferenceDate: $("scenarioReferenceDate"),
     scenarioMeta: $("scenarioMeta"),
     scenarioReset: $("scenarioReset"),
+    scenarioComparison: $("scenarioComparison"),
+    scenarioBaseTank: $("scenarioBaseTank"),
+    scenarioResultTank: $("scenarioResultTank"),
     priceSource: $("priceSource"),
     taxSource: $("taxSource"),
     dataStatus: $("dataStatus"),
@@ -232,6 +235,7 @@
     const scenario = scenarios[state.party];
     setText(els.scenarioReferenceDate, countyData.updatedAt || "—");
     if (els.scenarioReset) els.scenarioReset.hidden = !scenario;
+    if (els.scenarioComparison) els.scenarioComparison.hidden = true;
 
     els.partyResult.className = "party-result";
     els.scenarioTankPrice.className = "";
@@ -269,6 +273,9 @@
       const baseTank = basePrice * tankLiters;
       const resultTank = resultLiter * tankLiters;
       const deltaTank = resultTank - baseTank;
+      if (els.scenarioComparison) els.scenarioComparison.hidden = false;
+      setText(els.scenarioBaseTank, fmt(baseTank) + " kr");
+      setText(els.scenarioResultTank, fmt(resultTank) + " kr");
 
       setText(els.scenarioTankPrice, fmt(resultTank));
       els.scenarioTankUnit.hidden = false;
@@ -298,6 +305,7 @@
 
     els.partySource.href = scenario.source;
     els.partySource.hidden = false;
+    els.partySource.setAttribute("aria-label", "Öppna officiell källa för " + scenario.name);
   }
 
   function renderDataStatus(ref) {
@@ -425,6 +433,8 @@
       syncUrl();
     });
   }
+
+  window.addEventListener("popstate", () => { loadStateFromUrl(); if (els.countySelect) els.countySelect.value = state.county; updatePartySelection(); render(); });
 
   loadStateFromUrl();
   buildCountySelect();
