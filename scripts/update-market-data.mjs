@@ -7,11 +7,24 @@ const HISTORY = "data/market-history.json";
 const response = await fetch(URL, { headers: { "user-agent": "vadkostarsoppan-market-updater/1.0" } });
 if (!response.ok) throw new Error("Riksbank API returned HTTP " + response.status);
 const payload = await response.json();
-const candidate = Array.isArray(payload) ? payload : payload?.observations ?? payload?.value ?? payload?.results ?? payload;
-const rows = Array.isArray(candidate) ? candidate : [candidate];
-const row = rows.find(x => Number.isFinite(Number(x?.value ?? x?.Value))) ?? rows[0];
-const value = Number(row?.value ?? row?.Value);
-const date = row?.date ?? row?.Date ?? row?.observationDate ?? row?.ObservationDate;
+const objects = [];
+const visit = value => {
+  if (Array.isArray(value)) return value.forEach(visit);
+  if (value && typeof value === "object") {
+    objects.push(value);
+    Object.values(value).forEach(visit);
+  }
+};
+visit(payload);
+const parseNumber = raw => Number(String(raw ?? "").replace(",", "."));
+const row = objects.find(x => {
+  const raw = x.value ?? x.Value ?? x.valueNumeric ?? x.ValueNumeric;
+  const date = x.date ?? x.Date ?? x.observationDate ?? x.ObservationDate ?? x.dateString;
+  return Number.isFinite(parseNumber(raw)) && /^\\d{4}-\\d{2}-\\d{2}/.test(String(date ?? ""));
+});
+if (!row) throw new Error("Could not locate Riksbank observation in API response");
+const value = parseNumber(row.value ?? row.Value ?? row.valueNumeric ?? row.ValueNumeric);
+const date = row.date ?? row.Date ?? row.observationDate ?? row.ObservationDate ?? row.dateString;
 if (!Number.isFinite(value) || value < 5 || value > 20) throw new Error("Implausible USD/SEK value");
 if (!/^\d{4}-\d{2}-\d{2}/.test(String(date ?? ""))) throw new Error("Invalid USD/SEK observation date");
 
