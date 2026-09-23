@@ -14,7 +14,7 @@ const required = [
   "data/data-health.json",
   "data/price-history.json",
   "data/calculation-model.json", "data/reduction-duty.json", "data/market-data.json", "data/market-history.json", "lib/calculation.mjs",
-  "404.html", "data/phase3-status.json", "data/phase4-status.json", "lib/simulator.mjs", "tests/simulator.mjs", "data/policy-facts-sd.json"
+  "404.html", "data/phase3-status.json", "data/phase4-status.json", "lib/simulator.mjs", "tests/simulator.mjs", "data/policy-facts-sd.json", "data/policy-facts-m.json"
 ];
 const failures = [];
 const warnings = [];
@@ -267,6 +267,14 @@ try {
   sdFacts.facts?.every(x => String(x.source ?? "").startsWith("https://")) ? pass("SD fact sources") : fail("SD fact source missing");
   script.includes('state.party === "sd"') && html.includes('id="policyFacts"') ? pass("SD contextual evidence UI") : fail("SD contextual evidence UI missing");
 } catch (error) { fail("SD policy facts: " + error.message); }
+
+try {
+  const mFacts = JSON.parse(read("data/policy-facts-m.json"));
+  const ids = new Set(mFacts.facts?.map(x => x.id));
+  ["eu_min_tax_2026","additional_relief_2026","reduction_duty_current","tax_indexation_2026"].every(x => ids.has(x)) ? pass("M sourced policy facts") : fail("M policy facts incomplete");
+  mFacts.facts?.every(x => String(x.source ?? "").startsWith("https://moderaterna.se/")) ? pass("M official fact sources") : fail("M fact source invalid");
+  script.includes('state.party === "m"') ? pass("M contextual evidence UI") : fail("M contextual evidence UI missing");
+} catch (error) { fail("M policy facts: " + error.message); }
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
 if (failures.length) {
