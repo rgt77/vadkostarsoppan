@@ -64,7 +64,7 @@ QA körs även automatiskt via GitHub Actions på push till `main`.
 
 Projektet publiceras som statiska assets via Cloudflare Workers från `main`.
 
-Aktuell applikationsversion: **0.16.0**.
+Aktuell applikationsversion: **0.19.0**.
 
 
 ## Dataautomatik
@@ -87,3 +87,11 @@ Aktuell applikationsversion: **0.16.0**.
 - Prisavvikelser över 20 % från rikssnitt flaggas för kontroll men skrivs inte automatiskt över.
 - Källregistret dokumenterar ursprung, kostnad, automationsnivå och tillitsnivå.
 - GitHub Actions kör hälsokontrollen var sjätte timme.
+
+## Fas 3 – prishistorik
+
+- Dagliga prisögonblick sparas automatiskt i `data/price-history.json`.
+- Samma datum uppdateras i stället för att dupliceras.
+- Historiken hålls till maximalt 730 dagar.
+- QA kontrollerar datumordning, dubbletter och att alla fyra rikssnitt finns.
+- Historiken är grunden för förändring över 7/30 dagar utan att belasta huvudvyn.
