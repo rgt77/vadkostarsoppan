@@ -23,7 +23,7 @@ for (const [key, item] of Object.entries(scenarios)) {
   try {
     const response = await fetch(item.source, {
       redirect: "follow",
-      headers: { "user-agent": "vadkostarsoppan-source-monitor/1.0" }
+      headers: { "user-agent": "vadkostarsoppan-source-monitor/1.0", "accept": "text/html,application/pdf;q=0.9,*/*;q=0.8" }
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const body = Buffer.from(await response.arrayBuffer());
