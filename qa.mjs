@@ -36,6 +36,7 @@ for (const file of ["script.js", "fuel-data.js", "county-data.js", "policy-data.
 }
 
 const html = read("index.html");
+const html404 = read("404.html");
 const script = read("script.js");
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
 const duplicates = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
@@ -60,7 +61,7 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = Object.values(w.FUEL_DATA ?? {});
 
-  w.SITE_DATA?.appVersion === "0.25.0" ? pass("Version 0.25.0") : fail("Version mismatch");
+  w.SITE_DATA?.appVersion === "0.26.0" ? pass("Version 0.26.0") : fail("Version mismatch");
   w.SITE_DATA?.typicalTankLiters === 40 ? pass("Tank size 40 L") : fail("Tank size invalid");
 
   for (const fuel of fuels) {
@@ -177,6 +178,10 @@ try {
 } catch (error) {
   fail("Policy data: " + error.message);
 }
+
+html404.includes("style.css?v=0.26.0") ? pass("404 cache version") : fail("404 cache version mismatch");
+script.includes("Partikällorna kontrollerades 2026-09-23") ? fail("Hardcoded policy review date") : pass("No hardcoded policy review date");
+read("scripts/update-price-data.mjs").includes("Implausible") ? pass("Pump price plausibility guard") : fail("Pump price plausibility guard missing");
 
 const fuelButtons = [...html.matchAll(/data-fuel="([^"]+)"/g)].map(x => x[1]);
 new Set(fuelButtons).size === 4 && ["petrol","petrol98","diesel","e85"].every(x => fuelButtons.includes(x)) && script.includes('button.addEventListener("click"') ? pass("Clickable four-fuel selector") : fail("Fuel selector regression");
