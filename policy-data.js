@@ -37,7 +37,8 @@ window.POLICY_SCENARIOS = {
     evidence: "not_quantified",
     verifiedAt: "2026-09-23",
     method: "Partiet anger att tillfälliga skattesänkningar kan förlängas beroende på omvärldsläget, men anger inte en permanent framtida nivå som kan räknas till ett exakt kr/l-pris.",
-    source: "https://moderaterna.se/var-politik/drivmedelspriser/"
+    source: "https://moderaterna.se/var-politik/drivmedelspriser/",
+    facts: "data/policy-facts-m.json"
   },
   s: {
     name: "Socialdemokraterna",
