@@ -1,10 +1,11 @@
 import fs from "node:fs";
 
-// Parser accepts nested observation envelopes from the official SWEA API.\nconst URL = "https://api.riksbank.se/swea/v1/Observations/Latest/sekusdpmi";
+// Parser accepts nested observation envelopes from the official SWEA API.
+const API_URL = "https://api.riksbank.se/swea/v1/Observations/Latest/sekusdpmi";
 const OUT = "data/market-data.json";
 const HISTORY = "data/market-history.json";
 
-const response = await fetch(URL, { headers: { "user-agent": "vadkostarsoppan-market-updater/1.0" } });
+const response = await fetch(API_URL, { headers: { "user-agent": "vadkostarsoppan-market-updater/1.0" } });
 if (!response.ok) throw new Error("Riksbank API returned HTTP " + response.status);
 const payload = await response.json();
 const objects = [];
@@ -20,7 +21,7 @@ const parseNumber = raw => Number(String(raw ?? "").replace(",", "."));
 const row = objects.find(x => {
   const raw = x.value ?? x.Value ?? x.valueNumeric ?? x.ValueNumeric;
   const date = x.date ?? x.Date ?? x.observationDate ?? x.ObservationDate ?? x.dateString;
-  return Number.isFinite(parseNumber(raw)) && /^\\d{4}-\\d{2}-\\d{2}/.test(String(date ?? ""));
+  return Number.isFinite(parseNumber(raw)) && /^\d{4}-\d{2}-\d{2}/.test(String(date ?? ""));
 });
 if (!row) throw new Error("Could not locate Riksbank observation in API response");
 const value = parseNumber(row.value ?? row.Value ?? row.valueNumeric ?? row.ValueNumeric);
@@ -35,7 +36,7 @@ const data = {
     usdSek: value,
     observationDate: String(date).slice(0, 10),
     seriesId: "SEKUSDPMI",
-    source: URL,
+    source: API_URL,
     indicative: true
   }
 };
