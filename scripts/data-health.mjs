@@ -11,6 +11,8 @@ const fuels = loadWindow("fuel-data.js").FUEL_DATA;
 const policies = loadWindow("policy-data.js").POLICY_SCENARIOS;
 const policyState = JSON.parse(fs.readFileSync("data/policy-source-state.json","utf8"));
 const now = new Date().toISOString();
+const market = JSON.parse(fs.readFileSync("data/market-data.json","utf8"));
+const duty = JSON.parse(fs.readFileSync("data/reduction-duty.json","utf8"));
 const checks = [];
 
 const add=(id,status,message,source=null)=>checks.push({id,status,message,source});
@@ -39,8 +41,11 @@ for(const c of prices.counties){
   }
 }
 add("prices:plausibility",deviations.length?"warning":"ok",deviations.length?`${deviations.length} länsvärde(n) avviker >20 % från rikssnitt`:"Inga extrema länsavvikelser",prices.source);
+const activeDuty=(duty.periods||[]).find(p=>p.validFrom<=now.slice(0,10)&&now.slice(0,10)<=p.validTo);
+add("policy:reduction-duty",activeDuty?"ok":"error",activeDuty?`Reduktionsplikt ${activeDuty.petrolPct}% bensin / ${activeDuty.dieselPct}% diesel`:"Ingen aktiv reduktionspliktsperiod",duty.source);
+const fxAge=market.fx?.observationDate ? days(market.fx.observationDate) : null;
+add("market:usdsek",market.fx?.usdSek>0 && fxAge!==null && fxAge<=7?"ok":"warning",market.fx?.usdSek>0?`USD/SEK ${market.fx.usdSek}, ${fxAge} dag(ar) gammal`:"Väntar på första Riksbankshämtningen",market.fx?.source);
 const summary={
-  generatedAt:now,
   status:checks.some(x=>x.status==="error")?"error":checks.some(x=>x.status==="warning")?"warning":"ok",
   counts:{ok:checks.filter(x=>x.status==="ok").length,warning:checks.filter(x=>x.status==="warning").length,error:checks.filter(x=>x.status==="error").length},
   checks,
