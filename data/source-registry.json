@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "strategy": "official-free-first",
+  "sources": [
+    {
+      "id": "tax-skatteverket",
+      "category": "tax",
+      "authority": "Skatteverket",
+      "url": "https://www.skatteverket.se/foretag/skatterochavdrag/punktskatter/energiskatter/skattpabransle.4.15532c7b1442f256bae5e56.html",
+      "official": true,
+      "cost": "free",
+      "automation": "monitor",
+      "trust": "primary"
+    },
+    {
+      "id": "pumpprice-carculated",
+      "category": "pump_price",
+      "authority": "Carculated / bensinpriser.nu",
+      "url": "https://www.carculated.se/bensinpriser",
+      "official": false,
+      "cost": "free",
+      "automation": "ingest",
+      "trust": "secondary",
+      "note": "Behålls tills en tillräckligt aktuell kostnadsfri officiell pumppriskälla finns."
+    }
+  ]
+}
