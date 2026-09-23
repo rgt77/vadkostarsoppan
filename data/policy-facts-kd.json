@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-23",
+  "party": "kd",
+  "name": "Kristdemokraterna",
+  "facts": [
+    {
+      "id": "tax_reduction_mix_2024",
+      "kind": "historical_policy_measure",
+      "date": "2024-08-27",
+      "source": "https://kristdemokraterna.se/arkiv/nyheter/2024/2024-08-27-vi-sanker-drivmedelsskatten-och-utslappen",
+      "note": "KD beskriver en aviserad ändring av mixen mellan drivmedelsskatt och reduktionsplikt för att säkra lägre bränslepriser och nå klimatmålen till 2030. Källan anger ingen exakt kr/l-effekt."
+    },
+    {
+      "id": "reduction_duty_2024",
+      "kind": "historical_policy_level",
+      "date": "2024-01-01",
+      "petrolPct": 6,
+      "dieselPct": 6,
+      "source": "https://kristdemokraterna.se/arkiv/nyheter/2023/2023-05-07-billigare-bensin-och-diesel---for-att-hela-sverige-ska-fungera",
+      "note": "KD och samarbetspartierna angav 6 procent reduktionsplikt för både bensin och diesel från årsskiftet."
+    },
+    {
+      "id": "diesel_estimate_2024",
+      "kind": "party_estimate",
+      "date": "2024",
+      "dieselPumpReliefEstimate": 5.5,
+      "unit": "SEK/l",
+      "source": "https://kristdemokraterna.se/arkiv/nyheter/2023/2023-05-07-billigare-bensin-och-diesel---for-att-hela-sverige-ska-fungera",
+      "note": "KD:s dåvarande uppskattning: diesel kunde bli 5,50 kr/l billigare. Historisk partiuppskattning, inte ett aktuellt 2026-scenario."
+    }
+  ]
+}
