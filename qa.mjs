@@ -236,6 +236,13 @@ try {
   phase.blockedInputs?.some(x => x.id === "refined_product_reference") ? pass("Blocked refined-product input documented") : fail("Blocked market input undocumented");
 } catch (error) { fail("Phase 3 status: " + error.message); }
 
+try {
+  const healthScript = read("scripts/data-health.mjs");
+  healthScript.includes('add("prices:plausibility","ok"') ? pass("Price outliers are informational anomalies") : fail("Price anomaly health regression");
+  const monitor = read("scripts/check-policy-sources.mjs");
+  monitor.includes('status: "unreachable"') ? pass("Policy monitor tolerates individual source failures") : fail("Policy monitor resilience missing");
+} catch (error) { fail("Health architecture: " + error.message); }
+
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
 if (failures.length) {
   console.error("\n" + failures.map(message => "✕ " + message).join("\n"));
