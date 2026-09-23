@@ -42,7 +42,10 @@
     "refined_product_reference": {
       "kind": "market_input",
       "political": false,
-      "status": "research"
+      "status": "blocked_licensed_source",
+      "source": "S&P Global Commodity Insights",
+      "publicProxyAllowed": false,
+      "note": "True Rotterdam/ARA gasoline and diesel benchmark data is licensed. Do not substitute crude oil. EU Weekly Oil Bulletin net-of-tax prices may be used only as market context, not as refined-product spot."
     },
     "market_chain_residual": {
       "kind": "derived_residual",
