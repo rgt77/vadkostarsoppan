@@ -37,11 +37,14 @@
       "id": "fx-riksbanken",
       "category": "fx",
       "authority": "Sveriges Riksbank",
-      "url": "https://www.riksbank.se/sv/statistik/sok-rantor--valutakurser/",
+      "url": "https://api.riksbank.se/swea/v1/Observations/Latest/sekusdpmi",
       "official": true,
       "cost": "free",
-      "automation": "planned_ingest",
-      "trust": "primary"
+      "automation": "ingest",
+      "trust": "primary",
+      "seriesId": "SEKUSDPMI",
+      "unit": "SEK per USD",
+      "note": "Official indicative Riksbank exchange rate; informational reference, not a transaction rate."
     },
     {
       "id": "market-ara",
