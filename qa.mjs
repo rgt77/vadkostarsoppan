@@ -13,7 +13,7 @@ const required = [
   "data/source-registry.json",
   "data/data-health.json",
   "data/price-history.json",
-  "data/calculation-model.json", "data/reduction-duty.json", "data/market-data.json", "lib/calculation.mjs",
+  "data/calculation-model.json", "data/reduction-duty.json", "data/market-data.json", "data/market-history.json", "lib/calculation.mjs",
   "404.html"
 ];
 const failures = [];
@@ -178,6 +178,9 @@ try {
   fail("Policy data: " + error.message);
 }
 
+const fuelButtons = [...html.matchAll(/data-fuel="([^"]+)"/g)].map(x => x[1]);
+new Set(fuelButtons).size === 4 && ["petrol","petrol98","diesel","e85"].every(x => fuelButtons.includes(x)) && script.includes('button.addEventListener("click"') ? pass("Clickable four-fuel selector") : fail("Fuel selector regression");
+
 if (html.includes('id="partySelect"') || !html.includes('id="partyGrid"')) {
   fail("Party selector regression");
 } else {
@@ -212,6 +215,13 @@ try {
   new Set(ids).size === ids.length ? pass("Unique source IDs") : fail("Duplicate source IDs");
   registry.sources?.every(x => /^https:\\/\\//.test(x.url) && Array.isArray(x.requiredFor)) ? pass("Source registry schema") : fail("Source registry invalid");
 } catch (error) { fail("Source registry: " + error.message); }
+
+try {
+  const history = JSON.parse(read("data/market-history.json"));
+  const rows = history.snapshots ?? [];
+  rows.length <= 730 ? pass("Market history bounded") : fail("Market history too large");
+  rows.every((x,i) => /^\\d{4}-\\d{2}-\\d{2}$/.test(x.date) && Number.isFinite(x.usdSek) && (i===0 || rows[i-1].date < x.date)) ? pass("Market history schema") : rows.length === 0 ? warn("Market history awaits first ingestion") : fail("Market history invalid");
+} catch (error) { fail("Market history: " + error.message); }
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
 if (failures.length) {
