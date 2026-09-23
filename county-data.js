@@ -6,6 +6,8 @@ window.COUNTY_PRICES = {
     id: "riket",
     name: "Hela Sverige",
     petrol: 17.26,
+    petrol98: 18.10,
+    e85: 14.89,
     diesel: 22.18
   },
   counties: [
