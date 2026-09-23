@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "methodology": "observed-plus-simulation",
   "observed": {
     "description": "Observed pump price is authoritative for today's displayed tank cost. Taxes are separated from it; the remainder is explicitly a residual, not profit.",
@@ -8,7 +8,12 @@
   "simulation": {
     "description": "Freeze observed market conditions at a reference timestamp and alter only documented policy variables.",
     "formula": "frozen_market_reference + documented_policy_costs + energy_tax + carbon_tax -> VAT -> simulated_pump_price",
-    "status": "foundation"
+    "status": "guarded_foundation",
+    "referencePolicy": {
+      "freezeObservedPrice": true,
+      "freezeMarketTimestamp": true,
+      "allowUndocumentedPoliticalInputs": false
+    }
   },
   "variables": {
     "pump_price": {
@@ -37,7 +42,8 @@
     "usd_sek": {
       "kind": "official_market_input",
       "political": false,
-      "status": "planned"
+      "status": "active_reference",
+      "sourceData": "data/market-data.json"
     },
     "refined_product_reference": {
       "kind": "market_input",
@@ -57,6 +63,8 @@
     "Never infer undocumented party values.",
     "Every political numeric input requires source and validity.",
     "Do not equate reduction-duty percentage with biofuel volume percentage.",
-    "Do not present a market residual as company profit."
+    "Do not present a market residual as company profit.",
+    "A simulated result must retain the reference timestamp used for non-political inputs.",
+    "Licensed refined-product data must not be silently replaced by crude-oil proxies."
   ]
 }
