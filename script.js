@@ -102,7 +102,14 @@
   function calculate(price) {
     const fuel = fuelData[state.fuel];
     const taxPeriod = getTaxPeriod(fuel);
-    if (!fuel || !taxPeriod || !Number.isFinite(price)) return null;
+    if (!fuel || !Number.isFinite(price)) return null;
+
+    if (fuel.taxModel === "blend_dependent") {
+      const beforeVat = price / (1 + fuel.vatRate / 100);
+      const vat = price - beforeVat;
+      return { fuel, taxPeriod: null, vat, market: beforeVat, tax: vat, blendDependent: true };
+    }
+    if (!taxPeriod) return null;
 
     const beforeVat = price / (1 + fuel.vatRate / 100);
     const vat = price - beforeVat;
@@ -289,7 +296,9 @@
       "Prisdata " + (countyData.updatedAt || "—") + (age !== null && age > warningAfter ? " · kontrollera" : "")
     );
 
-    if (ref?.taxPeriod) {
+    if (ref?.blendDependent) {
+      els.dataStatus.innerHTML = "<strong>Datastatus</strong> Prisdata " + priceStatus + ". För E85 beror punktskatten på bränslets faktiska bio-/bensinandel; vi visar därför inte en konstruerad fast punktskatt.";
+    } else if (ref?.taxPeriod) {
       els.dataStatus.innerHTML =
         "<strong>Datastatus</strong> Prisdata " + priceStatus +
         ". Skattesatsen gäller " + ref.taxPeriod.validFrom + "–" + ref.taxPeriod.validTo +
@@ -321,8 +330,8 @@
     setText(els.tankTotal, fmt(price * tankLiters));
     setText(els.literPrice, fmt(price));
     setText(els.marketTank, fmt(ref.market * tankLiters) + " kr");
-    setText(els.energyTank, fmt(ref.taxPeriod.energyTax * tankLiters) + " kr");
-    setText(els.carbonTank, fmt(ref.taxPeriod.carbonTax * tankLiters) + " kr");
+    setText(els.energyTank, ref.blendDependent ? "Ingår i bränslemixen" : fmt(ref.taxPeriod.energyTax * tankLiters) + " kr");
+    setText(els.carbonTank, ref.blendDependent ? "Ingår i bränslemixen" : fmt(ref.taxPeriod.carbonTax * tankLiters) + " kr");
     setText(els.vatTank, fmt(ref.vat * tankLiters) + " kr");
     setText(els.taxTank, fmt(ref.tax * tankLiters) + " kr");
     setText(els.taxShare, wholePercent.format(ref.tax / price * 100) + " % av tankningen");
