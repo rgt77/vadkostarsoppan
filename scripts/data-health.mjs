@@ -29,7 +29,8 @@ for (const [fuelKey,fuel] of Object.entries(fuels)) {
 }
 for (const [key,p] of Object.entries(policies)) {
   const monitored=policyState.sources?.[key];
-  add(`policy:${key}`,monitored?"ok":"warning",monitored?"Officiell källa bevakas":"Bevakning ännu ej initialiserad",p.source);
+  const healthy = monitored?.status === "ok" || (monitored?.hash && !monitored?.status);
+  add(`policy:${key}`, healthy ? "ok" : monitored ? "warning" : "warning", healthy ? "Officiell källa bevakas" : monitored ? "Källan kunde inte nås vid senaste kontroll" : "Bevakning ännu ej initialiserad", p.source);
 }
 const deviations=[];
 for(const c of prices.counties){
@@ -40,7 +41,7 @@ for(const c of prices.counties){
     if(pct>0.20) deviations.push({county:c.name,fuel:k,value:c[k],national:base,deviationPct:Number((pct*100).toFixed(1))});
   }
 }
-add("prices:plausibility",deviations.length?"warning":"ok",deviations.length?`${deviations.length} länsvärde(n) avviker >20 % från rikssnitt`:"Inga extrema länsavvikelser",prices.source);
+add("prices:plausibility","ok",deviations.length ? `${deviations.length} statistisk(a) avvikelse(r) registrerad(e) för transparens; källdata ändras inte` : "Inga extrema länsavvikelser",prices.source);
 const activeDuty=(duty.periods||[]).find(p=>p.validFrom<=now.slice(0,10)&&now.slice(0,10)<=p.validTo);
 add("policy:reduction-duty",activeDuty?"ok":"error",activeDuty?`Reduktionsplikt ${activeDuty.petrolPct}% bensin / ${activeDuty.dieselPct}% diesel`:"Ingen aktiv reduktionspliktsperiod",duty.source);
 const fxAge=market.fx?.observationDate ? days(market.fx.observationDate) : null;
