@@ -6,10 +6,10 @@
       "national": {
         "id": "riket",
         "name": "Hela Sverige",
-        "petrol": 17.24,
-        "petrol98": 18.13,
+        "petrol": 17.23,
+        "petrol98": 18.17,
         "e85": 14.89,
-        "diesel": 22.15
+        "diesel": 22.14
       },
       "counties": [
         {
@@ -23,7 +23,7 @@
         {
           "id": "dalarna",
           "name": "Dalarnas län",
-          "petrol": 17.24,
+          "petrol": 17.22,
           "petrol98": 19.19,
           "e85": 14.89,
           "diesel": 22.14
@@ -39,18 +39,18 @@
         {
           "id": "gavleborg",
           "name": "Gävleborgs län",
-          "petrol": 17.3,
+          "petrol": 17.29,
           "petrol98": 19.19,
           "e85": 14.9,
-          "diesel": 22.21
+          "diesel": 22.2
         },
         {
           "id": "halland",
           "name": "Hallands län",
-          "petrol": 17.32,
+          "petrol": 17.31,
           "petrol98": null,
           "e85": 14.91,
-          "diesel": 22.28
+          "diesel": 22.27
         },
         {
           "id": "jamtland",
@@ -58,7 +58,7 @@
           "petrol": 17.24,
           "petrol98": null,
           "e85": 14.89,
-          "diesel": 22.12
+          "diesel": 22.15
         },
         {
           "id": "jonkoping",
@@ -66,7 +66,7 @@
           "petrol": 17.29,
           "petrol98": 19.09,
           "e85": 14.92,
-          "diesel": 22.18
+          "diesel": 22.17
         },
         {
           "id": "kalmar",
@@ -95,10 +95,10 @@
         {
           "id": "skane",
           "name": "Skåne län",
-          "petrol": 17.19,
+          "petrol": 17.17,
           "petrol98": 18.58,
           "e85": 14.88,
-          "diesel": 22.09
+          "diesel": 22.06
         },
         {
           "id": "stockholm",
@@ -111,15 +111,15 @@
         {
           "id": "sodermanland",
           "name": "Södermanlands län",
-          "petrol": 17.29,
-          "petrol98": 18.79,
+          "petrol": 17.28,
+          "petrol98": 18.66,
           "e85": 14.92,
           "diesel": 22.16
         },
         {
           "id": "uppsala",
           "name": "Uppsala län",
-          "petrol": 17.31,
+          "petrol": 17.3,
           "petrol98": null,
           "e85": 14.89,
           "diesel": 22.15
@@ -146,7 +146,7 @@
           "petrol": 17.23,
           "petrol98": null,
           "e85": 14.84,
-          "diesel": 22.11
+          "diesel": 22.1
         },
         {
           "id": "vastmanland",
@@ -159,15 +159,15 @@
         {
           "id": "vastra-gotaland",
           "name": "Västra Götalands län",
-          "petrol": 17.19,
+          "petrol": 17.18,
           "petrol98": 18.79,
           "e85": 14.86,
-          "diesel": 22.09
+          "diesel": 22.08
         },
         {
           "id": "orebro",
           "name": "Örebro län",
-          "petrol": 17.37,
+          "petrol": 17.36,
           "petrol98": 19.34,
           "e85": 14.9,
           "diesel": 22.4
