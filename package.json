@@ -1,12 +1,13 @@
 {
   "name": "vadkostarsoppan",
   "private": true,
-  "version": "0.22.0",
+  "version": "0.23.0",
   "scripts": {
     "qa": "node qa.mjs",
     "update:prices": "node scripts/update-price-data.mjs",
     "monitor:policy": "node scripts/check-policy-sources.mjs",
     "monitor:official": "node scripts/check-official-sources.mjs",
-    "health": "node scripts/data-health.mjs"
+    "health": "node scripts/data-health.mjs",
+    "update:market": "node scripts/update-market-data.mjs"
   }
 }
