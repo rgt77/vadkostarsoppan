@@ -83,11 +83,11 @@
     <section class="card" aria-labelledby="partyTitle">
       <div class="card-head party-head">
         <div>
-          <span class="overline">PARTISCENARIO</span>
+          <span class="overline">PARTISCENARIO · REFERENS <span id="scenarioReferenceDate">—</span></span>
           <h2 id="partyTitle">Vad skulle <span data-tank-liters>40</span> liter kosta?</h2>
         </div>
 
-        <div class="party-choice-label">Välj parti</div>
+        <button class="scenario-reset" id="scenarioReset" type="button" hidden>Nollställ</button>
       </div>
 
       <div class="party-grid" id="partyGrid" role="group" aria-label="Välj parti"></div>
@@ -104,6 +104,7 @@
         <div class="party-delta" id="scenarioDelta">—</div>
       </div>
 
+      <div class="scenario-meta" id="scenarioMeta" hidden></div>
       <p class="scenario-note" id="scenarioNote">Om ett parti inte har publicerat tillräckligt exakta nivåer visar vi inget påhittat pris.</p>
       <a class="source-link" id="partySource" href="#" target="_blank" rel="noopener noreferrer" hidden>Officiell källa ↗</a>
     </section>
