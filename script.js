@@ -214,12 +214,12 @@
       fragment.append(button);
     }
 
-    els.partyGrid.replaceChildren(fragment);
+    els.partyGrid?.replaceChildren(fragment);
     updatePartySelection();
   }
 
   function updatePartySelection() {
-    for (const button of els.partyGrid.children) {
+    for (const button of els.partyGrid?.children ?? []) {
       button.setAttribute("aria-pressed", String(button.dataset.party === state.party));
     }
   }
@@ -336,7 +336,7 @@
       const target = Date.parse(latestDate + "T12:00:00Z") - days * 86400000;
       const candidates = snapshots
         .map(item => ({ item, distance: Math.abs(Date.parse(item.date + "T12:00:00Z") - target) }))
-        .filter(entry => Number.isFinite(entry.distance) && entry.distance <= 3 * 86400000)
+        .filter(entry => Number.isFinite(entry.distance) && entry.distance <= (Number(siteData.trendToleranceDays) || 3) * 86400000)
         .sort((a, b) => a.distance - b.distance);
       const oldPrice = historyPrice(candidates[0]?.item);
       return oldPrice === null ? null : currentPrice - oldPrice;
@@ -392,12 +392,12 @@
       });
     }
 
-    els.countySelect.addEventListener("change", () => {
+    els.countySelect?.addEventListener("change", () => {
       state.county = els.countySelect.value;
       render();
     });
 
-    els.partyGrid.addEventListener("click", event => {
+    els.partyGrid?.addEventListener("click", event => {
       const button = event.target.closest("[data-party]");
       if (!button) return;
 
