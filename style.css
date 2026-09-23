@@ -568,3 +568,33 @@ select {
 .price-trend>span{font-weight:700}
 .price-trend>div{display:flex;gap:.75rem;text-align:right}
 @media(max-width:520px){.price-trend{font-size:.72rem}.price-trend>div{gap:.5rem}}
+
+/* Mobile fuel selector: four equal, non-overlapping cells */
+.fuel-toggle{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  overflow:hidden;
+}
+.fuel-button{
+  width:100%;
+  min-width:0;
+  padding:.55rem .2rem;
+  gap:.2rem;
+  font-size:.74rem;
+  overflow:hidden;
+}
+.fuel-button>span:last-child{
+  min-width:0;
+  white-space:normal;
+  text-align:center;
+}
+.fuel-id{
+  width:1.48rem;
+  height:1.48rem;
+  flex:0 0 1.48rem;
+  font-size:.52rem;
+}
+@media(max-width:520px){
+  .fuel-button{font-size:.68rem;padding:.48rem .12rem;gap:.12rem}
+  .fuel-id{width:1.38rem;height:1.38rem;flex-basis:1.38rem;font-size:.48rem}
+}
