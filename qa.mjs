@@ -274,6 +274,7 @@ try {
   ["eu_min_tax_2026","additional_relief_2026","reduction_duty_current","tax_indexation_2026"].every(x => ids.has(x)) ? pass("M sourced policy facts") : fail("M policy facts incomplete");
   mFacts.facts?.every(x => String(x.source ?? "").startsWith("https://moderaterna.se/")) ? pass("M official fact sources") : fail("M fact source invalid");
   script.includes('state.party === "m"') ? pass("M contextual evidence UI") : fail("M contextual evidence UI missing");
+  script.includes("model.validFrom") && script.includes("model.fuels") ? pass("Bounded political scenario guard") : fail("Bounded scenario guard missing");
 } catch (error) { fail("M policy facts: " + error.message); }
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
