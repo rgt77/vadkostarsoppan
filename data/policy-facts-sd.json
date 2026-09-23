@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-23",
+  "party": "sd",
+  "name": "Sverigedemokraterna",
+  "facts": [
+    {
+      "id": "pump_prices_2022_2026",
+      "kind": "party_published_comparison",
+      "periodStart": "2022-06",
+      "periodEnd": "2026-07",
+      "petrol95": {
+        "from": 23.54,
+        "to": 14.34,
+        "unit": "SEK/l"
+      },
+      "diesel": {
+        "from": 26.46,
+        "to": 16.09,
+        "unit": "SEK/l"
+      },
+      "source": "https://val2026.sd.se/drivmedel/",
+      "note": "Partiets publicerade jämförelse; sidan anger Drivkraft Sverige och bensinpriser.nu som underliggande källor. Visas som historiskt underlag, inte som kausal effektberäkning."
+    },
+    {
+      "id": "reduction_duty_2022",
+      "kind": "historical_policy_level",
+      "date": "2022",
+      "petrolPct": 7.8,
+      "dieselPct": 30.5,
+      "source": "https://val2026.sd.se/drivmedel/",
+      "note": "Historiska nivåer enligt partiets sida."
+    },
+    {
+      "id": "reduction_duty_2024",
+      "kind": "historical_policy_level",
+      "date": "2024-01-01",
+      "petrolPct": 6,
+      "dieselPct": 6,
+      "source": "https://val2026.sd.se/drivmedel/",
+      "note": "Partiets beskrivning av sänkningen som trädde i kraft 1 januari 2024."
+    },
+    {
+      "id": "tax_2024_2025",
+      "kind": "historical_budget_measure",
+      "date": "2024-01-01",
+      "petrolTaxChangeInclVat": -1.61,
+      "secondPetrolChangeInclVat": -0.75,
+      "secondDate": "2025-01-01",
+      "unit": "SEK/l",
+      "source": "https://event.sd.se/wp-content/uploads/2022/12/redogorelse-fran-riksdagsgruppen.pdf",
+      "note": "SD:s redogörelse för statsbudgeten; historiskt budgetunderlag."
+    },
+    {
+      "id": "temporary_tax_2026",
+      "kind": "temporary_policy_measure",
+      "validFrom": "2026-07-01",
+      "validTo": "2026-11-30",
+      "maxPumpRelief": 3,
+      "unit": "SEK/l",
+      "source": "https://val2026.sd.se/drivmedel/",
+      "note": "Partiets beskrivning av ett tidsbegränsat EU-undantag. Ska inte användas som permanent framtida partipris."
+    }
+  ]
+}
