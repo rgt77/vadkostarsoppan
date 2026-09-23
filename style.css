@@ -562,3 +562,13 @@ select {
   .party-head { flex-direction: row; align-items: end; }
   .scenario-reset { flex: 0 0 auto; }
 }
+
+.scenario-comparison {
+  margin-left: auto; display: grid; grid-template-columns: auto auto; gap: 4px 12px;
+  align-items: baseline; color: var(--muted); font-size: 9px; font-variant-numeric: tabular-nums;
+}
+.scenario-comparison strong { color: var(--text); font-size: 11px; text-align: right; }
+.scenario-comparison[hidden] { display: none; }
+@media (max-width: 640px) {
+  .scenario-comparison { width: 100%; margin: 2px 0 0; grid-template-columns: 1fr auto; }
+}
