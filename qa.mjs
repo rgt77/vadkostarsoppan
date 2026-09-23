@@ -13,6 +13,7 @@ const required = [
   "data/source-registry.json",
   "data/data-health.json",
   "data/price-history.json",
+  "data/calculation-model.json",
   "404.html"
 ];
 const failures = [];
@@ -59,7 +60,7 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = Object.values(w.FUEL_DATA ?? {});
 
-  w.SITE_DATA?.appVersion === "0.20.0" ? pass("Version 0.20.0") : fail("Version mismatch");
+  w.SITE_DATA?.appVersion === "0.21.0" ? pass("Version 0.21.0") : fail("Version mismatch");
   w.SITE_DATA?.typicalTankLiters === 40 ? pass("Tank size 40 L") : fail("Tank size invalid");
 
   for (const fuel of fuels) {
@@ -116,6 +117,13 @@ try {
 } catch (error) {
   fail("County data: " + error.message);
 }
+
+try {
+  const model = JSON.parse(read("data/calculation-model.json"));
+  model.methodology === "observed-plus-simulation" ? pass("Two-layer calculation model") : fail("Calculation model invalid");
+  model.variables?.market_chain_residual?.kind === "derived_residual" ? pass("Market residual explicitly classified") : fail("Market residual classification missing");
+  Array.isArray(model.safeguards) && model.safeguards.length >= 4 ? pass("Simulation safeguards") : fail("Simulation safeguards missing");
+} catch (error) { fail("Calculation model: " + error.message); }
 
 try {
   const history = JSON.parse(read("data/price-history.json"));
