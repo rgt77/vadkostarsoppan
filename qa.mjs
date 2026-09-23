@@ -12,6 +12,7 @@ const required = [
   "scripts/check-official-sources.mjs",
   "data/source-registry.json",
   "data/data-health.json",
+  "data/price-history.json",
   "404.html"
 ];
 const failures = [];
@@ -102,6 +103,9 @@ try {
   counties.every(item => Number.isFinite(item.petrol) && Number.isFinite(item.diesel))
     ? pass("County prices")
     : fail("Invalid county prices");
+  ["petrol", "petrol98", "e85", "diesel"].every(key => Number.isFinite(data.national?.[key]))
+    ? pass("Four national fuel prices")
+    : fail("National fuel price missing");
 
   if (!/^\d{4}-\d{2}-\d{2}$/.test(data.updatedAt ?? "")) {
     fail("County updatedAt invalid");
@@ -111,6 +115,21 @@ try {
   }
 } catch (error) {
   fail("County data: " + error.message);
+}
+
+try {
+  const history = JSON.parse(read("data/price-history.json"));
+  const snapshots = history.snapshots ?? [];
+  snapshots.length ? pass("Price history seeded") : fail("Price history empty");
+  snapshots.length <= 730 ? pass("Price history bounded") : fail("Price history exceeds 730 snapshots");
+  const dates = snapshots.map(item => item.date);
+  new Set(dates).size === dates.length ? pass("Unique history dates") : fail("Duplicate history dates");
+  dates.every((date, i) => i === 0 || dates[i - 1] <= date) ? pass("Chronological history") : fail("History order invalid");
+  const latest = snapshots.at(-1);
+  ["petrol", "petrol98", "e85", "diesel"].every(key => Number.isFinite(latest?.national?.[key]))
+    ? pass("Latest history has four fuels") : fail("History fuel data missing");
+} catch (error) {
+  fail("Price history: " + error.message);
 }
 
 try {
