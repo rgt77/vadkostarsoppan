@@ -309,6 +309,14 @@
       }
     }
 
+    if (state.party === "c" && els.policyFacts) {
+      els.policyFacts.hidden = false;
+      const title = document.createElement("strong");
+      title.textContent = "Dokumenterad bakgrund";
+      const text = document.createElement("p");
+      text.textContent = "Centerpartiets klimatplan från 6 augusti 2026 vill ta bort skatten på biodrivmedel som blandas in i bensin och diesel, med målet att kunna öka inblandningen utan att priset vid pump stiger. Planen innehåller också elektrifieringsmål för 2030: 90 % av nya personbilar, 75 % av nya lätta lastbilar och 50 % av nya tunga lastbilar ska vara helt eldrivna.";
+      els.policyFacts.append(title, text);
+    }
     if (state.party === "s" && els.policyFacts) {
       els.policyFacts.hidden = false;
       const title = document.createElement("strong");
