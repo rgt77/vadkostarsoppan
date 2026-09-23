@@ -5,7 +5,8 @@ window.POLICY_SCENARIOS = {
     evidence: "party_stated_target",
     verifiedAt: "2026-09-23",
     method: "0 kr/l är partiets uttalade mål för pumppriset i förslaget, inte en oberoende verifierad kostnadsberäkning.",
-    source: "https://www.centerpartiet.se/nyheter/arkiv-2026/2026-08-31-centerpartiet-mer-fossilfritt-i-tanken-utan-hogre-pris-vid-pump"
+    source: "https://www.centerpartiet.se/nyheter/arkiv-2026/2026-08-31-centerpartiet-mer-fossilfritt-i-tanken-utan-hogre-pris-vid-pump",
+    facts: "data/policy-facts-c.json"
   },
   kd: {
     name: "Kristdemokraterna",
