@@ -14,7 +14,7 @@ const required = [
   "data/data-health.json",
   "data/price-history.json",
   "data/calculation-model.json", "data/reduction-duty.json", "data/market-data.json", "data/market-history.json", "lib/calculation.mjs",
-  "404.html", "data/phase3-status.json", "data/phase4-status.json", "lib/simulator.mjs", "tests/simulator.mjs"
+  "404.html", "data/phase3-status.json", "data/phase4-status.json", "lib/simulator.mjs", "tests/simulator.mjs", "data/policy-facts-sd.json"
 ];
 const failures = [];
 const warnings = [];
@@ -259,6 +259,14 @@ try {
   script.includes('"ArrowLeft"') && script.includes('"popstate"') ? pass("Scenario keyboard and history navigation") : fail("Scenario navigation regression");
   script.includes('latestDate || ""') ? pass("Trend reference-date guard") : fail("Trend date guard missing");
 } catch (error) { fail("Phase 4 block 2 QA: " + error.message); }
+
+try {
+  const sdFacts = JSON.parse(read("data/policy-facts-sd.json"));
+  const ids = new Set(sdFacts.facts?.map(x => x.id));
+  ["pump_prices_2022_2026","reduction_duty_2022","reduction_duty_2024","tax_2024_2025","temporary_tax_2026"].every(x => ids.has(x)) ? pass("SD sourced policy facts") : fail("SD policy facts incomplete");
+  sdFacts.facts?.every(x => String(x.source ?? "").startsWith("https://")) ? pass("SD fact sources") : fail("SD fact source missing");
+  script.includes('state.party === "sd"') && html.includes('id="policyFacts"') ? pass("SD contextual evidence UI") : fail("SD contextual evidence UI missing");
+} catch (error) { fail("SD policy facts: " + error.message); }
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
 if (failures.length) {
