@@ -321,11 +321,11 @@
   let priceHistory = null;
 
   function historyPrice(snapshot) {
-    const area = state.county === "riket" ? snapshot?.national : snapshot?.counties?.find(item => item.id === state.county);
+    const area = state.county === "riket"
+      ? snapshot?.national
+      : snapshot?.counties?.find(item => item.id === state.county);
     const value = Number(area?.[state.fuel]);
-    if (Number.isFinite(value) && value > 0) return value;
-    const national = Number(snapshot?.national?.[state.fuel]);
-    return Number.isFinite(national) && national > 0 ? national : null;
+    return Number.isFinite(value) && value > 0 ? value : null;
   }
 
   function renderTrend(currentPrice) {
@@ -334,11 +334,12 @@
     const latestDate = countyData.updatedAt;
     const metric = days => {
       const target = Date.parse(latestDate + "T12:00:00Z") - days * 86400000;
-      const candidates = snapshots.filter(item => Date.parse(item.date + "T12:00:00Z") <= target);
-      const old = candidates.at(-1);
-      const oldPrice = historyPrice(old);
-      if (!oldPrice) return null;
-      return currentPrice - oldPrice;
+      const candidates = snapshots
+        .map(item => ({ item, distance: Math.abs(Date.parse(item.date + "T12:00:00Z") - target) }))
+        .filter(entry => Number.isFinite(entry.distance) && entry.distance <= 3 * 86400000)
+        .sort((a, b) => a.distance - b.distance);
+      const oldPrice = historyPrice(candidates[0]?.item);
+      return oldPrice === null ? null : currentPrice - oldPrice;
     };
     const show = (node, days, delta) => setText(node, days + " dagar " + (delta === null ? "—" : (Math.abs(delta) < .005 ? "±0,00 kr/l" : (delta > 0 ? "+" : "−") + fmt(Math.abs(delta)) + " kr/l")));
     const d7 = metric(7), d30 = metric(30);
