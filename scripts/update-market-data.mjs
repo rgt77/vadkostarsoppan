@@ -46,6 +46,7 @@ const snapshot = { date: data.fx.observationDate, usdSek: data.fx.usdSek };
 const index = history.snapshots.findIndex(x => x.date === snapshot.date);
 if (index >= 0) history.snapshots[index] = snapshot; else history.snapshots.push(snapshot);
 history.snapshots.sort((a,b) => a.date.localeCompare(b.date));
-history.snapshots = history.snapshots.slice(-730);
+const cutoff = Date.parse(data.fx.observationDate + "T12:00:00Z") - 730 * 86400000;
+history.snapshots = history.snapshots.filter(x => Date.parse(x.date + "T12:00:00Z") >= cutoff);
 fs.writeFileSync(HISTORY, JSON.stringify(history, null, 2) + "\n");
 console.log("USD/SEK", value, data.fx.observationDate);
