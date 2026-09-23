@@ -64,7 +64,7 @@ QA körs även automatiskt via GitHub Actions på push till `main`.
 
 Projektet publiceras som statiska assets via Cloudflare Workers från `main`.
 
-Aktuell applikationsversion: **0.27.0**.
+Aktuell applikationsversion: **0.30.0**.
 
 
 ## Dataautomatik
@@ -88,7 +88,7 @@ Aktuell applikationsversion: **0.27.0**.
 - Källregistret dokumenterar ursprung, kostnad, automationsnivå och tillitsnivå.
 - GitHub Actions kör hälsokontrollen var sjätte timme.
 
-## Fas 3 – prishistorik
+## Fas 3 – historik och marknadsmodell — KLAR
 
 - Dagliga prisögonblick sparas automatiskt i `data/price-history.json`.
 - Samma datum uppdateras i stället för att dupliceras.
@@ -106,3 +106,10 @@ Aktuell applikationsversion: **0.27.0**.
 ## Tvålagers prismodell
 
 Fas 3 skiljer strikt på observerat pumppris och politisk simulering. Det observerade lagret bryter ned faktiskt pumppris. Simuleringslagret fryser marknadsförutsättningar och får endast ändra dokumenterade politiska variabler. Reduktionsplikt behandlas som utsläppsreduktionskrav, inte som direkt volymandel. Marknad + kedja är alltid en härledd restpost och aldrig ett påstående om vinst.
+
+
+## Fas 3 exit status
+
+Fas 3 är stängd i v0.30.0. Observerat pumppris, skatteuppdelning, pris- och FX-historik, källroller, data-health och den skyddade simuleringsgrunden har egna QA-regler. Raffinerad ARA/Rotterdam-spot är uttryckligen blockerad tills en lagligt och metodmässigt användbar källa finns; frånvaron får inte ersättas med Brent eller ett konstruerat värde.
+
+Maskinläsbar status finns i `data/phase3-status.json`.
