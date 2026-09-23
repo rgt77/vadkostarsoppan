@@ -3,11 +3,12 @@
   "private": true,
   "version": "0.27.0",
   "scripts": {
-    "qa": "node qa.mjs",
+    "qa": "node qa.mjs && node tests/market-parser.mjs",
     "update:prices": "node scripts/update-price-data.mjs",
     "monitor:policy": "node scripts/check-policy-sources.mjs",
     "monitor:official": "node scripts/check-official-sources.mjs",
     "health": "node scripts/data-health.mjs",
-    "update:market": "node scripts/update-market-data.mjs"
+    "update:market": "node scripts/update-market-data.mjs",
+    "test:market": "node tests/market-parser.mjs"
   }
 }
