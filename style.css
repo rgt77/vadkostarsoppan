@@ -21,8 +21,13 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-button, select { font: inherit; }
-button, select, summary, a { -webkit-tap-highlight-color: transparent; }
+button,
+select { font: inherit; }
+
+button,
+select,
+summary,
+a { -webkit-tap-highlight-color: transparent; }
 
 .noscript {
   padding: 12px 16px;
@@ -37,14 +42,20 @@ button, select, summary, a { -webkit-tap-highlight-color: transparent; }
   margin-inline: auto;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 18px;
   color: var(--muted);
+  font-size: 10px;
 }
 
 .topbar {
   min-height: 64px;
+  justify-content: space-between;
+  gap: 18px;
   border-bottom: 1px solid var(--line);
+}
+
+.footer {
+  min-height: 64px;
+  border-top: 1px solid var(--line);
 }
 
 .brand {
@@ -63,9 +74,6 @@ button, select, summary, a { -webkit-tap-highlight-color: transparent; }
   border-radius: 50%;
   background: var(--text);
 }
-
-.updated,
-.footer { font-size: 10px; }
 
 .shell {
   width: min(720px, calc(100% - 28px));
@@ -274,18 +282,11 @@ select {
   border: 1px solid var(--line);
   border-radius: 12px;
   color: var(--text);
-  background: #fff;
+  background: var(--card);
   cursor: pointer;
-  transition: border-color .12s ease, box-shadow .12s ease, transform .12s ease;
 }
 
-.party-button:hover {
-  border-color: #a9aaa5;
-}
-
-.party-button:active {
-  transform: scale(.98);
-}
+.party-button:hover { border-color: #a9aaa5; }
 
 .party-button[aria-pressed="true"] {
   border-color: var(--text);
@@ -301,11 +302,6 @@ select {
   border-radius: 8px;
 }
 
-.party-logo-box.s {
-  padding: 0;
-  background: transparent;
-}
-
 .party-logo {
   max-width: 46px;
   max-height: 42px;
@@ -313,18 +309,11 @@ select {
   object-fit: contain;
 }
 
-.party-logo-box.s .party-logo {
-  max-width: 42px;
-  max-height: 42px;
-  margin: auto;
-  object-position: center;
-}
-
+.party-logo-box.s .party-logo,
 .party-logo-box.mp .party-logo {
   max-width: 42px;
   max-height: 42px;
   margin: auto;
-  object-position: center;
 }
 
 .party-logo-box.sd .party-logo {
@@ -333,14 +322,9 @@ select {
 }
 
 .party-name {
-  max-width: 100%;
-  overflow: hidden;
   color: var(--muted);
   font-size: 8px;
   font-weight: 750;
-  line-height: 1.1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .party-abbr {
@@ -367,7 +351,10 @@ select {
 .party-result.empty,
 .party-result.unavailable { color: var(--muted); }
 
-.party-price-wrap { display: grid; gap: 5px; }
+.party-price-wrap {
+  display: grid;
+  gap: 5px;
+}
 
 .result-label {
   color: var(--muted);
@@ -451,20 +438,25 @@ select {
   margin-top: 12px;
 }
 
-.method-links a {
+.method-links a,
+.back-link {
   color: var(--text);
-  font-size: 10px;
   font-weight: 700;
   text-underline-offset: 3px;
 }
 
-.footer {
-  min-height: 64px;
-  border-top: 1px solid var(--line);
+.method-links a { font-size: 10px; }
+
+.back-link {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 13px;
 }
 
 @media (max-width: 640px) {
-  .topbar { min-height: 56px; }
+  .topbar,
+  .footer { min-height: 56px; }
+
   .updated { display: none; }
 
   .shell {
@@ -497,9 +489,7 @@ select {
     gap: 7px;
   }
 
-  .party-button {
-    min-height: 78px;
-  }
+  .party-button { min-height: 78px; }
 
   .party-result {
     min-height: 0;
@@ -509,19 +499,4 @@ select {
   }
 
   .party-delta { text-align: left; }
-
-  .footer { min-height: 56px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * { scroll-behavior: auto !important; }
-}
-
-.back-link {
-  display: inline-block;
-  margin-top: 4px;
-  color: var(--text);
-  font-size: 13px;
-  font-weight: 750;
-  text-underline-offset: 3px;
 }
