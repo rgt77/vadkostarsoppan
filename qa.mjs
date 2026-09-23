@@ -13,7 +13,7 @@ const required = [
   "data/source-registry.json",
   "data/data-health.json",
   "data/price-history.json",
-  "data/calculation-model.json", "data/reduction-duty.json",
+  "data/calculation-model.json", "data/reduction-duty.json", "data/market-data.json",
   "404.html"
 ];
 const failures = [];
@@ -60,7 +60,7 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = Object.values(w.FUEL_DATA ?? {});
 
-  w.SITE_DATA?.appVersion === "0.22.0" ? pass("Version 0.22.0") : fail("Version mismatch");
+  w.SITE_DATA?.appVersion === "0.24.0" ? pass("Version 0.24.0") : fail("Version mismatch");
   w.SITE_DATA?.typicalTankLiters === 40 ? pass("Tank size 40 L") : fail("Tank size invalid");
 
   for (const fuel of fuels) {
@@ -182,17 +182,6 @@ if (html.includes('id="partySelect"') || !html.includes('id="partyGrid"')) {
   pass("Clickable party logos");
 }
 
-if (warnings.length) {
-  console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
-}
-
-if (failures.length) {
-  console.error("\n" + failures.map(message => "✕ " + message).join("\n"));
-  process.exit(1);
-}
-
-console.log("\nPASS");
-
 try {
   const duty = JSON.parse(read("data/reduction-duty.json"));
   const today = new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Stockholm" }).format(new Date());
@@ -203,3 +192,20 @@ try {
 } catch (error) {
   fail("Reduction duty: " + error.message);
 }
+
+try {
+  const market = JSON.parse(read("data/market-data.json"));
+  market.fx?.seriesId === "SEKUSDPMI" ? pass("Riksbank FX series") : fail("Riksbank FX series invalid");
+  String(market.fx?.source ?? "").startsWith("https://api.riksbank.se/") ? pass("Official FX source") : fail("FX source invalid");
+  if (market.fx?.usdSek !== null) {
+    Number.isFinite(market.fx.usdSek) && market.fx.usdSek > 0 ? pass("USD/SEK value") : fail("USD/SEK value invalid");
+    /^\d{4}-\d{2}-\d{2}$/.test(market.fx.observationDate ?? "") ? pass("USD/SEK date") : fail("USD/SEK date invalid");
+  } else warn("Market data awaits first Riksbank ingestion");
+} catch (error) { fail("Market data: " + error.message); }
+
+if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
+if (failures.length) {
+  console.error("\n" + failures.map(message => "✕ " + message).join("\n"));
+  process.exit(1);
+}
+console.log("\nPASS");
