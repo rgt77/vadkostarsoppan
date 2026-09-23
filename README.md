@@ -64,7 +64,7 @@ QA körs även automatiskt via GitHub Actions på push till `main`.
 
 Projektet publiceras som statiska assets via Cloudflare Workers från `main`.
 
-Aktuell applikationsversion: **0.15.0**.
+Aktuell applikationsversion: **0.16.0**.
 
 
 ## Dataautomatik
@@ -76,3 +76,14 @@ Aktuell applikationsversion: **0.15.0**.
 - Partidata har verifieringsdatum och evidenstyp. Exakt pris visas bara för kvantifierbara modeller.
 - Officiella partikällor bevakas automatiskt utan att politiska uppgifter ändras automatiskt.
 - Ambitionen är att prioritera öppna, kostnadsfria och officiella källor där de ger tillräcklig aktualitet och detaljnivå.
+
+
+## Fas 2 – datakvalitet och autonom drift
+
+- Källstrategi: officiell och kostnadsfri källa prioriteras.
+- Officiella myndighetskällor bevakas för innehållsförändringar.
+- Politiska källor bevakas separat och ändrar aldrig sakuppgifter automatiskt.
+- Data health kontrollerar färskhet, länstäckning, skatteperioder, källbevakning och extrema prisavvikelser.
+- Prisavvikelser över 20 % från rikssnitt flaggas för kontroll men skrivs inte automatiskt över.
+- Källregistret dokumenterar ursprung, kostnad, automationsnivå och tillitsnivå.
+- GitHub Actions kör hälsokontrollen var sjätte timme.
