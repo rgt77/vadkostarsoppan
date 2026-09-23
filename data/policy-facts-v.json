@@ -5,33 +5,26 @@
   "name": "Vänsterpartiet",
   "facts": [
     {
-      "id": "fuel_tax_policy_2026",
+      "id": "fuel_tax_position_2026",
       "kind": "policy_direction",
       "updated": "2026-01-20",
       "source": "https://www.vansterpartiet.se/var-politik/politik-a-o/drivmedelsbeskattning/",
-      "note": "V beskriver drivmedelsbeskattning som ett klimatstyrmedel men vill kompensera människor med få alternativ till bil, särskilt i gles-/landsbygd och med lägre inkomster."
+      "note": "V beskriver drivmedelsbeskattning som ett användbart men trubbigt klimatstyrmedel och vill kompensera bilberoende hushåll med sämre alternativ."
     },
     {
       "id": "geographic_road_tax",
       "kind": "policy_proposal",
+      "updated": "2026-01-20",
       "source": "https://www.vansterpartiet.se/var-politik/politik-a-o/drivmedelsbeskattning/",
-      "note": "V vill på sikt beskatta biltrafik geografiskt efter var bilen körs, med lägre skatt på landsbygden och högre i städer."
+      "note": "På sikt vill V beskatta biltrafik geografiskt efter var bilen körs, med lägre skatt på landsbygden och högre i städer."
     },
     {
-      "id": "sweden_ticket",
+      "id": "sustainable_travel_support",
       "kind": "policy_proposal",
-      "priceAdult": 450,
-      "unit": "SEK/month",
+      "updated": "2026-01-20",
+      "publicTransportTicketSek": 450,
       "source": "https://www.vansterpartiet.se/var-politik/politik-a-o/drivmedelsbeskattning/",
-      "note": "V vill införa en Sverigebiljett för regional kollektivtrafik för 450 kr per månad."
-    },
-    {
-      "id": "reduction_duty_direction_2026",
-      "kind": "policy_direction",
-      "currentPct": 10,
-      "direction": "increase",
-      "source": "https://www.vansterpartiet.se/var-politik/klimatmalen-till-2030/",
-      "note": "V anger att reduktionsplikten behöver höjas från nuvarande 10 procent, men anger inte en exakt ny nivå."
+      "note": "V föreslår ökat stöd till kollektivtrafik och järnväg, Sverigebiljett för regional kollektivtrafik samt elbilspremie för låg- och medelinkomsttagare."
     }
   ]
 }
