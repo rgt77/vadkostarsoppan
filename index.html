@@ -16,7 +16,7 @@
   <meta property="og:locale" content="sv_SE">
   <meta property="og:site_name" content="Vad kostar soppan?">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/style.css?v=0.24.0">
+  <link rel="stylesheet" href="/style.css?v=0.25.0">
 </head>
 <body>
   <noscript><div class="noscript">JavaScript behöver vara aktiverat för att kalkylen ska fungera.</div></noscript>
@@ -115,6 +115,7 @@
         <p><strong>Nuvarande pris</strong> är valt rikssnitt eller länssnitt från rapporterade stationspriser och kan skilja sig från en viss station.</p>
         <p><strong>Marknad + kedja</strong> är pumppris före moms minus energi- och koldioxidskatt. Restposten är inte samma sak som ren vinst.</p>
         <p><strong>Partiscenario</strong> räknas bara när det finns dokumenterade numeriska uppgifter. Annars visas inget konstruerat pris.</p>
+        <p><strong>Marknadsdata</strong> hålls separat från pumppriset. Valutakurs och reduktionsplikt används inte för att konstruera ett spotpris när en verifierad raffinerad produktreferens saknas.</p>
         <p id="dataStatus"><strong>Datastatus</strong> kontrolleras…</p>
         <nav class="method-links" aria-label="Källor">
           <a id="priceSource" href="#" target="_blank" rel="noopener noreferrer">Priskälla ↗</a>
@@ -128,9 +129,9 @@
     <span>vadkostarsoppan.se</span>
   </footer>
 
-  <script defer src="/fuel-data.js?v=0.24.0"></script>
-  <script defer src="/county-data.js?v=0.24.0"></script>
-  <script defer src="/policy-data.js?v=0.24.0"></script>
-  <script defer src="/script.js?v=0.24.0"></script>
+  <script defer src="/fuel-data.js?v=0.25.0"></script>
+  <script defer src="/county-data.js?v=0.25.0"></script>
+  <script defer src="/policy-data.js?v=0.25.0"></script>
+  <script defer src="/script.js?v=0.25.0"></script>
 </body>
 </html>
