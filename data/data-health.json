@@ -1,0 +1,7 @@
+{
+  "generatedAt": null,
+  "status": "warning",
+  "counts": {"ok":0,"warning":1,"error":0},
+  "checks": [{"id":"bootstrap","status":"warning","message":"Kör npm run health för aktuell status","source":null}],
+  "anomalies": []
+}
