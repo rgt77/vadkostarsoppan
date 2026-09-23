@@ -562,3 +562,9 @@ select {
     font-size: .56rem;
   }
 }
+
+.price-trend{margin-top:1rem;padding-top:.85rem;border-top:1px solid var(--line,#deded8);display:flex;align-items:center;justify-content:space-between;gap:1rem;font-size:.78rem;color:var(--muted,#73736d)}
+.price-trend[hidden]{display:none}
+.price-trend>span{font-weight:700}
+.price-trend>div{display:flex;gap:.75rem;text-align:right}
+@media(max-width:520px){.price-trend{font-size:.72rem}.price-trend>div{gap:.5rem}}
