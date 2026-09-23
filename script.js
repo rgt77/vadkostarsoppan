@@ -6,7 +6,7 @@
   const countyData = window.COUNTY_PRICES ?? {};
   const scenarios = window.POLICY_SCENARIOS ?? {};
 
-  const tankLiters = Number(siteData.typicalTankLiters) || 40;
+  let tankLiters = Number(siteData.typicalTankLiters) || 40;
   const areas = [countyData.national, ...(countyData.counties ?? [])].filter(Boolean);
   const areasById = new Map(areas.map(area => [area.id, area]));
   const partyOrder = ["c", "kd", "l", "mp", "m", "s", "sd", "v"];
@@ -26,6 +26,7 @@
   const els = {
     fuelButtons: [...document.querySelectorAll("[data-fuel]")],
     tankLiterLabels: [...document.querySelectorAll("[data-tank-liters]")],
+    tankSizeButtons: [...document.querySelectorAll("[data-tank-size]")],
     countySelect: $("countySelect"),
     partyGrid: $("partyGrid"),
     updatedLabel: $("updatedLabel"),
@@ -39,6 +40,8 @@
     vatTank: $("vatTank"),
     taxTank: $("taxTank"),
     taxShare: $("taxShare"),
+    taxBarFill: $("taxBarFill"),
+    policyDetails: $("policyDetails"),
     partyResult: $("partyResult"),
     scenarioLabel: $("scenarioLabel"),
     scenarioTankPrice: $("scenarioTankPrice"),
@@ -241,7 +244,8 @@
     setText(els.scenarioReferenceDate, countyData.updatedAt || "—");
     if (els.scenarioReset) els.scenarioReset.hidden = !scenario;
     if (els.scenarioComparison) els.scenarioComparison.hidden = true;
-    if (els.policyFacts) { els.policyFacts.hidden = true; els.policyFacts.replaceChildren(); }
+    if (els.policyFacts) els.policyFacts.replaceChildren();
+    if (els.policyDetails) { els.policyDetails.hidden = !scenario; els.policyDetails.open = false; }
 
     els.partyResult.className = "party-result";
     els.scenarioTankPrice.className = "";
@@ -255,7 +259,7 @@
       setText(els.scenarioLiterPrice, "— kr/l");
       setText(els.scenarioDelta, "—");
       setText(els.scenarioNote, "Om ett parti inte har publicerat tillräckligt exakta nivåer visar vi inget påhittat pris.");
-      els.partySource.hidden = true;
+      if (els.policyDetails) els.policyDetails.hidden = true;
       if (els.scenarioMeta) { els.scenarioMeta.hidden = true; els.scenarioMeta.textContent = ""; }
       return;
     }
@@ -366,7 +370,6 @@
       els.policyFacts.append(title, text);
     }
     els.partySource.href = scenario.source;
-    els.partySource.hidden = false;
     els.partySource.setAttribute("aria-label", "Öppna officiell källa för " + scenario.name);
   }
 
@@ -455,7 +458,9 @@
     setText(els.carbonTank, ref.blendDependent ? "Ingår i bränslemixen" : fmt(ref.taxPeriod.carbonTax * tankLiters) + " kr");
     setText(els.vatTank, fmt(ref.vat * tankLiters) + " kr");
     setText(els.taxTank, fmt(ref.tax * tankLiters) + " kr");
-    setText(els.taxShare, wholePercent.format(ref.tax / price * 100) + " % av tankningen");
+    const taxPct = ref.tax / price * 100;
+    setText(els.taxShare, wholePercent.format(taxPct) + " % av tankningen");
+    if (els.taxBarFill) els.taxBarFill.style.width = Math.max(0, Math.min(100, taxPct)) + "%";
 
     els.priceSource.href = countyData.source;
     els.taxSource.href = ref.fuel.taxSource;
@@ -467,6 +472,16 @@
   }
 
   function bindEvents() {
+    for (const button of els.tankSizeButtons) {
+      button.addEventListener("click", () => {
+        const liters = Number(button.dataset.tankSize);
+        if (!Number.isFinite(liters) || liters <= 0) return;
+        tankLiters = liters;
+        for (const node of els.tankLiterLabels) setText(node, String(tankLiters));
+        for (const choice of els.tankSizeButtons) choice.setAttribute("aria-pressed", String(choice === button));
+        render();
+      });
+    }
     for (const button of els.fuelButtons) {
       button.addEventListener("click", () => {
         state.fuel = button.dataset.fuel;
