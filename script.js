@@ -309,6 +309,14 @@
       }
     }
 
+    if (state.party === "s" && els.policyFacts) {
+      els.policyFacts.hidden = false;
+      const title = document.createElement("strong");
+      title.textContent = "Dokumenterad bakgrund";
+      const text = document.createElement("p");
+      text.textContent = "Den 20 mars 2026 krävde Socialdemokraterna en tillfällig skattesänkning på bensin och diesel för att dämpa effekten av stigande drivmedelspriser. Den officiella källan anger ingen exakt skattesänkning eller kr/l-effekt, så hemsidan visar förslaget men konstruerar inget S-pris.";
+      els.policyFacts.append(title, text);
+    }
     if (state.party === "l" && els.policyFacts) {
       els.policyFacts.hidden = false;
       const title = document.createElement("strong");
