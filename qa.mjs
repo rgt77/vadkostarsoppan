@@ -14,7 +14,7 @@ const required = [
   "data/data-health.json",
   "data/price-history.json",
   "data/calculation-model.json", "data/reduction-duty.json", "data/market-data.json", "data/market-history.json", "lib/calculation.mjs",
-  "404.html", "data/phase3-status.json", "data/phase4-status.json", "lib/simulator.mjs", "tests/simulator.mjs", "data/policy-facts-sd.json", "data/policy-facts-m.json"
+  "404.html", "data/phase3-status.json", "data/phase4-status.json", "lib/simulator.mjs", "tests/simulator.mjs", "data/policy-facts-sd.json", "data/policy-facts-m.json", "data/policy-facts-kd.json"
 ];
 const failures = [];
 const warnings = [];
@@ -276,6 +276,14 @@ try {
   script.includes('state.party === "m"') ? pass("M contextual evidence UI") : fail("M contextual evidence UI missing");
   script.includes("model.validFrom") && script.includes("model.fuels") ? pass("Bounded political scenario guard") : fail("Bounded scenario guard missing");
 } catch (error) { fail("M policy facts: " + error.message); }
+
+try {
+  const kdFacts = JSON.parse(read("data/policy-facts-kd.json"));
+  const ids = new Set(kdFacts.facts?.map(x => x.id));
+  ["tax_reduction_mix_2024","reduction_duty_2024","diesel_estimate_2024"].every(x => ids.has(x)) ? pass("KD sourced policy facts") : fail("KD policy facts incomplete");
+  kdFacts.facts?.every(x => String(x.source ?? "").startsWith("https://kristdemokraterna.se/")) ? pass("KD official fact sources") : fail("KD fact source invalid");
+  script.includes('state.party === "kd"') ? pass("KD contextual evidence UI") : fail("KD contextual evidence UI missing");
+} catch (error) { fail("KD policy facts: " + error.message); }
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
 if (failures.length) {
