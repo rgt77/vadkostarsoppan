@@ -79,6 +79,8 @@ const next = {
     id: "riket",
     name: "Hela Sverige",
     petrol: number(nationalMatch[1]),
+    petrol98: petrol98Match ? number(petrol98Match[1]) : current.national.petrol98,
+    e85: e85Match ? number(e85Match[1]) : current.national.e85,
     diesel: number(nationalMatch[2])
   },
   counties
