@@ -146,7 +146,8 @@ const existingIndex = history.snapshots.findIndex(item => item.date === snapshot
 if (existingIndex >= 0) history.snapshots[existingIndex] = snapshot;
 else history.snapshots.push(snapshot);
 history.snapshots.sort((a, b) => a.date.localeCompare(b.date));
-history.snapshots = history.snapshots.slice(-730);
+const cutoff = Date.parse(next.updatedAt + "T12:00:00Z") - 730 * 86400000;
+history.snapshots = history.snapshots.filter(item => Date.parse(item.date + "T12:00:00Z") >= cutoff);
 fs.mkdirSync("data", { recursive: true });
 fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2) + "\n");
 console.log(
