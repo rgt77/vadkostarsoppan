@@ -1,14 +1,15 @@
 {
   "name": "vadkostarsoppan",
   "private": true,
-  "version": "0.30.0",
+  "version": "0.40.0",
   "scripts": {
-    "qa": "node qa.mjs && node tests/market-parser.mjs",
+    "qa": "node qa.mjs && node tests/market-parser.mjs && node tests/simulator.mjs",
     "update:prices": "node scripts/update-price-data.mjs",
     "monitor:policy": "node scripts/check-policy-sources.mjs",
     "monitor:official": "node scripts/check-official-sources.mjs",
     "health": "node scripts/data-health.mjs",
     "update:market": "node scripts/update-market-data.mjs",
-    "test:market": "node tests/market-parser.mjs"
+    "test:market": "node tests/market-parser.mjs",
+    "test:simulator": "node tests/simulator.mjs"
   }
 }
