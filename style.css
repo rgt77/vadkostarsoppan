@@ -546,3 +546,5 @@ select {
   .price-trend { font-size: .72rem; }
   .price-trend > div { gap: .5rem; }
 }
+
+.fuel-button:focus-visible, .party-button:focus-visible, select:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
