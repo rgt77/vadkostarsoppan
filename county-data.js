@@ -1,8 +1,6 @@
 window.COUNTY_PRICES = {
   updatedAt: "2026-09-21",
-  sourceName: "Carculated – länssnitt från rapporterade stationspriser, källa Bensinpriser.nu",
   source: "https://www.carculated.se/bensinpriser",
-  methodology: "Genomsnitt av stationer som rapporterat pris. Uppenbara felrapporter filtreras bort. Priserna är riktvärden och kan avvika från en enskild station.",
   national: {
     id: "riket",
     name: "Hela Sverige",
