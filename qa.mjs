@@ -14,7 +14,7 @@ const required = [
   "data/data-health.json",
   "data/price-history.json",
   "data/calculation-model.json", "data/reduction-duty.json", "data/market-data.json", "data/market-history.json", "lib/calculation.mjs",
-  "404.html"
+  "404.html", "data/phase3-status.json"
 ];
 const failures = [];
 const warnings = [];
@@ -229,6 +229,12 @@ try {
   rows.length <= 730 ? pass("Market history bounded") : fail("Market history too large");
   rows.every((x,i) => /^\d{4}-\d{2}-\d{2}$/.test(x.date) && Number.isFinite(x.usdSek) && (i===0 || rows[i-1].date < x.date)) ? pass("Market history schema") : rows.length === 0 ? warn("Market history awaits first ingestion") : fail("Market history invalid");
 } catch (error) { fail("Market history: " + error.message); }
+
+try {
+  const phase = JSON.parse(read("data/phase3-status.json"));
+  phase.status === "complete" && Object.values(phase.exitCriteria ?? {}).every(Boolean) ? pass("Phase 3 completion criteria") : fail("Phase 3 incomplete");
+  phase.blockedInputs?.some(x => x.id === "refined_product_reference") ? pass("Blocked refined-product input documented") : fail("Blocked market input undocumented");
+} catch (error) { fail("Phase 3 status: " + error.message); }
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
 if (failures.length) {
