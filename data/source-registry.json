@@ -22,6 +22,37 @@
       "automation": "ingest",
       "trust": "secondary",
       "note": "Behålls tills en tillräckligt aktuell kostnadsfri officiell pumppriskälla finns."
+    },
+    {
+      "id": "reduction-duty-energimyndigheten",
+      "category": "reduction_duty",
+      "authority": "Energimyndigheten",
+      "url": "https://www.energimyndigheten.se/klimat/transporter/reduktionsplikt/",
+      "official": true,
+      "cost": "free",
+      "automation": "monitor",
+      "trust": "primary"
+    },
+    {
+      "id": "fx-riksbanken",
+      "category": "fx",
+      "authority": "Sveriges Riksbank",
+      "url": "https://www.riksbank.se/sv/statistik/sok-rantor--valutakurser/",
+      "official": true,
+      "cost": "free",
+      "automation": "planned_ingest",
+      "trust": "primary"
+    },
+    {
+      "id": "market-ara",
+      "category": "market_reference",
+      "authority": "Market reference",
+      "url": "",
+      "official": false,
+      "cost": "unknown",
+      "automation": "research",
+      "trust": "reference",
+      "note": "ARA/Rotterdam refined-product reference. Do not use until a reliable legal/free source is verified."
     }
   ]
 }
