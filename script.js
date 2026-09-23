@@ -10,6 +10,7 @@
   const areas = [countyData.national, ...(countyData.counties ?? [])].filter(Boolean);
   const areasById = new Map(areas.map(area => [area.id, area]));
   const partyOrder = ["c", "kd", "l", "mp", "m", "s", "sd", "v"];
+  const evidenceLabels = { party_estimate: "Partiets uppskattning", party_stated_target: "Partiets uttalade mål", not_quantified: "Ej numeriskt kvantifierat" };
   const partyLogos = {
     c: "https://commons.wikimedia.org/wiki/Special:FilePath/C%20v1.svg",
     kd: "https://commons.wikimedia.org/wiki/Special:FilePath/Kd%20v1.svg",
@@ -257,7 +258,7 @@
     setText(els.scenarioLabel, scenario.name);
     if (els.scenarioMeta) {
       els.scenarioMeta.hidden = false;
-      els.scenarioMeta.textContent = "Referenspris " + (countyData.updatedAt || "—") + " · källan verifierad " + (scenario.verifiedAt || "—");
+      els.scenarioMeta.textContent = (evidenceLabels[scenario.evidence] || "Källbundet scenario") + " · referenspris " + (countyData.updatedAt || "—") + " · källan verifierad " + (scenario.verifiedAt || "—");
     }
     const resultLiter = scenarioPrice(basePrice, scenario);
 
@@ -351,6 +352,7 @@
     const snapshots = priceHistory?.snapshots ?? [];
     if (!snapshots.length || !Number.isFinite(currentPrice)) { els.priceTrend.hidden = true; return; }
     const latestDate = countyData.updatedAt;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(latestDate || "")) { els.priceTrend.hidden = true; return; }
     const metric = days => {
       const target = Date.parse(latestDate + "T12:00:00Z") - days * 86400000;
       const candidates = snapshots
@@ -421,6 +423,14 @@
       updatePartySelection();
       renderScenario(getPrice());
       syncUrl();
+    });
+
+    els.partyGrid?.addEventListener("keydown", event => {
+      if (!["ArrowLeft","ArrowRight","Home","End"].includes(event.key)) return;
+      const buttons = [...els.partyGrid.querySelectorAll("[data-party]")];
+      const current = Math.max(0, buttons.indexOf(document.activeElement));
+      const next = event.key === "Home" ? 0 : event.key === "End" ? buttons.length - 1 : (current + (event.key === "ArrowRight" ? 1 : -1) + buttons.length) % buttons.length;
+      event.preventDefault(); buttons[next]?.focus();
     });
 
     els.partyGrid?.addEventListener("click", event => {
