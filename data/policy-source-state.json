@@ -54,7 +54,7 @@
       "url": "https://www.vansterpartiet.se/var-politik/politik-a-o/drivmedelsbeskattning/",
       "hash": null,
       "contentType": null,
-      "status": "unreachable",
+      "status": "access_blocked",
       "error": "HTTP 403"
     }
   }
