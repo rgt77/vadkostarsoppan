@@ -13,7 +13,7 @@ const required = [
   "data/source-registry.json",
   "data/data-health.json",
   "data/price-history.json",
-  "data/calculation-model.json",
+  "data/calculation-model.json", "data/reduction-duty.json",
   "404.html"
 ];
 const failures = [];
@@ -192,3 +192,14 @@ if (failures.length) {
 }
 
 console.log("\nPASS");
+
+try {
+  const duty = JSON.parse(read("data/reduction-duty.json"));
+  const today = new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Stockholm" }).format(new Date());
+  const active = duty.periods?.find(p => p.validFrom <= today && today <= p.validTo);
+  duty.model === "ghg_reduction_obligation" ? pass("Reduction duty model") : fail("Reduction duty model invalid");
+  active?.petrolPct === 10 && active?.dieselPct === 10 ? pass("Active reduction duty") : fail("Active reduction duty missing");
+  duty.notes?.some(x => x.includes("not direct biofuel volume shares")) ? pass("Reduction duty safeguard") : fail("Reduction duty safeguard missing");
+} catch (error) {
+  fail("Reduction duty: " + error.message);
+}
