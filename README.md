@@ -64,4 +64,13 @@ QA körs även automatiskt via GitHub Actions på push till `main`.
 
 Projektet publiceras som statiska assets via Cloudflare Workers från `main`.
 
-Aktuell applikationsversion: **0.13.0**.
+Aktuell applikationsversion: **0.14.0**.
+
+
+## Dataautomatik
+
+- Läns- och rikssnitt uppdateras automatiskt från Carculated/bensinpriser.nu via `scripts/update-price-data.mjs`.
+- GitHub Actions kör prisuppdateringen var sjätte timme och committar endast när data ändras.
+- Skattesatser lagras som giltighetsperioder och rätt period väljs automatiskt efter svenskt datum.
+- QA stoppar publicering om länspriserna blir mer än tre dagar gamla eller om dagens datum saknar giltig skatteperiod.
+- Partidata har verifieringsdatum och evidenstyp. Exakt pris visas bara för kvantifierbara modeller.
