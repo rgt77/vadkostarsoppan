@@ -46,6 +46,7 @@ add("policy:reduction-duty",activeDuty?"ok":"error",activeDuty?`Reduktionsplikt 
 const fxAge=market.fx?.observationDate ? days(market.fx.observationDate) : null;
 add("market:usdsek",market.fx?.usdSek>0 && fxAge!==null && fxAge<=7?"ok":"warning",market.fx?.usdSek>0?`USD/SEK ${market.fx.usdSek}, ${fxAge} dag(ar) gammal`:"Väntar på första Riksbankshämtningen",market.fx?.source);
 const summary={
+  date: now.slice(0,10),
   status:checks.some(x=>x.status==="error")?"error":checks.some(x=>x.status==="warning")?"warning":"ok",
   counts:{ok:checks.filter(x=>x.status==="ok").length,warning:checks.filter(x=>x.status==="warning").length,error:checks.filter(x=>x.status==="error").length},
   checks,
