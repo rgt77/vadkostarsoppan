@@ -53,6 +53,7 @@
     scenarioComparison: $("scenarioComparison"),
     scenarioBaseTank: $("scenarioBaseTank"),
     scenarioResultTank: $("scenarioResultTank"),
+    policyFacts: $("policyFacts"),
     priceSource: $("priceSource"),
     taxSource: $("taxSource"),
     dataStatus: $("dataStatus"),
@@ -237,6 +238,7 @@
     setText(els.scenarioReferenceDate, countyData.updatedAt || "—");
     if (els.scenarioReset) els.scenarioReset.hidden = !scenario;
     if (els.scenarioComparison) els.scenarioComparison.hidden = true;
+    if (els.policyFacts) { els.policyFacts.hidden = true; els.policyFacts.replaceChildren(); }
 
     els.partyResult.className = "party-result";
     els.scenarioTankPrice.className = "";
@@ -304,6 +306,14 @@
       }
     }
 
+    if (state.party === "sd" && els.policyFacts) {
+      els.policyFacts.hidden = false;
+      const title = document.createElement("strong");
+      title.textContent = "Dokumenterad bakgrund";
+      const text = document.createElement("p");
+      text.textContent = "SD:s officiella drivmedelssida redovisar Bensin 95: 23,54 → 14,34 kr/l och diesel: 26,46 → 16,09 kr/l (juni 2022–juli 2026). Sidan anger även reduktionsplikt 2022 på 7,8 % för bensin och 30,5 % för diesel samt 6 % från 1 januari 2024. Uppgifterna visas som historiskt/politiskt underlag och används inte som ett beräknat framtida SD-pris.";
+      els.policyFacts.append(title, text);
+    }
     els.partySource.href = scenario.source;
     els.partySource.hidden = false;
     els.partySource.setAttribute("aria-label", "Öppna officiell källa för " + scenario.name);
