@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-23",
+  "source": "https://www.energimyndigheten.se/klimat/transporter/reduktionsplikt/",
+  "authority": "Energimyndigheten",
+  "model": "ghg_reduction_obligation",
+  "periods": [
+    {
+      "validFrom": "2024-01-01",
+      "validTo": "2025-06-30",
+      "petrolPct": 6,
+      "dieselPct": 6
+    },
+    {
+      "validFrom": "2025-07-01",
+      "validTo": "2030-12-31",
+      "petrolPct": 10,
+      "dieselPct": 10
+    }
+  ],
+  "notes": [
+    "Reduction percentages are greenhouse-gas reduction obligations, not direct biofuel volume shares.",
+    "From 1 July 2025 electricity credits from public charging may contribute under the applicable rules.",
+    "E85 is not modelled as a reduction-duty fuel input."
+  ]
+}
