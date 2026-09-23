@@ -28,6 +28,8 @@ jobs:
         run: node scripts/update-market-data.mjs
       - name: Run QA
         run: npm run qa
+      - name: Validate generated market data
+        run: node -e 'const d=require("./data/market-data.json"); if(!(d.fx.usdSek>5&&d.fx.usdSek<20)) process.exit(1)'
       - name: Commit market data
         run: |
           if git diff --quiet -- data/market-data.json; then exit 0; fi
