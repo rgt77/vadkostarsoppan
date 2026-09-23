@@ -1,6 +1,6 @@
 import fs from "node:fs";
 
-const URL = "https://api.riksbank.se/swea/v1/Observations/Latest/sekusdpmi";
+// Parser accepts nested observation envelopes from the official SWEA API.\nconst URL = "https://api.riksbank.se/swea/v1/Observations/Latest/sekusdpmi";
 const OUT = "data/market-data.json";
 const HISTORY = "data/market-history.json";
 
