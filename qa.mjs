@@ -315,6 +315,11 @@ try {
  script.includes('state.party === "v"') ? pass("V contextual evidence UI") : fail("V contextual evidence UI missing");
 } catch(error){ fail("V policy facts: "+error.message); }
 
+html.includes('data-tank-size="30"') && html.includes('data-tank-size="60"') && script.includes("tankSizeButtons") ? pass("Interactive tank-size selector") : fail("Tank-size selector missing");
+html.includes('id="taxBarFill"') && script.includes("taxBarFill.style.width") ? pass("Visual tax-share bar") : fail("Tax-share visualization missing");
+html.includes('id="policyDetails"') && html.includes("Visa underlag") ? pass("Progressive policy evidence disclosure") : fail("Policy evidence disclosure missing");
+html.includes("Pris före skatt &amp; moms") ? pass("Plain-language residual label") : fail("Residual label not simplified");
+
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
 if (failures.length) {
   console.error("\n" + failures.map(message => "✕ " + message).join("\n"));
