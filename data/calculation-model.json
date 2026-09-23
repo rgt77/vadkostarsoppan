@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "methodology": "observed-plus-simulation",
+  "observed": {
+    "description": "Observed pump price is authoritative for today's displayed tank cost. Taxes are separated from it; the remainder is explicitly a residual, not profit.",
+    "formula": "pump_price -> VAT + energy_tax + carbon_tax + market_chain_residual"
+  },
+  "simulation": {
+    "description": "Freeze observed market conditions at a reference timestamp and alter only documented policy variables.",
+    "formula": "frozen_market_reference + documented_policy_costs + energy_tax + carbon_tax -> VAT -> simulated_pump_price",
+    "status": "foundation"
+  },
+  "variables": {
+    "pump_price": {
+      "kind": "observed",
+      "political": false
+    },
+    "energy_tax": {
+      "kind": "official",
+      "political": true
+    },
+    "carbon_tax": {
+      "kind": "official",
+      "political": true
+    },
+    "vat": {
+      "kind": "official",
+      "political": true
+    },
+    "reduction_duty": {
+      "kind": "official_rule",
+      "political": true,
+      "note": "GHG reduction obligation; not interpreted as a direct volume blend percentage."
+    },
+    "usd_sek": {
+      "kind": "official_market_input",
+      "political": false,
+      "status": "planned"
+    },
+    "refined_product_reference": {
+      "kind": "market_input",
+      "political": false,
+      "status": "research"
+    },
+    "market_chain_residual": {
+      "kind": "derived_residual",
+      "political": false,
+      "note": "Must never be described as pure profit."
+    }
+  },
+  "safeguards": [
+    "Never infer undocumented party values.",
+    "Every political numeric input requires source and validity.",
+    "Do not equate reduction-duty percentage with biofuel volume percentage.",
+    "Do not present a market residual as company profit."
+  ]
+}
