@@ -21,8 +21,9 @@ window.POLICY_SCENARIOS = {
     priceModel: { type: "not_quantified" },
     evidence: "not_quantified",
     verifiedAt: "2026-09-23",
-    method: "De aktuella källorna anger inriktning och tillfälliga åtgärder, men inte en komplett framtida nivå som kan räknas om till ett exakt kr/l-pris.",
-    source: "https://www.liberalerna.se/politik/glesbygd"
+    method: "Liberalernas källor dokumenterar reduktionsplikt, skattekompensation och en långsiktig elektrifieringsinriktning, men anger inte en aktuell komplett kr/l-nivå som kan användas för ett exakt framtida prisscenario.",
+    source: "https://www.liberalerna.se/wp-content/uploads/klimatomstallning-i-en-vaxande-ekonomi.pdf",
+    facts: "data/policy-facts-l.json"
   },
   mp: {
     name: "Miljöpartiet",
