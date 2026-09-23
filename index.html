@@ -16,7 +16,7 @@
   <meta property="og:locale" content="sv_SE">
   <meta property="og:site_name" content="Vad kostar soppan?">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/style.css?v=0.17.0">
+  <link rel="stylesheet" href="/style.css?v=0.18.0">
 </head>
 <body>
   <noscript><div class="noscript">JavaScript behöver vara aktiverat för att kalkylen ska fungera.</div></noscript>
@@ -39,7 +39,9 @@
     <section class="controls" aria-label="Välj bränsle och område">
       <div class="fuel-toggle" aria-label="Bränsletyp">
         <button class="fuel-button" type="button" data-fuel="petrol" aria-pressed="true">Bensin 95</button>
+        <button class="fuel-button" type="button" data-fuel="petrol98" aria-pressed="false">Bensin 98</button>
         <button class="fuel-button" type="button" data-fuel="diesel" aria-pressed="false">Diesel</button>
+        <button class="fuel-button" type="button" data-fuel="e85" aria-pressed="false">E85</button>
       </div>
 
       <label class="select-control">
@@ -121,9 +123,9 @@
     <span>vadkostarsoppan.se</span>
   </footer>
 
-  <script defer src="/fuel-data.js?v=0.17.0"></script>
-  <script defer src="/county-data.js?v=0.17.0"></script>
-  <script defer src="/policy-data.js?v=0.17.0"></script>
-  <script defer src="/script.js?v=0.17.0"></script>
+  <script defer src="/fuel-data.js?v=0.18.0"></script>
+  <script defer src="/county-data.js?v=0.18.0"></script>
+  <script defer src="/policy-data.js?v=0.18.0"></script>
+  <script defer src="/script.js?v=0.18.0"></script>
 </body>
 </html>
