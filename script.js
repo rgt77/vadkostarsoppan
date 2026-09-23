@@ -309,6 +309,14 @@
       }
     }
 
+    if (state.party === "v" && els.policyFacts) {
+      els.policyFacts.hidden = false;
+      const title = document.createElement("strong");
+      title.textContent = "Dokumenterad bakgrund";
+      const text = document.createElement("p");
+      text.textContent = "Vänsterpartiet beskriver drivmedelsbeskattning som ett klimatstyrmedel men vill ekonomiskt kompensera personer som saknar alternativ till bilen, särskilt i gles- och landsbygd och hushåll med lägre inkomster. Partiet vill på sikt ha geografiskt differentierad vägtrafikbeskattning med lägre skatt på landsbygden och högre i städer. V vill också höja reduktionsplikten från 10 %, men anger ingen exakt ny nivå. Därför konstrueras inget V-pris.";
+      els.policyFacts.append(title, text);
+    }
     if (state.party === "c" && els.policyFacts) {
       els.policyFacts.hidden = false;
       const title = document.createElement("strong");
