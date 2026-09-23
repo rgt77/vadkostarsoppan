@@ -64,7 +64,7 @@ QA körs även automatiskt via GitHub Actions på push till `main`.
 
 Projektet publiceras som statiska assets via Cloudflare Workers från `main`.
 
-Aktuell applikationsversion: **0.26.0**.
+Aktuell applikationsversion: **0.27.0**.
 
 
 ## Dataautomatik
