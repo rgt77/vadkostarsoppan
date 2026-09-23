@@ -47,7 +47,8 @@
     scenarioNote: $("scenarioNote"),
     partySource: $("partySource"),
     priceSource: $("priceSource"),
-    taxSource: $("taxSource")
+    taxSource: $("taxSource"),
+    dataStatus: $("dataStatus")
   };
 
   const state = {
@@ -61,11 +62,30 @@
     maximumFractionDigits: 2
   });
   const wholePercent = new Intl.NumberFormat("sv-SE", { maximumFractionDigits: 0 });
+  const swedishDate = new Intl.DateTimeFormat("sv-SE", {
+    timeZone: "Europe/Stockholm",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  });
 
   const fmt = value => Number.isFinite(value) ? money.format(value) : "—";
   const setText = (node, value) => {
-    if (node.textContent !== value) node.textContent = value;
+    if (node && node.textContent !== value) node.textContent = value;
   };
+
+  function todayIso() {
+    return swedishDate.format(new Date());
+  }
+
+  function daysBetween(olderIso, newerIso = todayIso()) {
+    if (!olderIso || !newerIso) return null;
+    const older = Date.parse(olderIso + "T12:00:00Z");
+    const newer = Date.parse(newerIso + "T12:00:00Z");
+    return Number.isFinite(older) && Number.isFinite(newer)
+      ? Math.floor((newer - older) / 86400000)
+      : null;
+  }
 
   function getArea() {
     return areasById.get(state.county) ?? areas[0];
@@ -75,21 +95,27 @@
     return Number(getArea()?.[state.fuel]);
   }
 
+  function getTaxPeriod(fuel, date = todayIso()) {
+    return fuel?.taxPeriods?.find(period => period.validFrom <= date && date <= period.validTo) ?? null;
+  }
+
   function calculate(price) {
     const fuel = fuelData[state.fuel];
-    if (!fuel || !Number.isFinite(price)) return null;
+    const taxPeriod = getTaxPeriod(fuel);
+    if (!fuel || !taxPeriod || !Number.isFinite(price)) return null;
 
     const beforeVat = price / (1 + fuel.vatRate / 100);
     const vat = price - beforeVat;
-    const market = beforeVat - fuel.energyTax - fuel.carbonTax;
+    const market = beforeVat - taxPeriod.energyTax - taxPeriod.carbonTax;
 
     if (!Number.isFinite(market) || market < 0) return null;
 
     return {
       fuel,
+      taxPeriod,
       vat,
       market,
-      tax: fuel.energyTax + fuel.carbonTax + vat
+      tax: taxPeriod.energyTax + taxPeriod.carbonTax + vat
     };
   }
 
@@ -247,6 +273,33 @@
     els.partySource.hidden = false;
   }
 
+  function renderDataStatus(ref) {
+    const age = daysBetween(countyData.updatedAt);
+    const warningAfter = Number(siteData.priceWarningAfterDays) || 2;
+    const priceStatus = age === null
+      ? "okänt datum"
+      : age <= 0
+        ? "uppdaterad idag"
+        : age === 1
+          ? "1 dag gammal"
+          : age + " dagar gammal";
+
+    setText(
+      els.updatedLabel,
+      "Prisdata " + (countyData.updatedAt || "—") + (age !== null && age > warningAfter ? " · kontrollera" : "")
+    );
+
+    if (ref?.taxPeriod) {
+      els.dataStatus.innerHTML =
+        "<strong>Datastatus</strong> Prisdata " + priceStatus +
+        ". Skattesatsen gäller " + ref.taxPeriod.validFrom + "–" + ref.taxPeriod.validTo +
+        ". Partikällorna kontrollerades 2026-09-23.";
+    } else {
+      els.dataStatus.innerHTML =
+        "<strong>Datastatus</strong> Ingen giltig skatteperiod finns för dagens datum. Kalkylen behöver uppdateras.";
+    }
+  }
+
   function render() {
     const price = getPrice();
     const area = getArea();
@@ -254,6 +307,8 @@
 
     if (!area || !ref) {
       setText(els.tankTotal, "Data saknas");
+      setText(els.literPrice, "—");
+      renderDataStatus(ref);
       return;
     }
 
@@ -266,16 +321,16 @@
     setText(els.tankTotal, fmt(price * tankLiters));
     setText(els.literPrice, fmt(price));
     setText(els.marketTank, fmt(ref.market * tankLiters) + " kr");
-    setText(els.energyTank, fmt(ref.fuel.energyTax * tankLiters) + " kr");
-    setText(els.carbonTank, fmt(ref.fuel.carbonTax * tankLiters) + " kr");
+    setText(els.energyTank, fmt(ref.taxPeriod.energyTax * tankLiters) + " kr");
+    setText(els.carbonTank, fmt(ref.taxPeriod.carbonTax * tankLiters) + " kr");
     setText(els.vatTank, fmt(ref.vat * tankLiters) + " kr");
     setText(els.taxTank, fmt(ref.tax * tankLiters) + " kr");
     setText(els.taxShare, wholePercent.format(ref.tax / price * 100) + " % av tankningen");
-    setText(els.updatedLabel, countyData.updatedAt ? "Prisdata " + countyData.updatedAt : "Prisdata");
 
     els.priceSource.href = countyData.source;
     els.taxSource.href = ref.fuel.taxSource;
 
+    renderDataStatus(ref);
     renderScenario(price);
     syncUrl();
   }
