@@ -66,7 +66,8 @@ window.POLICY_SCENARIOS = {
     priceModel: { type: "not_quantified" },
     evidence: "not_quantified",
     verifiedAt: "2026-09-23",
-    method: "Den använda officiella källan innehåller inte ett komplett numeriskt förslag som kan översättas till ett exakt kr/l-pris utan egna antaganden.",
-    source: "https://www.vansterpartiet.se/var-politik/politik-a-o/drivmedelsbeskattning/"
+    method: "Vänsterpartiet vill använda drivmedelsbeskattning som klimatstyrmedel men kombinera den med ekonomisk kompensation och på sikt geografiskt differentierad vägtrafikbeskattning. Någon komplett aktuell kr/l-nivå anges inte, därför konstrueras inget V-pris.",
+    source: "https://www.vansterpartiet.se/var-politik/politik-a-o/drivmedelsbeskattning/",
+    facts: "data/policy-facts-v.json"
   }
 };
