@@ -3,6 +3,7 @@ import fs from "node:fs";
 const SOURCE = "https://www.carculated.se/bensinpriser";
 const COUNTY_SLUGS = { blekinge:"blekinge", dalarna:"dalarna", gotland:"gotland", gavleborg:"gavleborg", halland:"halland", jamtland:"jamtland", jonkoping:"jonkoping", kalmar:"kalmar", kronoberg:"kronoberg", norrbotten:"norrbotten", skane:"skane", stockholm:"stockholm", sodermanland:"sodermanland", uppsala:"uppsala", varmland:"varmland", vasterbotten:"vasterbotten", vasternorrland:"vasternorrland", vastmanland:"vastmanland", "vastra-gotaland":"vastra-gotaland", orebro:"orebro", ostergotland:"ostergotland" };
 const FILE = "county-data.js";
+const HISTORY_FILE = "data/price-history.json";
 
 const decode = text => text
   .replace(/&nbsp;|&#160;/gi, " ")
@@ -36,6 +37,8 @@ const response = await fetch(SOURCE, {
 if (!response.ok) throw new Error("Price source returned HTTP " + response.status);
 
 const text = plainText(await response.text());
+const petrol98Match = text.match(/Bensin 98\s+([\d,]+)\s+kr\/l/i);
+const e85Match = text.match(/Etanol E85\s+([\d,]+)\s+kr\/l/i);
 
 const updatedMatch = text.match(/Prisdata uppdaterad\s+(\d{4}-\d{2}-\d{2})/i);
 const nationalMatch = text.match(
@@ -118,6 +121,8 @@ const output =
   '    id: "riket",\n' +
   '    name: "Hela Sverige",\n' +
   '    petrol: ' + next.national.petrol.toFixed(2) + ',\n' +
+  '    petrol98: ' + next.national.petrol98.toFixed(2) + ',\n' +
+  '    e85: ' + next.national.e85.toFixed(2) + ',\n' +
   '    diesel: ' + next.national.diesel.toFixed(2) + '\n' +
   '  },\n' +
   '  counties: [\n' +
@@ -126,6 +131,16 @@ const output =
   '};\n';
 
 fs.writeFileSync(FILE, output);
+
+const history = fs.existsSync(HISTORY_FILE) ? JSON.parse(fs.readFileSync(HISTORY_FILE, "utf8")) : { version: 1, snapshots: [] };
+const snapshot = { date: next.updatedAt, national: next.national, counties: next.counties };
+const existingIndex = history.snapshots.findIndex(item => item.date === snapshot.date);
+if (existingIndex >= 0) history.snapshots[existingIndex] = snapshot;
+else history.snapshots.push(snapshot);
+history.snapshots.sort((a, b) => a.date.localeCompare(b.date));
+history.snapshots = history.snapshots.slice(-730);
+fs.mkdirSync("data", { recursive: true });
+fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2) + "\n");
 console.log(
   "Updated county-data.js:",
   next.updatedAt,
