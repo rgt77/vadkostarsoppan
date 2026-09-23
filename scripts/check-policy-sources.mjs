@@ -39,4 +39,5 @@ for (const [key, item] of Object.entries(scenarios)) {
 fs.mkdirSync("data", { recursive: true });
 fs.writeFileSync(statePath, JSON.stringify(next, null, 2) + "\n");
 fs.writeFileSync("data/policy-source-changes.json", JSON.stringify({ changes }, null, 2) + "\n");
+// Persist access status even when a site blocks automated clients.
 console.log(changes.length ? `CHANGED: ${changes.map(x => x.name).join(", ")}` : "No source changes detected.");
