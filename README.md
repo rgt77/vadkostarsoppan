@@ -64,7 +64,7 @@ QA körs även automatiskt via GitHub Actions på push till `main`.
 
 Projektet publiceras som statiska assets via Cloudflare Workers från `main`.
 
-Aktuell applikationsversion: **0.19.0**.
+Aktuell applikationsversion: **0.21.0**.
 
 
 ## Dataautomatik
@@ -95,3 +95,7 @@ Aktuell applikationsversion: **0.19.0**.
 - Historiken hålls till maximalt 730 dagar.
 - QA kontrollerar datumordning, dubbletter och att alla fyra rikssnitt finns.
 - Historiken är grunden för förändring över 7/30 dagar utan att belasta huvudvyn.
+
+## Tvålagers prismodell
+
+Fas 3 skiljer strikt på observerat pumppris och politisk simulering. Det observerade lagret bryter ned faktiskt pumppris. Simuleringslagret fryser marknadsförutsättningar och får endast ändra dokumenterade politiska variabler. Reduktionsplikt behandlas som utsläppsreduktionskrav, inte som direkt volymandel. Marknad + kedja är alltid en härledd restpost och aldrig ett påstående om vinst.
