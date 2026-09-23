@@ -61,7 +61,7 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = Object.values(w.FUEL_DATA ?? {});
 
-  w.SITE_DATA?.appVersion === "0.40.0" ? pass("Version 0.40.0") : fail("Version mismatch");
+  w.SITE_DATA?.appVersion === "0.41.0" ? pass("Version 0.41.0") : fail("Version mismatch");
   w.SITE_DATA?.typicalTankLiters === 40 ? pass("Tank size 40 L") : fail("Tank size invalid");
 
   for (const fuel of fuels) {
@@ -179,7 +179,7 @@ try {
   fail("Policy data: " + error.message);
 }
 
-html404.includes("style.css?v=0.40.0") ? pass("404 cache version") : fail("404 cache version mismatch");
+html404.includes("style.css?v=0.41.0") ? pass("404 cache version") : fail("404 cache version mismatch");
 script.includes("Partikällorna kontrollerades 2026-09-23") ? fail("Hardcoded policy review date") : pass("No hardcoded policy review date");
 read("scripts/update-price-data.mjs").includes("Implausible") ? pass("Pump price plausibility guard") : fail("Pump price plausibility guard missing");
 const marketUpdater = read("scripts/update-market-data.mjs");
@@ -251,6 +251,14 @@ try {
   const simulator = read("lib/simulator.mjs");
   simulator.includes('["party_delta","stated_target"]') ? pass("Simulator accepts only documented numeric models") : fail("Simulator model guard missing");
 } catch (error) { fail("Phase 4 QA: " + error.message); }
+
+try {
+  const phase4b = JSON.parse(read("data/phase4-status.json"));
+  phase4b.completedSteps?.length >= 20 ? pass("Phase 4 first twenty steps recorded") : fail("Phase 4 second block incomplete");
+  html.includes('id="scenarioComparison"') && script.includes("evidenceLabels") ? pass("Neutral scenario comparison evidence UI") : fail("Scenario comparison evidence UI missing");
+  script.includes('"ArrowLeft"') && script.includes('"popstate"') ? pass("Scenario keyboard and history navigation") : fail("Scenario navigation regression");
+  script.includes('latestDate || ""') ? pass("Trend reference-date guard") : fail("Trend date guard missing");
+} catch (error) { fail("Phase 4 block 2 QA: " + error.message); }
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
 if (failures.length) {
