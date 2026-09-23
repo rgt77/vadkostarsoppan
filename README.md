@@ -64,7 +64,7 @@ QA körs även automatiskt via GitHub Actions på push till `main`.
 
 Projektet publiceras som statiska assets via Cloudflare Workers från `main`.
 
-Aktuell applikationsversion: **0.24.0**.
+Aktuell applikationsversion: **0.25.0**.
 
 
 ## Dataautomatik
@@ -98,7 +98,7 @@ Aktuell applikationsversion: **0.24.0**.
 
 ## Marknadsdata
 
-- USD/SEK hämtas från Riksbankens officiella API och hålls separat från observerat pumppris.
+- USD/SEK hämtas från Riksbankens officiella API, plausibilitetskontrolleras och hålls separat från observerat pumppris. Dagliga observationer sparas i `data/market-history.json`.
 - Reduktionsplikten lagras som utsläppsreduktionskrav med giltighetsperioder och tolkas aldrig som direkt volymandel biodrivmedel.
 - ARA/Rotterdam får inte ersättas med Brent/råolja. Raffinerad spotreferens kopplas först in när en metodmässigt och licensmässigt användbar källa finns.
 - Marknadsdata får inte påverka den publika pumppriskalkylen förrän hela simuleringskedjan är validerad.
