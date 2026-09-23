@@ -46,6 +46,9 @@
     scenarioDelta: $("scenarioDelta"),
     scenarioNote: $("scenarioNote"),
     partySource: $("partySource"),
+    scenarioReferenceDate: $("scenarioReferenceDate"),
+    scenarioMeta: $("scenarioMeta"),
+    scenarioReset: $("scenarioReset"),
     priceSource: $("priceSource"),
     taxSource: $("taxSource"),
     dataStatus: $("dataStatus"),
@@ -190,6 +193,7 @@
       button.className = "party-button";
       button.dataset.party = key;
       button.setAttribute("aria-label", scenario.name);
+      button.setAttribute("aria-pressed", "false");
 
       const logoBox = document.createElement("span");
       logoBox.className = "party-logo-box " + key;
@@ -226,6 +230,8 @@
 
   function renderScenario(basePrice) {
     const scenario = scenarios[state.party];
+    setText(els.scenarioReferenceDate, countyData.updatedAt || "—");
+    if (els.scenarioReset) els.scenarioReset.hidden = !scenario;
 
     els.partyResult.className = "party-result";
     els.scenarioTankPrice.className = "";
@@ -240,10 +246,15 @@
       setText(els.scenarioDelta, "—");
       setText(els.scenarioNote, "Om ett parti inte har publicerat tillräckligt exakta nivåer visar vi inget påhittat pris.");
       els.partySource.hidden = true;
+      if (els.scenarioMeta) { els.scenarioMeta.hidden = true; els.scenarioMeta.textContent = ""; }
       return;
     }
 
     setText(els.scenarioLabel, scenario.name);
+    if (els.scenarioMeta) {
+      els.scenarioMeta.hidden = false;
+      els.scenarioMeta.textContent = "Referenspris " + (countyData.updatedAt || "—") + " · källan verifierad " + (scenario.verifiedAt || "—");
+    }
     const resultLiter = scenarioPrice(basePrice, scenario);
 
     if (resultLiter === null) {
@@ -395,6 +406,13 @@
     els.countySelect?.addEventListener("change", () => {
       state.county = els.countySelect.value;
       render();
+    });
+
+    els.scenarioReset?.addEventListener("click", () => {
+      state.party = "";
+      updatePartySelection();
+      renderScenario(getPrice());
+      syncUrl();
     });
 
     els.partyGrid?.addEventListener("click", event => {
