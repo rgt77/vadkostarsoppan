@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-23",
+  "party": "c",
+  "name": "Centerpartiet",
+  "facts": [
+    {
+      "id": "climate_plan_transport_2026",
+      "kind": "policy_plan",
+      "date": "2026-08-06",
+      "source": "https://www.centerpartiet.se/nyheter/arkiv-2026/2026-08-06-fler-elbilar-och-mer-hallbart-drivmedel---centerpartiets-klimatplan",
+      "note": "Centerpartiets klimatplan anger elektrifieringsmål, bredare elbilsbonus, laddsatsningar och ökad användning av biodrivmedel."
+    },
+    {
+      "id": "biofuel_tax_exemption_2026",
+      "kind": "policy_proposal",
+      "date": "2026-08-06",
+      "source": "https://www.centerpartiet.se/nyheter/arkiv-2026/2026-08-06-fler-elbilar-och-mer-hallbart-drivmedel---centerpartiets-klimatplan",
+      "note": "Partiet vill inleda processen för att ta bort skatten på biodrivmedel som blandas in i bensin och diesel så att inblandningen kan höjas utan att pumppriset stiger."
+    },
+    {
+      "id": "ev_sales_targets_2030",
+      "kind": "policy_target",
+      "date": "2030",
+      "passengerCarsPct": 90,
+      "lightTrucksPct": 75,
+      "heavyTrucksPct": 50,
+      "source": "https://www.centerpartiet.se/nyheter/arkiv-2026/2026-08-06-fler-elbilar-och-mer-hallbart-drivmedel---centerpartiets-klimatplan",
+      "note": "Andel nya fordon som enligt Centerpartiets mål ska vara helt eldrivna 2030."
+    }
+  ]
+}
