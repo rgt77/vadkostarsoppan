@@ -9,16 +9,16 @@
     },
     "kd": {
       "name": "Kristdemokraterna",
-      "url": "https://kristdemokraterna.se/var-politik/politik-a-till-o/drivmedelspriser",
-      "hash": "86bd9f26736654a60e9f1337d0283dddaea42779e621787a2b1fa1c9110c1696",
+      "url": "https://kristdemokraterna.se/arkiv/nyheter/2024/2024-08-27-vi-sanker-drivmedelsskatten-och-utslappen",
+      "hash": "21059c7d289e064c55eecf7a017d65a0c4903c20990d61cca14c0e557c06acfe",
       "contentType": "text/html;charset=UTF-8",
       "status": "ok"
     },
     "l": {
       "name": "Liberalerna",
-      "url": "https://www.liberalerna.se/politik/glesbygd",
-      "hash": "593c99f3f37f2f4338543a660d5c894c903e4e3c73e47b62f3d4a681bdb093ae",
-      "contentType": "text/html; charset=UTF-8",
+      "url": "https://www.liberalerna.se/wp-content/uploads/klimatomstallning-i-en-vaxande-ekonomi.pdf",
+      "hash": "e8e3b643ac27eb90f4f8d49ef8fc8d621d2d54f4a863d702286a11ec36a885d8",
+      "contentType": "application/pdf",
       "status": "ok"
     },
     "mp": {
@@ -30,23 +30,23 @@
     },
     "m": {
       "name": "Moderaterna",
-      "url": "https://moderaterna.se/var-politik/drivmedelspriser/",
-      "hash": "d3d3f39fa5776aea9f7eeb989040fcdded96df0aae7f4ea3a3718b9ddbced6bb",
+      "url": "https://moderaterna.se/nyhet/ytterligare-sankt-skatt-pa-drivmedel/",
+      "hash": "cdf5fd55edeae2d2e7b94ed0ae90656f069830b31e29fb074c6b631ab327b206",
       "contentType": "text/html; charset=UTF-8",
       "status": "ok"
     },
     "s": {
       "name": "Socialdemokraterna",
-      "url": "https://www.socialdemokraterna.se/var-politik/a-till-o/branslepriser/fakta-om-socialdemokraternas-politik-kring-drivmedelsskatt",
-      "hash": "9102516623e9f67b3c29f19d0d17c3969b7ecc3fa047f7beccebaa4eb614614c",
+      "url": "https://www.socialdemokraterna.se/nyheter/nyheter/2026-03-20-s-kraver-tillfallig-skattesankning-pa-bensin-och-diesel",
+      "hash": "e1757f121f096740646277af0fcbc06e352a839b02559fa3fa225b924100ca4c",
       "contentType": "text/html;charset=UTF-8",
       "status": "ok"
     },
     "sd": {
       "name": "Sverigedemokraterna",
-      "url": "https://www.sd.se/vad-vi-vill/folder-vi-gor-sverige-till-sverige-igen/",
-      "hash": "e5ed14b8a9f7a55bdf4f963b0b8c08e3d4a4d543427eb19c279c25095cd81bec",
-      "contentType": "text/html; charset=UTF-8",
+      "url": "https://val2026.sd.se/drivmedel/",
+      "hash": "d7b80901dc7892a20620715adb1dc24f5136bbb47b925525d4168b5cff5b5b37",
+      "contentType": "text/html",
       "status": "ok"
     },
     "v": {
