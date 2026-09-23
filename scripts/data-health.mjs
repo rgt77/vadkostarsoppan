@@ -13,7 +13,7 @@ const policyState = JSON.parse(fs.readFileSync("data/policy-source-state.json","
 const now = new Date().toISOString();
 const market = JSON.parse(fs.readFileSync("data/market-data.json","utf8"));
 const duty = JSON.parse(fs.readFileSync("data/reduction-duty.json","utf8"));
-const checks = []; // Health status excludes informational anomalies from warning severity.
+const checks = []; // Health status excludes informational anomalies from warning severity; source access limits are classified separately.
 
 const add=(id,status,message,source=null)=>checks.push({id,status,message,source});
 add("prices:freshness", days(prices.updatedAt)<=3 ? "ok":"error", `Prisdata är ${days(prices.updatedAt)} dag(ar) gammal`, prices.source);
