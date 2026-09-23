@@ -49,13 +49,25 @@
     {
       "id": "market-ara",
       "category": "market_reference",
-      "authority": "Market reference",
-      "url": "",
+      "authority": "S&P Global Commodity Insights / ARA benchmark",
+      "url": "https://cova.nl/en/oil-dashboard-netherlands/",
       "official": false,
-      "cost": "unknown",
-      "automation": "research",
+      "cost": "licensed",
+      "automation": "blocked",
       "trust": "reference",
-      "note": "ARA/Rotterdam refined-product reference. Do not use until a reliable legal/free source is verified."
+      "note": "Rotterdam gasoline/diesel benchmark data is licensed and not public-domain. COVA may display only derived 7-day rolling trends. Never ingest or substitute this with Brent/crude.",
+      "status": "not_publicly_ingestable"
+    },
+    {
+      "id": "market-eu-oil-bulletin-net",
+      "category": "market_context",
+      "authority": "European Commission, DG Energy",
+      "url": "https://energy.ec.europa.eu/data-and-analysis/weekly-oil-bulletin_en",
+      "official": true,
+      "cost": "free",
+      "automation": "research",
+      "trust": "primary",
+      "note": "Weekly consumer petroleum prices excluding duties and taxes. Useful as transparent market+distribution context, but not an ARA refinery spot benchmark."
     }
   ]
 }
