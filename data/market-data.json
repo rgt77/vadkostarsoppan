@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "updatedAt": null,
+  "fx": {
+    "usdSek": null,
+    "observationDate": null,
+    "seriesId": "SEKUSDPMI",
+    "source": "https://api.riksbank.se/swea/v1/Observations/Latest/sekusdpmi",
+    "indicative": true
+  }
+}
