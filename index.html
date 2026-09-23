@@ -16,7 +16,7 @@
   <meta property="og:locale" content="sv_SE">
   <meta property="og:site_name" content="Vad kostar soppan?">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/style.css?v=0.23.0">
+  <link rel="stylesheet" href="/style.css?v=0.23.1">
 </head>
 <body>
   <noscript><div class="noscript">JavaScript behöver vara aktiverat för att kalkylen ska fungera.</div></noscript>
@@ -69,7 +69,12 @@
         <div><dt>Moms</dt><dd id="vatTank">— kr</dd></div>
       </dl>
 
-      <div class="price-trend" id="priceTrend" hidden aria-label="Prisutveckling">\n        <span>Prisutveckling</span>\n        <div><span id="trend7">7 dagar —</span><span id="trend30">30 dagar —</span></div>\n      </div>\n\n      <div class="tax-summary">
+      <div class="price-trend" id="priceTrend" hidden aria-label="Prisutveckling">
+        <span>Prisutveckling</span>
+        <div><span id="trend7">7 dagar —</span><span id="trend30">30 dagar —</span></div>
+      </div>
+
+      <div class="tax-summary">
         <div><span>Skatt + moms totalt</span><strong id="taxTank">— kr</strong></div>
         <small id="taxShare">— av tankningen</small>
       </div>
@@ -123,9 +128,9 @@
     <span>vadkostarsoppan.se</span>
   </footer>
 
-  <script defer src="/fuel-data.js?v=0.23.0"></script>
-  <script defer src="/county-data.js?v=0.23.0"></script>
-  <script defer src="/policy-data.js?v=0.23.0"></script>
-  <script defer src="/script.js?v=0.23.0"></script>
+  <script defer src="/fuel-data.js?v=0.23.1"></script>
+  <script defer src="/county-data.js?v=0.23.1"></script>
+  <script defer src="/policy-data.js?v=0.23.1"></script>
+  <script defer src="/script.js?v=0.23.1"></script>
 </body>
 </html>
