@@ -2,8 +2,8 @@
   "date": "2026-09-23",
   "status": "warning",
   "counts": {
-    "ok": 8,
-    "warning": 9,
+    "ok": 16,
+    "warning": 1,
     "error": 0
   },
   "checks": [
@@ -45,56 +45,56 @@
     },
     {
       "id": "policy:c",
-      "status": "warning",
-      "message": "Bevakning ännu ej initialiserad",
+      "status": "ok",
+      "message": "Officiell källa bevakas",
       "source": "https://www.centerpartiet.se/nyheter/arkiv-2026/2026-08-31-centerpartiet-mer-fossilfritt-i-tanken-utan-hogre-pris-vid-pump"
     },
     {
       "id": "policy:kd",
-      "status": "warning",
-      "message": "Bevakning ännu ej initialiserad",
+      "status": "ok",
+      "message": "Officiell källa bevakas",
       "source": "https://kristdemokraterna.se/var-politik/politik-a-till-o/drivmedelspriser"
     },
     {
       "id": "policy:l",
-      "status": "warning",
-      "message": "Bevakning ännu ej initialiserad",
+      "status": "ok",
+      "message": "Officiell källa bevakas",
       "source": "https://www.liberalerna.se/politik/glesbygd"
     },
     {
       "id": "policy:mp",
-      "status": "warning",
-      "message": "Bevakning ännu ej initialiserad",
+      "status": "ok",
+      "message": "Officiell källa bevakas",
       "source": "https://www.mp.se/wp-content/uploads/2025/10/mp-budgetmotion-2026.pdf"
     },
     {
       "id": "policy:m",
-      "status": "warning",
-      "message": "Bevakning ännu ej initialiserad",
+      "status": "ok",
+      "message": "Officiell källa bevakas",
       "source": "https://moderaterna.se/var-politik/drivmedelspriser/"
     },
     {
       "id": "policy:s",
-      "status": "warning",
-      "message": "Bevakning ännu ej initialiserad",
+      "status": "ok",
+      "message": "Officiell källa bevakas",
       "source": "https://www.socialdemokraterna.se/var-politik/a-till-o/branslepriser/fakta-om-socialdemokraternas-politik-kring-drivmedelsskatt"
     },
     {
       "id": "policy:sd",
-      "status": "warning",
-      "message": "Bevakning ännu ej initialiserad",
+      "status": "ok",
+      "message": "Officiell källa bevakas",
       "source": "https://www.sd.se/vad-vi-vill/folder-vi-gor-sverige-till-sverige-igen/"
     },
     {
       "id": "policy:v",
       "status": "warning",
-      "message": "Bevakning ännu ej initialiserad",
+      "message": "Källan kunde inte nås vid senaste kontroll",
       "source": "https://www.vansterpartiet.se/var-politik/klimatmalen-till-2030/"
     },
     {
       "id": "prices:plausibility",
-      "status": "warning",
-      "message": "1 länsvärde(n) avviker >20 % från rikssnitt",
+      "status": "ok",
+      "message": "1 statistisk(a) avvikelse(r) registrerad(e) för transparens; källdata ändras inte",
       "source": "https://www.carculated.se/bensinpriser"
     },
     {

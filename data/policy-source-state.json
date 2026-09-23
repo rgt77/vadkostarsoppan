@@ -1,4 +1,61 @@
 {
-  "generatedAt": null,
-  "sources": {}
+  "sources": {
+    "c": {
+      "name": "Centerpartiet",
+      "url": "https://www.centerpartiet.se/nyheter/arkiv-2026/2026-08-31-centerpartiet-mer-fossilfritt-i-tanken-utan-hogre-pris-vid-pump",
+      "hash": "9a859ee50b9c18fd239f286d094e008e8bf0405064cd3581ddd4f4066d3b8c91",
+      "contentType": "text/html;charset=UTF-8",
+      "status": "ok"
+    },
+    "kd": {
+      "name": "Kristdemokraterna",
+      "url": "https://kristdemokraterna.se/var-politik/politik-a-till-o/drivmedelspriser",
+      "hash": "86bd9f26736654a60e9f1337d0283dddaea42779e621787a2b1fa1c9110c1696",
+      "contentType": "text/html;charset=UTF-8",
+      "status": "ok"
+    },
+    "l": {
+      "name": "Liberalerna",
+      "url": "https://www.liberalerna.se/politik/glesbygd",
+      "hash": "593c99f3f37f2f4338543a660d5c894c903e4e3c73e47b62f3d4a681bdb093ae",
+      "contentType": "text/html; charset=UTF-8",
+      "status": "ok"
+    },
+    "mp": {
+      "name": "Miljöpartiet",
+      "url": "https://www.mp.se/wp-content/uploads/2025/10/mp-budgetmotion-2026.pdf",
+      "hash": "8872b69ecb03eeb97001d7a17530a993978c24476463e1f656eb3547ef42538e",
+      "contentType": "application/pdf",
+      "status": "ok"
+    },
+    "m": {
+      "name": "Moderaterna",
+      "url": "https://moderaterna.se/var-politik/drivmedelspriser/",
+      "hash": "d3d3f39fa5776aea9f7eeb989040fcdded96df0aae7f4ea3a3718b9ddbced6bb",
+      "contentType": "text/html; charset=UTF-8",
+      "status": "ok"
+    },
+    "s": {
+      "name": "Socialdemokraterna",
+      "url": "https://www.socialdemokraterna.se/var-politik/a-till-o/branslepriser/fakta-om-socialdemokraternas-politik-kring-drivmedelsskatt",
+      "hash": "9102516623e9f67b3c29f19d0d17c3969b7ecc3fa047f7beccebaa4eb614614c",
+      "contentType": "text/html;charset=UTF-8",
+      "status": "ok"
+    },
+    "sd": {
+      "name": "Sverigedemokraterna",
+      "url": "https://www.sd.se/vad-vi-vill/folder-vi-gor-sverige-till-sverige-igen/",
+      "hash": "e5ed14b8a9f7a55bdf4f963b0b8c08e3d4a4d543427eb19c279c25095cd81bec",
+      "contentType": "text/html; charset=UTF-8",
+      "status": "ok"
+    },
+    "v": {
+      "name": "Vänsterpartiet",
+      "url": "https://www.vansterpartiet.se/var-politik/klimatmalen-till-2030/",
+      "hash": null,
+      "contentType": null,
+      "status": "unreachable",
+      "error": "HTTP 403"
+    }
+  }
 }
