@@ -160,6 +160,7 @@
   }
 
   function buildCountySelect() {
+    if (!els.countySelect || !areas.length) return;
     const fragment = document.createDocumentFragment();
 
     for (const area of areas) {
@@ -171,6 +172,7 @@
 
     els.countySelect.replaceChildren(fragment);
     els.countySelect.value = state.county;
+    if (!els.countySelect.value && areas[0]) { state.county = areas[0].id; els.countySelect.value = state.county; }
   }
 
   function buildPartyButtons() {
