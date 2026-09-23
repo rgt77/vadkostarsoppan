@@ -306,6 +306,14 @@
       }
     }
 
+    if (state.party === "m" && els.policyFacts) {
+      els.policyFacts.hidden = false;
+      const title = document.createElement("strong");
+      title.textContent = "Dokumenterad bakgrund";
+      const text = document.createElement("p");
+      text.textContent = "Moderaternas officiella underlag anger cirka 1,03 kr/l lägre bensinpris och 0,40 kr/l lägre dieselpris vid full prisövervältring från skattesänkningen till EU:s miniminivå, samt en ytterligare tillfällig sänkning på 3 kr/l från 1 juli till 30 november 2026. Partiet anger också 10 % reduktionsplikt för både bensin och diesel. Uppgifterna används som dokumenterad bakgrund, inte som ett permanent framtida M-pris.";
+      els.policyFacts.append(title, text);
+    }
     if (state.party === "sd" && els.policyFacts) {
       els.policyFacts.hidden = false;
       const title = document.createElement("strong");
