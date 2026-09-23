@@ -525,3 +525,40 @@ select {
 }
 .fuel-id--petrol { border-radius: 50%; }
 .fuel-id--diesel { border-radius: 0; }
+
+
+/* Compact four-option fuel selector */
+.fuel-switch {
+  gap: 3px;
+  padding: 4px;
+}
+.fuel-button {
+  min-width: 0;
+  gap: .32rem;
+  padding-left: .38rem;
+  padding-right: .38rem;
+  font-size: clamp(.82rem, 3.2vw, 1rem);
+  line-height: 1.05;
+  white-space: nowrap;
+}
+.fuel-id {
+  width: 1.72rem;
+  height: 1.72rem;
+  flex-basis: 1.72rem;
+  border-width: 1.5px;
+  font-size: .61rem;
+}
+@media (max-width: 520px) {
+  .fuel-button {
+    gap: .24rem;
+    padding-left: .24rem;
+    padding-right: .24rem;
+    font-size: .82rem;
+  }
+  .fuel-id {
+    width: 1.58rem;
+    height: 1.58rem;
+    flex-basis: 1.58rem;
+    font-size: .56rem;
+  }
+}
