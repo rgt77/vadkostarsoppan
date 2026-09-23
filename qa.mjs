@@ -14,7 +14,7 @@ const required = [
   "data/data-health.json",
   "data/price-history.json",
   "data/calculation-model.json", "data/reduction-duty.json", "data/market-data.json", "data/market-history.json", "lib/calculation.mjs",
-  "404.html", "data/phase3-status.json"
+  "404.html", "data/phase3-status.json", "data/phase4-status.json", "lib/simulator.mjs", "tests/simulator.mjs"
 ];
 const failures = [];
 const warnings = [];
@@ -61,7 +61,7 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = Object.values(w.FUEL_DATA ?? {});
 
-  w.SITE_DATA?.appVersion === "0.30.0" ? pass("Version 0.30.0") : fail("Version mismatch");
+  w.SITE_DATA?.appVersion === "0.40.0" ? pass("Version 0.40.0") : fail("Version mismatch");
   w.SITE_DATA?.typicalTankLiters === 40 ? pass("Tank size 40 L") : fail("Tank size invalid");
 
   for (const fuel of fuels) {
@@ -179,7 +179,7 @@ try {
   fail("Policy data: " + error.message);
 }
 
-html404.includes("style.css?v=0.30.0") ? pass("404 cache version") : fail("404 cache version mismatch");
+html404.includes("style.css?v=0.40.0") ? pass("404 cache version") : fail("404 cache version mismatch");
 script.includes("Partikällorna kontrollerades 2026-09-23") ? fail("Hardcoded policy review date") : pass("No hardcoded policy review date");
 read("scripts/update-price-data.mjs").includes("Implausible") ? pass("Pump price plausibility guard") : fail("Pump price plausibility guard missing");
 const marketUpdater = read("scripts/update-market-data.mjs");
@@ -242,6 +242,15 @@ try {
   const monitor = read("scripts/check-policy-sources.mjs");
   monitor.includes('"unreachable"') && monitor.includes('"access_blocked"') ? pass("Policy monitor classifies source access failures") : fail("Policy monitor resilience missing");
 } catch (error) { fail("Health architecture: " + error.message); }
+
+try {
+  const phase4 = JSON.parse(read("data/phase4-status.json"));
+  phase4.status === "in_progress" && phase4.completedSteps?.length >= 10 ? pass("Phase 4 first ten steps recorded") : fail("Phase 4 progress invalid");
+  html.includes('id="scenarioReferenceDate"') && html.includes('id="scenarioReset"') && html.includes('id="scenarioMeta"') ? pass("Scenario reference UI") : fail("Scenario reference UI missing");
+  script.includes('state.party = ""') && script.includes("scenario.verifiedAt") ? pass("Scenario reset and evidence UI") : fail("Scenario interaction guard missing");
+  const simulator = read("lib/simulator.mjs");
+  simulator.includes('["party_delta","stated_target"]') ? pass("Simulator accepts only documented numeric models") : fail("Simulator model guard missing");
+} catch (error) { fail("Phase 4 QA: " + error.message); }
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
 if (failures.length) {
