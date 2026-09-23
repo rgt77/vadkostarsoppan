@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "status": "in_progress",
+  "startedAt": "2026-09-23",
+  "goal": "Fast, source-bound scenario exploration on top of frozen observed reference data.",
+  "completedSteps": [
+    "simulation_contract",
+    "pure_simulator_engine",
+    "simulator_regression_tests",
+    "reference_timestamp_ui",
+    "scenario_evidence_ui",
+    "reset_scenario_control",
+    "accessible_scenario_state",
+    "responsive_scenario_layout",
+    "phase4_qa_guards",
+    "release_0_40_0"
+  ],
+  "safeguards": [
+    "No undocumented political values are inferred.",
+    "Observed pump price is frozen as the scenario reference.",
+    "Every computable political scenario retains its source and verification date.",
+    "Unavailable scenarios remain unavailable rather than being estimated."
+  ]
+}
