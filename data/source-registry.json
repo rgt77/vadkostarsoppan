@@ -57,7 +57,9 @@
       "note": "Official indicative Riksbank exchange rate; informational reference, not a transaction rate.",
       "requiredFor": [
         "market_reference"
-      ]
+      ],
+      "attribution": "Källa: Sveriges riksbank",
+      "indicative": true
     },
     {
       "id": "market-ara",
