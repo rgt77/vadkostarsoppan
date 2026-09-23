@@ -13,7 +13,7 @@ const required = [
   "data/source-registry.json",
   "data/data-health.json",
   "data/price-history.json",
-  "data/calculation-model.json", "data/reduction-duty.json", "data/market-data.json",
+  "data/calculation-model.json", "data/reduction-duty.json", "data/market-data.json", "lib/calculation.mjs",
   "404.html"
 ];
 const failures = [];
@@ -125,6 +125,8 @@ try {
 try {
   const model = JSON.parse(read("data/calculation-model.json"));
   model.methodology === "observed-plus-simulation" ? pass("Two-layer calculation model") : fail("Calculation model invalid");
+  model.simulation?.referencePolicy?.allowUndocumentedPoliticalInputs === false ? pass("No undocumented political inputs") : fail("Political input safeguard missing");
+  model.variables?.refined_product_reference?.publicProxyAllowed === false ? pass("No crude proxy substitution") : fail("Market proxy safeguard missing");
   model.variables?.market_chain_residual?.kind === "derived_residual" ? pass("Market residual explicitly classified") : fail("Market residual classification missing");
   Array.isArray(model.safeguards) && model.safeguards.length >= 4 ? pass("Simulation safeguards") : fail("Simulation safeguards missing");
 } catch (error) { fail("Calculation model: " + error.message); }
@@ -197,11 +199,19 @@ try {
   const market = JSON.parse(read("data/market-data.json"));
   market.fx?.seriesId === "SEKUSDPMI" ? pass("Riksbank FX series") : fail("Riksbank FX series invalid");
   String(market.fx?.source ?? "").startsWith("https://api.riksbank.se/") ? pass("Official FX source") : fail("FX source invalid");
+  market.updatedAt === null || /^\\d{4}-\\d{2}-\\d{2}$/.test(market.updatedAt) ? pass("Market snapshot date") : fail("Market updatedAt invalid");
   if (market.fx?.usdSek !== null) {
     Number.isFinite(market.fx.usdSek) && market.fx.usdSek > 0 ? pass("USD/SEK value") : fail("USD/SEK value invalid");
     /^\d{4}-\d{2}-\d{2}$/.test(market.fx.observationDate ?? "") ? pass("USD/SEK date") : fail("USD/SEK date invalid");
   } else warn("Market data awaits first Riksbank ingestion");
 } catch (error) { fail("Market data: " + error.message); }
+
+try {
+  const registry = JSON.parse(read("data/source-registry.json"));
+  const ids = registry.sources?.map(x => x.id) ?? [];
+  new Set(ids).size === ids.length ? pass("Unique source IDs") : fail("Duplicate source IDs");
+  registry.sources?.every(x => /^https:\\/\\//.test(x.url) && Array.isArray(x.requiredFor)) ? pass("Source registry schema") : fail("Source registry invalid");
+} catch (error) { fail("Source registry: " + error.message); }
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
 if (failures.length) {
