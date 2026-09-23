@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "strategy": "official-free-first",
   "sources": [
     {
@@ -10,7 +10,11 @@
       "official": true,
       "cost": "free",
       "automation": "monitor",
-      "trust": "primary"
+      "trust": "primary",
+      "requiredFor": [
+        "observed",
+        "simulation"
+      ]
     },
     {
       "id": "pumpprice-carculated",
@@ -21,7 +25,10 @@
       "cost": "free",
       "automation": "ingest",
       "trust": "secondary",
-      "note": "Behålls tills en tillräckligt aktuell kostnadsfri officiell pumppriskälla finns."
+      "note": "Behålls tills en tillräckligt aktuell kostnadsfri officiell pumppriskälla finns.",
+      "requiredFor": [
+        "observed"
+      ]
     },
     {
       "id": "reduction-duty-energimyndigheten",
@@ -31,7 +38,10 @@
       "official": true,
       "cost": "free",
       "automation": "monitor",
-      "trust": "primary"
+      "trust": "primary",
+      "requiredFor": [
+        "simulation"
+      ]
     },
     {
       "id": "fx-riksbanken",
@@ -44,7 +54,10 @@
       "trust": "primary",
       "seriesId": "SEKUSDPMI",
       "unit": "SEK per USD",
-      "note": "Official indicative Riksbank exchange rate; informational reference, not a transaction rate."
+      "note": "Official indicative Riksbank exchange rate; informational reference, not a transaction rate.",
+      "requiredFor": [
+        "market_reference"
+      ]
     },
     {
       "id": "market-ara",
@@ -56,7 +69,8 @@
       "automation": "blocked",
       "trust": "reference",
       "note": "Rotterdam gasoline/diesel benchmark data is licensed and not public-domain. COVA may display only derived 7-day rolling trends. Never ingest or substitute this with Brent/crude.",
-      "status": "not_publicly_ingestable"
+      "status": "not_publicly_ingestable",
+      "requiredFor": []
     },
     {
       "id": "market-eu-oil-bulletin-net",
@@ -67,7 +81,8 @@
       "cost": "free",
       "automation": "research",
       "trust": "primary",
-      "note": "Weekly consumer petroleum prices excluding duties and taxes. Useful as transparent market+distribution context, but not an ARA refinery spot benchmark."
+      "note": "Weekly consumer petroleum prices excluding duties and taxes. Useful as transparent market+distribution context, but not an ARA refinery spot benchmark.",
+      "requiredFor": []
     }
   ]
 }
