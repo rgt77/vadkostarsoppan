@@ -59,7 +59,7 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = Object.values(w.FUEL_DATA ?? {});
 
-  w.SITE_DATA?.appVersion === "0.18.0" ? pass("Version 0.18.0") : fail("Version mismatch");
+  w.SITE_DATA?.appVersion === "0.19.0" ? pass("Version 0.19.0") : fail("Version mismatch");
   w.SITE_DATA?.typicalTankLiters === 40 ? pass("Tank size 40 L") : fail("Tank size invalid");
 
   for (const fuel of fuels) {
