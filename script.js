@@ -48,7 +48,7 @@
     partySource: $("partySource"),
     priceSource: $("priceSource"),
     taxSource: $("taxSource"),
-    dataStatus: $("dataStatus")
+    dataStatus: $("dataStatus"),\n    priceTrend: $("priceTrend"),\n    trend7: $("trend7"),\n    trend30: $("trend30")
   };
 
   const state = {
@@ -313,7 +313,7 @@
     }
   }
 
-  function render() {
+  let priceHistory = null;\n\n  function historyPrice(snapshot) {\n    const area = state.county === "riket" ? snapshot?.national : snapshot?.counties?.find(item => item.id === state.county);\n    const value = Number(area?.[state.fuel]);\n    if (Number.isFinite(value) && value > 0) return value;\n    const national = Number(snapshot?.national?.[state.fuel]);\n    return Number.isFinite(national) && national > 0 ? national : null;\n  }\n\n  function renderTrend(currentPrice) {\n    const snapshots = priceHistory?.snapshots ?? [];\n    if (!snapshots.length || !Number.isFinite(currentPrice)) { els.priceTrend.hidden = true; return; }\n    const latestDate = countyData.updatedAt;\n    const metric = days => {\n      const target = Date.parse(latestDate + "T12:00:00Z") - days * 86400000;\n      const candidates = snapshots.filter(item => Date.parse(item.date + "T12:00:00Z") <= target);\n      const old = candidates.at(-1);\n      const oldPrice = historyPrice(old);\n      if (!oldPrice) return null;\n      return currentPrice - oldPrice;\n    };\n    const show = (node, days, delta) => setText(node, days + " dagar " + (delta === null ? "—" : (Math.abs(delta) < .005 ? "±0,00 kr/l" : (delta > 0 ? "+" : "−") + fmt(Math.abs(delta)) + " kr/l")));\n    const d7 = metric(7), d30 = metric(30);\n    show(els.trend7, 7, d7); show(els.trend30, 30, d30);\n    els.priceTrend.hidden = d7 === null && d30 === null;\n  }\n\n  function render() {
     const price = getPrice();
     const area = getArea();
     const ref = calculate(price);
