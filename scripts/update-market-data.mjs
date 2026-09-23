@@ -2,6 +2,7 @@ import fs from "node:fs";
 
 const URL = "https://api.riksbank.se/swea/v1/Observations/Latest/sekusdpmi";
 const OUT = "data/market-data.json";
+const HISTORY = "data/market-history.json";
 
 const response = await fetch(URL, { headers: { "user-agent": "vadkostarsoppan-market-updater/1.0" } });
 if (!response.ok) throw new Error("Riksbank API returned HTTP " + response.status);
@@ -26,4 +27,11 @@ const data = {
 };
 fs.mkdirSync("data", { recursive: true });
 fs.writeFileSync(OUT, JSON.stringify(data, null, 2) + "\n");
+const history = fs.existsSync(HISTORY) ? JSON.parse(fs.readFileSync(HISTORY, "utf8")) : { version: 1, retentionDays: 730, snapshots: [] };
+const snapshot = { date: data.fx.observationDate, usdSek: data.fx.usdSek };
+const index = history.snapshots.findIndex(x => x.date === snapshot.date);
+if (index >= 0) history.snapshots[index] = snapshot; else history.snapshots.push(snapshot);
+history.snapshots.sort((a,b) => a.date.localeCompare(b.date));
+history.snapshots = history.snapshots.slice(-730);
+fs.writeFileSync(HISTORY, JSON.stringify(history, null, 2) + "\n");
 console.log("USD/SEK", value, data.fx.observationDate);
