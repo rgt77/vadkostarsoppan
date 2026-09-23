@@ -14,7 +14,7 @@ const required = [
   "data/data-health.json",
   "data/price-history.json",
   "data/calculation-model.json", "data/reduction-duty.json", "data/market-data.json", "data/market-history.json", "lib/calculation.mjs",
-  "404.html", "data/phase3-status.json", "data/phase4-status.json", "lib/simulator.mjs", "tests/simulator.mjs", "data/policy-facts-sd.json", "data/policy-facts-m.json", "data/policy-facts-kd.json", "data/policy-facts-l.json"
+  "404.html", "data/phase3-status.json", "data/phase4-status.json", "lib/simulator.mjs", "tests/simulator.mjs", "data/policy-facts-sd.json", "data/policy-facts-m.json", "data/policy-facts-kd.json", "data/policy-facts-l.json", "data/policy-facts-s.json"
 ];
 const failures = [];
 const warnings = [];
@@ -292,6 +292,14 @@ try {
   lFacts.facts?.every(x => String(x.source ?? "").startsWith("https://www.liberalerna.se/")) ? pass("L official fact sources") : fail("L fact source invalid");
   script.includes('state.party === "l"') ? pass("L contextual evidence UI") : fail("L contextual evidence UI missing");
 } catch (error) { fail("L policy facts: " + error.message); }
+
+try {
+  const sFacts = JSON.parse(read("data/policy-facts-s.json"));
+  const ids = new Set(sFacts.facts?.map(x => x.id));
+  ["temporary_fuel_tax_cut_2026","fuel_price_direction_2026"].every(x => ids.has(x)) ? pass("S sourced policy facts") : fail("S policy facts incomplete");
+  sFacts.facts?.every(x => String(x.source ?? "").startsWith("https://www.socialdemokraterna.se/")) ? pass("S official fact sources") : fail("S fact source invalid");
+  script.includes('state.party === "s"') ? pass("S contextual evidence UI") : fail("S contextual evidence UI missing");
+} catch (error) { fail("S policy facts: " + error.message); }
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
 if (failures.length) {
