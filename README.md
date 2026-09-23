@@ -64,7 +64,7 @@ QA körs även automatiskt via GitHub Actions på push till `main`.
 
 Projektet publiceras som statiska assets via Cloudflare Workers från `main`.
 
-Aktuell applikationsversion: **0.30.0**.
+Aktuell applikationsversion: **0.40.0**.
 
 
 ## Dataautomatik
@@ -110,6 +110,11 @@ Fas 3 skiljer strikt på observerat pumppris och politisk simulering. Det observ
 
 ## Fas 3 exit status
 
-Fas 3 är stängd i v0.30.0. Observerat pumppris, skatteuppdelning, pris- och FX-historik, källroller, data-health och den skyddade simuleringsgrunden har egna QA-regler. Raffinerad ARA/Rotterdam-spot är uttryckligen blockerad tills en lagligt och metodmässigt användbar källa finns; frånvaron får inte ersättas med Brent eller ett konstruerat värde.
+Fas 3 är stängd i v0.40.0. Observerat pumppris, skatteuppdelning, pris- och FX-historik, källroller, data-health och den skyddade simuleringsgrunden har egna QA-regler. Raffinerad ARA/Rotterdam-spot är uttryckligen blockerad tills en lagligt och metodmässigt användbar källa finns; frånvaron får inte ersättas med Brent eller ett konstruerat värde.
 
 Maskinläsbar status finns i `data/phase3-status.json`.
+
+
+## Fas 4 – simulator och presentation
+
+Påbörjad i v0.40.0. De första tio stegen etablerar en ren simulatormotor, regressionstester, fryst referensdag, synlig källverifiering, nollställning och tillgängliga scenariointeraktioner. Inga odokumenterade partivärden beräknas.
