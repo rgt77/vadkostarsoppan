@@ -228,7 +228,7 @@ try {
   const ids = new Set(sdFacts.facts?.map(x => x.id));
   ["pump_prices_2022_2026","reduction_duty_2022","reduction_duty_2024","tax_2024_2025","temporary_tax_2026"].every(x => ids.has(x)) ? pass("SD sourced policy facts") : fail("SD policy facts incomplete");
   sdFacts.facts?.every(x => String(x.source ?? "").startsWith("https://")) ? pass("SD fact sources") : fail("SD fact source missing");
-  script.includes('state.party === "sd"') && html.includes('id="policyFacts"') ? pass("SD contextual evidence UI") : fail("SD contextual evidence UI missing");
+  script.includes('policyBackground') && script.includes('"sd":') && html.includes('id="policyFacts"') ? pass("SD contextual evidence UI") : fail("SD contextual evidence UI missing");
 } catch (error) { fail("SD policy facts: " + error.message); }
 
 try {
@@ -236,7 +236,7 @@ try {
   const ids = new Set(mFacts.facts?.map(x => x.id));
   ["eu_min_tax_2026","additional_relief_2026","reduction_duty_current","tax_indexation_2026"].every(x => ids.has(x)) ? pass("M sourced policy facts") : fail("M policy facts incomplete");
   mFacts.facts?.every(x => String(x.source ?? "").startsWith("https://moderaterna.se/")) ? pass("M official fact sources") : fail("M fact source invalid");
-  script.includes('state.party === "m"') ? pass("M contextual evidence UI") : fail("M contextual evidence UI missing");
+  script.includes('policyBackground') && script.includes('"m":') ? pass("M contextual evidence UI") : fail("M contextual evidence UI missing");
   script.includes("model.validFrom") && script.includes("model.fuels") ? pass("Bounded political scenario guard") : fail("Bounded scenario guard missing");
 } catch (error) { fail("M policy facts: " + error.message); }
 
@@ -245,7 +245,7 @@ try {
   const ids = new Set(kdFacts.facts?.map(x => x.id));
   ["tax_reduction_mix_2024","reduction_duty_2024","diesel_estimate_2024"].every(x => ids.has(x)) ? pass("KD sourced policy facts") : fail("KD policy facts incomplete");
   kdFacts.facts?.every(x => String(x.source ?? "").startsWith("https://kristdemokraterna.se/")) ? pass("KD official fact sources") : fail("KD fact source invalid");
-  script.includes('state.party === "kd"') ? pass("KD contextual evidence UI") : fail("KD contextual evidence UI missing");
+  script.includes('policyBackground') && script.includes('"kd":') ? pass("KD contextual evidence UI") : fail("KD contextual evidence UI missing");
 } catch (error) { fail("KD policy facts: " + error.message); }
 
 try {
@@ -253,7 +253,7 @@ try {
   const ids = new Set(lFacts.facts?.map(x => x.id));
   ["climate_report_2022","reduction_duty_2025"].every(x => ids.has(x)) ? pass("L sourced policy facts") : fail("L policy facts incomplete");
   lFacts.facts?.every(x => String(x.source ?? "").startsWith("https://www.liberalerna.se/")) ? pass("L official fact sources") : fail("L fact source invalid");
-  script.includes('state.party === "l"') ? pass("L contextual evidence UI") : fail("L contextual evidence UI missing");
+  script.includes('policyBackground') && script.includes('"l":') ? pass("L contextual evidence UI") : fail("L contextual evidence UI missing");
 } catch (error) { fail("L policy facts: " + error.message); }
 
 try {
@@ -261,21 +261,21 @@ try {
   const ids = new Set(sFacts.facts?.map(x => x.id));
   ["temporary_fuel_tax_cut_2026","fuel_price_direction_2026"].every(x => ids.has(x)) ? pass("S sourced policy facts") : fail("S policy facts incomplete");
   sFacts.facts?.every(x => String(x.source ?? "").startsWith("https://www.socialdemokraterna.se/")) ? pass("S official fact sources") : fail("S fact source invalid");
-  script.includes('state.party === "s"') ? pass("S contextual evidence UI") : fail("S contextual evidence UI missing");
+  script.includes('policyBackground') && script.includes('"s":') ? pass("S contextual evidence UI") : fail("S contextual evidence UI missing");
 } catch (error) { fail("S policy facts: " + error.message); }
 
 try {
  const cFacts=JSON.parse(read("data/policy-facts-c.json")); const ids=new Set(cFacts.facts?.map(x=>x.id));
  ["climate_plan_transport_2026","biofuel_tax_exemption_2026","ev_sales_targets_2030"].every(x=>ids.has(x)) ? pass("C sourced policy facts") : fail("C policy facts incomplete");
  cFacts.facts?.every(x=>String(x.source??"").startsWith("https://www.centerpartiet.se/")) ? pass("C official fact sources") : fail("C fact source invalid");
- script.includes('state.party === "c"') ? pass("C contextual evidence UI") : fail("C contextual evidence UI missing");
+ script.includes('policyBackground') && script.includes('"c":') ? pass("C contextual evidence UI") : fail("C contextual evidence UI missing");
 } catch(error){ fail("C policy facts: "+error.message); }
 
 try {
  const vFacts=JSON.parse(read("data/policy-facts-v.json")); const ids=new Set(vFacts.facts?.map(x=>x.id));
  ["fuel_tax_position_2026","geographic_road_tax","sustainable_travel_support"].every(x=>ids.has(x)) ? pass("V sourced policy facts") : fail("V policy facts incomplete");
  vFacts.facts?.every(x=>String(x.source??"").startsWith("https://www.vansterpartiet.se/")) ? pass("V official fact sources") : fail("V fact source invalid");
- script.includes('state.party === "v"') ? pass("V contextual evidence UI") : fail("V contextual evidence UI missing");
+ script.includes('policyBackground') && script.includes('"v":') ? pass("V contextual evidence UI") : fail("V contextual evidence UI missing");
 } catch(error){ fail("V policy facts: "+error.message); }
 
 html.includes('data-tank-size="30"') && html.includes('data-tank-size="60"') && script.includes("tankSizeButtons") ? pass("Interactive tank-size selector") : fail("Tank-size selector missing");
