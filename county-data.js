@@ -1,12 +1,12 @@
 window.COUNTY_PRICES = {
-  updatedAt: "2026-09-23",
-  retrievedAt: "2026-09-23",
+  updatedAt: "2026-09-24",
+  retrievedAt: "2026-09-24",
   source: "https://www.carculated.se/bensinpriser",
   national: {
     id: "riket",
     name: "Hela Sverige",
     petrol: 17.23,
-    petrol98: 18.17,
+    petrol98: 17.98,
     e85: 14.89,
     diesel: 22.14
   },
@@ -17,7 +17,7 @@ window.COUNTY_PRICES = {
     { id: "gavleborg", name: "Gävleborgs län", petrol: 17.29, petrol98: 19.19, e85: 14.90, diesel: 22.20 },
     { id: "halland", name: "Hallands län", petrol: 17.31, petrol98: null, e85: 14.91, diesel: 22.27 },
     { id: "jamtland", name: "Jämtlands län", petrol: 17.24, petrol98: null, e85: 14.89, diesel: 22.15 },
-    { id: "jonkoping", name: "Jönköpings län", petrol: 17.29, petrol98: 19.09, e85: 14.92, diesel: 22.17 },
+    { id: "jonkoping", name: "Jönköpings län", petrol: 17.29, petrol98: 19.09, e85: 14.93, diesel: 22.17 },
     { id: "kalmar", name: "Kalmar län", petrol: 17.31, petrol98: null, e85: 14.91, diesel: 22.33 },
     { id: "kronoberg", name: "Kronobergs län", petrol: 17.34, petrol98: null, e85: 14.90, diesel: 22.33 },
     { id: "norrbotten", name: "Norrbottens län", petrol: 17.25, petrol98: null, e85: 14.90, diesel: 22.13 },
@@ -27,10 +27,10 @@ window.COUNTY_PRICES = {
     { id: "uppsala", name: "Uppsala län", petrol: 17.30, petrol98: null, e85: 14.89, diesel: 22.15 },
     { id: "varmland", name: "Värmlands län", petrol: 17.24, petrol98: null, e85: 14.89, diesel: 22.14 },
     { id: "vasterbotten", name: "Västerbottens län", petrol: 17.24, petrol98: null, e85: 14.89, diesel: 22.28 },
-    { id: "vasternorrland", name: "Västernorrlands län", petrol: 17.23, petrol98: null, e85: 14.84, diesel: 22.10 },
+    { id: "vasternorrland", name: "Västernorrlands län", petrol: 17.22, petrol98: null, e85: 14.84, diesel: 22.09 },
     { id: "vastmanland", name: "Västmanlands län", petrol: 17.24, petrol98: null, e85: 14.91, diesel: 22.14 },
     { id: "vastra-gotaland", name: "Västra Götalands län", petrol: 17.18, petrol98: 18.79, e85: 14.86, diesel: 22.08 },
-    { id: "orebro", name: "Örebro län", petrol: 17.36, petrol98: 19.34, e85: 14.90, diesel: 22.40 },
+    { id: "orebro", name: "Örebro län", petrol: 17.34, petrol98: 19.34, e85: 14.90, diesel: 22.38 },
     { id: "ostergotland", name: "Östergötlands län", petrol: 17.25, petrol98: null, e85: 14.90, diesel: 22.19 }
   ]
 };
