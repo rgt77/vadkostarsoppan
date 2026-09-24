@@ -357,3 +357,12 @@ read("sitemap.xml").includes("<lastmod>2026-09-24</lastmod>") ? pass("Sitemap re
 script.includes('params.get("tank")') && script.includes('url.searchParams.set("tank"') ? pass("Tank-size URL state") : fail("Tank-size URL state missing");
 html.includes('rel="canonical" href="https://vadkostarsoppan.se/"') && read("robots.txt").includes("https://vadkostarsoppan.se/sitemap.xml") ? pass("Canonical and sitemap discovery") : fail("Search discovery metadata incomplete");
 html404.includes('name="robots" content="noindex"') ? pass("404 excluded from indexing") : fail("404 indexing guard missing");
+
+const officialMonitor = read("scripts/check-official-sources.mjs");
+officialMonitor.includes('"access_blocked"') && officialMonitor.includes('"unreachable"') ? pass("Official monitor tolerates source access failures") : fail("Official monitor resilience missing");
+const priceWorkflow = read(".github/workflows/update-prices.yml");
+priceWorkflow.includes("if: failure()") && priceWorkflow.includes("Prisuppdatering misslyckades") ? pass("Price ingestion failure alert") : fail("Price failure alert missing");
+const healthWorkflow = read(".github/workflows/data-health.yml");
+healthWorkflow.includes("gh issue list") && healthWorkflow.includes("Officiell datakälla ändrad") ? pass("Official source alerts deduplicated") : fail("Official source alert deduplication missing");
+const marketWorkflow = read(".github/workflows/update-market-data.yml");
+marketWorkflow.includes("Marknadsdata behöver granskas") && marketWorkflow.includes("issues: write") ? pass("Market health alert") : fail("Market health alert missing");
