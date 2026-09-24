@@ -438,11 +438,9 @@ a { -webkit-tap-highlight-color: transparent; }
   .intro h1 { font-size: 38px; }
   .intro > p:last-child { font-size: 13px; }
 
-  .controls { grid-template-columns: 1fr; }
-
   .card {
     padding: 18px;
-    border-radius: 14px;
+    border-radius: var(--radius-control);
   }
 
   .card-head {
