@@ -7,6 +7,11 @@
   --soft: #f0f1ec;
   --good: #2c7a52;
   --bad: #a7473a;
+  --radius-control: 18px;
+  --radius-active: 14px;
+  --control-border: 1px solid var(--line);
+  --control-pad: 3px;
+  --control-active: var(--text);
 }
 
 * { box-sizing: border-box; }
@@ -457,12 +462,12 @@ a { -webkit-tap-highlight-color: transparent; }
 
 /* Unified choice controls */
 .controls{display:block}
-.fuel-toggle,.tank-size-control>div{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:3px;border:1px solid var(--line);border-radius:18px;background:var(--card)}
+.fuel-toggle,.tank-size-control>div{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:var(--control-pad);border:var(--control-border);border-radius:var(--radius-control);background:var(--card)}
 .fuel-toggle{overflow:hidden}
-.fuel-button,.tank-size-control button{width:100%;min-width:0;min-height:58px;border:0;border-radius:14px;background:transparent;color:var(--muted);cursor:pointer;font:inherit;font-size:15px;font-weight:750;line-height:1.05}
+.fuel-button,.tank-size-control button{width:100%;min-width:0;min-height:58px;border:0;border-radius:var(--radius-active);background:transparent;color:var(--muted);cursor:pointer;font:inherit;font-size:15px;font-weight:750;line-height:1.05}
 .fuel-button{padding:8px 6px;display:flex;align-items:center;justify-content:center;gap:5px;overflow:hidden}
 .fuel-button>span:last-child{min-width:0;text-align:center;white-space:nowrap}
-.fuel-button[aria-pressed="true"],.tank-size-control button[aria-pressed="true"]{background:var(--text);color:#fff}
+.fuel-button[aria-pressed="true"],.tank-size-control button[aria-pressed="true"]{background:var(--control-active);color:#fff}
 .fuel-id{box-sizing:border-box;width:32px;height:32px;flex:0 0 32px;display:inline-flex;align-items:center;justify-content:center;border:2px solid currentColor;font-size:11px;font-weight:800;line-height:1}
 .fuel-id--petrol{border-radius:50%}.fuel-id--diesel{border-radius:0}
 .tank-size-control{display:block;margin-top:28px}
