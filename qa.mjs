@@ -348,3 +348,6 @@ style.includes(".trend-periods button{min-height:var(--touch-min)") ? pass("Tren
 
 html.includes('id="taxSummaryLabel"') && script.includes('"Moms (känd del)"') && script.includes('"Varierar med bränslemixen"') ? pass("E85 tax semantics are explicit") : fail("E85 tax semantics regression");
 script.includes('"Punktskatt varierar med bränslemixen"') ? pass("E85 tax share avoids false total") : fail("E85 tax share misleading");
+
+html.includes("30–60 liters tankning") ? pass("Metadata matches selectable tank sizes") : fail("Metadata tank-size claim stale");
+style.includes("prefers-reduced-motion") ? pass("Reduced motion preference supported") : fail("Reduced motion support missing");
