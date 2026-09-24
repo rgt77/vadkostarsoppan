@@ -1,0 +1,65 @@
+{
+  "date": "2026-09-24",
+  "status": "ok",
+  "counts": {
+    "ok": 9,
+    "warning": 0,
+    "error": 0
+  },
+  "checks": [
+    {
+      "id": "health:status",
+      "ok": true,
+      "message": "Data health: ok",
+      "severity": "error"
+    },
+    {
+      "id": "prices:fresh",
+      "ok": true,
+      "message": "Prisdata är 0 dagar gammal",
+      "severity": "error"
+    },
+    {
+      "id": "prices:history",
+      "ok": true,
+      "message": "Prishistorik har 2 mätningar",
+      "severity": "warning"
+    },
+    {
+      "id": "prices:latest-history",
+      "ok": true,
+      "message": "Senaste priset saknas i historiken",
+      "severity": "error"
+    },
+    {
+      "id": "market:value",
+      "ok": true,
+      "message": "USD/SEK saknas eller är orimlig",
+      "severity": "error"
+    },
+    {
+      "id": "market:fresh",
+      "ok": true,
+      "message": "Marknadsdata är 1 dagar gammal",
+      "severity": "warning"
+    },
+    {
+      "id": "market:history",
+      "ok": true,
+      "message": "Marknadshistorik saknas",
+      "severity": "error"
+    },
+    {
+      "id": "history:price-order",
+      "ok": true,
+      "message": "Prishistoriken är inte strikt kronologisk",
+      "severity": "error"
+    },
+    {
+      "id": "history:market-order",
+      "ok": true,
+      "message": "Marknadshistoriken är inte strikt kronologisk",
+      "severity": "error"
+    }
+  ]
+}
