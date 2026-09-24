@@ -245,8 +245,6 @@ a { -webkit-tap-highlight-color: transparent; }
   cursor: pointer;
 }
 
-.party-button:hover { border-color: #a9aaa5; }
-
 .party-button[aria-pressed="true"] {
   border-color: var(--control-active);
   background: var(--control-active);
@@ -422,6 +420,7 @@ a { -webkit-tap-highlight-color: transparent; }
   .fuel-button:not([aria-pressed="true"]):hover,
   .tank-size-control button:not([aria-pressed="true"]):hover,
   .trend-periods button:not(:disabled):not([aria-pressed="true"]):hover { background: var(--soft); }
+  .party-button:not([aria-pressed="true"]):hover { background: var(--soft); border-color: var(--muted); }
 }
 
 @media (max-width: 640px) {
