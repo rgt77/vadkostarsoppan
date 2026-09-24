@@ -33,21 +33,16 @@
     <header class="intro">
       <p class="eyebrow">TYPISK TANKNING · <span data-tank-liters>40</span> LITER</p>
       <h1>Vad kostar det att tanka?</h1>
-      <p>Välj bränsle och område. Du får kostnaden direkt.</p>
+      <p>Välj bränsle. Du får rikssnittet direkt.</p>
     </header>
 
-    <section class="controls" aria-label="Välj bränsle och område">
+    <section class="controls" aria-label="Välj bränsle">
       <div class="fuel-toggle" role="group" aria-label="Bränsletyp">
         <button class="fuel-button" type="button" data-fuel="petrol" aria-pressed="true"><span class="fuel-id fuel-id--petrol" aria-hidden="true">E10</span><span>Bensin 95</span></button>
         <button class="fuel-button" type="button" data-fuel="petrol98" aria-pressed="false"><span class="fuel-id fuel-id--petrol" aria-hidden="true">E5</span><span>Bensin 98</span></button>
         <button class="fuel-button" type="button" data-fuel="diesel" aria-pressed="false"><span class="fuel-id fuel-id--diesel" aria-hidden="true">B7</span><span>Diesel</span></button>
         <button class="fuel-button" type="button" data-fuel="e85" aria-pressed="false"><span class="fuel-id fuel-id--petrol" aria-hidden="true">E85</span><span>E85</span></button>
       </div>
-
-      <label class="select-control">
-        <span>Område</span>
-        <select id="countySelect" aria-label="Välj prisområde"></select>
-      </label>
           <div class="tank-size-control" role="group" aria-label="Välj tankstorlek">
         <span>Tankstorlek</span>
         <div><button type="button" data-tank-size="30">30 L</button><button type="button" data-tank-size="40" aria-pressed="true">40 L</button><button type="button" data-tank-size="50">50 L</button><button type="button" data-tank-size="60">60 L</button></div>
@@ -57,7 +52,7 @@
     <section class="card" aria-labelledby="tankTitle">
       <div class="card-head">
         <div>
-          <span class="overline"><span data-tank-liters>40</span> LITER · <span id="fuelLabel">Bensin 95</span> · <span id="areaLabel">Hela Sverige</span></span>
+          <span class="overline"><span data-tank-liters>40</span> LITER · <span id="fuelLabel">Bensin 95</span> · SVERIGE</span>
           <h2 id="tankTitle">Typisk tankning</h2>
         </div>
         <div class="tank-total" aria-live="polite">
@@ -123,7 +118,7 @@
       <summary>Så räknar vi</summary>
       <div class="method-content">
         <p><strong>Typisk tankning</strong> är satt till <span data-tank-liters>40</span> liter som ett praktiskt riktvärde.</p>
-        <p><strong>Nuvarande pris</strong> är valt rikssnitt eller länssnitt från rapporterade stationspriser och kan skilja sig från en viss station.</p>
+        <p><strong>Nuvarande pris</strong> är rikssnitt från rapporterade stationspriser och kan skilja sig från en viss station.</p>
         <p><strong>Pris före skatt &amp; moms</strong> är pumppris före moms minus energi- och koldioxidskatt. Det är inte samma sak som bensinbolagens vinst.</p>
         <p><strong>Partiscenario</strong> räknas bara när det finns dokumenterade numeriska uppgifter. Annars visas inget konstruerat pris.</p>
         <p><strong>Marknadsdata</strong> hålls separat från pumppriset. Valutakurs och reduktionsplikt används inte för att konstruera ett spotpris när en verifierad raffinerad produktreferens saknas.</p>
