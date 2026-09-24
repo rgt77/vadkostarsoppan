@@ -179,7 +179,6 @@
   function syncUrl() {
     const url = new URL(location.href);
     url.searchParams.set("fuel", state.fuel);
-    url.searchParams.delete("county");
     state.party ? url.searchParams.set("party", state.party) : url.searchParams.delete("party");
 
     const next = url.pathname + url.search + url.hash;
