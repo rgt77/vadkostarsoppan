@@ -20,6 +20,16 @@
     v: "https://commons.wikimedia.org/wiki/Special:FilePath/V%C3%A4nsterpartiet%20logo.svg"
   };
 
+  const policyBackground = {
+      "v": "Vänsterpartiet beskriver drivmedelsbeskattning som ett klimatstyrmedel men vill ekonomiskt kompensera personer som saknar alternativ till bilen, särskilt i gles- och landsbygd och hushåll med lägre inkomster. Partiet vill på sikt ha geografiskt differentierad vägtrafikbeskattning med lägre skatt på landsbygden och högre i städer. V vill också höja reduktionsplikten från 10 %, men anger ingen exakt ny nivå. Därför konstrueras inget V-pris.",
+      "c": "Centerpartiets klimatplan från 6 augusti 2026 vill ta bort skatten på biodrivmedel som blandas in i bensin och diesel, med målet att kunna öka inblandningen utan att priset vid pump stiger. Planen innehåller också elektrifieringsmål för 2030: 90 % av nya personbilar, 75 % av nya lätta lastbilar och 50 % av nya tunga lastbilar ska vara helt eldrivna.",
+      "s": "Den 20 mars 2026 krävde Socialdemokraterna en tillfällig skattesänkning på bensin och diesel för att dämpa effekten av stigande drivmedelspriser. Den officiella källan anger ingen exakt skattesänkning eller kr/l-effekt, så hemsidan visar förslaget men konstruerar inget S-pris.",
+      "l": "Liberalernas klimatrapport beskriver reduktionsplikten som en övergångslösning medan fordonsflottan elektrifieras och att biodrivmedel på sikt bör prioriteras till sektorer som är svårare att elektrifiera. Senare liberal dokumentation anger 10 % reduktionsplikt för bensin och diesel, kombinerad med sänkt drivmedelsskatt för att motverka priseffekten. Underlaget anger ingen tillräckligt specificerad aktuell kr/l-nivå, därför konstrueras inget L-pris.",
+      "kd": "KD:s officiella underlag från 27 augusti 2024 beskriver en ändrad mix mellan drivmedelsskatt och reduktionsplikt. Ett tidigare KD-underlag anger 6 % reduktionsplikt för både bensin och diesel från 1 januari 2024 och uppskattade då att diesel kunde bli 5,50 kr/l billigare. 5,50 kr/l visas endast som KD:s historiska uppskattning och används inte som ett aktuellt 2026-prisscenario.",
+      "m": "Moderaternas officiella underlag anger cirka 1,03 kr/l lägre bensinpris och 0,40 kr/l lägre dieselpris vid full prisövervältring från skattesänkningen till EU:s miniminivå, samt en ytterligare tillfällig sänkning på 3 kr/l från 1 juli till 30 november 2026. Partiet anger också 10 % reduktionsplikt för både bensin och diesel. Uppgifterna används som dokumenterad bakgrund, inte som ett permanent framtida M-pris.",
+      "sd": "SD:s officiella drivmedelssida redovisar Bensin 95: 23,54 → 14,34 kr/l och diesel: 26,46 → 16,09 kr/l (juni 2022–juli 2026). Sidan anger även reduktionsplikt 2022 på 7,8 % för bensin och 30,5 % för diesel samt 6 % från 1 januari 2024. Uppgifterna visas som historiskt/politiskt underlag och används inte som ett beräknat framtida SD-pris."
+  };
+
   const $ = id => document.getElementById(id);
   const els = {
     fuelButtons: [...document.querySelectorAll("[data-fuel]")],
@@ -307,62 +317,23 @@
       }
     }
 
-    if (state.party === "v" && els.policyFacts) {
+    
+    
+    
+    
+    
+    
+    
+    const background = policyBackground[state.party];
+    if (background && els.policyFacts) {
       els.policyFacts.hidden = false;
       const title = document.createElement("strong");
       title.textContent = "Dokumenterad bakgrund";
       const text = document.createElement("p");
-      text.textContent = "Vänsterpartiet beskriver drivmedelsbeskattning som ett klimatstyrmedel men vill ekonomiskt kompensera personer som saknar alternativ till bilen, särskilt i gles- och landsbygd och hushåll med lägre inkomster. Partiet vill på sikt ha geografiskt differentierad vägtrafikbeskattning med lägre skatt på landsbygden och högre i städer. V vill också höja reduktionsplikten från 10 %, men anger ingen exakt ny nivå. Därför konstrueras inget V-pris.";
+      text.textContent = background;
       els.policyFacts.append(title, text);
     }
-    if (state.party === "c" && els.policyFacts) {
-      els.policyFacts.hidden = false;
-      const title = document.createElement("strong");
-      title.textContent = "Dokumenterad bakgrund";
-      const text = document.createElement("p");
-      text.textContent = "Centerpartiets klimatplan från 6 augusti 2026 vill ta bort skatten på biodrivmedel som blandas in i bensin och diesel, med målet att kunna öka inblandningen utan att priset vid pump stiger. Planen innehåller också elektrifieringsmål för 2030: 90 % av nya personbilar, 75 % av nya lätta lastbilar och 50 % av nya tunga lastbilar ska vara helt eldrivna.";
-      els.policyFacts.append(title, text);
-    }
-    if (state.party === "s" && els.policyFacts) {
-      els.policyFacts.hidden = false;
-      const title = document.createElement("strong");
-      title.textContent = "Dokumenterad bakgrund";
-      const text = document.createElement("p");
-      text.textContent = "Den 20 mars 2026 krävde Socialdemokraterna en tillfällig skattesänkning på bensin och diesel för att dämpa effekten av stigande drivmedelspriser. Den officiella källan anger ingen exakt skattesänkning eller kr/l-effekt, så hemsidan visar förslaget men konstruerar inget S-pris.";
-      els.policyFacts.append(title, text);
-    }
-    if (state.party === "l" && els.policyFacts) {
-      els.policyFacts.hidden = false;
-      const title = document.createElement("strong");
-      title.textContent = "Dokumenterad bakgrund";
-      const text = document.createElement("p");
-      text.textContent = "Liberalernas klimatrapport beskriver reduktionsplikten som en övergångslösning medan fordonsflottan elektrifieras och att biodrivmedel på sikt bör prioriteras till sektorer som är svårare att elektrifiera. Senare liberal dokumentation anger 10 % reduktionsplikt för bensin och diesel, kombinerad med sänkt drivmedelsskatt för att motverka priseffekten. Underlaget anger ingen tillräckligt specificerad aktuell kr/l-nivå, därför konstrueras inget L-pris.";
-      els.policyFacts.append(title, text);
-    }
-    if (state.party === "kd" && els.policyFacts) {
-      els.policyFacts.hidden = false;
-      const title = document.createElement("strong");
-      title.textContent = "Dokumenterad bakgrund";
-      const text = document.createElement("p");
-      text.textContent = "KD:s officiella underlag från 27 augusti 2024 beskriver en ändrad mix mellan drivmedelsskatt och reduktionsplikt. Ett tidigare KD-underlag anger 6 % reduktionsplikt för både bensin och diesel från 1 januari 2024 och uppskattade då att diesel kunde bli 5,50 kr/l billigare. 5,50 kr/l visas endast som KD:s historiska uppskattning och används inte som ett aktuellt 2026-prisscenario.";
-      els.policyFacts.append(title, text);
-    }
-    if (state.party === "m" && els.policyFacts) {
-      els.policyFacts.hidden = false;
-      const title = document.createElement("strong");
-      title.textContent = "Dokumenterad bakgrund";
-      const text = document.createElement("p");
-      text.textContent = "Moderaternas officiella underlag anger cirka 1,03 kr/l lägre bensinpris och 0,40 kr/l lägre dieselpris vid full prisövervältring från skattesänkningen till EU:s miniminivå, samt en ytterligare tillfällig sänkning på 3 kr/l från 1 juli till 30 november 2026. Partiet anger också 10 % reduktionsplikt för både bensin och diesel. Uppgifterna används som dokumenterad bakgrund, inte som ett permanent framtida M-pris.";
-      els.policyFacts.append(title, text);
-    }
-    if (state.party === "sd" && els.policyFacts) {
-      els.policyFacts.hidden = false;
-      const title = document.createElement("strong");
-      title.textContent = "Dokumenterad bakgrund";
-      const text = document.createElement("p");
-      text.textContent = "SD:s officiella drivmedelssida redovisar Bensin 95: 23,54 → 14,34 kr/l och diesel: 26,46 → 16,09 kr/l (juni 2022–juli 2026). Sidan anger även reduktionsplikt 2022 på 7,8 % för bensin och 30,5 % för diesel samt 6 % från 1 januari 2024. Uppgifterna visas som historiskt/politiskt underlag och används inte som ett beräknat framtida SD-pris.";
-      els.policyFacts.append(title, text);
-    }
+
     els.partySource.href = scenario.source;
     els.partySource.setAttribute("aria-label", "Öppna officiell källa för " + scenario.name);
   }
