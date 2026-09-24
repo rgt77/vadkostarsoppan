@@ -328,6 +328,7 @@ script.includes("minIndex") && script.includes("maxIndex") ? pass("Trend summary
 script.includes("pointSpanMs") && script.includes("p.ms-pointStartMs") ? pass("Trend uses proportional time axis") : fail("Trend x-axis is not time-proportional");
 html.includes('id="trendMinStat"') && html.includes('id="trendMaxStat"') ? pass("Visible trend extrema summary") : fail("Trend extrema summary missing");
 html.includes('aria-valuemax="3"') && script.includes("3 mätningar") ? pass("Trend progress matches graph readiness") : fail("Trend progress semantics mismatch");
+script.includes("coveragePercent") && script.includes("datatäckning") ? pass("Trend reports data coverage accessibly") : fail("Trend data coverage context missing");
 !JSON.parse(read("data/price-history.json")).trendToleranceDays ? pass("Obsolete trend tolerance metadata removed") : fail("Obsolete trend tolerance remains");
 script.includes("trendPercent") && html.includes('id="trendPercent"') ? pass("Trend percentage context") : fail("Trend percentage missing");
 
