@@ -1,5 +1,5 @@
 const base=(process.env.SITE_URL||"https://vadkostarsoppan.se").replace(/\/$/,"");
-const expectedVersion=process.env.EXPECTED_VERSION||"0.49.0";
+const expectedVersion=process.env.EXPECTED_VERSION||null;
 const failures=[],checks=[];
 const check=(id,condition,message)=>{checks.push({id,ok:Boolean(condition),message});if(!condition)failures.push(message);};
 const get=async path=>{const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),15000);try{return await fetch(base+path,{redirect:"follow",signal:controller.signal,headers:{"user-agent":"vadkostarsoppan-live-smoke/1.0","cache-control":"no-cache"}})}finally{clearTimeout(timer)}};
@@ -8,7 +8,9 @@ try{
  const home=await get("/"); check("home:http",home.ok,`Startsidan svarade HTTP ${home.status}`);
  const html=await home.text();
  check("home:identity",html.includes("Vad kostar det att tanka?"),"Startsidan saknar huvudrubriken");
- check("home:version",html.includes(`style.css?v=${expectedVersion}`),`Live-sidan kör inte version ${expectedVersion}`);
+ const liveVersion=html.match(/style\.css\?v=([0-9.]+)/)?.[1]||null;
+ if(expectedVersion) check("home:version",liveVersion===expectedVersion,`Live-sidan kör ${liveVersion||"okänd version"}, förväntat ${expectedVersion}`);
+ else check("home:version",Boolean(liveVersion),liveVersion?`Live-version ${liveVersion}`:"Live-version kunde inte identifieras");
  check("home:canonical",html.includes('href="https://vadkostarsoppan.se/"'),"Canonical saknas live");
  const robots=await get("/robots.txt"); const robotsText=await robots.text();
  check("robots:http",robots.ok,`robots.txt svarade HTTP ${robots.status}`);
