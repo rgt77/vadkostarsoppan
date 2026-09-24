@@ -90,10 +90,7 @@ const output =
   '    petrol98: ' + next.national.petrol98.toFixed(2) + ',\n' +
   '    e85: ' + next.national.e85.toFixed(2) + ',\n' +
   '    diesel: ' + next.national.diesel.toFixed(2) + '\n' +
-  '  },\n' +
-  '  counties: [\n' +
-  next.counties.map(row).join(',\n') + '\n' +
-  '  ]\n' +
+  '  }\n' +
   '};\n';
 
 fs.writeFileSync(FILE, output);
@@ -109,7 +106,7 @@ history.snapshots = history.snapshots.filter(item => Date.parse(item.date + "T12
 fs.mkdirSync("data", { recursive: true });
 fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2) + "\n");
 console.log(
-  "Updated county-data.js:",
+  "Updated national price data:",
   next.updatedAt,
   next.national.petrol.toFixed(2),
   next.national.diesel.toFixed(2)
