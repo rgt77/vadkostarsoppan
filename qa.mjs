@@ -65,7 +65,7 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = Object.values(w.FUEL_DATA ?? {});
 
-  w.SITE_DATA?.appVersion === "0.60.0" ? pass("Version 0.60.0") : fail("Version mismatch");
+  w.SITE_DATA?.appVersion === "0.61.0" ? pass("Version 0.61.0") : fail("Version mismatch");
   w.SITE_DATA?.typicalTankLiters === 40 ? pass("Tank size 40 L") : fail("Tank size invalid");
 
   for (const fuel of fuels) {
@@ -167,7 +167,7 @@ try {
   fail("Policy data: " + error.message);
 }
 
-html404.includes("style.css?v=0.60.0") ? pass("404 cache version") : fail("404 cache version mismatch");
+html404.includes("style.css?v=0.61.0") ? pass("404 cache version") : fail("404 cache version mismatch");
 script.includes("Partikällorna kontrollerades 2026-09-23") ? fail("Hardcoded policy review date") : pass("No hardcoded policy review date");
 read("scripts/update-price-data.mjs").includes("Implausible") ? pass("Pump price plausibility guard") : fail("Pump price plausibility guard missing");
 const marketUpdater = read("scripts/update-market-data.mjs");
@@ -371,6 +371,9 @@ const productionAuditWorkflow = read(".github/workflows/production-audit.yml");
 productionAuditWorkflow.includes('cron: "12 6 * * *"') && productionAuditWorkflow.includes("Produktionskontroll misslyckades") ? pass("Daily production audit and alert") : fail("Production audit automation missing");
 const productionAudit = JSON.parse(read("data/production-audit.json"));
 productionAudit.status === "ok" ? pass("Production audit state healthy") : fail("Production audit state unhealthy");
+
+
+!html.includes("regionSelect") && !script.includes("swedishCounties") && !script.includes("priceData.regions") && !script.includes("buildRegionOptions") && !read("scripts/update-price-data.mjs").includes("countyNames") && !/\bregions\s*:/.test(read("scripts/update-price-data.mjs")) ? pass("National-only price scope") : fail("Regional price code remains");
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
 if (failures.length) {
