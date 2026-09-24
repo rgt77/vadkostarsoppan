@@ -100,28 +100,12 @@ try {
   const w = {};
   new Function("window", read("county-data.js"))(w);
   const data = w.COUNTY_PRICES ?? {};
-  const counties = data.counties ?? [];
-
-  counties.length === 21 ? pass("21 counties") : fail("County count: " + counties.length);
-  new Set(counties.map(item => item.id)).size === counties.length
-    ? pass("Unique county IDs")
-    : fail("Duplicate county IDs");
-  counties.every(item => Number.isFinite(item.petrol) && Number.isFinite(item.diesel))
-    ? pass("County prices")
-    : fail("Invalid county prices");
-  ["petrol", "petrol98", "e85", "diesel"].every(key => Number.isFinite(data.national?.[key]))
-    ? pass("Four national fuel prices")
-    : fail("National fuel price missing");
-
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(data.updatedAt ?? "")) {
-    fail("County updatedAt invalid");
-  } else {
-    const age = daysBetween(data.updatedAt);
-    age <= 3 ? pass("County data freshness: " + age + " day(s)") : fail("County prices are stale: " + age + " days");
-  }
-} catch (error) {
-  fail("County data: " + error.message);
-}
+  ["petrol","petrol98","e85","diesel"].every(key => Number.isFinite(data.national?.[key]))
+    ? pass("Four national fuel prices") : fail("National fuel price missing");
+  Array.isArray(data.counties) ? fail("County data must not be stored") : pass("National-only price data");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(data.updatedAt ?? "")) fail("Price updatedAt invalid");
+  else { const age=daysBetween(data.updatedAt); age<=3 ? pass("National price freshness: "+age+" day(s)") : fail("National prices are stale: "+age+" days"); }
+} catch(error){ fail("National price data: "+error.message); }
 
 try {
   const model = JSON.parse(read("data/calculation-model.json"));
@@ -136,6 +120,7 @@ try {
   const history = JSON.parse(read("data/price-history.json"));
   const snapshots = history.snapshots ?? [];
   snapshots.length ? pass("Price history seeded") : fail("Price history empty");
+  snapshots.every(item => !("counties" in item)) ? pass("National-only price history") : fail("County history remains");
   snapshots.length <= 730 ? pass("Price history bounded") : fail("Price history exceeds 730 snapshots");
   const dates = snapshots.map(item => item.date);
   new Set(dates).size === dates.length ? pass("Unique history dates") : fail("Duplicate history dates");
@@ -324,6 +309,8 @@ html.includes('data-trend-days="365"') && script.includes("state.trendDays") && 
 html.includes('<details class="policy-details"') && html.indexOf('id="scenarioNote"') > html.indexOf('<details class="policy-details"') ? pass("Scenario methodology progressively disclosed") : fail("Scenario methodology disclosure regression");
 
 html.includes('class="breakdown-details"') && html.includes("Visa kostnadsdelar") ? pass("Progressive cost breakdown") : fail("Cost breakdown disclosure missing");
+
+!html.includes("countySelect") && !script.includes("state.county") && !script.includes("counties?.find") ? pass("County UI fully removed") : fail("County logic remains in frontend");
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
 if (failures.length) {
