@@ -65,7 +65,7 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = Object.values(w.FUEL_DATA ?? {});
 
-  w.SITE_DATA?.appVersion === "0.56.0" ? pass("Version 0.56.0") : fail("Version mismatch");
+  w.SITE_DATA?.appVersion === "0.57.0" ? pass("Version 0.57.0") : fail("Version mismatch");
   w.SITE_DATA?.typicalTankLiters === 40 ? pass("Tank size 40 L") : fail("Tank size invalid");
 
   for (const fuel of fuels) {
@@ -117,7 +117,7 @@ try {
   const regions = w.PRICE_DATA?.regions ?? {};
   const validRegions = Object.values(regions).every(r => r && typeof r.name === "string" && ["petrol","diesel"].every(k => Number.isFinite(r[k]) && r[k] >= 5 && r[k] <= 50));
   validRegions ? pass("Regional prices validated when present") : fail("Invalid regional price record");
-  Object.keys(regions).length <= 21 ? pass("Regional county count bounded") : fail("Too many regional records");
+  Object.keys(regions).length === 0 || Object.keys(regions).length === 21 ? pass("Regional county set is atomic") : fail("Partial regional dataset published");
 } catch(error){ fail("Regional price data: "+error.message); }
 
 try {
@@ -176,7 +176,7 @@ try {
   fail("Policy data: " + error.message);
 }
 
-html404.includes("style.css?v=0.56.0") ? pass("404 cache version") : fail("404 cache version mismatch");
+html404.includes("style.css?v=0.57.0") ? pass("404 cache version") : fail("404 cache version mismatch");
 script.includes("Partikällorna kontrollerades 2026-09-23") ? fail("Hardcoded policy review date") : pass("No hardcoded policy review date");
 read("scripts/update-price-data.mjs").includes("Implausible") ? pass("Pump price plausibility guard") : fail("Pump price plausibility guard missing");
 const marketUpdater = read("scripts/update-market-data.mjs");
