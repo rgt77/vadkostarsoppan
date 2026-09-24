@@ -74,8 +74,9 @@
       </dl>
 
       <div class="price-trend" id="priceTrend" hidden aria-label="Prisutveckling">
-        <span>Prisutveckling</span>
-        <div><span id="trend7">7 dagar —</span><span id="trend30">30 dagar —</span></div>
+        <div class="trend-head"><span>Prisutveckling</span><div class="trend-periods" role="group" aria-label="Tidsperiod"><button type="button" data-trend-days="7">7D</button><button type="button" data-trend-days="30" aria-pressed="true">30D</button><button type="button" data-trend-days="365">1Å</button></div></div>
+        <div class="trend-summary"><strong id="trendSelected">30 dagar —</strong><span id="trendRange">Historik byggs upp automatiskt</span></div>
+        <svg id="trendChart" class="trend-chart" viewBox="0 0 320 72" preserveAspectRatio="none" role="img" aria-label="Prisgraf"><polyline id="trendLine" points=""></polyline></svg>
       </div>
 
       <div class="tax-summary">
@@ -110,8 +111,7 @@
       </div>
 
       <div class="scenario-meta" id="scenarioMeta" hidden></div>
-      <p class="scenario-note" id="scenarioNote">Om ett parti inte har publicerat tillräckligt exakta nivåer visar vi inget påhittat pris.</p>
-      <details class="policy-details" id="policyDetails" hidden><summary>Visa underlag</summary><div class="policy-facts" id="policyFacts"></div><a class="source-link" id="partySource" href="#" target="_blank" rel="noopener noreferrer">Visa partiets källa ↗</a></details>
+      <details class="policy-details" id="policyDetails" hidden><summary>Visa underlag</summary><p class="scenario-note" id="scenarioNote">Om ett parti inte har publicerat tillräckligt exakta nivåer visar vi inget påhittat pris.</p><div class="policy-facts" id="policyFacts"></div><a class="source-link" id="partySource" href="#" target="_blank" rel="noopener noreferrer">Visa partiets källa ↗</a></details>
     </section>
 
     <details class="method">
