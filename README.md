@@ -36,7 +36,7 @@ tankkostnad = pumppris × 40 liter
 - `style.css` – all publik styling
 - `script.js` – state, beräkning och rendering
 - `fuel-data.js` – skattesatser och appinställningar
-- `county-data.js` – rikssnitt och länspriser
+- `price-data.js` – rikssnitt och länspriser
 - `policy-data.js` – partiscenarier och källor
 - `404.html` – felsida
 - `qa.mjs` – zero-dependency statisk QA
