@@ -211,7 +211,8 @@ try {
   const history = JSON.parse(read("data/market-history.json"));
   const rows = history.snapshots ?? [];
   rows.length <= 730 ? pass("Market history bounded") : fail("Market history too large");
-  rows.every((x,i) => /^\d{4}-\d{2}-\d{2}$/.test(x.date) && Number.isFinite(x.usdSek) && (i===0 || rows[i-1].date < x.date)) ? pass("Market history schema") : rows.length === 0 ? warn("Market history awaits first ingestion") : fail("Market history invalid");
+  if (rows.length === 0) warn("Market history awaits first ingestion");
+  else rows.every((x,i) => /^\d{4}-\d{2}-\d{2}$/.test(x.date) && Number.isFinite(x.usdSek) && (i===0 || rows[i-1].date < x.date)) ? pass("Market history schema") : fail("Market history invalid");
 } catch (error) { fail("Market history: " + error.message); }
 
 try {
