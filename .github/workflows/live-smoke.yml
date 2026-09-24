@@ -32,8 +32,6 @@ jobs:
       - name: Check live production
         id: smoke
         continue-on-error: true
-        env:
-          EXPECTED_VERSION: "0.49.0"
         run: node scripts/live-smoke.mjs
       - name: Alert on live failure
         if: steps.smoke.outcome == 'failure'
