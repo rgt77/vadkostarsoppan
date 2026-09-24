@@ -491,7 +491,8 @@
       if (els.trendStats) els.trendStats.hidden=false;
       setText(els.trendStartDate, formatTrendDate(points[0].item.date));
       setText(els.trendEndDate, formatTrendDate(points.at(-1).item.date));
-      const chartSummary = fuelData[state.fuel].label + ": " + fmt(oldPrice) + " till " + fmt(currentPrice) + " kr/l, " + (unchanged ? "oförändrat" : delta > 0 ? "upp " + fmt(Math.abs(delta)) : "ned " + fmt(Math.abs(delta))) + " kr/l. Lägst " + fmt(min) + " den " + formatTrendDate(points[minIndex].item.date) + ", högst " + fmt(max) + " den " + formatTrendDate(points[maxIndex].item.date) + ".";
+      const coveragePercent = Math.round(coverageRatio * 100);
+      const chartSummary = fuelData[state.fuel].label + ": " + fmt(oldPrice) + " till " + fmt(currentPrice) + " kr/l, " + (unchanged ? "oförändrat" : delta > 0 ? "upp " + fmt(Math.abs(delta)) : "ned " + fmt(Math.abs(delta))) + " kr/l. Lägst " + fmt(min) + " den " + formatTrendDate(points[minIndex].item.date) + ", högst " + fmt(max) + " den " + formatTrendDate(points[maxIndex].item.date) + ". " + periodObservedDays + " mätningar, " + coveragePercent + " procent datatäckning.";
       setText(els.trendChartSummary, chartSummary);
       els.trendChart?.setAttribute("aria-label", chartSummary);
       els.trendChartWrap.hidden=false; els.trendEmpty.hidden=true;
