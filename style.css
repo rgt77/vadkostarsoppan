@@ -212,8 +212,10 @@ a { -webkit-tap-highlight-color: transparent; }
   margin-top: 4px;
   color: var(--muted);
   font-size: 9px;
+  line-height: 1.35;
   text-align: right;
 }
+.tax-share-row { gap: 12px; }
 
 .party-head { align-items: end; }
 
