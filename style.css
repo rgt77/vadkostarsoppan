@@ -191,6 +191,7 @@ a { -webkit-tap-highlight-color: transparent; }
 .breakdown-list dd {
   margin: 0;
   font-size: 11px;
+  line-height: 1.4;
 }
 
 .breakdown-list dt,
@@ -204,7 +205,7 @@ a { -webkit-tap-highlight-color: transparent; }
 
 .tax-summary { margin-top: 18px; padding-top: 15px; border-top: 1px solid var(--line); }
 
-.tax-summary strong { font-size: 18px; }
+.tax-summary strong { font-size: 18px; line-height: 1.15; }
 
 .tax-summary small {
   display: block;
