@@ -480,7 +480,13 @@
     } else {
       els.trendLine.setAttribute("points",""); if (els.trendLastPoint) els.trendLastPoint.hidden=true; setText(els.trendChartSummary, ""); els.trendChartWrap.hidden=true; els.trendEmpty.hidden=false;
       const remaining=Math.max(0,7-coverageDays);
-      setText(els.trendEmptyText, remaining > 0 ? "Första grafen blir tillgänglig om cirka " + remaining + (remaining===1?" dag.":" dagar.") : "Grafen visas när minst tre mätpunkter finns.");
+      const measurementsNeeded=Math.max(0,3-observedDays);
+      const waitingFor = remaining > 0
+        ? remaining + (remaining===1 ? " dag" : " dagar") + " historik"
+        : measurementsNeeded > 0
+          ? measurementsNeeded + (measurementsNeeded===1 ? " mätning" : " mätningar")
+          : "nästa uppdatering";
+      setText(els.trendEmptyText, "Första 7-dagarsvyn öppnas när tillräcklig historik finns · " + waitingFor + " kvar.");
       const collectedDays = Math.min(7, coverageDays + 1);
       if (els.trendProgressLabel) setText(els.trendProgressLabel, collectedDays + " / 7 dagar");
       if (els.trendProgressFill) {
