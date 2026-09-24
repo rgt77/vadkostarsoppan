@@ -6,7 +6,7 @@ const loadWindow = file => {
   return w;
 };
 const days = date => Math.floor((Date.now() - Date.parse(date + "T12:00:00Z")) / 86400000);
-const prices = loadWindow("price-data.js").COUNTY_PRICES;
+const prices = loadWindow("price-data.js").PRICE_DATA;
 const fuels = loadWindow("fuel-data.js").FUEL_DATA;
 const policies = loadWindow("policy-data.js").POLICY_SCENARIOS;
 const policyState = JSON.parse(fs.readFileSync("data/policy-source-state.json","utf8"));
