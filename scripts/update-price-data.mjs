@@ -37,6 +37,21 @@ if (!response.ok) throw new Error("Price source returned HTTP " + response.statu
 
 const text = plainText(await response.text());
 const petrol98Match = text.match(/Bensin 98\s+([\d,]+)\s+kr\/l/i);
+const countyNames = {
+  stockholm:"Stockholms län", uppsala:"Uppsala län", sodermanland:"Södermanlands län", ostergotland:"Östergötlands län",
+  jonkoping:"Jönköpings län", kronoberg:"Kronobergs län", kalmar:"Kalmar län", gotland:"Gotlands län", blekinge:"Blekinge län",
+  skane:"Skåne län", halland:"Hallands län", "vastra-gotaland":"Västra Götalands län", varmland:"Värmlands län", orebro:"Örebro län",
+  vastmanland:"Västmanlands län", dalarna:"Dalarnas län", gavleborg:"Gävleborgs län", vasternorrland:"Västernorrlands län",
+  jamtland:"Jämtlands län", vasterbotten:"Västerbottens län", norrbotten:"Norrbottens län"
+};
+const regional = {};
+for (const [id,name] of Object.entries(countyNames)) {
+  const escaped = escapeRegExp(name.replace(" län",""));
+  const row = text.match(new RegExp(escaped + String.raw`(?:s)?(?: län)?[^0-9]{0,120}([0-9]{1,2},[0-9]{2})[^0-9]{1,60}([0-9]{1,2},[0-9]{2})`, "i"));
+  if (!row) continue;
+  const petrol = number(row[1]), diesel = number(row[2]);
+  if (petrol >= 5 && petrol <= 50 && diesel >= 5 && diesel <= 50) regional[id] = { id, name, petrol, diesel };
+}
 const e85Match = text.match(/Etanol E85\s+([\d,]+)\s+kr\/l/i);
 
 const updatedMatch = text.match(/Prisdata uppdaterad\s+(\d{4}-\d{2}-\d{2})/i);
@@ -78,6 +93,7 @@ const next = {
     e85: e85Match ? number(e85Match[1]) : current.national.e85,
     diesel: number(nationalMatch[2])
   },
+  regions: regional
 };
 
 for (const key of ["petrol","petrol98","e85","diesel"]) validPrice(next.national[key], `national ${key}`);
@@ -103,7 +119,8 @@ const output =
   '    petrol98: ' + next.national.petrol98.toFixed(2) + ',\n' +
   '    e85: ' + next.national.e85.toFixed(2) + ',\n' +
   '    diesel: ' + next.national.diesel.toFixed(2) + '\n' +
-  '  }\n' +
+  '  },\n' +
+  '  regions: ' + JSON.stringify(next.regions, null, 2).replace(/\n/g, "\\n  ") + '\n' +
   '};\n';
 
 fs.writeFileSync(FILE, output);
@@ -119,7 +136,7 @@ history.snapshots = history.snapshots.filter(item => Date.parse(item.date + "T12
 fs.mkdirSync("data", { recursive: true });
 fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2) + "\n");
 console.log(
-  "Updated national price data:",
+  "Updated fuel price data:",
   next.updatedAt,
   next.national.petrol.toFixed(2),
   next.national.diesel.toFixed(2)
