@@ -1,0 +1,55 @@
+name: Production audit
+
+on:
+  schedule:
+    - cron: "12 6 * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/production-audit.mjs"
+      - ".github/workflows/production-audit.yml"
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: production-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run application QA
+        run: npm run qa
+      - name: Run production audit
+        id: audit
+        continue-on-error: true
+        run: node scripts/production-audit.mjs
+      - name: Persist audit
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/production-audit.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "chore: update production audit"
+          git pull --rebase origin main
+          git push
+      - name: Alert on production audit failure
+        if: steps.audit.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          body="Den dagliga produktionskontrollen har hittat ett blockerande driftfel. Kontrollera data/production-audit.json och workflow-loggen."
+          existing=$(gh issue list --state open --search '"Produktionskontroll misslyckades" in:title' --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then gh issue comment "$existing" --body "$body"; else gh issue create --title "Produktionskontroll misslyckades" --body "$body"; fi
+      - name: Fail workflow when audit failed
+        if: steps.audit.outcome == 'failure'
+        run: exit 1
