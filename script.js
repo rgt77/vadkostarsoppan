@@ -406,7 +406,6 @@
     if (!/^\d{4}-\d{2}-\d{2}$/.test(latestDate || "")) { els.priceTrend.hidden = true; return; }
 
     const latestMs = Date.parse(latestDate + "T12:00:00Z");
-    const toleranceDays = Number(siteData.trendToleranceDays) || 3;
     const dated = snapshots.map(item => ({ item, ms: Date.parse(item.date + "T12:00:00Z"), value: historyPrice(item) }))
       .filter(x => Number.isFinite(x.ms) && x.value !== null && x.ms <= latestMs)
       .sort((a,b) => a.ms-b.ms);
@@ -435,13 +434,13 @@
 
     const effectiveStartMs = days > 0 ? latestMs-days*86400000 : first.ms;
     const points = dated.filter(x => x.ms >= effectiveStartMs);
-    const target = dated.filter(x => Math.abs(x.ms-effectiveStartMs) <= toleranceDays*86400000)
-      .sort((a,b) => Math.abs(a.ms-effectiveStartMs)-Math.abs(b.ms-effectiveStartMs))[0] ?? first;
+    const target = days > 0 ? dated.find(x => x.ms >= effectiveStartMs) ?? first : first;
     const oldPrice = target.value;
     const delta = currentPrice-oldPrice;
     const percent = oldPrice > 0 ? delta/oldPrice*100 : 0;
     const unchanged = Math.abs(delta) < .005;
     const periodLabel = days === 365 ? "1 år" : days > 0 ? days + " dagar" : (coverageDays === 0 ? "idag" : "sedan " + first.item.date);
+    const actualStartDate = target.item.date;
 
     setText(els.trendDirection, days > 0 ? "Förändring · " + periodLabel : "Sedan första mätningen");
     setText(els.trendSelected, unchanged ? "±0,00 kr/l" : (delta > 0 ? "+" : "−") + fmt(Math.abs(delta)) + " kr/l");
@@ -450,7 +449,8 @@
     setText(els.trendToPrice, fmt(currentPrice) + " kr/l");
     if (els.trendPrices) els.trendPrices.hidden = coverageDays === 0;
 
-    const enoughForChart = points.length >= 3 && coverageDays >= 2;
+    const distinctDates = new Set(points.map(p => p.item.date)).size;
+    const enoughForChart = points.length >= 3 && distinctDates >= 3;
     if (enoughForChart) {
       const values=points.map(p=>p.value), min=Math.min(...values), max=Math.max(...values), rawSpan=max-min;
       const padding=Math.max(.05,rawSpan*.18), chartMin=min-padding, chartMax=max+padding, span=chartMax-chartMin;
@@ -461,7 +461,7 @@
       setText(els.trendStartDate,points[0].item.date.slice(5).replace("-","/"));
       setText(els.trendEndDate,points.at(-1).item.date.slice(5).replace("-","/"));
       els.trendChartWrap.hidden=false; els.trendEmpty.hidden=true;
-      setText(els.trendRange,"Rikssnitt för " + fuelData[state.fuel].label + " · " + periodLabel + ".");
+      setText(els.trendRange,"Rikssnitt för " + fuelData[state.fuel].label + " · " + actualStartDate + "–" + latestDate + ".");
     } else {
       els.trendLine.setAttribute("points",""); if (els.trendLastPoint) els.trendLastPoint.hidden=true; els.trendChartWrap.hidden=true; els.trendEmpty.hidden=false;
       const remaining=Math.max(0,7-coverageDays);
