@@ -38,6 +38,10 @@ En daglig produktionsaudit verifierar att data-health är grön, pris- och markn
 
 Frontendändringar passerar en separat release-audit som kontrollerar metadata, länksäkerhet, grundläggande tillgänglighet, responsiva brytpunkter, reduced motion, fokusmarkering, URL-state och defensiv frontendlogik. Den körs tillsammans med ordinarie QA innan en frontendändring betraktas som releaseklar.
 
+## Live-verifiering
+
+En separat daglig smoke test kontrollerar den faktiskt publicerade sajten, inte bara repositoryt. Den verifierar HTTP-svar, huvudsidans identitet och publicerade version, canonical, robots.txt, sitemap samt korrekt 404-svar. Fel skapar en deduplicerad GitHub-issue så att skillnader mellan grön repository-QA och trasig produktion upptäcks.
+
 ## QA
 
 ```bash
