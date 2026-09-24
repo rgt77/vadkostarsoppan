@@ -24,6 +24,5 @@
       }
     }
   ],
-  "retentionDays": 730,
-  "trendToleranceDays": 3
+  "retentionDays": 730
 }
