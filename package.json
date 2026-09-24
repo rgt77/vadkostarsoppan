@@ -1,7 +1,7 @@
 {
   "name": "vadkostarsoppan",
   "private": true,
-  "version": "0.50.0",
+  "version": "0.51.0",
   "scripts": {
     "qa": "node qa.mjs && node tests/market-parser.mjs",
     "update:prices": "node scripts/update-price-data.mjs",
@@ -12,6 +12,7 @@
     "test:market": "node tests/market-parser.mjs",
     "audit:production": "node scripts/production-audit.mjs",
     "audit:release": "node scripts/release-audit.mjs",
-    "smoke:live": "node scripts/live-smoke.mjs"
+    "smoke:live": "node scripts/live-smoke.mjs",
+    "audit:performance": "node scripts/performance-budget.mjs"
   }
 }
