@@ -454,6 +454,9 @@
 
     const effectiveStartMs = days > 0 ? latestMs-days*86400000 : first.ms;
     const points = dated.filter(x => x.ms >= effectiveStartMs);
+    const periodElapsedDays = Math.max(1, Math.round((latestMs - Math.max(effectiveStartMs, first.ms))/86400000) + 1);
+    const periodObservedDays = new Set(points.map(p => p.item.date)).size;
+    const coverageRatio = Math.min(1, periodObservedDays / periodElapsedDays);
     const target = days > 0 ? dated.find(x => x.ms >= effectiveStartMs) ?? first : first;
     const oldPrice = target.value;
     const delta = currentPrice-oldPrice;
@@ -492,7 +495,7 @@
       setText(els.trendChartSummary, chartSummary);
       els.trendChart?.setAttribute("aria-label", chartSummary);
       els.trendChartWrap.hidden=false; els.trendEmpty.hidden=true;
-      setText(els.trendRange,"Rikssnitt för " + fuelData[state.fuel].label + " · " + formatTrendDate(actualStartDate, true) + "–" + formatTrendDate(latestDate, true) + ".");
+      setText(els.trendRange,"Rikssnitt för " + fuelData[state.fuel].label + " · " + formatTrendDate(actualStartDate, true) + "–" + formatTrendDate(latestDate, true) + " · " + periodObservedDays + " mätningar.");
     } else {
       els.trendLine.setAttribute("points",""); if (els.trendLastPoint) els.trendLastPoint.hidden=true; if (els.trendStats) els.trendStats.hidden=true; setText(els.trendChartSummary, ""); els.trendChartWrap.hidden=true; els.trendEmpty.hidden=false;
       const remaining=Math.max(0,7-coverageDays);
