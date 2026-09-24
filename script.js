@@ -459,7 +459,10 @@
     setText(els.trendPercent, unchanged ? "0,0 %" : (percent > 0 ? "+" : "−") + Math.abs(percent).toLocaleString("sv-SE",{minimumFractionDigits:1,maximumFractionDigits:1}) + " %");
     setText(els.trendFromPrice, fmt(oldPrice) + " kr/l");
     setText(els.trendToPrice, fmt(currentPrice) + " kr/l");
-    if (els.trendPrices) els.trendPrices.hidden = coverageDays === 0;
+    if (els.trendPrices) {
+      els.trendPrices.hidden = coverageDays === 0;
+      els.trendPrices.setAttribute("aria-label", "Från " + fmt(oldPrice) + " till " + fmt(currentPrice) + " kronor per liter");
+    }
 
     const distinctDates = new Set(points.map(p => p.item.date)).size;
     const enoughForChart = points.length >= 3 && distinctDates >= 3;
