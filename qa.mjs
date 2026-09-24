@@ -318,3 +318,7 @@ style.includes("--radius-control") && style.includes("--control-active") ? pass(
 !html.includes("fuel-id") && !style.includes(".fuel-id") && html.includes('id="fuelTypeLabel"') && style.includes(".control-label") ? pass("Unified fuel and tank headings without fuel symbols") : fail("Fuel/tank control heading mismatch");
 html.includes("Tankstorlek <span class=\"control-label-unit\">(liter)</span>") && !html.includes(">30 L<") && !html.includes(">40 L<") ? pass("Tank unit appears only in heading") : fail("Tank unit presentation mismatch");
 style.includes(".fuel-button,.tank-size-control button") && style.includes("font-weight:600") ? pass("Primary option typography unified") : fail("Primary option typography mismatch");
+
+style.includes("font-variant-numeric:tabular-nums") ? pass("Stable numeric control typography") : fail("Numeric control typography missing");
+style.includes(".trend-periods button") && style.includes("font-weight:600") ? pass("Trend selector typography aligned") : fail("Trend selector typography mismatch");
+style.includes("min-height: 44px") ? pass("Minimum touch target guard") : fail("Touch target guard missing");
