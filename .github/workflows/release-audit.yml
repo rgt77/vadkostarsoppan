@@ -1,0 +1,35 @@
+name: Release audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "style.css"
+      - "script.js"
+      - "fuel-data.js"
+      - "policy-data.js"
+      - "scripts/release-audit.mjs"
+      - ".github/workflows/release-audit.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-audit
+  cancel-in-progress: true
+
+jobs:
+  release-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Full QA
+        run: npm run qa
+      - name: Frontend release audit
+        run: node scripts/release-audit.mjs
