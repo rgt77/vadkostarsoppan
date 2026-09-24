@@ -48,5 +48,4 @@ window.SITE_DATA = {
   typicalTankLiters: 40,
   priceWarningAfterDays: 2,
   marketWarningAfterDays: 7,
-  trendToleranceDays: 3
 };
