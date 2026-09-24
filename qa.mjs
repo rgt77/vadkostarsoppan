@@ -322,6 +322,9 @@ html.includes('id="trendLastPoint"') && html.includes("trend-grid-line") ? pass(
 html.includes('id="trendEmpty"') && html.includes('id="trendProgressFill"') && html.includes('role="progressbar"') ? pass("Trend empty-state progress") : fail("Trend empty state missing");
 script.includes("observedDays") && script.includes("mätningar") ? pass("Trend distinguishes measurements from elapsed days") : fail("Trend measurement count missing");
 html.includes('id="trendChartSummary"') && script.includes("chartSummary") ? pass("Accessible trend chart summary") : fail("Trend chart summary missing");
+script.includes("formatTrendDate") && script.includes('Intl.DateTimeFormat("sv-SE"') ? pass("Swedish trend dates") : fail("Trend dates not localized");
+script.includes("measurementsNeeded") && script.includes("waitingFor") ? pass("Precise trend empty-state requirements") : fail("Trend empty-state requirements unclear");
+script.includes("minIndex") && script.includes("maxIndex") ? pass("Trend summary includes extrema dates") : fail("Trend extrema context missing");
 script.includes("trendPercent") && html.includes('id="trendPercent"') ? pass("Trend percentage context") : fail("Trend percentage missing");
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
