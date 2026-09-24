@@ -468,6 +468,7 @@
     const enoughForChart = points.length >= 3 && distinctDates >= 3;
     if (enoughForChart) {
       const values=points.map(p=>p.value), min=Math.min(...values), max=Math.max(...values), rawSpan=max-min;
+      const minIndex=values.indexOf(min), maxIndex=values.indexOf(max);
       const padding=Math.max(.05,rawSpan*.18), chartMin=min-padding, chartMax=max+padding, span=chartMax-chartMin;
       const coords=points.map((p,i)=>(i/(points.length-1)*320).toFixed(1)+","+(88-(p.value-chartMin)/span*76).toFixed(1)).join(" ");
       els.trendLine.setAttribute("points",coords);
@@ -475,7 +476,7 @@
       setText(els.trendHigh,fmt(max)); setText(els.trendLow,fmt(min));
       setText(els.trendStartDate, formatTrendDate(points[0].item.date));
       setText(els.trendEndDate, formatTrendDate(points.at(-1).item.date));
-      const chartSummary = fuelData[state.fuel].label + ": " + fmt(oldPrice) + " till " + fmt(currentPrice) + " kr/l, " + (unchanged ? "oförändrat" : delta > 0 ? "upp " + fmt(Math.abs(delta)) : "ned " + fmt(Math.abs(delta))) + " kr/l.";
+      const chartSummary = fuelData[state.fuel].label + ": " + fmt(oldPrice) + " till " + fmt(currentPrice) + " kr/l, " + (unchanged ? "oförändrat" : delta > 0 ? "upp " + fmt(Math.abs(delta)) : "ned " + fmt(Math.abs(delta))) + " kr/l. Lägst " + fmt(min) + " den " + formatTrendDate(points[minIndex].item.date) + ", högst " + fmt(max) + " den " + formatTrendDate(points[maxIndex].item.date) + ".";
       setText(els.trendChartSummary, chartSummary);
       els.trendChart?.setAttribute("aria-label", chartSummary);
       els.trendChartWrap.hidden=false; els.trendEmpty.hidden=true;
