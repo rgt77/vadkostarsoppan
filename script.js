@@ -75,6 +75,7 @@
     trendLow: $("trendLow"),
     trendStartDate: $("trendStartDate"),
     trendEndDate: $("trendEndDate"),
+    trendChartSummary: $("trendChartSummary"),
     trendEmpty: $("trendEmpty"),
     trendEmptyText: $("trendEmptyText"),
     trendProgressFill: $("trendProgressFill"),
@@ -464,10 +465,13 @@
       setText(els.trendHigh,fmt(max)); setText(els.trendLow,fmt(min));
       setText(els.trendStartDate,points[0].item.date.slice(5).replace("-","/"));
       setText(els.trendEndDate,points.at(-1).item.date.slice(5).replace("-","/"));
+      const chartSummary = fuelData[state.fuel].label + ": " + fmt(oldPrice) + " till " + fmt(currentPrice) + " kr/l, " + (unchanged ? "oförändrat" : delta > 0 ? "upp " + fmt(Math.abs(delta)) : "ned " + fmt(Math.abs(delta))) + " kr/l.";
+      setText(els.trendChartSummary, chartSummary);
+      els.trendChart?.setAttribute("aria-label", chartSummary);
       els.trendChartWrap.hidden=false; els.trendEmpty.hidden=true;
       setText(els.trendRange,"Rikssnitt för " + fuelData[state.fuel].label + " · " + actualStartDate + "–" + latestDate + ".");
     } else {
-      els.trendLine.setAttribute("points",""); if (els.trendLastPoint) els.trendLastPoint.hidden=true; els.trendChartWrap.hidden=true; els.trendEmpty.hidden=false;
+      els.trendLine.setAttribute("points",""); if (els.trendLastPoint) els.trendLastPoint.hidden=true; setText(els.trendChartSummary, ""); els.trendChartWrap.hidden=true; els.trendEmpty.hidden=false;
       const remaining=Math.max(0,7-coverageDays);
       setText(els.trendEmptyText, remaining > 0 ? "Första grafen blir tillgänglig om cirka " + remaining + (remaining===1?" dag.":" dagar.") : "Grafen visas när minst tre mätpunkter finns.");
       const collectedDays = Math.min(7, coverageDays + 1);
