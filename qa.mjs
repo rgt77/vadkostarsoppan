@@ -15,6 +15,7 @@ const required = [
   "data/price-history.json",
   "data/calculation-model.json", "data/reduction-duty.json", "data/market-data.json", "data/market-history.json", "data/production-audit.json",
   "scripts/production-audit.mjs", ".github/workflows/production-audit.yml",
+  "scripts/release-audit.mjs", ".github/workflows/release-audit.yml", "data/release-audit.json",
   "404.html", "data/policy-facts-sd.json", "data/policy-facts-m.json", "data/policy-facts-kd.json", "data/policy-facts-l.json", "data/policy-facts-s.json", "data/policy-facts-c.json", "data/policy-facts-v.json"
 ];
 const failures = [];
@@ -374,3 +375,9 @@ if (failures.length) {
   process.exit(1);
 }
 console.log("\nPASS");
+
+const releaseAuditScript=read("scripts/release-audit.mjs");
+releaseAuditScript.includes("prefers-reduced-motion") && releaseAuditScript.includes("focus-visible") && releaseAuditScript.includes("noopener") ? pass("Frontend release audit coverage") : fail("Frontend release audit incomplete");
+const releaseAuditWorkflow=read(".github/workflows/release-audit.yml");
+releaseAuditWorkflow.includes("npm run qa") && releaseAuditWorkflow.includes("node scripts/release-audit.mjs") ? pass("Release audit gate") : fail("Release audit workflow missing");
+JSON.parse(read("data/release-audit.json")).status==="ok" ? pass("Release audit state healthy") : fail("Release audit state unhealthy");
