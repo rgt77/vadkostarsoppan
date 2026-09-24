@@ -1,7 +1,7 @@
 {
   "name": "vadkostarsoppan",
   "private": true,
-  "version": "0.43.5",
+  "version": "0.43.6",
   "scripts": {
     "qa": "node qa.mjs && node tests/market-parser.mjs",
     "update:prices": "node scripts/update-price-data.mjs",
