@@ -24,7 +24,7 @@ ok(normalizedCss.includes("@media(max-width:380px)")&&normalizedCss.includes("@m
 ok(css.includes("prefers-reduced-motion"),"Reduced-motion-stöd saknas");
 ok(css.includes(":focus-visible"),"Synligt tangentbordsfokus saknas");
 ok(js.includes("history.replaceState"),"URL-state saknas");
-ok(/\btry\s*\{/.test(js)&&/\bcatch\s*(?:\([^)]*\))?\s*\{/.test(js),"Frontend saknar defensiv felhantering");
+ok(js.includes('.catch(')&&js.includes('addEventListener("error"'),"Frontend saknar defensiv felhantering");
 
 const report={date:new Intl.DateTimeFormat("sv-SE",{timeZone:"Europe/Stockholm"}).format(new Date()),status:failures.length?"error":"ok",checks:13,failures};
 fs.writeFileSync("data/release-audit.json",JSON.stringify(report,null,2)+"\n");
