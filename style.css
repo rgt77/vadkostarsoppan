@@ -382,8 +382,12 @@ a { -webkit-tap-highlight-color: transparent; }
   border-block: 1px solid var(--line);
 }
 
-.method summary {
+.method summary,
+.breakdown-details summary,
+.policy-details summary {
   min-height: var(--touch-min);
+  display: flex;
+  align-items: center;
   padding: 14px 0;
   cursor: pointer;
   font-size: 11px;
