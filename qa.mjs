@@ -38,6 +38,7 @@ for (const file of ["script.js", "fuel-data.js", "county-data.js", "policy-data.
 const html = read("index.html");
 const html404 = read("404.html");
 const script = read("script.js");
+const style = read("style.css");
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
 const duplicates = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
 duplicates.length ? fail("Duplicate IDs: " + duplicates.join(", ")) : pass("Unique HTML IDs");
