@@ -61,14 +61,18 @@
     taxSource: $("taxSource"),
     dataStatus: $("dataStatus"),
     priceTrend: $("priceTrend"),
-    trend7: $("trend7"),
-    trend30: $("trend30")
+    trendButtons: [...document.querySelectorAll("[data-trend-days]")],
+    trendSelected: $("trendSelected"),
+    trendRange: $("trendRange"),
+    trendChart: $("trendChart"),
+    trendLine: $("trendLine")
   };
 
   const state = {
     fuel: fuelData[siteData.defaultFuel] ? siteData.defaultFuel : "petrol",
     county: areasById.has("riket") ? "riket" : areas[0]?.id,
-    party: ""
+    party: "",
+    trendDays: 30
   };
 
   const money = new Intl.NumberFormat("sv-SE", {
@@ -417,19 +421,37 @@
     if (!snapshots.length || !Number.isFinite(currentPrice)) { els.priceTrend.hidden = true; return; }
     const latestDate = countyData.updatedAt;
     if (!/^\d{4}-\d{2}-\d{2}$/.test(latestDate || "")) { els.priceTrend.hidden = true; return; }
-    const metric = days => {
-      const target = Date.parse(latestDate + "T12:00:00Z") - days * 86400000;
-      const candidates = snapshots
-        .map(item => ({ item, distance: Math.abs(Date.parse(item.date + "T12:00:00Z") - target) }))
-        .filter(entry => Number.isFinite(entry.distance) && entry.distance <= (Number(siteData.trendToleranceDays) || 3) * 86400000)
-        .sort((a, b) => a.distance - b.distance);
-      const oldPrice = historyPrice(candidates[0]?.item);
-      return oldPrice === null ? null : currentPrice - oldPrice;
-    };
-    const show = (node, days, delta) => setText(node, days + " dagar " + (delta === null ? "—" : (Math.abs(delta) < .005 ? "±0,00 kr/l" : (delta > 0 ? "+" : "−") + fmt(Math.abs(delta)) + " kr/l")));
-    const d7 = metric(7), d30 = metric(30);
-    show(els.trend7, 7, d7); show(els.trend30, 30, d30);
-    els.priceTrend.hidden = d7 === null && d30 === null;
+
+    const latestMs = Date.parse(latestDate + "T12:00:00Z");
+    const days = state.trendDays;
+    const startMs = latestMs - days * 86400000;
+    const points = snapshots
+      .filter(item => { const t = Date.parse(item.date + "T12:00:00Z"); return Number.isFinite(t) && t >= startMs && t <= latestMs; })
+      .map(item => ({ date: item.date, value: historyPrice(item) }))
+      .filter(item => item.value !== null);
+    const target = snapshots
+      .map(item => ({ item, distance: Math.abs(Date.parse(item.date + "T12:00:00Z") - startMs) }))
+      .filter(entry => Number.isFinite(entry.distance) && entry.distance <= (Number(siteData.trendToleranceDays) || 3) * 86400000)
+      .sort((a,b) => a.distance-b.distance)[0]?.item;
+    const oldPrice = historyPrice(target);
+    const delta = oldPrice === null ? null : currentPrice - oldPrice;
+    const label = days === 365 ? "1 år" : days + " dagar";
+    setText(els.trendSelected, label + " " + (delta === null ? "—" : Math.abs(delta) < .005 ? "±0,00 kr/l" : (delta > 0 ? "+" : "−") + fmt(Math.abs(delta)) + " kr/l"));
+    setText(els.trendRange, points.length >= 2 ? points[0].date + " – " + points.at(-1).date : "Historik för perioden saknas");
+
+    if (els.trendLine) {
+      if (points.length >= 2) {
+        const values = points.map(p => p.value), min = Math.min(...values), max = Math.max(...values), span = Math.max(.01, max-min);
+        const coords = points.map((p,i) => (i/(points.length-1)*320).toFixed(1) + "," + (66-(p.value-min)/span*58).toFixed(1)).join(" ");
+        els.trendLine.setAttribute("points", coords);
+        els.trendChart.hidden = false;
+      } else {
+        els.trendLine.setAttribute("points", "");
+        els.trendChart.hidden = true;
+      }
+    }
+    for (const button of els.trendButtons) button.setAttribute("aria-pressed", String(Number(button.dataset.trendDays) === days));
+    els.priceTrend.hidden = false;
   }
 
   function render() {
@@ -472,6 +494,12 @@
   }
 
   function bindEvents() {
+    for (const button of els.trendButtons) {
+      button.addEventListener("click", () => {
+        state.trendDays = Number(button.dataset.trendDays) || 30;
+        renderTrend(getPrice());
+      });
+    }
     for (const button of els.tankSizeButtons) {
       button.addEventListener("click", () => {
         const liters = Number(button.dataset.tankSize);
