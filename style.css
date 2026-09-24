@@ -175,7 +175,7 @@ a { -webkit-tap-highlight-color: transparent; }
 }
 
 .breakdown-list {
-  margin: 22px 0 0;
+  margin: 18px 0 0;
   border-top: 1px solid var(--line);
 }
 
@@ -233,6 +233,8 @@ a { -webkit-tap-highlight-color: transparent; }
   gap: 8px;
   margin-top: 18px;
 }
+
+.party-grid,.breakdown-list,.trend-status,.trend-stats{font-variant-numeric:tabular-nums}
 
  .party-button {
   min-width: 0;
@@ -303,7 +305,7 @@ a { -webkit-tap-highlight-color: transparent; }
 
 .party-result {
   min-height: 132px;
-  margin-top: 18px;
+  margin-top: 14px;
   padding: 20px;
   display: flex;
   align-items: center;
