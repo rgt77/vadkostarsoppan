@@ -498,19 +498,13 @@
       setText(els.trendRange,"Rikssnitt för " + fuelData[state.fuel].label + " · " + formatTrendDate(actualStartDate, true) + "–" + formatTrendDate(latestDate, true) + " · " + periodObservedDays + " mätningar.");
     } else {
       els.trendLine.setAttribute("points",""); if (els.trendLastPoint) els.trendLastPoint.hidden=true; if (els.trendStats) els.trendStats.hidden=true; setText(els.trendChartSummary, ""); els.trendChartWrap.hidden=true; els.trendEmpty.hidden=false;
-      const remaining=Math.max(0,7-coverageDays);
       const measurementsNeeded=Math.max(0,3-observedDays);
-      const waitingFor = remaining > 0
-        ? remaining + (remaining===1 ? " dag" : " dagar") + " historik"
-        : measurementsNeeded > 0
-          ? measurementsNeeded + (measurementsNeeded===1 ? " mätning" : " mätningar")
-          : "nästa uppdatering";
-      setText(els.trendEmptyText, "Första 7-dagarsvyn öppnas när tillräcklig historik finns · " + waitingFor + " kvar.");
-      const collectedDays = Math.min(7, coverageDays + 1);
-      if (els.trendProgressLabel) setText(els.trendProgressLabel, collectedDays + " / 7 dagar");
+      setText(els.trendEmptyText, measurementsNeeded > 0 ? "Grafen visas efter " + measurementsNeeded + (measurementsNeeded===1 ? " ytterligare mätning." : " ytterligare mätningar.") : "Grafen visas vid nästa kompletta uppdatering.");
+      const collectedMeasurements = Math.min(3, observedDays);
+      if (els.trendProgressLabel) setText(els.trendProgressLabel, collectedMeasurements + " / 3 mätningar");
       if (els.trendProgressFill) {
-        els.trendProgressFill.style.width = Math.max(8, collectedDays / 7 * 100) + "%";
-        els.trendProgressFill.parentElement?.setAttribute("aria-valuenow", String(collectedDays));
+        els.trendProgressFill.style.width = Math.max(8, collectedMeasurements / 3 * 100) + "%";
+        els.trendProgressFill.parentElement?.setAttribute("aria-valuenow", String(collectedMeasurements));
       }
       setText(els.trendRange,"Rikssnitt för " + fuelData[state.fuel].label + " · uppdateras dagligen.");
     }
