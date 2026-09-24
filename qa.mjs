@@ -65,7 +65,7 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = Object.values(w.FUEL_DATA ?? {});
 
-  w.SITE_DATA?.appVersion === "0.54.0" ? pass("Version 0.54.0") : fail("Version mismatch");
+  w.SITE_DATA?.appVersion === "0.56.0" ? pass("Version 0.56.0") : fail("Version mismatch");
   w.SITE_DATA?.typicalTankLiters === 40 ? pass("Tank size 40 L") : fail("Tank size invalid");
 
   for (const fuel of fuels) {
@@ -176,7 +176,7 @@ try {
   fail("Policy data: " + error.message);
 }
 
-html404.includes("style.css?v=0.54.0") ? pass("404 cache version") : fail("404 cache version mismatch");
+html404.includes("style.css?v=0.56.0") ? pass("404 cache version") : fail("404 cache version mismatch");
 script.includes("Partikällorna kontrollerades 2026-09-23") ? fail("Hardcoded policy review date") : pass("No hardcoded policy review date");
 read("scripts/update-price-data.mjs").includes("Implausible") ? pass("Pump price plausibility guard") : fail("Pump price plausibility guard missing");
 const marketUpdater = read("scripts/update-market-data.mjs");
@@ -294,6 +294,8 @@ html.includes('data-tank-size="30"') && html.includes('data-tank-size="60"') && 
 html.includes('id="taxBarFill"') && script.includes("taxBarFill.style.width") ? pass("Visual tax-share bar") : fail("Tax-share visualization missing");
 html.includes('id="policyDetails"') && html.includes("Visa underlag") ? pass("Progressive policy evidence disclosure") : fail("Policy evidence disclosure missing");
 html.includes("Pris före skatt &amp; moms") ? pass("Plain-language residual label") : fail("Residual label not simplified");
+
+html.includes('id="regionSelect"') && script.includes("swedishCounties") && script.includes("priceData.regions") ? pass("Regional selector end-to-end") : fail("Regional selector wiring missing");
 
 html.includes('data-trend-days="365"') && script.includes("state.trendDays") && script.includes("trendLine.setAttribute") ? pass("Compact trend period controls") : fail("Trend controls missing");
 html.includes('<details class="policy-details"') && html.indexOf('id="scenarioNote"') > html.indexOf('<details class="policy-details"') ? pass("Scenario methodology progressively disclosed") : fail("Scenario methodology disclosure regression");
