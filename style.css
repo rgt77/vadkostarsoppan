@@ -363,7 +363,9 @@ a { -webkit-tap-highlight-color: transparent; }
 }
 
 .source-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   margin-top: 9px;
   color: var(--text);
   font-size: 10px;
@@ -377,6 +379,7 @@ a { -webkit-tap-highlight-color: transparent; }
 }
 
 .method summary {
+  min-height: 44px;
   padding: 14px 0;
   cursor: pointer;
   font-size: 11px;
