@@ -315,7 +315,7 @@ html.includes('class="breakdown-details"') && html.includes("Visa kostnadsdelar"
 
 script.includes("Sedan första mätningen") && script.includes("coverageDays") && script.includes("button.disabled") && html.includes('id="trendCoverage"') ? pass("Coverage-aware trend component") : fail("Trend readability regression");
 script.includes("enoughForChart") && script.includes("distinctDates >= 3") ? pass("Trend chart minimum-data guard") : fail("Trend chart data guard missing");
-script.includes("coverageDays >= 7") && script.includes("coverageDays >= 30") && script.includes("coverageDays >= 365") ? pass("Trend requires complete periods") : fail("Trend period completeness guard missing");
+script.includes("coverageDays >= period") && script.includes("minimumObservations") ? pass("Trend requires complete representative periods") : fail("Trend period completeness guard missing");
 !script.includes("trendToleranceDays") ? pass("Trend uses exact dates") : fail("Trend still uses date tolerance");
 (style.match(/\/\* Price trend \*\//g) ?? []).length === 1 && !style.includes("Price trend v2") ? pass("Trend CSS consolidated") : fail("Duplicate trend CSS remains");
 html.includes('id="trendLastPoint"') && html.includes("trend-grid-line") ? pass("Trend chart visual guides") : fail("Trend chart guides missing");
@@ -323,8 +323,12 @@ html.includes('id="trendEmpty"') && html.includes('id="trendProgressFill"') && h
 script.includes("observedDays") && script.includes("mätningar") ? pass("Trend distinguishes measurements from elapsed days") : fail("Trend measurement count missing");
 html.includes('id="trendChartSummary"') && script.includes("chartSummary") ? pass("Accessible trend chart summary") : fail("Trend chart summary missing");
 script.includes("formatTrendDate") && script.includes('Intl.DateTimeFormat("sv-SE"') ? pass("Swedish trend dates") : fail("Trend dates not localized");
-script.includes("measurementsNeeded") && script.includes("waitingFor") ? pass("Precise trend empty-state requirements") : fail("Trend empty-state requirements unclear");
+script.includes("measurementsNeeded") && script.includes("collectedMeasurements") ? pass("Precise trend empty-state requirements") : fail("Trend empty-state requirements unclear");
 script.includes("minIndex") && script.includes("maxIndex") ? pass("Trend summary includes extrema dates") : fail("Trend extrema context missing");
+script.includes("pointSpanMs") && script.includes("p.ms-pointStartMs") ? pass("Trend uses proportional time axis") : fail("Trend x-axis is not time-proportional");
+html.includes('id="trendMinStat"') && html.includes('id="trendMaxStat"') ? pass("Visible trend extrema summary") : fail("Trend extrema summary missing");
+html.includes('aria-valuemax="3"') && script.includes("3 mätningar") ? pass("Trend progress matches graph readiness") : fail("Trend progress semantics mismatch");
+!JSON.parse(read("data/price-history.json")).trendToleranceDays ? pass("Obsolete trend tolerance metadata removed") : fail("Obsolete trend tolerance remains");
 script.includes("trendPercent") && html.includes('id="trendPercent"') ? pass("Trend percentage context") : fail("Trend percentage missing");
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
