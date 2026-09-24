@@ -41,9 +41,12 @@
     tankTotal: $("tankTotal"),
     literPrice: $("literPrice"),
     marketTank: $("marketTank"),
+    energyTaxLabel: $("energyTaxLabel"),
     energyTank: $("energyTank"),
+    carbonTaxLabel: $("carbonTaxLabel"),
     carbonTank: $("carbonTank"),
     vatTank: $("vatTank"),
+    taxSummaryLabel: $("taxSummaryLabel"),
     taxTank: $("taxTank"),
     taxShare: $("taxShare"),
     nonTaxShare: $("nonTaxShare"),
@@ -495,13 +498,16 @@
     setText(els.tankTotal, fmt(price * tankLiters));
     setText(els.literPrice, fmt(price));
     setText(els.marketTank, fmt(ref.market * tankLiters) + " kr");
-    setText(els.energyTank, ref.blendDependent ? "Ingår i bränslemixen" : fmt(ref.taxPeriod.energyTax * tankLiters) + " kr");
-    setText(els.carbonTank, ref.blendDependent ? "Ingår i bränslemixen" : fmt(ref.taxPeriod.carbonTax * tankLiters) + " kr");
+    setText(els.energyTaxLabel, ref.blendDependent ? "Energiskatt" : "Energiskatt");
+    setText(els.carbonTaxLabel, ref.blendDependent ? "Koldioxidskatt" : "Koldioxidskatt");
+    setText(els.energyTank, ref.blendDependent ? "Varierar med bränslemixen" : fmt(ref.taxPeriod.energyTax * tankLiters) + " kr");
+    setText(els.carbonTank, ref.blendDependent ? "Varierar med bränslemixen" : fmt(ref.taxPeriod.carbonTax * tankLiters) + " kr");
     setText(els.vatTank, fmt(ref.vat * tankLiters) + " kr");
+    setText(els.taxSummaryLabel, ref.blendDependent ? "Moms (känd del)" : "Skatt + moms");
     setText(els.taxTank, fmt(ref.tax * tankLiters) + " kr");
     const taxPct = ref.tax / price * 100;
-    setText(els.taxShare, wholePercent.format(taxPct) + " % skatt + moms");
-    setText(els.nonTaxShare, wholePercent.format(100 - taxPct) + " % före skatt & moms");
+    setText(els.taxShare, ref.blendDependent ? wholePercent.format(taxPct) + " % moms" : wholePercent.format(taxPct) + " % skatt + moms");
+    setText(els.nonTaxShare, ref.blendDependent ? "Punktskatt varierar med bränslemixen" : wholePercent.format(100 - taxPct) + " % före skatt & moms");
     if (els.taxBarFill) els.taxBarFill.style.width = Math.max(0, Math.min(100, taxPct)) + "%";
 
     els.priceSource.href = priceData.source;
