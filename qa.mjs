@@ -351,3 +351,9 @@ script.includes('"Punktskatt varierar med bränslemixen"') ? pass("E85 tax share
 
 html.includes("30–60 liters tankning") ? pass("Metadata matches selectable tank sizes") : fail("Metadata tank-size claim stale");
 style.includes("prefers-reduced-motion") ? pass("Reduced motion preference supported") : fail("Reduced motion support missing");
+
+html.includes('name="twitter:card"') && html.includes('property="og:title"') ? pass("Social metadata complete") : fail("Social metadata incomplete");
+read("sitemap.xml").includes("<lastmod>2026-09-24</lastmod>") ? pass("Sitemap release date current") : fail("Sitemap release date stale");
+script.includes('params.get("tank")') && script.includes('url.searchParams.set("tank"') ? pass("Tank-size URL state") : fail("Tank-size URL state missing");
+html.includes('rel="canonical" href="https://vadkostarsoppan.se/"') && read("robots.txt").includes("https://vadkostarsoppan.se/sitemap.xml") ? pass("Canonical and sitemap discovery") : fail("Search discovery metadata incomplete");
+html404.includes('name="robots" content="noindex"') ? pass("404 excluded from indexing") : fail("404 indexing guard missing");
