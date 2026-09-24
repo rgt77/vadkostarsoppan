@@ -19,7 +19,7 @@
   <meta name="twitter:title" content="Vad kostar en typisk tankning?">
   <meta name="twitter:description" content="Aktuellt rikssnitt för bensin, diesel och E85, tankkostnad och dokumenterade partiscenarier.">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/style.css?v=0.52.0">
+  <link rel="stylesheet" href="/style.css?v=0.53.0">
 </head>
 <body>
   <noscript><div class="noscript">JavaScript behöver vara aktiverat för att kalkylen ska fungera.</div></noscript>
@@ -39,7 +39,7 @@
       <p>Välj bränsle och tankstorlek. Du får rikssnittet direkt.</p>
     </header>
 
-    <section class="controls" aria-label="Bränsle och tankstorlek">
+    <section class="controls" aria-label="Bränsle, område och tankstorlek">
       <div class="fuel-control">
         <span class="control-label" id="fuelTypeLabel">Bränsletyp</span>
         <div class="fuel-toggle" role="group" aria-labelledby="fuelTypeLabel">
@@ -48,6 +48,13 @@
           <button class="fuel-button" type="button" data-fuel="diesel" aria-pressed="false"><span>Diesel</span></button>
           <button class="fuel-button" type="button" data-fuel="e85" aria-pressed="false"><span>E85</span></button>
         </div>
+      </div>
+      <div class="region-control">
+        <label class="control-label" for="regionSelect">Område</label>
+        <select id="regionSelect" aria-describedby="regionAvailability">
+          <option value="riket">Hela Sverige</option>
+        </select>
+        <small id="regionAvailability">Länspriser aktiveras automatiskt när verifierad regional prisdata finns.</small>
       </div>
       <div class="tank-size-control" role="group" aria-labelledby="tankSizeLabel">
         <span class="control-label" id="tankSizeLabel">Tankstorlek <span class="control-label-unit">(liter)</span></span>
@@ -63,7 +70,7 @@
     <section class="card result-card" aria-labelledby="tankTitle">
       <div class="card-head">
         <div>
-          <span class="overline"><span data-tank-liters>40</span> LITER · <span id="fuelLabel">Bensin 95</span> · SVERIGE</span>
+          <span class="overline"><span data-tank-liters>40</span> LITER · <span id="fuelLabel">Bensin 95</span> · <span id="regionLabel">HELA SVERIGE</span></span>
           <h2 id="tankTitle">Typisk tankning</h2>
         </div>
         <div class="tank-total" aria-live="polite">
@@ -155,9 +162,9 @@
     <span>vadkostarsoppan.se</span>
   </footer>
 
-  <script defer src="/fuel-data.js?v=0.52.0"></script>
-  <script defer src="/price-data.js?v=0.52.0"></script>
-  <script defer src="/policy-data.js?v=0.52.0"></script>
-  <script defer src="/script.js?v=0.52.0"></script>
+  <script defer src="/fuel-data.js?v=0.53.0"></script>
+  <script defer src="/price-data.js?v=0.53.0"></script>
+  <script defer src="/policy-data.js?v=0.53.0"></script>
+  <script defer src="/script.js?v=0.53.0"></script>
 </body>
 </html>
