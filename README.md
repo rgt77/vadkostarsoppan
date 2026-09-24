@@ -42,6 +42,10 @@ Frontendändringar passerar en separat release-audit som kontrollerar metadata, 
 
 En separat daglig smoke test kontrollerar den faktiskt publicerade sajten, inte bara repositoryt. Den verifierar HTTP-svar, huvudsidans identitet och publicerade version, canonical, robots.txt, sitemap samt korrekt 404-svar. Fel skapar en deduplicerad GitHub-issue så att skillnader mellan grön repository-QA och trasig produktion upptäcks.
 
+## Säkerhet och cache
+
+Cloudflare-svar använder explicita säkerhetsheaders: strikt CSP, klickkapningsskydd, MIME-skydd, begränsad referrer-policy och avstängda webbläsarbehörigheter som sajten inte behöver. Statiska lokala logotyper cacheas långsiktigt medan appkod, data och HTML har kortare cache med revalidering så att nya priser och releaser slår igenom utan onödig trafik.
+
 ## QA
 
 ```bash
@@ -50,4 +54,4 @@ npm run qa
 
 ## Publicering
 
-Statiska assets publiceras via Cloudflare från `main`. Aktuell applikationsversion: **0.49.0**.
+Statiska assets publiceras via Cloudflare från `main`. Aktuell applikationsversion: **0.50.0**.
