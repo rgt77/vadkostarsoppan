@@ -312,7 +312,7 @@ html.includes('class="breakdown-details"') && html.includes("Visa kostnadsdelar"
 
 !html.includes("countySelect") && !script.includes("state.county") && !script.includes("counties?.find") ? pass("County UI fully removed") : fail("County logic remains in frontend");
 
-script.includes("Inte tillräckligt med historik") && script.includes("Priset har ökat") && html.includes(">7 dagar</button>") ? pass("Readable trend fallback") : fail("Trend readability regression");
+script.includes("Historik byggs upp") && script.includes("trendFromPrice") && html.includes('id="trendChartWrap"') && html.includes(">7D</button>") ? pass("Readable trend component") : fail("Trend readability regression");
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
 if (failures.length) {
