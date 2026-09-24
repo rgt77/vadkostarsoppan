@@ -38,20 +38,23 @@ if (!response.ok) throw new Error("Price source returned HTTP " + response.statu
 const text = plainText(await response.text());
 const petrol98Match = text.match(/Bensin 98\s+([\d,]+)\s+kr\/l/i);
 const countyNames = {
-  stockholm:"Stockholms län", uppsala:"Uppsala län", sodermanland:"Södermanlands län", ostergotland:"Östergötlands län",
-  jonkoping:"Jönköpings län", kronoberg:"Kronobergs län", kalmar:"Kalmar län", gotland:"Gotlands län", blekinge:"Blekinge län",
-  skane:"Skåne län", halland:"Hallands län", "vastra-gotaland":"Västra Götalands län", varmland:"Värmlands län", orebro:"Örebro län",
-  vastmanland:"Västmanlands län", dalarna:"Dalarnas län", gavleborg:"Gävleborgs län", vasternorrland:"Västernorrlands län",
-  jamtland:"Jämtlands län", vasterbotten:"Västerbottens län", norrbotten:"Norrbottens län"
+  blekinge:"Blekinge län", dalarna:"Dalarnas län", gotland:"Gotlands län", gavleborg:"Gävleborgs län", halland:"Hallands län",
+  jamtland:"Jämtlands län", jonkoping:"Jönköpings län", kalmar:"Kalmar län", kronoberg:"Kronobergs län", norrbotten:"Norrbottens län",
+  skane:"Skåne län", stockholm:"Stockholms län", sodermanland:"Södermanlands län", uppsala:"Uppsala län", varmland:"Värmlands län",
+  vasterbotten:"Västerbottens län", vasternorrland:"Västernorrlands län", vastmanland:"Västmanlands län",
+  "vastra-gotaland":"Västra Götalands län", orebro:"Örebro län", ostergotland:"Östergötlands län"
 };
 const regional = {};
 for (const [id,name] of Object.entries(countyNames)) {
-  const escaped = escapeRegExp(name.replace(" län",""));
-  const row = text.match(new RegExp(escaped + String.raw`(?:s)?(?: län)?[^0-9]{0,120}([0-9]{1,2},[0-9]{2})[^0-9]{1,60}([0-9]{1,2},[0-9]{2})`, "i"));
+  const escaped = escapeRegExp(name);
+  const row = text.match(new RegExp(escaped + String.raw`(?:\\s+billigast)?\\s+([0-9]{1,2},[0-9]{2})\\s+kr\\s+([0-9]{1,2},[0-9]{2})\\s+kr`, "i"));
   if (!row) continue;
   const petrol = number(row[1]), diesel = number(row[2]);
   if (petrol >= 5 && petrol <= 50 && diesel >= 5 && diesel <= 50) regional[id] = { id, name, petrol, diesel };
 }
+const regionalCount = Object.keys(regional).length;
+if (regionalCount !== 21) throw new Error(`Expected 21 verified county rows, parsed ${regionalCount}`);
+
 const e85Match = text.match(/Etanol E85\s+([\d,]+)\s+kr\/l/i);
 
 const updatedMatch = text.match(/Prisdata uppdaterad\s+(\d{4}-\d{2}-\d{2})/i);
