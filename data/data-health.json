@@ -2,7 +2,7 @@
   "date": "2026-09-24",
   "status": "ok",
   "counts": {
-    "ok": 16,
+    "ok": 20,
     "warning": 0,
     "error": 0
   },
@@ -11,6 +11,18 @@
       "id": "prices:freshness",
       "status": "ok",
       "message": "Prisdata är 0 dag(ar) gammal",
+      "source": "https://www.carculated.se/bensinpriser"
+    },
+    {
+      "id": "prices:retrieval",
+      "status": "ok",
+      "message": "Priskällan hämtades för 0 dag(ar) sedan",
+      "source": "https://www.carculated.se/bensinpriser"
+    },
+    {
+      "id": "prices:dates",
+      "status": "ok",
+      "message": "Hämtningsdatum är förenligt med källdatum",
       "source": "https://www.carculated.se/bensinpriser"
     },
     {
@@ -89,6 +101,18 @@
       "id": "prices:plausibility",
       "status": "ok",
       "message": "Fyra rimliga nationella rikssnitt",
+      "source": "https://www.carculated.se/bensinpriser"
+    },
+    {
+      "id": "prices:history-sync",
+      "status": "ok",
+      "message": "Senaste historikdatum matchar publicerat rikssnitt",
+      "source": "https://www.carculated.se/bensinpriser"
+    },
+    {
+      "id": "prices:history-order",
+      "status": "ok",
+      "message": "Prishistoriken är strikt kronologisk",
       "source": "https://www.carculated.se/bensinpriser"
     },
     {
