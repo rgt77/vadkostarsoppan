@@ -65,7 +65,7 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = Object.values(w.FUEL_DATA ?? {});
 
-  w.SITE_DATA?.appVersion === "0.57.0" ? pass("Version 0.57.0") : fail("Version mismatch");
+  w.SITE_DATA?.appVersion === "0.58.0" ? pass("Version 0.58.0") : fail("Version mismatch");
   w.SITE_DATA?.typicalTankLiters === 40 ? pass("Tank size 40 L") : fail("Tank size invalid");
 
   for (const fuel of fuels) {
@@ -110,15 +110,6 @@ try {
   else { const age=daysBetween(data.updatedAt); age<=3 ? pass("National price freshness: "+age+" day(s)") : fail("National prices are stale: "+age+" days"); }
 } catch(error){ fail("National price data: "+error.message); }
 
-try {
-  const updater = read("scripts/update-price-data.mjs");
-  updater.includes("countyNames") && updater.includes("regions: regional") ? pass("Regional ingestion architecture") : fail("Regional ingestion architecture missing");
-  const w = {}; new Function("window", read("price-data.js"))(w);
-  const regions = w.PRICE_DATA?.regions ?? {};
-  const validRegions = Object.values(regions).every(r => r && typeof r.name === "string" && ["petrol","diesel"].every(k => Number.isFinite(r[k]) && r[k] >= 5 && r[k] <= 50));
-  validRegions ? pass("Regional prices validated when present") : fail("Invalid regional price record");
-  Object.keys(regions).length === 0 || Object.keys(regions).length === 21 ? pass("Regional county set is atomic") : fail("Partial regional dataset published");
-} catch(error){ fail("Regional price data: "+error.message); }
 
 try {
   const model = JSON.parse(read("data/calculation-model.json"));
@@ -176,7 +167,7 @@ try {
   fail("Policy data: " + error.message);
 }
 
-html404.includes("style.css?v=0.57.0") ? pass("404 cache version") : fail("404 cache version mismatch");
+html404.includes("style.css?v=0.58.0") ? pass("404 cache version") : fail("404 cache version mismatch");
 script.includes("Partikällorna kontrollerades 2026-09-23") ? fail("Hardcoded policy review date") : pass("No hardcoded policy review date");
 read("scripts/update-price-data.mjs").includes("Implausible") ? pass("Pump price plausibility guard") : fail("Pump price plausibility guard missing");
 const marketUpdater = read("scripts/update-market-data.mjs");
@@ -295,7 +286,6 @@ html.includes('id="taxBarFill"') && script.includes("taxBarFill.style.width") ? 
 html.includes('id="policyDetails"') && html.includes("Visa underlag") ? pass("Progressive policy evidence disclosure") : fail("Policy evidence disclosure missing");
 html.includes("Pris före skatt &amp; moms") ? pass("Plain-language residual label") : fail("Residual label not simplified");
 
-html.includes('id="regionSelect"') && script.includes("swedishCounties") && script.includes("priceData.regions") ? pass("Regional selector end-to-end") : fail("Regional selector wiring missing");
 
 html.includes('data-trend-days="365"') && script.includes("state.trendDays") && script.includes("trendLine.setAttribute") ? pass("Compact trend period controls") : fail("Trend controls missing");
 html.includes('<details class="policy-details"') && html.indexOf('id="scenarioNote"') > html.indexOf('<details class="policy-details"') ? pass("Scenario methodology progressively disclosed") : fail("Scenario methodology disclosure regression");
@@ -399,3 +389,5 @@ const liveSmoke=read("scripts/live-smoke.mjs");
 liveSmoke.includes("home:version") && liveSmoke.includes("robots:sitemap") && liveSmoke.includes("404:http") ? pass("Live production smoke coverage") : fail("Live production smoke coverage missing");
 const liveSmokeWorkflow=read(".github/workflows/live-smoke.yml");
 liveSmokeWorkflow.includes('cron: "32 6 * * *"') && liveSmokeWorkflow.includes("Live-sidan behöver granskas") && liveSmokeWorkflow.includes("issues: write") ? pass("Live production monitoring") : fail("Live production monitoring missing");
+
+!html.includes("regionSelect") && !script.includes("swedishCounties") && !script.includes("priceData.regions") && !read("scripts/update-price-data.mjs").includes("countyNames") ? pass("National-only price scope") : fail("Regional price code remains");
