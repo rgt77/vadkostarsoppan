@@ -77,7 +77,8 @@
     trendEndDate: $("trendEndDate"),
     trendEmpty: $("trendEmpty"),
     trendEmptyText: $("trendEmptyText"),
-    trendProgressFill: $("trendProgressFill")
+    trendProgressFill: $("trendProgressFill"),
+    trendProgressLabel: $("trendProgressLabel")
   };
 
   const state = {
@@ -466,7 +467,12 @@
       els.trendLine.setAttribute("points",""); if (els.trendLastPoint) els.trendLastPoint.hidden=true; els.trendChartWrap.hidden=true; els.trendEmpty.hidden=false;
       const remaining=Math.max(0,7-coverageDays);
       setText(els.trendEmptyText, remaining > 0 ? "Första grafen blir tillgänglig om cirka " + remaining + (remaining===1?" dag.":" dagar.") : "Grafen visas när minst tre mätpunkter finns.");
-      if (els.trendProgressFill) els.trendProgressFill.style.width=Math.min(100,Math.max(8,coverageDays/7*100))+"%";
+      const collectedDays = Math.min(7, coverageDays + 1);
+      if (els.trendProgressLabel) setText(els.trendProgressLabel, collectedDays + " / 7 dagar");
+      if (els.trendProgressFill) {
+        els.trendProgressFill.style.width = Math.max(8, collectedDays / 7 * 100) + "%";
+        els.trendProgressFill.parentElement?.setAttribute("aria-valuenow", String(collectedDays));
+      }
       setText(els.trendRange,"Rikssnitt för " + fuelData[state.fuel].label + " · uppdateras dagligen.");
     }
   }
