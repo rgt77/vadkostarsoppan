@@ -322,3 +322,7 @@ style.includes(".fuel-button,.tank-size-control button") && style.includes("font
 style.includes("font-variant-numeric:tabular-nums") ? pass("Stable numeric control typography") : fail("Numeric control typography missing");
 style.includes(".trend-periods button") && style.includes("font-weight:600") ? pass("Trend selector typography aligned") : fail("Trend selector typography mismatch");
 style.includes("min-height: 44px") ? pass("Minimum touch target guard") : fail("Touch target guard missing");
+
+style.includes("--space-section") && style.includes("--space-card") && style.includes("--touch-min") ? pass("Phase 4 spacing and touch tokens") : fail("Phase 4 layout tokens missing");
+html.includes("result-card") && html.includes("scenario-card") ? pass("Semantic result card hooks") : fail("Result card hooks missing");
+style.includes(".tax-summary { margin-top: 18px; padding-top: 15px; border-top: 1px solid var(--line); }") ? pass("Tax summary hierarchy") : fail("Tax summary hierarchy missing");
