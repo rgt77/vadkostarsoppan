@@ -345,3 +345,6 @@ html.includes("Så räknar vi och våra källor") ? pass("Method disclosure labe
 !style.includes(".tank-size-control button{min-height:58px") ? pass("Duplicate tank control CSS removed") : fail("Duplicate tank control CSS remains");
 style.includes(".trend-periods button{min-height:var(--touch-min)") ? pass("Trend periods use shared touch token") : fail("Trend touch token regression");
 !style.includes("background:#f3f3ef") && !style.includes("background:#deded8") ? pass("Trend neutrals use theme tokens") : fail("Hardcoded trend neutrals remain");
+
+html.includes('id="taxSummaryLabel"') && script.includes('"Moms (känd del)"') && script.includes('"Varierar med bränslemixen"') ? pass("E85 tax semantics are explicit") : fail("E85 tax semantics regression");
+script.includes('"Punktskatt varierar med bränslemixen"') ? pass("E85 tax share avoids false total") : fail("E85 tax share misleading");
