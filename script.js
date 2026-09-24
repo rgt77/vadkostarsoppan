@@ -3,7 +3,7 @@
 
   const fuelData = window.FUEL_DATA ?? {};
   const siteData = window.SITE_DATA ?? {};
-  const priceData = window.COUNTY_PRICES ?? {};
+  const priceData = window.PRICE_DATA ?? {};
   const scenarios = window.POLICY_SCENARIOS ?? {};
 
   let tankLiters = Number(siteData.typicalTankLiters) || 40;
