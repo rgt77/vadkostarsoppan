@@ -3,7 +3,7 @@ import fs from "node:fs";
 const read = file => fs.readFileSync(file, "utf8");
 const required = [
   "index.html", "style.css", "script.js",
-  "fuel-data.js", "county-data.js", "policy-data.js",
+  "fuel-data.js", "price-data.js", "policy-data.js",
   "party-logos/mp.png", "party-logos/s.png",
   "scripts/update-price-data.mjs",
   ".github/workflows/update-prices.yml",
@@ -26,7 +26,7 @@ for (const file of required) {
   fs.existsSync(file) ? pass(file) : fail("Missing: " + file);
 }
 
-for (const file of ["script.js", "fuel-data.js", "county-data.js", "policy-data.js"]) {
+for (const file of ["script.js", "fuel-data.js", "price-data.js", "policy-data.js"]) {
   try {
     new Function(read(file));
     pass("Syntax: " + file);
@@ -99,7 +99,7 @@ try {
 
 try {
   const w = {};
-  new Function("window", read("county-data.js"))(w);
+  new Function("window", read("price-data.js"))(w);
   const data = w.COUNTY_PRICES ?? {};
   ["petrol","petrol98","e85","diesel"].every(key => Number.isFinite(data.national?.[key]))
     ? pass("Four national fuel prices") : fail("National fuel price missing");
