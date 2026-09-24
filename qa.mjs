@@ -65,7 +65,7 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = Object.values(w.FUEL_DATA ?? {});
 
-  w.SITE_DATA?.appVersion === "0.49.0" ? pass("Version 0.49.0") : fail("Version mismatch");
+  w.SITE_DATA?.appVersion === "0.54.0" ? pass("Version 0.54.0") : fail("Version mismatch");
   w.SITE_DATA?.typicalTankLiters === 40 ? pass("Tank size 40 L") : fail("Tank size invalid");
 
   for (const fuel of fuels) {
@@ -109,6 +109,16 @@ try {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(data.updatedAt ?? "")) fail("Price updatedAt invalid");
   else { const age=daysBetween(data.updatedAt); age<=3 ? pass("National price freshness: "+age+" day(s)") : fail("National prices are stale: "+age+" days"); }
 } catch(error){ fail("National price data: "+error.message); }
+
+try {
+  const updater = read("scripts/update-price-data.mjs");
+  updater.includes("countyNames") && updater.includes("regions: regional") ? pass("Regional ingestion architecture") : fail("Regional ingestion architecture missing");
+  const w = {}; new Function("window", read("price-data.js"))(w);
+  const regions = w.PRICE_DATA?.regions ?? {};
+  const validRegions = Object.values(regions).every(r => r && typeof r.name === "string" && ["petrol","diesel"].every(k => Number.isFinite(r[k]) && r[k] >= 5 && r[k] <= 50));
+  validRegions ? pass("Regional prices validated when present") : fail("Invalid regional price record");
+  Object.keys(regions).length <= 21 ? pass("Regional county count bounded") : fail("Too many regional records");
+} catch(error){ fail("Regional price data: "+error.message); }
 
 try {
   const model = JSON.parse(read("data/calculation-model.json"));
@@ -166,7 +176,7 @@ try {
   fail("Policy data: " + error.message);
 }
 
-html404.includes("style.css?v=0.49.0") ? pass("404 cache version") : fail("404 cache version mismatch");
+html404.includes("style.css?v=0.54.0") ? pass("404 cache version") : fail("404 cache version mismatch");
 script.includes("Partikällorna kontrollerades 2026-09-23") ? fail("Hardcoded policy review date") : pass("No hardcoded policy review date");
 read("scripts/update-price-data.mjs").includes("Implausible") ? pass("Pump price plausibility guard") : fail("Pump price plausibility guard missing");
 const marketUpdater = read("scripts/update-market-data.mjs");
