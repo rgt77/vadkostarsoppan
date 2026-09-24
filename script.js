@@ -35,6 +35,9 @@
     fuelButtons: [...document.querySelectorAll("[data-fuel]")],
     tankLiterLabels: [...document.querySelectorAll("[data-tank-liters]")],
     tankSizeButtons: [...document.querySelectorAll("[data-tank-size]")],
+    regionSelect: $("regionSelect"),
+    regionLabel: $("regionLabel"),
+    regionAvailability: $("regionAvailability"),
     partyGrid: $("partyGrid"),
     updatedLabel: $("updatedLabel"),
     fuelLabel: $("fuelLabel"),
@@ -100,6 +103,7 @@
 
   const state = {
     fuel: fuelData[siteData.defaultFuel] ? siteData.defaultFuel : "petrol",
+    region: "riket",
     party: "",
     trendDays: 30
   };
@@ -134,9 +138,33 @@
       : null;
   }
 
+  const swedishCounties = [
+    ["stockholm","Stockholms län"],["uppsala","Uppsala län"],["sodermanland","Södermanlands län"],["ostergotland","Östergötlands län"],["jonkoping","Jönköpings län"],["kronoberg","Kronobergs län"],["kalmar","Kalmar län"],["gotland","Gotlands län"],["blekinge","Blekinge län"],["skane","Skåne län"],["halland","Hallands län"],["vastra-gotaland","Västra Götalands län"],["varmland","Värmlands län"],["orebro","Örebro län"],["vastmanland","Västmanlands län"],["dalarna","Dalarnas län"],["gavleborg","Gävleborgs län"],["vasternorrland","Västernorrlands län"],["jamtland","Jämtlands län"],["vasterbotten","Västerbottens län"],["norrbotten","Norrbottens län"]
+  ];
+
+  function regionRecord() {
+    return state.region === "riket" ? priceData.national : priceData.regions?.[state.region];
+  }
+
   function getPrice() {
-    const national = Number(priceData.national?.[state.fuel]);
-    return Number.isFinite(national) ? national : NaN;
+    const value = Number(regionRecord()?.[state.fuel]);
+    return Number.isFinite(value) ? value : NaN;
+  }
+
+  function buildRegionOptions() {
+    if (!els.regionSelect) return;
+    const available = priceData.regions ?? {};
+    const fragment = document.createDocumentFragment();
+    for (const [id,name] of swedishCounties) {
+      const option = document.createElement("option");
+      option.value = id;
+      option.textContent = name;
+      option.disabled = !available[id];
+      fragment.append(option);
+    }
+    els.regionSelect.append(fragment);
+    const count = swedishCounties.filter(([id]) => available[id]).length;
+    setText(els.regionAvailability, count === 21 ? "Verifierade länspriser finns för alla 21 län." : count ? `Verifierade länspriser finns för ${count} av 21 län.` : "Länspriser aktiveras automatiskt när verifierad regional prisdata finns.");
   }
 
   function getTaxPeriod(fuel, date = todayIso()) {
@@ -185,10 +213,12 @@
     const fuel = params.get("fuel");
     const party = params.get("party");
     const tank = Number(params.get("tank"));
+    const region = params.get("region");
 
     if (fuelData[fuel]) state.fuel = fuel;
     if (partyOrder.includes(party) && scenarios[party]) state.party = party;
     if ([30,40,50,60].includes(tank)) tankLiters = tank;
+    if (region === "riket" || priceData.regions?.[region]) state.region = region;
   }
 
   function syncUrl() {
@@ -196,6 +226,7 @@
     url.searchParams.set("fuel", state.fuel);
     tankLiters === siteData.typicalTankLiters ? url.searchParams.delete("tank") : url.searchParams.set("tank", String(tankLiters));
     state.party ? url.searchParams.set("party", state.party) : url.searchParams.delete("party");
+    state.region === "riket" ? url.searchParams.delete("region") : url.searchParams.set("region", state.region);
 
     const next = url.pathname + url.search + url.hash;
     const current = location.pathname + location.search + location.hash;
@@ -248,6 +279,12 @@
     for (const button of els.partyGrid?.children ?? []) {
       button.setAttribute("aria-pressed", String(button.dataset.party === state.party));
     }
+  }
+
+  function renderRegion() {
+    if (els.regionSelect) els.regionSelect.value = state.region;
+    const record = regionRecord();
+    setText(els.regionLabel, (record?.name || "Hela Sverige").toLocaleUpperCase("sv-SE"));
   }
 
   function renderScenario(basePrice) {
@@ -518,6 +555,7 @@
 
     renderDataStatus(ref);
     renderTrend(price);
+    renderRegion();
     renderScenario(price);
     syncUrl();
   }
@@ -555,7 +593,14 @@
       syncUrl();
     });
 
-    els.partyGrid?.addEventListener("keydown", event => {
+    els.regionSelect?.addEventListener("change", event => {
+    state.region = event.target.value;
+    state.party = "";
+    syncUrl();
+    render();
+  });
+
+  els.partyGrid?.addEventListener("keydown", event => {
       if (!["ArrowLeft","ArrowRight","Home","End"].includes(event.key)) return;
       const buttons = [...els.partyGrid.querySelectorAll("[data-party]")];
       const current = Math.max(0, buttons.indexOf(document.activeElement));
@@ -577,6 +622,7 @@
   window.addEventListener("popstate", () => { loadStateFromUrl(); updatePartySelection(); render(); });
 
   loadStateFromUrl();
+  buildRegionOptions();
   buildPartyButtons();
   for (const choice of els.tankSizeButtons) choice.setAttribute("aria-pressed", String(Number(choice.dataset.tankSize) === tankLiters));
   for (const node of els.tankLiterLabels) setText(node, String(tankLiters));
