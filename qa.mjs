@@ -100,7 +100,7 @@ try {
 try {
   const w = {};
   new Function("window", read("price-data.js"))(w);
-  const data = w.COUNTY_PRICES ?? {};
+  const data = w.PRICE_DATA ?? {};
   ["petrol","petrol98","e85","diesel"].every(key => Number.isFinite(data.national?.[key]))
     ? pass("Four national fuel prices") : fail("National fuel price missing");
   !("counties" in data) ? pass("National-only price data") : fail("County data must not be stored");
