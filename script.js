@@ -3,7 +3,7 @@
 
   const fuelData = window.FUEL_DATA ?? {};
   const siteData = window.SITE_DATA ?? {};
-  const countyData = window.COUNTY_PRICES ?? {};
+  const priceData = window.COUNTY_PRICES ?? {};
   const scenarios = window.POLICY_SCENARIOS ?? {};
 
   let tankLiters = Number(siteData.typicalTankLiters) || 40;
@@ -122,7 +122,7 @@
   }
 
   function getPrice() {
-    const national = Number(countyData.national?.[state.fuel]);
+    const national = Number(priceData.national?.[state.fuel]);
     return Number.isFinite(national) ? national : NaN;
   }
 
@@ -160,7 +160,7 @@
   function scenarioPrice(basePrice, scenario) {
     const model = scenario?.priceModel;
     if (!["party_delta", "stated_target"].includes(model?.type) || !Number.isFinite(model.delta)) return null;
-    const referenceDate = countyData.updatedAt || todayIso();
+    const referenceDate = priceData.updatedAt || todayIso();
     if (model.validFrom && referenceDate < model.validFrom) return null;
     if (model.validTo && referenceDate > model.validTo) return null;
     if (Array.isArray(model.fuels) && !model.fuels.includes(state.fuel)) return null;
@@ -236,7 +236,7 @@
 
   function renderScenario(basePrice) {
     const scenario = scenarios[state.party];
-    setText(els.scenarioReferenceDate, countyData.updatedAt || "—");
+    setText(els.scenarioReferenceDate, priceData.updatedAt || "—");
     if (els.scenarioReset) els.scenarioReset.hidden = !scenario;
     if (els.scenarioComparison) els.scenarioComparison.hidden = true;
     if (els.policyFacts) els.policyFacts.replaceChildren();
@@ -262,7 +262,7 @@
     setText(els.scenarioLabel, scenario.name);
     if (els.scenarioMeta) {
       els.scenarioMeta.hidden = false;
-      els.scenarioMeta.textContent = (evidenceLabels[scenario.evidence] || "Källbundet scenario") + " · referenspris " + (countyData.updatedAt || "—") + " · källan verifierad " + (scenario.verifiedAt || "—");
+      els.scenarioMeta.textContent = (evidenceLabels[scenario.evidence] || "Källbundet scenario") + " · referenspris " + (priceData.updatedAt || "—") + " · källan verifierad " + (scenario.verifiedAt || "—");
     }
     const resultLiter = scenarioPrice(basePrice, scenario);
 
@@ -369,7 +369,7 @@
   }
 
   function renderDataStatus(ref) {
-    const age = daysBetween(countyData.updatedAt);
+    const age = daysBetween(priceData.updatedAt);
     const warningAfter = Number(siteData.priceWarningAfterDays) || 2;
     const priceStatus = age === null
       ? "okänt datum"
@@ -381,7 +381,7 @@
 
     setText(
       els.updatedLabel,
-      "Prisdata " + (countyData.updatedAt || "—") + (age !== null && age > warningAfter ? " · kontrollera" : "")
+      "Prisdata " + (priceData.updatedAt || "—") + (age !== null && age > warningAfter ? " · kontrollera" : "")
     );
 
     if (ref?.blendDependent) {
@@ -413,7 +413,7 @@
   function renderTrend(currentPrice) {
     const snapshots = priceHistory?.snapshots ?? [];
     if (!snapshots.length || !Number.isFinite(currentPrice)) { els.priceTrend.hidden = true; return; }
-    const latestDate = countyData.updatedAt;
+    const latestDate = priceData.updatedAt;
     if (!/^\d{4}-\d{2}-\d{2}$/.test(latestDate || "")) { els.priceTrend.hidden = true; return; }
 
     const latestMs = Date.parse(latestDate + "T12:00:00Z");
@@ -539,7 +539,7 @@
     setText(els.nonTaxShare, wholePercent.format(100 - taxPct) + " % före skatt & moms");
     if (els.taxBarFill) els.taxBarFill.style.width = Math.max(0, Math.min(100, taxPct)) + "%";
 
-    els.priceSource.href = countyData.source;
+    els.priceSource.href = priceData.source;
     els.taxSource.href = ref.fuel.taxSource;
 
     renderDataStatus(ref);
