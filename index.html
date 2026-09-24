@@ -72,11 +72,19 @@
       </dl>
       </details>
 
-      <div class="price-trend" id="priceTrend" hidden aria-label="Prisutveckling">
-        <div class="trend-head"><strong>Prisutveckling</strong><div class="trend-periods" role="group" aria-label="Tidsperiod"><button type="button" data-trend-days="7">7 dagar</button><button type="button" data-trend-days="30" aria-pressed="true">30 dagar</button><button type="button" data-trend-days="365">1 år</button></div></div>
-        <div class="trend-result"><strong id="trendSelected">Historik saknas</strong><span id="trendRange">Vi samlar in prisdata dagligen.</span></div>
-        <svg id="trendChart" class="trend-chart" viewBox="0 0 320 72" preserveAspectRatio="none" role="img" aria-label="Prisgraf"><polyline id="trendLine" points=""></polyline></svg>
-      </div>
+      <section class="price-trend" id="priceTrend" hidden aria-labelledby="trendTitle">
+        <div class="trend-title-row"><div><span class="trend-kicker">RIKSSNITT · KR/L</span><h3 id="trendTitle">Prisutveckling</h3></div><div class="trend-periods" role="group" aria-label="Välj tidsperiod"><button type="button" data-trend-days="7">7D</button><button type="button" data-trend-days="30" aria-pressed="true">30D</button><button type="button" data-trend-days="365">1Å</button></div></div>
+        <div class="trend-status" id="trendStatus">
+          <div class="trend-change"><span id="trendDirection">Historik byggs upp</span><strong id="trendSelected">—</strong></div>
+          <div class="trend-prices" id="trendPrices" hidden><div><span>Från</span><strong id="trendFromPrice">—</strong></div><span class="trend-arrow">→</span><div><span>Nu</span><strong id="trendToPrice">—</strong></div></div>
+        </div>
+        <div class="trend-chart-wrap" id="trendChartWrap" hidden>
+          <span class="trend-y trend-y--high" id="trendHigh">—</span><span class="trend-y trend-y--low" id="trendLow">—</span>
+          <svg id="trendChart" class="trend-chart" viewBox="0 0 320 96" preserveAspectRatio="none" role="img" aria-label="Prisgraf"><polyline id="trendLine" points=""></polyline></svg>
+          <div class="trend-axis"><span id="trendStartDate">—</span><span id="trendEndDate">—</span></div>
+        </div>
+        <p class="trend-help" id="trendRange">Vi samlar in prisdata dagligen. Grafen visas när det finns tillräcklig historik.</p>
+      </section>
 
       <div class="tax-summary">
         <div><span>Skatt + moms</span><strong id="taxTank">— kr</strong></div>
