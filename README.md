@@ -26,6 +26,10 @@ Statisk webbapp för svenska drivmedelspriser. Besökaren väljer bränsle och t
 
 Prisdata uppdateras var sjätte timme. Marknadsdata från Riksbanken uppdateras på vardagar. Officiella data- och partikällor bevakas separat; en källförändring ändrar aldrig politiska sakuppgifter automatiskt. GitHub Actions kör QA före automatiska datacommittar.
 
+## Drift
+
+Produktionsdriften är självövervakande: prisinhämtning körs var sjätte timme, datahälsa och officiella källor bevakas separat, marknadsdata uppdateras på vardagar och avvikelser skapar deduplicerade GitHub-issues för manuell granskning. Politiska eller andra källbundna sakuppgifter skrivs aldrig om automatiskt när en källa ändras.
+
 ## QA
 
 ```bash
