@@ -13,12 +13,13 @@ const policyState = JSON.parse(fs.readFileSync("data/policy-source-state.json","
 const now = new Date().toISOString();
 const market = JSON.parse(fs.readFileSync("data/market-data.json","utf8"));
 const duty = JSON.parse(fs.readFileSync("data/reduction-duty.json","utf8"));
+const today = now.slice(0,10);
+const activeDuty=(duty.periods||[]).find(p=>p.validFrom<=today&&today<=p.validTo);
 const checks = []; // Health status excludes informational anomalies from warning severity; source access limits are classified separately.
 
 const add=(id,status,message,source=null)=>checks.push({id,status,message,source});
 add("prices:freshness", days(prices.updatedAt)<=3 ? "ok":"error", `Prisdata är ${days(prices.updatedAt)} dag(ar) gammal`, prices.source);
 for (const [fuelKey,fuel] of Object.entries(fuels)) {
-  const today = now.slice(0,10);
   if (fuel.taxModel === "blend_dependent") {
     add(`tax:${fuelKey}`,"ok","Blandningsberoende punktskatt hanteras utan konstruerad fast skattesats",fuel.taxSource);
     continue;
