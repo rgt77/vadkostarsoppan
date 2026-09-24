@@ -1,7 +1,7 @@
 import fs from "node:fs";
 
 const SOURCE = "https://www.carculated.se/bensinpriser";
-const FILE = "county-data.js";
+const FILE = "price-data.js";
 const HISTORY_FILE = "data/price-history.json";
 
 const decode = text => text
