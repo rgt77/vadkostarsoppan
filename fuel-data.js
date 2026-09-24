@@ -43,9 +43,9 @@ window.FUEL_DATA = {
 };
 
 window.SITE_DATA = {
-  appVersion: "0.42.3",
+  appVersion: "0.42.4",
   defaultFuel: "petrol",
   typicalTankLiters: 40,
   priceWarningAfterDays: 2,
-  marketWarningAfterDays: 7,
+  marketWarningAfterDays: 7
 };
