@@ -424,16 +424,21 @@
     const observedDays = new Set(dated.map(x => x.item.date)).size;
     setText(els.trendCoverage, observedDays === 1 ? "1 mätning" : observedDays + " mätningar");
 
-    const availability = new Map([[7,coverageDays >= 7 && observedDays >= 3],[30,coverageDays >= 30 && observedDays >= 3],[365,coverageDays >= 365 && observedDays >= 3]]);
+    const minimumObservations = period => Math.max(3, Math.ceil((period + 1) * .5));
+    const availability = new Map([7,30,365].map(period => [period, coverageDays >= period && observedDays >= minimumObservations(period)]));
     for (const button of els.trendButtons) {
       const period = Number(button.dataset.trendDays);
       const available = availability.get(period);
       button.disabled = !available;
       button.setAttribute("aria-disabled", String(!available));
       const remainingForPeriod = Math.max(0, period - coverageDays);
+      const remainingMeasurements = Math.max(0, minimumObservations(period) - observedDays);
       const periodName = period === 365 ? "1 år" : period + " dagar";
-      button.title = available ? "" : periodName + " · " + remainingForPeriod + (remainingForPeriod === 1 ? " dag kvar" : " dagar kvar");
-      button.setAttribute("aria-label", available ? periodName : periodName + ", " + remainingForPeriod + (remainingForPeriod === 1 ? " dag kvar" : " dagar kvar"));
+      const lockedReason = remainingForPeriod > 0
+        ? remainingForPeriod + (remainingForPeriod === 1 ? " dag kvar" : " dagar kvar")
+        : remainingMeasurements + (remainingMeasurements === 1 ? " mätning kvar" : " mätningar kvar");
+      button.title = available ? "" : periodName + " · " + lockedReason;
+      button.setAttribute("aria-label", available ? periodName : periodName + ", " + lockedReason);
     }
 
     let days = state.trendDays;
