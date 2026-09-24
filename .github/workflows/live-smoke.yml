@@ -1,0 +1,43 @@
+name: Live smoke
+
+on:
+  schedule:
+    - cron: "32 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: live-smoke
+  cancel-in-progress: true
+
+jobs:
+  live-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Repository QA
+        run: npm run qa
+      - name: Check live production
+        id: smoke
+        continue-on-error: true
+        env:
+          EXPECTED_VERSION: "0.49.0"
+        run: node scripts/live-smoke.mjs
+      - name: Alert on live failure
+        if: steps.smoke.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          body="Den dagliga live-kontrollen av vadkostarsoppan.se misslyckades. Kontrollera Live smoke-loggen: HTTP-status, publicerad version, canonical, robots, sitemap och 404."
+          existing=$(gh issue list --state open --search '"Live-sidan behöver granskas" in:title' --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then gh issue comment "$existing" --body "$body"; else gh issue create --title "Live-sidan behöver granskas" --body "$body"; fi
+      - name: Fail when production smoke failed
+        if: steps.smoke.outcome == 'failure'
+        run: exit 1
