@@ -65,7 +65,7 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = Object.values(w.FUEL_DATA ?? {});
 
-  w.SITE_DATA?.appVersion === "0.62.0" ? pass("Version 0.62.0") : fail("Version mismatch");
+  w.SITE_DATA?.appVersion === "0.63.0" ? pass("Version 0.63.0") : fail("Version mismatch");
   w.SITE_DATA?.typicalTankLiters === 40 ? pass("Tank size 40 L") : fail("Tank size invalid");
 
   for (const fuel of fuels) {
@@ -167,7 +167,7 @@ try {
   fail("Policy data: " + error.message);
 }
 
-html404.includes("style.css?v=0.62.0") ? pass("404 cache version") : fail("404 cache version mismatch");
+html404.includes("style.css?v=0.63.0") ? pass("404 cache version") : fail("404 cache version mismatch");
 script.includes("Partikällorna kontrollerades 2026-09-23") ? fail("Hardcoded policy review date") : pass("No hardcoded policy review date");
 read("scripts/update-price-data.mjs").includes("Implausible") ? pass("Pump price plausibility guard") : fail("Pump price plausibility guard missing");
 const marketUpdater = read("scripts/update-market-data.mjs");
@@ -320,11 +320,11 @@ style.includes(".fuel-button,.tank-size-control button") && style.includes("font
 
 style.includes("font-variant-numeric:tabular-nums") ? pass("Stable numeric control typography") : fail("Numeric control typography missing");
 style.includes(".trend-periods button") && style.includes("font-weight:600") ? pass("Trend selector typography aligned") : fail("Trend selector typography mismatch");
-style.includes("--touch-min: 44px") && style.includes("min-height:var(--touch-min)") ? pass("Minimum touch target guard") : fail("Touch target guard missing");
+style.includes("--touch-min: 44px") && /min-height:\s*var\(--touch-min\)/.test(style) ? pass("Minimum touch target guard") : fail("Touch target guard missing");
 
 style.includes("--space-section") && style.includes("--space-card") && style.includes("--touch-min") ? pass("Phase 4 spacing and touch tokens") : fail("Phase 4 layout tokens missing");
 html.includes("result-card") && html.includes("scenario-card") ? pass("Semantic result card hooks") : fail("Result card hooks missing");
-style.includes(".tax-summary { margin-top: 18px; padding-top: 15px; border-top: 1px solid var(--line); }") ? pass("Tax summary hierarchy") : fail("Tax summary hierarchy missing");
+/\.tax-summary\s*\{[^}]*margin-top:\s*18px;[^}]*padding-top:\s*15px;[^}]*border-top:\s*1px solid var\(--line\);[^}]*\}/s.test(style) ? pass("Tax summary hierarchy") : fail("Tax summary hierarchy missing");
 
 !style.includes("var(--muted,#") && !style.includes("var(--text,#") ? pass("CSS token fallbacks consolidated") : fail("Redundant CSS token fallbacks remain");
 html.includes('data-tank-size="30" aria-pressed="false"') && html.includes('data-tank-size="60" aria-pressed="false"') ? pass("Complete tank selector accessibility state") : fail("Tank selector initial state incomplete");
@@ -341,7 +341,7 @@ style.includes(".breakdown-details summary") && style.includes(".policy-details 
 html.includes("Så räknar vi och våra källor") ? pass("Method disclosure label is explicit") : fail("Method disclosure label regression");
 
 !style.includes(".tank-size-control button{min-height:58px") ? pass("Duplicate tank control CSS removed") : fail("Duplicate tank control CSS remains");
-style.includes(".trend-periods button{min-height:var(--touch-min)") ? pass("Trend periods use shared touch token") : fail("Trend touch token regression");
+/\.trend-periods button\s*\{[^}]*min-height:\s*var\(--touch-min\)/s.test(style) ? pass("Trend periods use shared touch token") : fail("Trend touch token regression");
 !style.includes("background:#f3f3ef") && !style.includes("background:#deded8") ? pass("Trend neutrals use theme tokens") : fail("Hardcoded trend neutrals remain");
 
 html.includes('id="taxSummaryLabel"') && script.includes('"Moms (känd del)"') && script.includes('"Varierar med bränslemixen"') ? pass("E85 tax semantics are explicit") : fail("E85 tax semantics regression");
