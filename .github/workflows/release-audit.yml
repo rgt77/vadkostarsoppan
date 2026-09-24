@@ -1,5 +1,5 @@
 name: Release audit
-# Phase 8 final verification
+# Phase 9 final verification
 
 on:
   workflow_dispatch:
