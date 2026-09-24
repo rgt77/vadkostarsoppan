@@ -103,7 +103,7 @@ try {
   const data = w.COUNTY_PRICES ?? {};
   ["petrol","petrol98","e85","diesel"].every(key => Number.isFinite(data.national?.[key]))
     ? pass("Four national fuel prices") : fail("National fuel price missing");
-  Array.isArray(data.counties) ? fail("County data must not be stored") : pass("National-only price data");
+  !("counties" in data) ? pass("National-only price data") : fail("County data must not be stored");
   if (!/^\d{4}-\d{2}-\d{2}$/.test(data.updatedAt ?? "")) fail("Price updatedAt invalid");
   else { const age=daysBetween(data.updatedAt); age<=3 ? pass("National price freshness: "+age+" day(s)") : fail("National prices are stale: "+age+" days"); }
 } catch(error){ fail("National price data: "+error.message); }
@@ -224,7 +224,7 @@ try {
 
 try {
   const healthScript = read("scripts/data-health.mjs");
-  healthScript.includes('add("prices:plausibility","ok"') ? pass("Price outliers are informational anomalies") : fail("Price anomaly health regression");
+  healthScript.includes("invalidPrices") && healthScript.includes('add("prices:plausibility"') ? pass("National price plausibility health check") : fail("Price plausibility health regression");
   const monitor = read("scripts/check-policy-sources.mjs");
   monitor.includes('"unreachable"') && monitor.includes('"access_blocked"') ? pass("Policy monitor classifies source access failures") : fail("Policy monitor resilience missing");
 } catch (error) { fail("Health architecture: " + error.message); }
@@ -311,7 +311,7 @@ html.includes('<details class="policy-details"') && html.indexOf('id="scenarioNo
 
 html.includes('class="breakdown-details"') && html.includes("Visa kostnadsdelar") ? pass("Progressive cost breakdown") : fail("Cost breakdown disclosure missing");
 
-!html.includes("countySelect") && !script.includes("state.county") && !script.includes("counties?.find") ? pass("County UI fully removed") : fail("County logic remains in frontend");
+!html.includes("countySelect") && !script.includes("countyData") && !script.includes("state.county") ? pass("County semantics fully removed from frontend") : fail("County logic remains in frontend");
 
 script.includes("Sedan första mätningen") && script.includes("coverageDays") && script.includes("button.disabled") && html.includes('id="trendCoverage"') ? pass("Coverage-aware trend component") : fail("Trend readability regression");
 script.includes("enoughForChart") && script.includes("distinctDates >= 3") ? pass("Trend chart minimum-data guard") : fail("Trend chart data guard missing");
