@@ -1,4 +1,4 @@
-window.COUNTY_PRICES = {
+window.PRICE_DATA = {
   updatedAt: "2026-09-24",
   retrievedAt: "2026-09-24",
   source: "https://www.carculated.se/bensinpriser",
