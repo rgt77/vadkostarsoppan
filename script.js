@@ -419,6 +419,7 @@
   }
 
   function renderTrend(currentPrice) {
+    if (state.region !== "riket") { els.priceTrend.hidden = true; return; }
     const snapshots = priceHistory?.snapshots ?? [];
     if (!snapshots.length || !Number.isFinite(currentPrice)) { els.priceTrend.hidden = true; return; }
     const latestDate = priceData.updatedAt;
