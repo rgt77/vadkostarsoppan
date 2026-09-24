@@ -415,9 +415,10 @@
 
     const first = dated[0];
     const coverageDays = Math.max(0, Math.round((latestMs-first.ms)/86400000));
-    setText(els.trendCoverage, coverageDays === 0 ? "Start idag" : coverageDays === 1 ? "2 dagar data" : (coverageDays + 1) + " dagar data");
+    const observedDays = new Set(dated.map(x => x.item.date)).size;
+    setText(els.trendCoverage, observedDays === 1 ? "1 mätning" : observedDays + " mätningar");
 
-    const availability = new Map([[7,coverageDays >= 7],[30,coverageDays >= 30],[365,coverageDays >= 365]]);
+    const availability = new Map([[7,coverageDays >= 7 && observedDays >= 3],[30,coverageDays >= 30 && observedDays >= 3],[365,coverageDays >= 365 && observedDays >= 3]]);
     for (const button of els.trendButtons) {
       const period = Number(button.dataset.trendDays);
       const available = availability.get(period);
