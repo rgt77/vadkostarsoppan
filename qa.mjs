@@ -341,3 +341,7 @@ healthScript2.includes("const activeDuty=") ? pass("Reduction-duty health period
 !style.includes("var(--line,#") ? pass("Line token fallbacks consolidated") : fail("Redundant line token fallback remains");
 style.includes(".breakdown-details summary") && style.includes(".policy-details summary") ? pass("Details controls share touch target") : fail("Details touch target mismatch");
 html.includes("Så räknar vi och våra källor") ? pass("Method disclosure label is explicit") : fail("Method disclosure label regression");
+
+!style.includes(".tank-size-control button{min-height:58px") ? pass("Duplicate tank control CSS removed") : fail("Duplicate tank control CSS remains");
+style.includes(".trend-periods button{min-height:var(--touch-min)") ? pass("Trend periods use shared touch token") : fail("Trend touch token regression");
+!style.includes("background:#f3f3ef") && !style.includes("background:#deded8") ? pass("Trend neutrals use theme tokens") : fail("Hardcoded trend neutrals remain");
