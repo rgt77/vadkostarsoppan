@@ -75,6 +75,9 @@
     trendLow: $("trendLow"),
     trendStartDate: $("trendStartDate"),
     trendEndDate: $("trendEndDate"),
+    trendStats: $("trendStats"),
+    trendMinStat: $("trendMinStat"),
+    trendMaxStat: $("trendMaxStat"),
     trendChartSummary: $("trendChartSummary"),
     trendEmpty: $("trendEmpty"),
     trendEmptyText: $("trendEmptyText"),
@@ -480,6 +483,9 @@
       els.trendLine.setAttribute("points",coords);
       if (els.trendLastPoint) { const last=coords.split(" ").at(-1).split(","); els.trendLastPoint.setAttribute("cx",last[0]); els.trendLastPoint.setAttribute("cy",last[1]); els.trendLastPoint.hidden=false; }
       setText(els.trendHigh,fmt(max)); setText(els.trendLow,fmt(min));
+      setText(els.trendMinStat, fmt(min) + " kr/l · " + formatTrendDate(points[minIndex].item.date));
+      setText(els.trendMaxStat, fmt(max) + " kr/l · " + formatTrendDate(points[maxIndex].item.date));
+      if (els.trendStats) els.trendStats.hidden=false;
       setText(els.trendStartDate, formatTrendDate(points[0].item.date));
       setText(els.trendEndDate, formatTrendDate(points.at(-1).item.date));
       const chartSummary = fuelData[state.fuel].label + ": " + fmt(oldPrice) + " till " + fmt(currentPrice) + " kr/l, " + (unchanged ? "oförändrat" : delta > 0 ? "upp " + fmt(Math.abs(delta)) : "ned " + fmt(Math.abs(delta))) + " kr/l. Lägst " + fmt(min) + " den " + formatTrendDate(points[minIndex].item.date) + ", högst " + fmt(max) + " den " + formatTrendDate(points[maxIndex].item.date) + ".";
@@ -488,7 +494,7 @@
       els.trendChartWrap.hidden=false; els.trendEmpty.hidden=true;
       setText(els.trendRange,"Rikssnitt för " + fuelData[state.fuel].label + " · " + formatTrendDate(actualStartDate, true) + "–" + formatTrendDate(latestDate, true) + ".");
     } else {
-      els.trendLine.setAttribute("points",""); if (els.trendLastPoint) els.trendLastPoint.hidden=true; setText(els.trendChartSummary, ""); els.trendChartWrap.hidden=true; els.trendEmpty.hidden=false;
+      els.trendLine.setAttribute("points",""); if (els.trendLastPoint) els.trendLastPoint.hidden=true; if (els.trendStats) els.trendStats.hidden=true; setText(els.trendChartSummary, ""); els.trendChartWrap.hidden=true; els.trendEmpty.hidden=false;
       const remaining=Math.max(0,7-coverageDays);
       const measurementsNeeded=Math.max(0,3-observedDays);
       const waitingFor = remaining > 0
