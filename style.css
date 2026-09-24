@@ -229,7 +229,7 @@ a { -webkit-tap-highlight-color: transparent; }
   margin-top: 18px;
 }
 
-.party-button {
+ .party-button {
   min-width: 0;
   min-height: 82px;
   padding: 8px 5px 7px;
@@ -237,8 +237,8 @@ a { -webkit-tap-highlight-color: transparent; }
   grid-template-rows: 48px auto;
   place-items: center;
   gap: 5px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
+  border: var(--control-border);
+  border-radius: var(--radius-active);
   color: var(--text);
   background: var(--card);
   cursor: pointer;
@@ -247,9 +247,11 @@ a { -webkit-tap-highlight-color: transparent; }
 .party-button:hover { border-color: #a9aaa5; }
 
 .party-button[aria-pressed="true"] {
-  border-color: var(--text);
-  box-shadow: 0 0 0 2px var(--text);
+  border-color: var(--control-active);
+  background: var(--control-active);
+  color: #fff;
 }
+.party-button[aria-pressed="true"] .party-name { color: #fff; }
 
 .party-logo-box {
   width: 52px;
