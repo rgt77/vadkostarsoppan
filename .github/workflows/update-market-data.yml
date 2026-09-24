@@ -11,6 +11,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: market-data-update
@@ -42,3 +43,14 @@ jobs:
           git commit -m "Data: refresh market inputs"
           git pull --rebase origin main
           git push
+
+      - name: Flag stale market data
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          status=$(node -e 'const d=require("./data/data-health.json"); const x=d.checks.find(x=>x.id==="market:usdsek"); console.log(x?.status||"warning")')
+          if [ "$status" = "ok" ]; then exit 0; fi
+          body="Automatisk driftkontroll visar att USD/SEK-marknadsdata behöver granskas. Kontrollera senaste Riksbankshämtningen och workflow-loggen."
+          existing=$(gh issue list --state open --search '"Marknadsdata behöver granskas" in:title' --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then gh issue comment "$existing" --body "$body"; else gh issue create --title "Marknadsdata behöver granskas" --body "$body"; fi
