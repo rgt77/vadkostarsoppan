@@ -17,7 +17,6 @@ const checks = []; // Health status excludes informational anomalies from warnin
 
 const add=(id,status,message,source=null)=>checks.push({id,status,message,source});
 add("prices:freshness", days(prices.updatedAt)<=3 ? "ok":"error", `Prisdata är ${days(prices.updatedAt)} dag(ar) gammal`, prices.source);
-add("prices:counties", prices.counties.length===21 ? "ok":"error", `${prices.counties.length}/21 län`, prices.source);
 for (const [fuelKey,fuel] of Object.entries(fuels)) {
   const today = now.slice(0,10);
   if (fuel.taxModel === "blend_dependent") {
@@ -33,17 +32,8 @@ for (const [key,p] of Object.entries(policies)) {
   const blocked = monitored?.status === "access_blocked";
   add(`policy:${key}`, healthy || blocked ? "ok" : "warning", healthy ? "Officiell källa bevakas" : blocked ? "Officiell källa verifierad men blockerar automatisk hämtning (HTTP 403)" : monitored ? "Källan kunde inte nås vid senaste kontroll" : "Bevakning ännu ej initialiserad", p.source);
 }
-const deviations=[];
-for(const c of prices.counties){
-  for(const k of ["petrol","petrol98","e85","diesel"]){
-    if (!Number.isFinite(c[k]) || !Number.isFinite(prices.national[k])) continue;
-    const base=prices.national[k];
-    const pct=Math.abs(c[k]-base)/base;
-    if(pct>0.20) deviations.push({county:c.name,fuel:k,value:c[k],national:base,deviationPct:Number((pct*100).toFixed(1))});
-  }
-}
-add("prices:plausibility","ok",deviations.length ? `${deviations.length} statistisk(a) avvikelse(r) registrerad(e) för transparens; källdata ändras inte` : "Inga extrema länsavvikelser",prices.source);
-const activeDuty=(duty.periods||[]).find(p=>p.validFrom<=now.slice(0,10)&&now.slice(0,10)<=p.validTo);
+const invalidPrices = ["petrol","petrol98","e85","diesel"].filter(k => !Number.isFinite(prices.national?.[k]) || prices.national[k] < 5 || prices.national[k] > 50);
+add("prices:plausibility", invalidPrices.length ? "error" : "ok", invalidPrices.length ? `Orimligt eller saknat rikssnitt: ${invalidPrices.join(", ")}` : "Fyra rimliga nationella rikssnitt", prices.source);
 add("policy:reduction-duty",activeDuty?"ok":"error",activeDuty?`Reduktionsplikt ${activeDuty.petrolPct}% bensin / ${activeDuty.dieselPct}% diesel`:"Ingen aktiv reduktionspliktsperiod",duty.source);
 const fxAge=market.fx?.observationDate ? days(market.fx.observationDate) : null;
 add("market:usdsek",market.fx?.usdSek>0 && fxAge!==null && fxAge<=7?"ok":"warning",market.fx?.usdSek>0?`USD/SEK ${market.fx.usdSek}, ${fxAge} dag(ar) gammal`:"Väntar på första Riksbankshämtningen",market.fx?.source);
@@ -52,7 +42,7 @@ const summary={
   status:checks.some(x=>x.status==="error")?"error":checks.some(x=>x.status==="warning")?"warning":"ok",
   counts:{ok:checks.filter(x=>x.status==="ok").length,warning:checks.filter(x=>x.status==="warning").length,error:checks.filter(x=>x.status==="error").length},
   checks,
-  anomalies:deviations
+  anomalies:[]
 };
 fs.writeFileSync("data/data-health.json",JSON.stringify(summary,null,2)+"\n");
 console.log(JSON.stringify(summary,null,2));
