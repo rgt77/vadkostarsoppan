@@ -28,7 +28,7 @@ const escapeRegExp = value => value.replace(/[.*+?^$(){}|[\]\\]/g, "\\$&");
 
 const scope = {};
 new Function("window", fs.readFileSync(FILE, "utf8"))(scope);
-const current = scope.COUNTY_PRICES;
+const current = scope.PRICE_DATA;
 
 const response = await fetch(SOURCE, {
   headers: { "user-agent": "vadkostarsoppan-data-updater/1.0" }
@@ -79,7 +79,7 @@ const next = {
 for (const key of ["petrol","petrol98","e85","diesel"]) validPrice(next.national[key], `national ${key}`);
 
 const output =
-  'window.COUNTY_PRICES = {\n' +
+  'window.PRICE_DATA = {\n' +
   '  updatedAt: "' + next.updatedAt + '",\n' +
   '  retrievedAt: "' + next.retrievedAt + '",\n' +
   '  source: "' + next.source + '",\n' +
