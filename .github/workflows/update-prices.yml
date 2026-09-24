@@ -11,6 +11,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: fuel-price-update
@@ -48,3 +49,12 @@ jobs:
           git commit -m "Data: refresh fuel prices"
           git pull --rebase origin main
           git push
+
+      - name: Flag price update failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          body="Den automatiska uppdateringen av nationella drivmedelspriser misslyckades. Kontrollera workflow-loggen innan prisdata betraktas som aktuell."
+          existing=$(gh issue list --state open --search '"Prisuppdatering misslyckades" in:title' --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then gh issue comment "$existing" --body "$body"; else gh issue create --title "Prisuppdatering misslyckades" --body "$body"; fi
