@@ -313,8 +313,10 @@ html.includes('class="breakdown-details"') && html.includes("Visa kostnadsdelar"
 !html.includes("countySelect") && !script.includes("state.county") && !script.includes("counties?.find") ? pass("County UI fully removed") : fail("County logic remains in frontend");
 
 script.includes("Sedan första mätningen") && script.includes("coverageDays") && script.includes("button.disabled") && html.includes('id="trendCoverage"') ? pass("Coverage-aware trend component") : fail("Trend readability regression");
-script.includes("enoughForChart") && script.includes("points.length >= 3") ? pass("Trend chart minimum-data guard") : fail("Trend chart data guard missing");
+script.includes("enoughForChart") && script.includes("distinctDates >= 3") ? pass("Trend chart minimum-data guard") : fail("Trend chart data guard missing");
 script.includes("coverageDays >= 7") && script.includes("coverageDays >= 30") && script.includes("coverageDays >= 365") ? pass("Trend requires complete periods") : fail("Trend period completeness guard missing");
+!script.includes("trendToleranceDays") ? pass("Trend uses exact dates") : fail("Trend still uses date tolerance");
+(style.match(/\/\* Price trend \*\//g) ?? []).length === 1 && !style.includes("Price trend v2") ? pass("Trend CSS consolidated") : fail("Duplicate trend CSS remains");
 html.includes('id="trendLastPoint"') && html.includes("trend-grid-line") ? pass("Trend chart visual guides") : fail("Trend chart guides missing");
 html.includes('id="trendEmpty"') && html.includes('id="trendProgressFill"') ? pass("Trend empty-state progress") : fail("Trend empty state missing");
 script.includes("trendPercent") && html.includes('id="trendPercent"') ? pass("Trend percentage context") : fail("Trend percentage missing");
