@@ -335,3 +335,9 @@ style.includes("@media (hover:hover)") ? pass("Touch-safe hover states") : fail(
 
 !style.includes(".party-button:hover") && style.includes(".party-button:not([aria-pressed=\"true\"]):hover") ? pass("Party hover is touch-safe") : fail("Party hover regression");
 !style.includes(".controls { grid-template-columns") ? pass("Dead controls grid rule removed") : fail("Dead controls grid rule remains");
+
+const healthScript2 = read("scripts/data-health.mjs");
+healthScript2.includes("const activeDuty=") ? pass("Reduction-duty health period resolved") : fail("Reduction-duty health period missing");
+!style.includes("var(--line,#") ? pass("Line token fallbacks consolidated") : fail("Redundant line token fallback remains");
+style.includes(".breakdown-details summary") && style.includes(".policy-details summary") ? pass("Details controls share touch target") : fail("Details touch target mismatch");
+html.includes("Så räknar vi och våra källor") ? pass("Method disclosure label is explicit") : fail("Method disclosure label regression");
