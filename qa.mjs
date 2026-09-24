@@ -16,6 +16,7 @@ const required = [
   "data/calculation-model.json", "data/reduction-duty.json", "data/market-data.json", "data/market-history.json", "data/production-audit.json",
   "scripts/production-audit.mjs", ".github/workflows/production-audit.yml",
   "scripts/release-audit.mjs", ".github/workflows/release-audit.yml", "data/release-audit.json",
+  "scripts/live-smoke.mjs", ".github/workflows/live-smoke.yml",
   "404.html", "data/policy-facts-sd.json", "data/policy-facts-m.json", "data/policy-facts-kd.json", "data/policy-facts-l.json", "data/policy-facts-s.json", "data/policy-facts-c.json", "data/policy-facts-v.json"
 ];
 const failures = [];
@@ -381,3 +382,8 @@ releaseAuditScript.includes("prefers-reduced-motion") && releaseAuditScript.incl
 const releaseAuditWorkflow=read(".github/workflows/release-audit.yml");
 releaseAuditWorkflow.includes("npm run qa") && releaseAuditWorkflow.includes("node scripts/release-audit.mjs") ? pass("Release audit gate") : fail("Release audit workflow missing");
 JSON.parse(read("data/release-audit.json")).status==="ok" ? pass("Release audit state healthy") : fail("Release audit state unhealthy");
+
+const liveSmoke=read("scripts/live-smoke.mjs");
+liveSmoke.includes("home:version") && liveSmoke.includes("robots:sitemap") && liveSmoke.includes("404:http") ? pass("Live production smoke coverage") : fail("Live production smoke coverage missing");
+const liveSmokeWorkflow=read(".github/workflows/live-smoke.yml");
+liveSmokeWorkflow.includes('cron: "32 6 * * *"') && liveSmokeWorkflow.includes("Live-sidan behöver granskas") && liveSmokeWorkflow.includes("issues: write") ? pass("Live production monitoring") : fail("Live production monitoring missing");
