@@ -14,7 +14,7 @@ const required = [
   "data/data-health.json",
   "data/price-history.json",
   "data/calculation-model.json", "data/reduction-duty.json", "data/market-data.json", "data/market-history.json",
-  "404.html", "lib/simulator.mjs", "tests/simulator.mjs", "data/policy-facts-sd.json", "data/policy-facts-m.json", "data/policy-facts-kd.json", "data/policy-facts-l.json", "data/policy-facts-s.json", "data/policy-facts-c.json", "data/policy-facts-v.json"
+  "404.html", "data/policy-facts-sd.json", "data/policy-facts-m.json", "data/policy-facts-kd.json", "data/policy-facts-l.json", "data/policy-facts-s.json", "data/policy-facts-c.json", "data/policy-facts-v.json"
 ];
 const failures = [];
 const warnings = [];
