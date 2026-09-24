@@ -422,7 +422,10 @@
       const available = availability.get(period);
       button.disabled = !available;
       button.setAttribute("aria-disabled", String(!available));
-      button.title = available ? "" : "Tillgänglig när " + (period === 365 ? "ett års" : period + " dagars") + " historik har samlats in";
+      const remainingForPeriod = Math.max(0, period - coverageDays);
+      const periodName = period === 365 ? "1 år" : period + " dagar";
+      button.title = available ? "" : periodName + " · " + remainingForPeriod + (remainingForPeriod === 1 ? " dag kvar" : " dagar kvar");
+      button.setAttribute("aria-label", available ? periodName : periodName + ", " + remainingForPeriod + (remainingForPeriod === 1 ? " dag kvar" : " dagar kvar"));
     }
 
     let days = state.trendDays;
