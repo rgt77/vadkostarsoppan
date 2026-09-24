@@ -61,6 +61,10 @@ const validPrice = (value, label) => {
   if (!Number.isFinite(value) || value < 5 || value > 50) throw new Error(`Implausible ${label}: ${value}`);
   return value;
 };
+const sourceAgeDays = Math.floor((Date.parse(stockholmDate + "T12:00:00Z") - Date.parse(updatedMatch[1] + "T12:00:00Z")) / 86400000);
+if (!Number.isFinite(sourceAgeDays) || sourceAgeDays < 0 || sourceAgeDays > 3) {
+  throw new Error(`Price source date is not current enough: ${updatedMatch[1]} (${sourceAgeDays} days)`);
+}
 
 const next = {
   updatedAt: updatedMatch[1],
@@ -77,6 +81,15 @@ const next = {
 };
 
 for (const key of ["petrol","petrol98","e85","diesel"]) validPrice(next.national[key], `national ${key}`);
+const previousDate = current.updatedAt;
+if (previousDate && next.updatedAt < previousDate) throw new Error(`Price source moved backwards: ${previousDate} -> ${next.updatedAt}`);
+for (const key of ["petrol","petrol98","e85","diesel"]) {
+  const previous = Number(current.national?.[key]);
+  const latest = next.national[key];
+  if (Number.isFinite(previous) && Math.abs(latest - previous) > 8) {
+    throw new Error(`Suspicious one-update jump for ${key}: ${previous} -> ${latest}`);
+  }
+}
 
 const output =
   'window.PRICE_DATA = {\n' +
