@@ -326,3 +326,8 @@ style.includes("min-height: 44px") ? pass("Minimum touch target guard") : fail("
 style.includes("--space-section") && style.includes("--space-card") && style.includes("--touch-min") ? pass("Phase 4 spacing and touch tokens") : fail("Phase 4 layout tokens missing");
 html.includes("result-card") && html.includes("scenario-card") ? pass("Semantic result card hooks") : fail("Result card hooks missing");
 style.includes(".tax-summary { margin-top: 18px; padding-top: 15px; border-top: 1px solid var(--line); }") ? pass("Tax summary hierarchy") : fail("Tax summary hierarchy missing");
+
+!style.includes("var(--muted,#") && !style.includes("var(--text,#") ? pass("CSS token fallbacks consolidated") : fail("Redundant CSS token fallbacks remain");
+html.includes('data-tank-size="30" aria-pressed="false"') && html.includes('data-tank-size="60" aria-pressed="false"') ? pass("Complete tank selector accessibility state") : fail("Tank selector initial state incomplete");
+script.includes('image.loading = "lazy"') ? pass("Party logos lazy loaded") : fail("Party logo loading strategy missing");
+style.includes("@media (hover:hover)") ? pass("Touch-safe hover states") : fail("Hover capability guard missing");
