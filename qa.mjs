@@ -288,7 +288,7 @@ html.includes('<details class="policy-details"') && html.indexOf('id="scenarioNo
 
 html.includes('class="breakdown-details"') && html.includes("Visa kostnadsdelar") ? pass("Progressive cost breakdown") : fail("Cost breakdown disclosure missing");
 
-!html.includes("countySelect") && !script.includes("countyData") && !script.includes("state.county") ? pass("County semantics fully removed from frontend") : fail("County logic remains in frontend");
+!html.toLowerCase().includes("county") && !script.toLowerCase().includes("county") ? pass("County semantics fully removed from frontend") : fail("County logic remains in frontend");
 
 script.includes("Sedan första mätningen") && script.includes("coverageDays") && script.includes("button.disabled") && html.includes('id="trendCoverage"') ? pass("Coverage-aware trend component") : fail("Trend readability regression");
 script.includes("enoughForChart") && script.includes("distinctDates >= 3") ? pass("Trend chart minimum-data guard") : fail("Trend chart data guard missing");
