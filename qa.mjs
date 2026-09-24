@@ -320,6 +320,9 @@ html.includes('id="taxBarFill"') && script.includes("taxBarFill.style.width") ? 
 html.includes('id="policyDetails"') && html.includes("Visa underlag") ? pass("Progressive policy evidence disclosure") : fail("Policy evidence disclosure missing");
 html.includes("Pris före skatt &amp; moms") ? pass("Plain-language residual label") : fail("Residual label not simplified");
 
+html.includes('data-trend-days="365"') && script.includes("state.trendDays") && script.includes("trendLine.setAttribute") ? pass("Compact trend period controls") : fail("Trend controls missing");
+html.includes('<details class="policy-details"') && html.indexOf('id="scenarioNote"') > html.indexOf('<details class="policy-details"') ? pass("Scenario methodology progressively disclosed") : fail("Scenario methodology disclosure regression");
+
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
 if (failures.length) {
   console.error("\n" + failures.map(message => "✕ " + message).join("\n"));
