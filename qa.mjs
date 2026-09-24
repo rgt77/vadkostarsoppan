@@ -323,6 +323,8 @@ html.includes("Pris före skatt &amp; moms") ? pass("Plain-language residual lab
 html.includes('data-trend-days="365"') && script.includes("state.trendDays") && script.includes("trendLine.setAttribute") ? pass("Compact trend period controls") : fail("Trend controls missing");
 html.includes('<details class="policy-details"') && html.indexOf('id="scenarioNote"') > html.indexOf('<details class="policy-details"') ? pass("Scenario methodology progressively disclosed") : fail("Scenario methodology disclosure regression");
 
+html.includes('class="breakdown-details"') && html.includes("Visa kostnadsdelar") ? pass("Progressive cost breakdown") : fail("Cost breakdown disclosure missing");
+
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
 if (failures.length) {
   console.error("\n" + failures.map(message => "✕ " + message).join("\n"));
