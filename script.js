@@ -218,6 +218,7 @@
       image.src = partyLogos[key];
       image.alt = "";
       image.decoding = "async";
+      image.loading = "lazy";
       image.addEventListener("error", () => button.classList.add("logo-failed"), { once: true });
 
       const fallback = document.createElement("span");
@@ -317,12 +318,6 @@
       }
     }
 
-    
-    
-    
-    
-    
-    
     
     const background = policyBackground[state.party];
     if (background && els.policyFacts) {
