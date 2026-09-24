@@ -331,3 +331,6 @@ style.includes(".tax-summary { margin-top: 18px; padding-top: 15px; border-top: 
 html.includes('data-tank-size="30" aria-pressed="false"') && html.includes('data-tank-size="60" aria-pressed="false"') ? pass("Complete tank selector accessibility state") : fail("Tank selector initial state incomplete");
 script.includes('image.loading = "lazy"') ? pass("Party logos lazy loaded") : fail("Party logo loading strategy missing");
 style.includes("@media (hover:hover)") ? pass("Touch-safe hover states") : fail("Hover capability guard missing");
+
+!style.includes(".party-button:hover") && style.includes(".party-button:not([aria-pressed=\"true\"]):hover") ? pass("Party hover is touch-safe") : fail("Party hover regression");
+!style.includes(".controls { grid-template-columns") ? pass("Dead controls grid rule removed") : fail("Dead controls grid rule remains");
