@@ -61,7 +61,7 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = Object.values(w.FUEL_DATA ?? {});
 
-  w.SITE_DATA?.appVersion === "0.41.0" ? pass("Version 0.41.0") : fail("Version mismatch");
+  w.SITE_DATA?.appVersion === "0.42.0" ? pass("Version 0.42.0") : fail("Version mismatch");
   w.SITE_DATA?.typicalTankLiters === 40 ? pass("Tank size 40 L") : fail("Tank size invalid");
 
   for (const fuel of fuels) {
@@ -164,7 +164,7 @@ try {
   fail("Policy data: " + error.message);
 }
 
-html404.includes("style.css?v=0.41.0") ? pass("404 cache version") : fail("404 cache version mismatch");
+html404.includes("style.css?v=0.42.0") ? pass("404 cache version") : fail("404 cache version mismatch");
 script.includes("Partikällorna kontrollerades 2026-09-23") ? fail("Hardcoded policy review date") : pass("No hardcoded policy review date");
 read("scripts/update-price-data.mjs").includes("Implausible") ? pass("Pump price plausibility guard") : fail("Pump price plausibility guard missing");
 const marketUpdater = read("scripts/update-market-data.mjs");
@@ -314,6 +314,8 @@ html.includes('class="breakdown-details"') && html.includes("Visa kostnadsdelar"
 
 script.includes("Sedan första mätningen") && script.includes("coverageDays") && script.includes("button.disabled") && html.includes('id="trendCoverage"') ? pass("Coverage-aware trend component") : fail("Trend readability regression");
 script.includes("enoughForChart") && script.includes("points.length >= 3") ? pass("Trend chart minimum-data guard") : fail("Trend chart data guard missing");
+script.includes("coverageDays >= 7") && script.includes("coverageDays >= 30") && script.includes("coverageDays >= 365") ? pass("Trend requires complete periods") : fail("Trend period completeness guard missing");
+html.includes('id="trendLastPoint"') && html.includes("trend-grid-line") ? pass("Trend chart visual guides") : fail("Trend chart guides missing");
 html.includes('id="trendEmpty"') && html.includes('id="trendProgressFill"') ? pass("Trend empty-state progress") : fail("Trend empty state missing");
 script.includes("trendPercent") && html.includes('id="trendPercent"') ? pass("Trend percentage context") : fail("Trend percentage missing");
 
