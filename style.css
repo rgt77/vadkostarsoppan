@@ -474,7 +474,7 @@ a { -webkit-tap-highlight-color: transparent; }
 .fuel-id{box-sizing:border-box;width:32px;height:32px;flex:0 0 32px;display:inline-flex;align-items:center;justify-content:center;border:2px solid currentColor;font-size:11px;font-weight:800;line-height:1}
 .fuel-id--petrol{border-radius:50%}.fuel-id--diesel{border-radius:0}
 .tank-size-control{display:block;margin-top:28px}
-.control-label{display:block;margin:0 0 14px;font-size:18px;font-weight:800;letter-spacing:-.02em}
+.control-label{display:block;margin:0 0 14px;font-size:18px;font-weight:800;line-height:1.2;letter-spacing:-.02em}
 .tank-size-control button{min-height:48px;font-size:16px;font-weight:500}
 .fuel-button:focus-visible,.tank-size-control button:focus-visible,.party-button:focus-visible,summary:focus-visible,a:focus-visible{outline:2px solid currentColor;outline-offset:2px}
 @media(max-width:520px){.fuel-toggle,.tank-size-control>div{border-radius:16px}.fuel-button{min-height:52px;padding:7px 2px;font-size:13px}.tank-size-control{margin-top:24px}.control-label{margin-bottom:12px;font-size:17px}.tank-size-control button{min-height:46px;font-size:15px}}
