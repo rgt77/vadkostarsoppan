@@ -138,22 +138,6 @@
     return Number.isFinite(national) ? national : NaN;
   }
 
-  function buildRegionOptions() {
-    if (!els.regionSelect) return;
-    const available = priceData.regions ?? {};
-    const fragment = document.createDocumentFragment();
-    for (const [id,name] of swedishCounties) {
-      const option = document.createElement("option");
-      option.value = id;
-      option.textContent = name;
-      option.disabled = !available[id];
-      fragment.append(option);
-    }
-    els.regionSelect.append(fragment);
-    const count = swedishCounties.filter(([id]) => available[id]).length;
-    setText(els.regionAvailability, count === 21 ? "Verifierade länspriser finns för alla 21 län." : count ? `Verifierade länspriser finns för ${count} av 21 län.` : "Länspriser aktiveras automatiskt när verifierad regional prisdata finns.");
-  }
-
   function getTaxPeriod(fuel, date = todayIso()) {
     return fuel?.taxPeriods?.find(period => period.validFrom <= date && date <= period.validTo) ?? null;
   }
