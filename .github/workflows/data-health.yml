@@ -48,4 +48,6 @@ jobs:
           count=$(node -e 'console.log(require("./data/official-source-changes.json").changes.length)')
           if [ "$count" = "0" ]; then exit 0; fi
           names=$(node -e 'console.log(require("./data/official-source-changes.json").changes.map(x=>x.id).join(", "))')
-          gh issue create --title "Officiell datakälla ändrad: $names" --body "Automatisk bevakning har upptäckt ändrat innehåll. Ingen sakuppgift ändras automatiskt; källan ska verifieras innan data uppdateras."
+          body="Automatisk bevakning har upptäckt ändrat innehåll. Ingen sakuppgift ändras automatiskt; källan ska verifieras innan data uppdateras."
+          existing=$(gh issue list --state open --search '"Officiell datakälla ändrad" in:title' --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then gh issue comment "$existing" --body "$body"; else gh issue create --title "Officiell datakälla ändrad: $names" --body "$body"; fi
