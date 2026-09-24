@@ -7,8 +7,6 @@
   const scenarios = window.POLICY_SCENARIOS ?? {};
 
   let tankLiters = Number(siteData.typicalTankLiters) || 40;
-  const areas = [countyData.national, ...(countyData.counties ?? [])].filter(Boolean);
-  const areasById = new Map(areas.map(area => [area.id, area]));
   const partyOrder = ["c", "kd", "l", "mp", "m", "s", "sd", "v"];
   const evidenceLabels = { party_estimate: "Partiets uppskattning", party_stated_target: "Partiets uttalade mål", not_quantified: "Ej numeriskt kvantifierat" };
   const partyLogos = {
@@ -27,11 +25,9 @@
     fuelButtons: [...document.querySelectorAll("[data-fuel]")],
     tankLiterLabels: [...document.querySelectorAll("[data-tank-liters]")],
     tankSizeButtons: [...document.querySelectorAll("[data-tank-size]")],
-    countySelect: $("countySelect"),
     partyGrid: $("partyGrid"),
     updatedLabel: $("updatedLabel"),
     fuelLabel: $("fuelLabel"),
-    areaLabel: $("areaLabel"),
     tankTotal: $("tankTotal"),
     literPrice: $("literPrice"),
     marketTank: $("marketTank"),
@@ -71,7 +67,6 @@
 
   const state = {
     fuel: fuelData[siteData.defaultFuel] ? siteData.defaultFuel : "petrol",
-    county: areasById.has("riket") ? "riket" : areas[0]?.id,
     party: "",
     trendDays: 30
   };
@@ -106,14 +101,7 @@
       : null;
   }
 
-  function getArea() {
-    return areasById.get(state.county) ?? areas[0];
-  }
-
   function getPrice() {
-    const area = getArea();
-    const local = Number(area?.[state.fuel]);
-    if (Number.isFinite(local) && local > 0) return local;
     const national = Number(countyData.national?.[state.fuel]);
     return Number.isFinite(national) ? national : NaN;
   }
@@ -162,39 +150,21 @@
   function loadStateFromUrl() {
     const params = new URLSearchParams(location.search);
     const fuel = params.get("fuel");
-    const county = params.get("county");
     const party = params.get("party");
 
     if (fuelData[fuel]) state.fuel = fuel;
-    if (areasById.has(county)) state.county = county;
     if (partyOrder.includes(party) && scenarios[party]) state.party = party;
   }
 
   function syncUrl() {
     const url = new URL(location.href);
     url.searchParams.set("fuel", state.fuel);
-    url.searchParams.set("county", state.county);
+    url.searchParams.delete("county");
     state.party ? url.searchParams.set("party", state.party) : url.searchParams.delete("party");
 
     const next = url.pathname + url.search + url.hash;
     const current = location.pathname + location.search + location.hash;
     if (next !== current) history.replaceState(null, "", next);
-  }
-
-  function buildCountySelect() {
-    if (!els.countySelect || !areas.length) return;
-    const fragment = document.createDocumentFragment();
-
-    for (const area of areas) {
-      const option = document.createElement("option");
-      option.value = area.id;
-      option.textContent = area.name;
-      fragment.append(option);
-    }
-
-    els.countySelect.replaceChildren(fragment);
-    els.countySelect.value = state.county;
-    if (!els.countySelect.value && areas[0]) { state.county = areas[0].id; els.countySelect.value = state.county; }
   }
 
   function buildPartyButtons() {
@@ -410,10 +380,7 @@
   let priceHistory = null;
 
   function historyPrice(snapshot) {
-    const area = state.county === "riket"
-      ? snapshot?.national
-      : snapshot?.counties?.find(item => item.id === state.county);
-    const value = Number(area?.[state.fuel]);
+    const value = Number(snapshot?.national?.[state.fuel]);
     return Number.isFinite(value) && value > 0 ? value : null;
   }
 
@@ -457,10 +424,9 @@
 
   function render() {
     const price = getPrice();
-    const area = getArea();
     const ref = calculate(price);
 
-    if (!area || !ref) {
+    if (!ref) {
       setText(els.tankTotal, "Data saknas");
       setText(els.literPrice, "—");
       renderDataStatus(ref);
@@ -472,8 +438,6 @@
     }
 
     setText(els.fuelLabel, ref.fuel.label);
-    const hasLocalPrice = Number.isFinite(Number(area?.[state.fuel])) && Number(area?.[state.fuel]) > 0;
-    setText(els.areaLabel, hasLocalPrice || area.id === "riket" ? area.name : area.name + " · rikssnitt");
     setText(els.tankTotal, fmt(price * tankLiters));
     setText(els.literPrice, fmt(price));
     setText(els.marketTank, fmt(ref.market * tankLiters) + " kr");
@@ -519,10 +483,6 @@
       });
     }
 
-    els.countySelect?.addEventListener("change", () => {
-      state.county = els.countySelect.value;
-      render();
-    });
 
     els.scenarioReset?.addEventListener("click", () => {
       state.party = "";
@@ -550,10 +510,9 @@
     });
   }
 
-  window.addEventListener("popstate", () => { loadStateFromUrl(); if (els.countySelect) els.countySelect.value = state.county; updatePartySelection(); render(); });
+  window.addEventListener("popstate", () => { loadStateFromUrl(); updatePartySelection(); render(); });
 
   loadStateFromUrl();
-  buildCountySelect();
   buildPartyButtons();
   for (const node of els.tankLiterLabels) setText(node, String(tankLiters));
   bindEvents();
