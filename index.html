@@ -61,6 +61,7 @@
           <h2 id="tankTitle">Typisk tankning</h2>
         </div>
         <div class="tank-total" aria-live="polite">
+          <small>Totalt</small>
           <div><strong id="tankTotal">—</strong><span>kr</span></div>
           <small><span id="literPrice">—</span> kr/l</small>
         </div>
@@ -80,8 +81,9 @@
       </div>
 
       <div class="tax-summary">
-        <div><span>Skatt + moms totalt</span><strong id="taxTank">— kr</strong></div>
-        <small id="taxShare">— av tankningen</small><div class="tax-bar" aria-hidden="true"><span id="taxBarFill"></span></div>
+        <div><span>Skatt + moms</span><strong id="taxTank">— kr</strong></div>
+        <div class="tax-share-row"><small id="taxShare">— av tankningen</small><small id="nonTaxShare">— före skatt &amp; moms</small></div>
+        <div class="tax-bar" aria-hidden="true"><span id="taxBarFill"></span></div>
       </div>
     </section>
 
