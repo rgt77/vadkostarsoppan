@@ -40,6 +40,7 @@
     vatTank: $("vatTank"),
     taxTank: $("taxTank"),
     taxShare: $("taxShare"),
+    nonTaxShare: $("nonTaxShare"),
     taxBarFill: $("taxBarFill"),
     policyDetails: $("policyDetails"),
     partyResult: $("partyResult"),
@@ -481,7 +482,8 @@
     setText(els.vatTank, fmt(ref.vat * tankLiters) + " kr");
     setText(els.taxTank, fmt(ref.tax * tankLiters) + " kr");
     const taxPct = ref.tax / price * 100;
-    setText(els.taxShare, wholePercent.format(taxPct) + " % av tankningen");
+    setText(els.taxShare, wholePercent.format(taxPct) + " % skatt + moms");
+    setText(els.nonTaxShare, wholePercent.format(100 - taxPct) + " % före skatt & moms");
     if (els.taxBarFill) els.taxBarFill.style.width = Math.max(0, Math.min(100, taxPct)) + "%";
 
     els.priceSource.href = countyData.source;
