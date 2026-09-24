@@ -1,7 +1,6 @@
 import fs from "node:fs";
 
 const SOURCE = "https://www.carculated.se/bensinpriser";
-const COUNTY_SLUGS = { blekinge:"blekinge", dalarna:"dalarna", gotland:"gotland", gavleborg:"gavleborg", halland:"halland", jamtland:"jamtland", jonkoping:"jonkoping", kalmar:"kalmar", kronoberg:"kronoberg", norrbotten:"norrbotten", skane:"skane", stockholm:"stockholm", sodermanland:"sodermanland", uppsala:"uppsala", varmland:"varmland", vasterbotten:"vasterbotten", vasternorrland:"vasternorrland", vastmanland:"vastmanland", "vastra-gotaland":"vastra-gotaland", orebro:"orebro", ostergotland:"ostergotland" };
 const FILE = "county-data.js";
 const HISTORY_FILE = "data/price-history.json";
 
@@ -49,42 +48,7 @@ if (!updatedMatch || !nationalMatch) {
   throw new Error("Could not parse national price metadata");
 }
 
-const counties = current.counties.map(county => {
-  const pattern = new RegExp(
-    escapeRegExp(county.name) +
-    "(?:\\s+billigast)?\\s+([0-9]+,[0-9]{2})\\s+kr\\s+([0-9]+,[0-9]{2})\\s+kr",
-    "i"
-  );
-  const match = text.match(pattern);
-  if (!match) throw new Error("Could not parse " + county.name);
 
-  return {
-    id: county.id,
-    name: county.name,
-    petrol: number(match[1]),
-    petrol98: Number.isFinite(county.petrol98) ? county.petrol98 : null,
-    e85: Number.isFinite(county.e85) ? county.e85 : null,
-    diesel: number(match[2])
-  };
-});
-
-if (counties.length !== 21) throw new Error("Expected 21 counties");
-
-for (const county of counties) {
-  const slug = COUNTY_SLUGS[county.id];
-  if (!slug) continue;
-  try {
-    const r = await fetch(`${SOURCE}/${slug}`, { headers: { "user-agent": "vadkostarsoppan-data-updater/1.0" } });
-    if (!r.ok) continue;
-    const countyText = plainText(await r.text());
-    const p98 = countyText.match(/Bensin 98\s+([\d,]+)\s+kr\/l/i);
-    const e85 = countyText.match(/Etanol E85\s+([\d,]+)\s+kr\/l/i);
-    if (p98) county.petrol98 = number(p98[1]);
-    if (e85) county.e85 = number(e85[1]);
-  } catch (error) {
-    console.warn(`Could not enrich ${county.name}: ${error.message}`);
-  }
-}
 
 const stockholmDate = new Intl.DateTimeFormat("sv-SE", {
   timeZone: "Europe/Stockholm",
@@ -110,15 +74,9 @@ const next = {
     e85: e85Match ? number(e85Match[1]) : current.national.e85,
     diesel: number(nationalMatch[2])
   },
-  counties
 };
 
 for (const key of ["petrol","petrol98","e85","diesel"]) validPrice(next.national[key], `national ${key}`);
-for (const county of counties) for (const key of ["petrol","diesel"]) validPrice(county[key], `${county.id} ${key}`);
-
-const row = county =>
-  '    { id: "' + county.id + '", name: "' + county.name + '", petrol: ' +
-  county.petrol.toFixed(2) + ', petrol98: ' + (Number.isFinite(county.petrol98) ? county.petrol98.toFixed(2) : 'null') + ', e85: ' + (Number.isFinite(county.e85) ? county.e85.toFixed(2) : 'null') + ', diesel: ' + county.diesel.toFixed(2) + ' }';
 
 const output =
   'window.COUNTY_PRICES = {\n' +
@@ -141,7 +99,7 @@ const output =
 fs.writeFileSync(FILE, output);
 
 const history = fs.existsSync(HISTORY_FILE) ? JSON.parse(fs.readFileSync(HISTORY_FILE, "utf8")) : { version: 1, snapshots: [] };
-const snapshot = { date: next.updatedAt, national: next.national, counties: next.counties };
+const snapshot = { date: next.updatedAt, national: next.national };
 const existingIndex = history.snapshots.findIndex(item => item.date === snapshot.date);
 if (existingIndex >= 0) history.snapshots[existingIndex] = snapshot;
 else history.snapshots.push(snapshot);
@@ -154,6 +112,5 @@ console.log(
   "Updated county-data.js:",
   next.updatedAt,
   next.national.petrol.toFixed(2),
-  next.national.diesel.toFixed(2),
-  "21 counties"
+  next.national.diesel.toFixed(2)
 );
