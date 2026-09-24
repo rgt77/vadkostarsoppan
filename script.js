@@ -184,14 +184,17 @@
     const params = new URLSearchParams(location.search);
     const fuel = params.get("fuel");
     const party = params.get("party");
+    const tank = Number(params.get("tank"));
 
     if (fuelData[fuel]) state.fuel = fuel;
     if (partyOrder.includes(party) && scenarios[party]) state.party = party;
+    if ([30,40,50,60].includes(tank)) tankLiters = tank;
   }
 
   function syncUrl() {
     const url = new URL(location.href);
     url.searchParams.set("fuel", state.fuel);
+    tankLiters === siteData.typicalTankLiters ? url.searchParams.delete("tank") : url.searchParams.set("tank", String(tankLiters));
     state.party ? url.searchParams.set("party", state.party) : url.searchParams.delete("party");
 
     const next = url.pathname + url.search + url.hash;
@@ -575,6 +578,7 @@
 
   loadStateFromUrl();
   buildPartyButtons();
+  for (const choice of els.tankSizeButtons) choice.setAttribute("aria-pressed", String(Number(choice.dataset.tankSize) === tankLiters));
   for (const node of els.tankLiterLabels) setText(node, String(tankLiters));
   bindEvents();
   render();
