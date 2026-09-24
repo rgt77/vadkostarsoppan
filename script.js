@@ -401,6 +401,12 @@
     return Number.isFinite(value) && value > 0 ? value : null;
   }
 
+  function formatTrendDate(iso, withYear = false) {
+    const date = new Date(iso + "T12:00:00Z");
+    if (!Number.isFinite(date.getTime())) return iso;
+    return new Intl.DateTimeFormat("sv-SE", { day: "numeric", month: "short", ...(withYear ? { year: "numeric" } : {}), timeZone: "UTC" }).format(date);
+  }
+
   function renderTrend(currentPrice) {
     const snapshots = priceHistory?.snapshots ?? [];
     if (!snapshots.length || !Number.isFinite(currentPrice)) { els.priceTrend.hidden = true; return; }
@@ -445,7 +451,7 @@
     const delta = currentPrice-oldPrice;
     const percent = oldPrice > 0 ? delta/oldPrice*100 : 0;
     const unchanged = Math.abs(delta) < .005;
-    const periodLabel = days === 365 ? "1 år" : days > 0 ? days + " dagar" : (coverageDays === 0 ? "idag" : "sedan " + first.item.date);
+    const periodLabel = days === 365 ? "1 år" : days > 0 ? days + " dagar" : (coverageDays === 0 ? "idag" : "sedan " + formatTrendDate(first.item.date, true));
     const actualStartDate = target.item.date;
 
     setText(els.trendDirection, days > 0 ? "Förändring · " + periodLabel : "Sedan första mätningen");
@@ -464,13 +470,13 @@
       els.trendLine.setAttribute("points",coords);
       if (els.trendLastPoint) { const last=coords.split(" ").at(-1).split(","); els.trendLastPoint.setAttribute("cx",last[0]); els.trendLastPoint.setAttribute("cy",last[1]); els.trendLastPoint.hidden=false; }
       setText(els.trendHigh,fmt(max)); setText(els.trendLow,fmt(min));
-      setText(els.trendStartDate,points[0].item.date.slice(5).replace("-","/"));
-      setText(els.trendEndDate,points.at(-1).item.date.slice(5).replace("-","/"));
+      setText(els.trendStartDate, formatTrendDate(points[0].item.date));
+      setText(els.trendEndDate, formatTrendDate(points.at(-1).item.date));
       const chartSummary = fuelData[state.fuel].label + ": " + fmt(oldPrice) + " till " + fmt(currentPrice) + " kr/l, " + (unchanged ? "oförändrat" : delta > 0 ? "upp " + fmt(Math.abs(delta)) : "ned " + fmt(Math.abs(delta))) + " kr/l.";
       setText(els.trendChartSummary, chartSummary);
       els.trendChart?.setAttribute("aria-label", chartSummary);
       els.trendChartWrap.hidden=false; els.trendEmpty.hidden=true;
-      setText(els.trendRange,"Rikssnitt för " + fuelData[state.fuel].label + " · " + actualStartDate + "–" + latestDate + ".");
+      setText(els.trendRange,"Rikssnitt för " + fuelData[state.fuel].label + " · " + formatTrendDate(actualStartDate, true) + "–" + formatTrendDate(latestDate, true) + ".");
     } else {
       els.trendLine.setAttribute("points",""); if (els.trendLastPoint) els.trendLastPoint.hidden=true; setText(els.trendChartSummary, ""); els.trendChartWrap.hidden=true; els.trendEmpty.hidden=false;
       const remaining=Math.max(0,7-coverageDays);
