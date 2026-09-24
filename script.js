@@ -404,8 +404,15 @@
     const oldPrice = historyPrice(target);
     const delta = oldPrice === null ? null : currentPrice - oldPrice;
     const label = days === 365 ? "1 år" : days + " dagar";
-    setText(els.trendSelected, label + " " + (delta === null ? "—" : Math.abs(delta) < .005 ? "±0,00 kr/l" : (delta > 0 ? "+" : "−") + fmt(Math.abs(delta)) + " kr/l"));
-    setText(els.trendRange, points.length >= 2 ? points[0].date + " – " + points.at(-1).date : "Historik för perioden saknas");
+    if (delta === null) {
+      setText(els.trendSelected, "Inte tillräckligt med historik för " + label);
+      setText(els.trendRange, "Vi samlar in prisdata dagligen. Visas automatiskt när perioden är komplett.");
+    } else {
+      const direction = Math.abs(delta) < .005 ? "Oförändrat" : delta > 0 ? "Priset har ökat" : "Priset har minskat";
+      const amount = Math.abs(delta) < .005 ? "" : " med " + fmt(Math.abs(delta)) + " kr/l";
+      setText(els.trendSelected, direction + amount);
+      setText(els.trendRange, label + " · " + fmt(oldPrice) + " → " + fmt(currentPrice) + " kr/l");
+    }
 
     if (els.trendLine) {
       if (points.length >= 2) {
