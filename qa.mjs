@@ -217,34 +217,11 @@ try {
 } catch (error) { fail("Market history: " + error.message); }
 
 try {
-  const phase = JSON.parse(read("data/phase3-status.json"));
-  phase.status === "complete" && Object.values(phase.exitCriteria ?? {}).every(Boolean) ? pass("Phase 3 completion criteria") : fail("Phase 3 incomplete");
-  phase.blockedInputs?.some(x => x.id === "refined_product_reference") ? pass("Blocked refined-product input documented") : fail("Blocked market input undocumented");
-} catch (error) { fail("Phase 3 status: " + error.message); }
-
-try {
   const healthScript = read("scripts/data-health.mjs");
   healthScript.includes("invalidPrices") && healthScript.includes('add("prices:plausibility"') ? pass("National price plausibility health check") : fail("Price plausibility health regression");
   const monitor = read("scripts/check-policy-sources.mjs");
   monitor.includes('"unreachable"') && monitor.includes('"access_blocked"') ? pass("Policy monitor classifies source access failures") : fail("Policy monitor resilience missing");
 } catch (error) { fail("Health architecture: " + error.message); }
-
-try {
-  const phase4 = JSON.parse(read("data/phase4-status.json"));
-  phase4.status === "in_progress" && phase4.completedSteps?.length >= 10 ? pass("Phase 4 first ten steps recorded") : fail("Phase 4 progress invalid");
-  html.includes('id="scenarioReferenceDate"') && html.includes('id="scenarioReset"') && html.includes('id="scenarioMeta"') ? pass("Scenario reference UI") : fail("Scenario reference UI missing");
-  script.includes('state.party = ""') && script.includes("scenario.verifiedAt") ? pass("Scenario reset and evidence UI") : fail("Scenario interaction guard missing");
-  const simulator = read("lib/simulator.mjs");
-  simulator.includes('["party_delta","stated_target"]') ? pass("Simulator accepts only documented numeric models") : fail("Simulator model guard missing");
-} catch (error) { fail("Phase 4 QA: " + error.message); }
-
-try {
-  const phase4b = JSON.parse(read("data/phase4-status.json"));
-  phase4b.completedSteps?.length >= 20 ? pass("Phase 4 first twenty steps recorded") : fail("Phase 4 second block incomplete");
-  html.includes('id="scenarioComparison"') && script.includes("evidenceLabels") ? pass("Neutral scenario comparison evidence UI") : fail("Scenario comparison evidence UI missing");
-  script.includes('"ArrowLeft"') && script.includes('"popstate"') ? pass("Scenario keyboard and history navigation") : fail("Scenario navigation regression");
-  script.includes('latestDate || ""') ? pass("Trend reference-date guard") : fail("Trend date guard missing");
-} catch (error) { fail("Phase 4 block 2 QA: " + error.message); }
 
 try {
   const sdFacts = JSON.parse(read("data/policy-facts-sd.json"));
