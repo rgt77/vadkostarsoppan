@@ -124,7 +124,7 @@
     {
       "id": "market:usdsek",
       "status": "ok",
-      "message": "USD/SEK 9.87819, 1 dag(ar) gammal",
+      "message": "USD/SEK 9.90983, 0 dag(ar) gammal",
       "source": "https://api.riksbank.se/swea/v1/Observations/Latest/sekusdpmi"
     }
   ],
