@@ -21,11 +21,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-button,
-select { font: inherit; }
+button { font: inherit; }
 
 button,
-select,
 summary,
 a { -webkit-tap-highlight-color: transparent; }
 
@@ -111,27 +109,6 @@ a { -webkit-tap-highlight-color: transparent; }
   display: grid;
   grid-template-columns: 1fr minmax(210px, .7fr);
   gap: 10px;
-}
-
-.select-control {
-  display: grid;
-  gap: 5px;
-}
-
-.select-control > span {
-  color: var(--muted);
-  font-size: 9px;
-  font-weight: 700;
-}
-
-select {
-  width: 100%;
-  min-height: 44px;
-  padding: 0 11px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  color: var(--text);
-  background: var(--card);
 }
 
 .card {
