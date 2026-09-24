@@ -312,7 +312,10 @@ html.includes('class="breakdown-details"') && html.includes("Visa kostnadsdelar"
 
 !html.includes("countySelect") && !script.includes("state.county") && !script.includes("counties?.find") ? pass("County UI fully removed") : fail("County logic remains in frontend");
 
-script.includes("Historik byggs upp") && script.includes("trendFromPrice") && html.includes('id="trendChartWrap"') && html.includes(">7D</button>") ? pass("Readable trend component") : fail("Trend readability regression");
+script.includes("Sedan första mätningen") && script.includes("coverageDays") && script.includes("button.disabled") && html.includes('id="trendCoverage"') ? pass("Coverage-aware trend component") : fail("Trend readability regression");
+script.includes("enoughForChart") && script.includes("points.length >= 3") ? pass("Trend chart minimum-data guard") : fail("Trend chart data guard missing");
+html.includes('id="trendEmpty"') && html.includes('id="trendProgressFill"') ? pass("Trend empty-state progress") : fail("Trend empty state missing");
+script.includes("trendPercent") && html.includes('id="trendPercent"') ? pass("Trend percentage context") : fail("Trend percentage missing");
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
 if (failures.length) {
