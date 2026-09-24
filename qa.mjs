@@ -319,7 +319,9 @@ script.includes("coverageDays >= 7") && script.includes("coverageDays >= 30") &&
 !script.includes("trendToleranceDays") ? pass("Trend uses exact dates") : fail("Trend still uses date tolerance");
 (style.match(/\/\* Price trend \*\//g) ?? []).length === 1 && !style.includes("Price trend v2") ? pass("Trend CSS consolidated") : fail("Duplicate trend CSS remains");
 html.includes('id="trendLastPoint"') && html.includes("trend-grid-line") ? pass("Trend chart visual guides") : fail("Trend chart guides missing");
-html.includes('id="trendEmpty"') && html.includes('id="trendProgressFill"') ? pass("Trend empty-state progress") : fail("Trend empty state missing");
+html.includes('id="trendEmpty"') && html.includes('id="trendProgressFill"') && html.includes('role="progressbar"') ? pass("Trend empty-state progress") : fail("Trend empty state missing");
+script.includes("observedDays") && script.includes("mätningar") ? pass("Trend distinguishes measurements from elapsed days") : fail("Trend measurement count missing");
+html.includes('id="trendChartSummary"') && script.includes("chartSummary") ? pass("Accessible trend chart summary") : fail("Trend chart summary missing");
 script.includes("trendPercent") && html.includes('id="trendPercent"') ? pass("Trend percentage context") : fail("Trend percentage missing");
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
