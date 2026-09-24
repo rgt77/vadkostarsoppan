@@ -34,4 +34,4 @@ npm run qa
 
 ## Publicering
 
-Statiska assets publiceras via Cloudflare från `main`. Aktuell applikationsversion: **0.45.0**.
+Statiska assets publiceras via Cloudflare från `main`. Aktuell applikationsversion: **0.45.1**.
