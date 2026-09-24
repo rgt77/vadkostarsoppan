@@ -491,8 +491,8 @@ a { -webkit-tap-highlight-color: transparent; }
 .fuel-button>span:last-child{min-width:0;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:clip}
 .fuel-button[aria-pressed="true"],.tank-size-control button[aria-pressed="true"]{background:var(--control-active);color:#fff;font-weight:600}
 .tank-size-control{display:block;margin-top:var(--space-section)}
-.control-label{display:block;margin:0 0 14px;font-size:18px;font-weight:800;line-height:1.2;letter-spacing:-.02em}.control-label-unit{display:inline;margin:0;font:inherit;letter-spacing:inherit;color:inherit}
-.tank-size-control button{min-height:58px;font-size:15px;font-weight:600}
+.control-label{display:block;margin:0 0 14px;font-size:18px;font-weight:800;line-height:1.2;letter-spacing:-.02em}
+.control-label-unit{display:inline;margin:0;font:inherit;letter-spacing:inherit;color:inherit}
 .fuel-button:focus-visible,.tank-size-control button:focus-visible,.party-button:focus-visible,summary:focus-visible,a:focus-visible{outline:2px solid currentColor;outline-offset:2px}
 @media(max-width:520px){.fuel-toggle,.tank-size-control>div{border-radius:var(--radius-control)}.fuel-button,.tank-size-control button{min-height:52px;padding:7px 2px;font-size:13px}.tank-size-control{margin-top:26px}.control-label{margin-bottom:12px;font-size:17px}}
 
