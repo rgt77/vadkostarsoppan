@@ -13,7 +13,8 @@ const required = [
   "data/source-registry.json",
   "data/data-health.json",
   "data/price-history.json",
-  "data/calculation-model.json", "data/reduction-duty.json", "data/market-data.json", "data/market-history.json",
+  "data/calculation-model.json", "data/reduction-duty.json", "data/market-data.json", "data/market-history.json", "data/production-audit.json",
+  "scripts/production-audit.mjs", ".github/workflows/production-audit.yml",
   "404.html", "data/policy-facts-sd.json", "data/policy-facts-m.json", "data/policy-facts-kd.json", "data/policy-facts-l.json", "data/policy-facts-s.json", "data/policy-facts-c.json", "data/policy-facts-v.json"
 ];
 const failures = [];
@@ -307,13 +308,6 @@ script.includes("coveragePercent") && script.includes("datatäckning") ? pass("T
 !JSON.parse(read("data/price-history.json")).trendToleranceDays ? pass("Obsolete trend tolerance metadata removed") : fail("Obsolete trend tolerance remains");
 script.includes("trendPercent") && html.includes('id="trendPercent"') ? pass("Trend percentage context") : fail("Trend percentage missing");
 
-if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
-if (failures.length) {
-  console.error("\n" + failures.map(message => "✕ " + message).join("\n"));
-  process.exit(1);
-}
-console.log("\nPASS");
-
 style.includes("--radius-control") && style.includes("--control-active") ? pass("Unified control design tokens") : fail("Control design tokens missing");
 
 !html.includes("fuel-id") && !style.includes(".fuel-id") && html.includes('id="fuelTypeLabel"') && style.includes(".control-label") ? pass("Unified fuel and tank headings without fuel symbols") : fail("Fuel/tank control heading mismatch");
@@ -366,3 +360,17 @@ const healthWorkflow = read(".github/workflows/data-health.yml");
 healthWorkflow.includes("gh issue list") && healthWorkflow.includes("Officiell datakälla ändrad") ? pass("Official source alerts deduplicated") : fail("Official source alert deduplication missing");
 const marketWorkflow = read(".github/workflows/update-market-data.yml");
 marketWorkflow.includes("Marknadsdata behöver granskas") && marketWorkflow.includes("issues: write") ? pass("Market health alert") : fail("Market health alert missing");
+
+const productionAuditScript = read("scripts/production-audit.mjs");
+productionAuditScript.includes("prices:latest-history") && productionAuditScript.includes("history:market-order") ? pass("Production audit validates live data continuity") : fail("Production audit coverage missing");
+const productionAuditWorkflow = read(".github/workflows/production-audit.yml");
+productionAuditWorkflow.includes('cron: "12 6 * * *"') && productionAuditWorkflow.includes("Produktionskontroll misslyckades") ? pass("Daily production audit and alert") : fail("Production audit automation missing");
+const productionAudit = JSON.parse(read("data/production-audit.json"));
+productionAudit.status === "ok" ? pass("Production audit state healthy") : fail("Production audit state unhealthy");
+
+if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
+if (failures.length) {
+  console.error("\n" + failures.map(message => "✕ " + message).join("\n"));
+  process.exit(1);
+}
+console.log("\nPASS");
