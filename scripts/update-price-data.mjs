@@ -24,7 +24,6 @@ const plainText = html => decode(
 ).replace(/\s+/g, " ").trim();
 
 const number = value => Number(value.replace(",", "."));
-const escapeRegExp = value => value.replace(/[.*+?^$(){}|[\]\\]/g, "\\$&");
 
 const scope = {};
 new Function("window", fs.readFileSync(FILE, "utf8"))(scope);
@@ -103,8 +102,7 @@ const output =
   '    petrol98: ' + next.national.petrol98.toFixed(2) + ',\n' +
   '    e85: ' + next.national.e85.toFixed(2) + ',\n' +
   '    diesel: ' + next.national.diesel.toFixed(2) + '\n' +
-  '  },\n' +
-  '  regions: ' + JSON.stringify(next.regions, null, 2).replace(/\n/g, "\\n  ") + '\n' +
+  '  }\n' +
   '};\n';
 
 fs.writeFileSync(FILE, output);
