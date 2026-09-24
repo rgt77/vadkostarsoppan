@@ -1,56 +1,30 @@
 # Vad kostar soppan?
 
-En liten statisk webbapp som ska besvara två frågor så snabbt som möjligt:
+Statisk webbapp för svenska drivmedelspriser. Besökaren väljer bränsle och tankstorlek och får nationellt rikssnitt, kostnadsdelar, prishistorik och källbundna partiscenarier när underlaget är numeriskt tillräckligt.
 
-1. Vad kostar en **typisk tankning på 40 liter**?
-2. Vad skulle samma tankning kosta i ett valt **partiscenario**, när det finns tillräckligt kvantifierat underlag?
+## Principer
 
-## Produktprincip
+- Endast nationella pumppriser används i den publika kalkylen.
+- Pris före skatt och moms är en härledd restpost, inte bensinbolagens vinst.
+- E85 får ingen konstruerad fast punktskatt när faktisk blandning saknas.
+- Politiska scenarier visar bara dokumenterade numeriska uppgifter; övriga visas utan konstruerat pris.
+- Reduktionsplikt behandlas som utsläppsreduktionskrav, inte direkt biodrivmedelsandel.
+- ARA/Rotterdam ersätts inte med Brent eller annan råoljeproxy.
 
-Sidan är medvetet minimalistisk. Besökaren väljer:
+## Struktur
 
-- Bensin 95, Bensin 98, diesel eller E85
-- Hela Sverige eller län
-- Parti
+- `index.html`, `style.css`, `script.js` – publik frontend.
+- `fuel-data.js` – skattesatser och appinställningar.
+- `price-data.js` – aktuella nationella pumppriser.
+- `policy-data.js` och `data/policy-facts-*.json` – källbundna politiska scenarier/fakta.
+- `data/price-history.json` – nationell prishistorik, högst 730 dagar.
+- `data/market-*.json` – separata marknadsreferenser.
+- `scripts/` – pris-, marknads-, käll- och hälsouppdatering.
+- `qa.mjs` och `tests/` – automatiska kontroller.
 
-Därefter visas tankkostnaden, kostnadsdelarna och partiscenariot.
+## Automatik
 
-När ett parti inte har publicerat tillräckligt exakta nivåer visas inget konstruerat pris.
-
-## Kostnadsmodell
-
-För vald pumpprisreferens räknas:
-
-```
-pris före moms = pumppris / (1 + momssats)
-marknad + kedja = pris före moms - energiskatt - koldioxidskatt
-skatt + moms = energiskatt + koldioxidskatt + moms
-tankkostnad = pumppris × 40 liter
-```
-
-`marknad + kedja` är en restpost och ska inte beskrivas som ren vinst.
-
-## Filer
-
-- `index.html` – sidans markup
-- `style.css` – all publik styling
-- `script.js` – state, beräkning och rendering
-- `fuel-data.js` – skattesatser och appinställningar
-- `price-data.js` – rikssnitt och länspriser
-- `policy-data.js` – partiscenarier och källor
-- `404.html` – felsida
-- `qa.mjs` – zero-dependency statisk QA
-- `wrangler.jsonc` – Cloudflare Workers Static Assets
-
-## Kvalitetsregler
-
-- 21 län ska finnas.
-- Alla prisvärden ska vara numeriska.
-- Skattesatser ska ha källor.
-- Alla åtta riksdagspartier ska finnas i datalagret.
-- Exakt partipris visas endast för modeller som är kvantifierbara.
-- Marknadsrestposten får aldrig bli negativ.
-- Den publika sidan ska inte ladda gamla experimentella datafiler eller PWA-lager.
+Prisdata uppdateras var sjätte timme. Marknadsdata från Riksbanken uppdateras på vardagar. Officiella data- och partikällor bevakas separat; en källförändring ändrar aldrig politiska sakuppgifter automatiskt. GitHub Actions kör QA före automatiska datacommittar.
 
 ## QA
 
@@ -58,63 +32,6 @@ tankkostnad = pumppris × 40 liter
 npm run qa
 ```
 
-QA körs även automatiskt via GitHub Actions på push till `main`.
-
 ## Publicering
 
-Projektet publiceras som statiska assets via Cloudflare Workers från `main`.
-
-Aktuell applikationsversion: **0.40.0**.
-
-
-## Dataautomatik
-
-- Läns- och rikssnitt uppdateras automatiskt från Carculated/bensinpriser.nu via `scripts/update-price-data.mjs`.
-- GitHub Actions kör prisuppdateringen var sjätte timme och committar endast när data ändras.
-- Skattesatser lagras som giltighetsperioder och rätt period väljs automatiskt efter svenskt datum.
-- QA stoppar publicering om länspriserna blir mer än tre dagar gamla eller om dagens datum saknar giltig skatteperiod.
-- Partidata har verifieringsdatum och evidenstyp. Exakt pris visas bara för kvantifierbara modeller.
-- Officiella partikällor bevakas automatiskt utan att politiska uppgifter ändras automatiskt.
-- Ambitionen är att prioritera öppna, kostnadsfria och officiella källor där de ger tillräcklig aktualitet och detaljnivå.
-
-
-## Fas 2 – datakvalitet och autonom drift
-
-- Källstrategi: officiell och kostnadsfri källa prioriteras.
-- Officiella myndighetskällor bevakas för innehållsförändringar.
-- Politiska källor bevakas separat och ändrar aldrig sakuppgifter automatiskt.
-- Data health kontrollerar färskhet, länstäckning, skatteperioder, källbevakning och extrema prisavvikelser.
-- Prisavvikelser över 20 % från rikssnitt flaggas för kontroll men skrivs inte automatiskt över.
-- Källregistret dokumenterar ursprung, kostnad, automationsnivå och tillitsnivå.
-- GitHub Actions kör hälsokontrollen var sjätte timme.
-
-## Fas 3 – historik och marknadsmodell — KLAR
-
-- Dagliga prisögonblick sparas automatiskt i `data/price-history.json`.
-- Samma datum uppdateras i stället för att dupliceras.
-- Historiken hålls till maximalt 730 dagar.
-- QA kontrollerar datumordning, dubbletter och att alla fyra rikssnitt finns.
-- Historiken är grunden för förändring över 7/30 dagar utan att belasta huvudvyn.
-
-## Marknadsdata
-
-- USD/SEK hämtas från Riksbankens officiella API, plausibilitetskontrolleras och hålls separat från observerat pumppris. Dagliga observationer sparas i `data/market-history.json`.
-- Reduktionsplikten lagras som utsläppsreduktionskrav med giltighetsperioder och tolkas aldrig som direkt volymandel biodrivmedel.
-- ARA/Rotterdam får inte ersättas med Brent/råolja. Raffinerad spotreferens kopplas först in när en metodmässigt och licensmässigt användbar källa finns.
-- Marknadsdata får inte påverka den publika pumppriskalkylen förrän hela simuleringskedjan är validerad.
-
-## Tvålagers prismodell
-
-Fas 3 skiljer strikt på observerat pumppris och politisk simulering. Det observerade lagret bryter ned faktiskt pumppris. Simuleringslagret fryser marknadsförutsättningar och får endast ändra dokumenterade politiska variabler. Reduktionsplikt behandlas som utsläppsreduktionskrav, inte som direkt volymandel. Marknad + kedja är alltid en härledd restpost och aldrig ett påstående om vinst.
-
-
-## Fas 3 exit status
-
-Fas 3 är stängd i v0.40.0. Observerat pumppris, skatteuppdelning, pris- och FX-historik, källroller, data-health och den skyddade simuleringsgrunden har egna QA-regler. Raffinerad ARA/Rotterdam-spot är uttryckligen blockerad tills en lagligt och metodmässigt användbar källa finns; frånvaron får inte ersättas med Brent eller ett konstruerat värde.
-
-Maskinläsbar status finns i `data/phase3-status.json`.
-
-
-## Fas 4 – simulator och presentation
-
-Påbörjad i v0.40.0. De första tio stegen etablerar en ren simulatormotor, regressionstester, fryst referensdag, synlig källverifiering, nollställning och tillgängliga scenariointeraktioner. Inga odokumenterade partivärden beräknas.
+Statiska assets publiceras via Cloudflare från `main`. Aktuell applikationsversion: **0.42.4**.
