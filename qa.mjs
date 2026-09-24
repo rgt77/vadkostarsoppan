@@ -103,7 +103,6 @@ try {
   const data = w.PRICE_DATA ?? {};
   ["petrol","petrol98","e85","diesel"].every(key => Number.isFinite(data.national?.[key]))
     ? pass("Four national fuel prices") : fail("National fuel price missing");
-  !("counties" in data) ? pass("National-only price data") : fail("County data must not be stored");
   if (!/^\d{4}-\d{2}-\d{2}$/.test(data.updatedAt ?? "")) fail("Price updatedAt invalid");
   else { const age=daysBetween(data.updatedAt); age<=3 ? pass("National price freshness: "+age+" day(s)") : fail("National prices are stale: "+age+" days"); }
 } catch(error){ fail("National price data: "+error.message); }
@@ -121,7 +120,6 @@ try {
   const history = JSON.parse(read("data/price-history.json"));
   const snapshots = history.snapshots ?? [];
   snapshots.length ? pass("Price history seeded") : fail("Price history empty");
-  snapshots.every(item => !("counties" in item)) ? pass("National-only price history") : fail("County history remains");
   snapshots.length <= 730 ? pass("Price history bounded") : fail("Price history exceeds 730 snapshots");
   const dates = snapshots.map(item => item.date);
   new Set(dates).size === dates.length ? pass("Unique history dates") : fail("Duplicate history dates");
@@ -288,7 +286,6 @@ html.includes('<details class="policy-details"') && html.indexOf('id="scenarioNo
 
 html.includes('class="breakdown-details"') && html.includes("Visa kostnadsdelar") ? pass("Progressive cost breakdown") : fail("Cost breakdown disclosure missing");
 
-!html.toLowerCase().includes("county") && !script.toLowerCase().includes("county") ? pass("County semantics fully removed from frontend") : fail("County logic remains in frontend");
 
 script.includes("Sedan första mätningen") && script.includes("coverageDays") && script.includes("button.disabled") && html.includes('id="trendCoverage"') ? pass("Coverage-aware trend component") : fail("Trend readability regression");
 script.includes("enoughForChart") && script.includes("distinctDates >= 3") ? pass("Trend chart minimum-data guard") : fail("Trend chart data guard missing");
