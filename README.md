@@ -30,6 +30,10 @@ Prisdata uppdateras var sjätte timme. Marknadsdata från Riksbanken uppdateras 
 
 Produktionsdriften är självövervakande: prisinhämtning körs var sjätte timme, datahälsa och officiella källor bevakas separat, marknadsdata uppdateras på vardagar och avvikelser skapar deduplicerade GitHub-issues för manuell granskning. Politiska eller andra källbundna sakuppgifter skrivs aldrig om automatiskt när en källa ändras.
 
+## Produktionsvalidering
+
+En daglig produktionsaudit verifierar att data-health är grön, pris- och marknadsdata är färska, senaste priset finns i historiken och att historikserierna är kronologiskt sammanhängande. Resultatet sparas i `data/production-audit.json`. Blockerande driftfel ger en deduplicerad GitHub-issue. Kort historik flaggas endast som varning medan serien byggs upp organiskt; historiska priser konstrueras inte.
+
 ## QA
 
 ```bash
