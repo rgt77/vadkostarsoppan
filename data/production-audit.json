@@ -10,7 +10,7 @@
     {
       "id": "health:status",
       "ok": true,
-      "message": "Data health: ok",
+      "message": "Data health är OK",
       "severity": "error"
     },
     {
@@ -28,13 +28,13 @@
     {
       "id": "prices:latest-history",
       "ok": true,
-      "message": "Senaste priset saknas i historiken",
+      "message": "Senaste priset finns i historiken",
       "severity": "error"
     },
     {
       "id": "market:value",
       "ok": true,
-      "message": "USD/SEK saknas eller är orimlig",
+      "message": "USD/SEK är rimlig",
       "severity": "error"
     },
     {
@@ -46,19 +46,19 @@
     {
       "id": "market:history",
       "ok": true,
-      "message": "Marknadshistorik saknas",
+      "message": "Marknadshistorik finns",
       "severity": "error"
     },
     {
       "id": "history:price-order",
       "ok": true,
-      "message": "Prishistoriken är inte strikt kronologisk",
+      "message": "Prishistoriken är strikt kronologisk",
       "severity": "error"
     },
     {
       "id": "history:market-order",
       "ok": true,
-      "message": "Marknadshistoriken är inte strikt kronologisk",
+      "message": "Marknadshistoriken är strikt kronologisk",
       "severity": "error"
     }
   ]
