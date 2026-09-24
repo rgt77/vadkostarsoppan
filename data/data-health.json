@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-23",
+  "date": "2026-09-24",
   "status": "ok",
   "counts": {
     "ok": 16,
@@ -10,7 +10,7 @@
     {
       "id": "prices:freshness",
       "status": "ok",
-      "message": "Prisdata är 0 dag(ar) gammal",
+      "message": "Prisdata är -1 dag(ar) gammal",
       "source": "https://www.carculated.se/bensinpriser"
     },
     {
@@ -47,13 +47,13 @@
       "id": "policy:kd",
       "status": "ok",
       "message": "Officiell källa bevakas",
-      "source": "https://kristdemokraterna.se/var-politik/politik-a-till-o/drivmedelspriser"
+      "source": "https://kristdemokraterna.se/arkiv/nyheter/2024/2024-08-27-vi-sanker-drivmedelsskatten-och-utslappen"
     },
     {
       "id": "policy:l",
       "status": "ok",
       "message": "Officiell källa bevakas",
-      "source": "https://www.liberalerna.se/politik/glesbygd"
+      "source": "https://www.liberalerna.se/wp-content/uploads/klimatomstallning-i-en-vaxande-ekonomi.pdf"
     },
     {
       "id": "policy:mp",
@@ -65,19 +65,19 @@
       "id": "policy:m",
       "status": "ok",
       "message": "Officiell källa bevakas",
-      "source": "https://moderaterna.se/var-politik/drivmedelspriser/"
+      "source": "https://moderaterna.se/nyhet/ytterligare-sankt-skatt-pa-drivmedel/"
     },
     {
       "id": "policy:s",
       "status": "ok",
       "message": "Officiell källa bevakas",
-      "source": "https://www.socialdemokraterna.se/var-politik/a-till-o/branslepriser/fakta-om-socialdemokraternas-politik-kring-drivmedelsskatt"
+      "source": "https://www.socialdemokraterna.se/nyheter/nyheter/2026-03-20-s-kraver-tillfallig-skattesankning-pa-bensin-och-diesel"
     },
     {
       "id": "policy:sd",
       "status": "ok",
       "message": "Officiell källa bevakas",
-      "source": "https://www.sd.se/vad-vi-vill/folder-vi-gor-sverige-till-sverige-igen/"
+      "source": "https://val2026.sd.se/drivmedel/"
     },
     {
       "id": "policy:v",
