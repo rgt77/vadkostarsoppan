@@ -315,4 +315,6 @@ console.log("\nPASS");
 
 style.includes("--radius-control") && style.includes("--control-active") ? pass("Unified control design tokens") : fail("Control design tokens missing");
 
-!html.includes("fuel-id") && html.includes('id="fuelTypeLabel"') && style.includes(".control-label") ? pass("Unified fuel and tank headings without fuel symbols") : fail("Fuel/tank control heading mismatch");
+!html.includes("fuel-id") && !style.includes(".fuel-id") && html.includes('id="fuelTypeLabel"') && style.includes(".control-label") ? pass("Unified fuel and tank headings without fuel symbols") : fail("Fuel/tank control heading mismatch");
+html.includes("Tankstorlek <span class=\"control-label-unit\">(liter)</span>") && !html.includes(">30 L<") && !html.includes(">40 L<") ? pass("Tank unit appears only in heading") : fail("Tank unit presentation mismatch");
+style.includes(".fuel-button,.tank-size-control button") && style.includes("font-weight:600") ? pass("Primary option typography unified") : fail("Primary option typography mismatch");
