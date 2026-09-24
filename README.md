@@ -34,6 +34,10 @@ Produktionsdriften är självövervakande: prisinhämtning körs var sjätte tim
 
 En daglig produktionsaudit verifierar att data-health är grön, pris- och marknadsdata är färska, senaste priset finns i historiken och att historikserierna är kronologiskt sammanhängande. Resultatet sparas i `data/production-audit.json`. Blockerande driftfel ger en deduplicerad GitHub-issue. Kort historik flaggas endast som varning medan serien byggs upp organiskt; historiska priser konstrueras inte.
 
+## Release gate
+
+Frontendändringar passerar en separat release-audit som kontrollerar metadata, länksäkerhet, grundläggande tillgänglighet, responsiva brytpunkter, reduced motion, fokusmarkering, URL-state och defensiv frontendlogik. Den körs tillsammans med ordinarie QA innan en frontendändring betraktas som releaseklar.
+
 ## QA
 
 ```bash
