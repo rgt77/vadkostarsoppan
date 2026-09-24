@@ -1,0 +1,11 @@
+{
+  "generatedAt": "2026-09-24T15:33:00.000Z",
+  "status": "ok",
+  "budgets": {
+    "indexHtml": 20000,
+    "css": 25000,
+    "js": 40000,
+    "criticalLocalPayload": 100000
+  },
+  "note": "Baseline committed; workflow regenerates and enforces budgets."
+}
