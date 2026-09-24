@@ -59,8 +59,10 @@
     dataStatus: $("dataStatus"),
     priceTrend: $("priceTrend"),
     trendButtons: [...document.querySelectorAll("[data-trend-days]")],
+    trendCoverage: $("trendCoverage"),
     trendDirection: $("trendDirection"),
     trendSelected: $("trendSelected"),
+    trendPercent: $("trendPercent"),
     trendRange: $("trendRange"),
     trendPrices: $("trendPrices"),
     trendFromPrice: $("trendFromPrice"),
@@ -71,7 +73,10 @@
     trendHigh: $("trendHigh"),
     trendLow: $("trendLow"),
     trendStartDate: $("trendStartDate"),
-    trendEndDate: $("trendEndDate")
+    trendEndDate: $("trendEndDate"),
+    trendEmpty: $("trendEmpty"),
+    trendEmptyText: $("trendEmptyText"),
+    trendProgressFill: $("trendProgressFill")
   };
 
   const state = {
@@ -399,50 +404,68 @@
     const latestDate = countyData.updatedAt;
     if (!/^\d{4}-\d{2}-\d{2}$/.test(latestDate || "")) { els.priceTrend.hidden = true; return; }
 
-    const days = state.trendDays;
     const latestMs = Date.parse(latestDate + "T12:00:00Z");
-    const startMs = latestMs - days * 86400000;
-    const tolerance = (Number(siteData.trendToleranceDays) || 3) * 86400000;
+    const toleranceDays = Number(siteData.trendToleranceDays) || 3;
     const dated = snapshots.map(item => ({ item, ms: Date.parse(item.date + "T12:00:00Z"), value: historyPrice(item) }))
-      .filter(x => Number.isFinite(x.ms) && x.value !== null);
-    const target = dated.filter(x => Math.abs(x.ms - startMs) <= tolerance).sort((a,b) => Math.abs(a.ms-startMs)-Math.abs(b.ms-startMs))[0];
-    const points = dated.filter(x => x.ms >= startMs && x.ms <= latestMs);
-    const oldPrice = target?.value ?? null;
-    const delta = oldPrice === null ? null : currentPrice - oldPrice;
-    const label = days === 365 ? "1 år" : days + " dagar";
+      .filter(x => Number.isFinite(x.ms) && x.value !== null && x.ms <= latestMs)
+      .sort((a,b) => a.ms-b.ms);
+    if (!dated.length) { els.priceTrend.hidden = true; return; }
 
-    for (const button of els.trendButtons) button.setAttribute("aria-pressed", String(Number(button.dataset.trendDays) === days));
-    els.priceTrend.hidden = false;
+    const first = dated[0];
+    const coverageDays = Math.max(0, Math.round((latestMs-first.ms)/86400000));
+    setText(els.trendCoverage, coverageDays === 0 ? "Start idag" : coverageDays === 1 ? "2 dagar data" : (coverageDays + 1) + " dagar data");
 
-    if (delta === null) {
-      setText(els.trendDirection, "Historik byggs upp");
-      setText(els.trendSelected, "Data för " + label + " saknas");
-      setText(els.trendRange, "Vi samlar in rikssnittet dagligen. " + label + " visas automatiskt när tillräckligt med data finns.");
-      if (els.trendPrices) els.trendPrices.hidden = true;
-      if (els.trendChartWrap) els.trendChartWrap.hidden = true;
-      return;
+    const availability = new Map([[7,coverageDays >= 7-toleranceDays],[30,coverageDays >= 30-toleranceDays],[365,coverageDays >= 365-toleranceDays]]);
+    for (const button of els.trendButtons) {
+      const period = Number(button.dataset.trendDays);
+      const available = availability.get(period);
+      button.disabled = !available;
+      button.setAttribute("aria-disabled", String(!available));
+      button.title = available ? "" : "Tillgänglig när " + (period === 365 ? "ett års" : period + " dagars") + " historik har samlats in";
     }
 
+    let days = state.trendDays;
+    if (!availability.get(days)) {
+      const availablePeriods = [365,30,7].filter(x => availability.get(x));
+      days = availablePeriods[0] ?? 0;
+    }
+    for (const button of els.trendButtons) button.setAttribute("aria-pressed", String(days > 0 && Number(button.dataset.trendDays) === days));
+    els.priceTrend.hidden = false;
+
+    const effectiveStartMs = days > 0 ? latestMs-days*86400000 : first.ms;
+    const points = dated.filter(x => x.ms >= effectiveStartMs);
+    const target = dated.filter(x => Math.abs(x.ms-effectiveStartMs) <= toleranceDays*86400000)
+      .sort((a,b) => Math.abs(a.ms-effectiveStartMs)-Math.abs(b.ms-effectiveStartMs))[0] ?? first;
+    const oldPrice = target.value;
+    const delta = currentPrice-oldPrice;
+    const percent = oldPrice > 0 ? delta/oldPrice*100 : 0;
     const unchanged = Math.abs(delta) < .005;
-    setText(els.trendDirection, unchanged ? "Oförändrat" : delta > 0 ? "Ökat" : "Minskat");
+    const periodLabel = days === 365 ? "1 år" : days > 0 ? days + " dagar" : (coverageDays === 0 ? "idag" : "sedan " + first.item.date);
+
+    setText(els.trendDirection, days > 0 ? "Förändring · " + periodLabel : "Sedan första mätningen");
     setText(els.trendSelected, unchanged ? "±0,00 kr/l" : (delta > 0 ? "+" : "−") + fmt(Math.abs(delta)) + " kr/l");
+    setText(els.trendPercent, unchanged ? "0,0 %" : (percent > 0 ? "+" : "−") + Math.abs(percent).toLocaleString("sv-SE",{minimumFractionDigits:1,maximumFractionDigits:1}) + " %");
     setText(els.trendFromPrice, fmt(oldPrice) + " kr/l");
     setText(els.trendToPrice, fmt(currentPrice) + " kr/l");
-    setText(els.trendRange, "Förändring under de senaste " + label + ".");
-    if (els.trendPrices) els.trendPrices.hidden = false;
+    if (els.trendPrices) els.trendPrices.hidden = coverageDays === 0;
 
-    if (points.length >= 2) {
-      const values = points.map(p => p.value), min = Math.min(...values), max = Math.max(...values), span = Math.max(.01, max-min);
-      const coords = points.map((p,i) => (i/(points.length-1)*320).toFixed(1) + "," + (86-(p.value-min)/span*72).toFixed(1)).join(" ");
-      els.trendLine.setAttribute("points", coords);
-      setText(els.trendHigh, fmt(max));
-      setText(els.trendLow, fmt(min));
-      setText(els.trendStartDate, points[0].item.date.slice(5));
-      setText(els.trendEndDate, points.at(-1).item.date.slice(5));
-      els.trendChartWrap.hidden = false;
+    const enoughForChart = points.length >= 3 && coverageDays >= 2;
+    if (enoughForChart) {
+      const values=points.map(p=>p.value), min=Math.min(...values), max=Math.max(...values), rawSpan=max-min;
+      const padding=Math.max(.05,rawSpan*.18), chartMin=min-padding, chartMax=max+padding, span=chartMax-chartMin;
+      const coords=points.map((p,i)=>(i/(points.length-1)*320).toFixed(1)+","+(88-(p.value-chartMin)/span*76).toFixed(1)).join(" ");
+      els.trendLine.setAttribute("points",coords);
+      setText(els.trendHigh,fmt(max)); setText(els.trendLow,fmt(min));
+      setText(els.trendStartDate,points[0].item.date.slice(5).replace("-","/"));
+      setText(els.trendEndDate,points.at(-1).item.date.slice(5).replace("-","/"));
+      els.trendChartWrap.hidden=false; els.trendEmpty.hidden=true;
+      setText(els.trendRange,"Rikssnitt för " + fuelData[state.fuel].label + " · " + periodLabel + ".");
     } else {
-      els.trendLine.setAttribute("points", "");
-      els.trendChartWrap.hidden = true;
+      els.trendLine.setAttribute("points",""); els.trendChartWrap.hidden=true; els.trendEmpty.hidden=false;
+      const remaining=Math.max(0,7-coverageDays);
+      setText(els.trendEmptyText, remaining > 0 ? "Första grafen blir tillgänglig om cirka " + remaining + (remaining===1?" dag.":" dagar.") : "Grafen visas när minst tre mätpunkter finns.");
+      if (els.trendProgressFill) els.trendProgressFill.style.width=Math.min(100,Math.max(8,coverageDays/7*100))+"%";
+      setText(els.trendRange,"Rikssnitt för " + fuelData[state.fuel].label + " · uppdateras dagligen.");
     }
   }
 
@@ -486,7 +509,8 @@
   function bindEvents() {
     for (const button of els.trendButtons) {
       button.addEventListener("click", () => {
-        state.trendDays = Number(button.dataset.trendDays) || 30;
+        if (button.disabled) return;
+        state.trendDays = Number(button.dataset.trendDays) || 7;
         renderTrend(getPrice());
       });
     }
