@@ -475,7 +475,8 @@
       const values=points.map(p=>p.value), min=Math.min(...values), max=Math.max(...values), rawSpan=max-min;
       const minIndex=values.indexOf(min), maxIndex=values.indexOf(max);
       const padding=Math.max(.05,rawSpan*.18), chartMin=min-padding, chartMax=max+padding, span=chartMax-chartMin;
-      const coords=points.map((p,i)=>(i/(points.length-1)*320).toFixed(1)+","+(88-(p.value-chartMin)/span*76).toFixed(1)).join(" ");
+      const pointStartMs=points[0].ms, pointEndMs=points.at(-1).ms, pointSpanMs=Math.max(1,pointEndMs-pointStartMs);
+      const coords=points.map(p=>(((p.ms-pointStartMs)/pointSpanMs)*320).toFixed(1)+","+(88-(p.value-chartMin)/span*76).toFixed(1)).join(" ");
       els.trendLine.setAttribute("points",coords);
       if (els.trendLastPoint) { const last=coords.split(" ").at(-1).split(","); els.trendLastPoint.setAttribute("cx",last[0]); els.trendLastPoint.setAttribute("cy",last[1]); els.trendLastPoint.hidden=false; }
       setText(els.trendHigh,fmt(max)); setText(els.trendLow,fmt(min));
