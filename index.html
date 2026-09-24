@@ -36,15 +36,18 @@
       <p>Välj bränsle. Du får rikssnittet direkt.</p>
     </header>
 
-    <section class="controls" aria-label="Välj bränsle">
-      <div class="fuel-toggle" role="group" aria-label="Bränsletyp">
-        <button class="fuel-button" type="button" data-fuel="petrol" aria-pressed="true"><span class="fuel-id fuel-id--petrol" aria-hidden="true">E10</span><span>Bensin 95</span></button>
-        <button class="fuel-button" type="button" data-fuel="petrol98" aria-pressed="false"><span class="fuel-id fuel-id--petrol" aria-hidden="true">E5</span><span>Bensin 98</span></button>
-        <button class="fuel-button" type="button" data-fuel="diesel" aria-pressed="false"><span class="fuel-id fuel-id--diesel" aria-hidden="true">B7</span><span>Diesel</span></button>
-        <button class="fuel-button" type="button" data-fuel="e85" aria-pressed="false"><span class="fuel-id fuel-id--petrol" aria-hidden="true">E85</span><span>E85</span></button>
+    <section class="controls" aria-label="Bränsle och tankstorlek">
+      <div class="fuel-control">
+        <span class="control-label" id="fuelTypeLabel">Bränsletyp</span>
+        <div class="fuel-toggle" role="group" aria-labelledby="fuelTypeLabel">
+        <button class="fuel-button" type="button" data-fuel="petrol" aria-pressed="true"><span>Bensin 95</span></button>
+        <button class="fuel-button" type="button" data-fuel="petrol98" aria-pressed="false"><span>Bensin 98</span></button>
+        <button class="fuel-button" type="button" data-fuel="diesel" aria-pressed="false"><span>Diesel</span></button>
+        <button class="fuel-button" type="button" data-fuel="e85" aria-pressed="false"><span>E85</span></button>
+        </div>
       </div>
-          <div class="tank-size-control" role="group" aria-labelledby="tankSizeLabel">
-        <span id="tankSizeLabel">Tankstorlek</span>
+      <div class="tank-size-control" role="group" aria-labelledby="tankSizeLabel">
+        <span class="control-label" id="tankSizeLabel">Tankstorlek</span>
         <div><button type="button" data-tank-size="30">30 L</button><button type="button" data-tank-size="40" aria-pressed="true">40 L</button><button type="button" data-tank-size="50">50 L</button><button type="button" data-tank-size="60">60 L</button></div>
       </div>
     </section>
