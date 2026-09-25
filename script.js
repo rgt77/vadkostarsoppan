@@ -543,9 +543,9 @@
     setText(els.taxSummaryLabel, ref.blendDependent ? "Moms (känd del)" : "Skatt och moms");
     setText(els.taxTank, fmt(ref.tax * tankLiters) + " kr");
     const taxPct = ref.tax / price * 100;
-    setText(els.taxShare, ref.blendDependent ? wholePercent.format(taxPct) + " % moms" : wholePercent.format(taxPct) + " % skatt + moms");
+    setText(els.taxShare, ref.blendDependent ? wholePercent.format(taxPct) + " % moms" : wholePercent.format(taxPct) + " % skatt och moms");
     setText(els.nonTaxShare, ref.blendDependent ? "Punktskatt varierar med bränslemixen" : wholePercent.format(100 - taxPct) + " % övrigt");
-    if (els.taxBarFill) els.taxBarFill.style.width = Math.max(0, Math.min(100, taxPct)) + "%";
+    if (els.taxBarFill) { const boundedTaxPct = Math.max(0, Math.min(100, taxPct)); els.taxBarFill.style.width = boundedTaxPct + "%"; els.taxBarFill.parentElement?.setAttribute("aria-valuenow", String(Math.round(boundedTaxPct))); }
 
     els.priceSource.href = priceData.source;
     els.taxSource.href = ref.fuel.taxSource;
