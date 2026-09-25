@@ -117,6 +117,8 @@ a { -webkit-tap-highlight-color: transparent; }
   font-size: 14px;
 }
 
+.controls { padding: 18px; border: 1px solid var(--line); border-radius: var(--radius-control); background: var(--card); }
+
 .card {
   margin-top: var(--space-card);
   padding: 24px;
