@@ -367,6 +367,9 @@ script.includes('"Punktskatt varierar med bränslemixen"') ? pass("E85 tax share
 
 html.includes("30–60 liters tankning") ? pass("Metadata matches selectable tank sizes") : fail("Metadata tank-size claim stale");
 style.includes("prefers-reduced-motion") ? pass("Reduced motion preference supported") : fail("Reduced motion support missing");
+html.includes('class="skip-link" href="#mainContent"') && html.includes('id="mainContent"') ? pass("Keyboard skip navigation") : fail("Skip navigation missing");
+html.includes('class="tax-bar" role="progressbar"') && html.includes('aria-valuemax="100"') ? pass("Tax share exposed as accessible meter") : fail("Tax share accessibility semantics missing");
+style.includes(":where(button,a,summary):focus-visible") ? pass("Global visible keyboard focus") : fail("Global focus-visible treatment missing");
 
 html.includes('name="twitter:card"') && html.includes('property="og:title"') ? pass("Social metadata complete") : fail("Social metadata incomplete");
 /<lastmod>2026-09-(?:24|25)<\/lastmod>/.test(read("sitemap.xml")) ? pass("Sitemap release date current") : fail("Sitemap release date stale");
