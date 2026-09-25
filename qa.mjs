@@ -283,7 +283,7 @@ try {
 
 html.includes('data-tank-size="30"') && html.includes('data-tank-size="60"') && script.includes("tankSizeButtons") ? pass("Interactive tank-size selector") : fail("Tank-size selector missing");
 html.includes('id="taxBarFill"') && script.includes("taxBarFill.style.width") ? pass("Visual tax-share bar") : fail("Tax-share visualization missing");
-html.includes('id="policyDetails"') && html.includes("Visa underlag") ? pass("Progressive policy evidence disclosure") : fail("Policy evidence disclosure missing");
+html.includes('id="policyDetails"') && html.includes("Underlag och källa") ? pass("Progressive policy evidence disclosure") : fail("Policy evidence disclosure missing");
 html.includes("Pris före skatt &amp; moms") ? pass("Plain-language residual label") : fail("Residual label not simplified");
 
 
@@ -291,6 +291,9 @@ html.includes('data-trend-days="365"') && script.includes("state.trendDays") && 
 html.includes('<details class="policy-details"') && html.indexOf('id="scenarioNote"') > html.indexOf('<details class="policy-details"') ? pass("Scenario methodology progressively disclosed") : fail("Scenario methodology disclosure regression");
 
 html.includes('class="breakdown-details"') && html.includes("Visa prisets delar") ? pass("Progressive cost breakdown") : fail("Cost breakdown disclosure missing");
+script.includes("scenarioEvaluation") && script.includes('"unsupported_fuel"') && script.includes('"outside_date"') && script.includes('"invalid_result"') ? pass("Scenario availability states explicit") : fail("Scenario availability states missing");
+html.includes('role="status" aria-live="polite" aria-atomic="true"') ? pass("Scenario result announced accessibly") : fail("Scenario live result semantics missing");
+style.includes("/* Phase 97: deep scenario refinement */") && style.includes(".scenario-comparison") ? pass("Scenario deep refinement styles present") : fail("Scenario deep refinement styles missing");
 
 
 script.includes("Sedan första mätningen") && script.includes("coverageDays") && script.includes("button.disabled") && html.includes('id="trendCoverage"') ? pass("Coverage-aware trend component") : fail("Trend readability regression");
