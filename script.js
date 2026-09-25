@@ -628,6 +628,8 @@
   }
 
   window.addEventListener("popstate", () => { loadStateFromUrl(); updatePartySelection(); render(); });
+  window.addEventListener("error", () => document.documentElement.classList.add("runtime-error"));
+  window.addEventListener("unhandledrejection", () => document.documentElement.classList.add("runtime-error"));
 
   loadStateFromUrl();
   buildPartyButtons();
