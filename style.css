@@ -229,6 +229,7 @@ a { -webkit-tap-highlight-color: transparent; }
 .party-head { align-items: end; }
 
 .party-choice-label {
+  margin: 14px 0 -6px;
   color: var(--muted);
   font-size: 10px;
   font-weight: 700;
