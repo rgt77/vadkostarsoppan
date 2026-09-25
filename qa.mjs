@@ -405,6 +405,7 @@ const releaseAuditScript=read("scripts/release-audit.mjs");
 releaseAuditScript.includes("prefers-reduced-motion") && releaseAuditScript.includes("focus-visible") && releaseAuditScript.includes("noopener") ? pass("Frontend release audit coverage") : fail("Frontend release audit incomplete");
 const releaseAuditWorkflow=read(".github/workflows/release-audit.yml");
 releaseAuditWorkflow.includes("npm run qa") && releaseAuditWorkflow.includes("node scripts/release-audit.mjs") ? pass("Release audit gate") : fail("Release audit workflow missing");
+read("package.json").includes('"check:syntax"') && read(".github/workflows/qa.yml").includes("Syntax preflight") && releaseAuditWorkflow.includes("Syntax preflight") ? pass("Syntax integrity gated in QA and release") : fail("Syntax integrity gate missing");
 JSON.parse(read("data/release-audit.json")).status==="ok" ? pass("Release audit state healthy") : warn("Release audit state pending refresh");
 
 const liveSmoke=read("scripts/live-smoke.mjs");
