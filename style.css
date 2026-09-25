@@ -573,3 +573,36 @@ a { -webkit-tap-highlight-color: transparent; }
 
 /* Phase 95: final result-card rhythm */
 .result-card .tax-summary{margin-top:14px}.result-card .price-trend{margin-top:16px}.result-card .breakdown-list{margin-top:12px}@media(max-width:480px){.result-card{padding:17px}.result-card .tank-total strong{font-size:56px}}
+
+
+/* Phase 96: deep price-trend refinement */
+.price-trend{margin-top:18px;padding:20px 0 18px}
+.trend-title-row{align-items:center}
+.trend-coverage{background:var(--soft);border-color:transparent}
+.trend-status{margin-top:18px;padding:14px;border:1px solid var(--line);border-radius:var(--radius-active);background:var(--card)}
+.trend-change strong{font-size:32px;letter-spacing:-.04em}
+.trend-change small{margin-top:6px}
+.trend-prices{background:var(--soft);border:1px solid transparent}
+.trend-chart-wrap{margin-top:20px;padding-top:8px}
+.trend-chart{height:112px}
+.trend-grid-line{opacity:.12}
+.trend-last-point{r:4}
+.trend-stats{margin-top:10px;padding-top:10px}
+.trend-help{margin-top:10px}
+.trend-periods button:focus-visible{outline:2px solid currentColor;outline-offset:-2px}
+@media(max-width:480px){
+  .price-trend{padding:18px 0}
+  .trend-title-row{align-items:flex-start}
+  .trend-status{padding:12px;gap:12px}
+  .trend-change strong{font-size:32px}
+  .trend-prices{padding:9px 10px}
+  .trend-chart-wrap{padding-left:34px}
+  .trend-chart{height:116px}
+  .trend-axis,.trend-y{font-size:10px}
+  .trend-stats{grid-template-columns:1fr 1fr}
+  .trend-stats span:last-child{text-align:right}
+}
+@media(max-width:380px){
+  .trend-stats{grid-template-columns:1fr}
+  .trend-stats span:last-child{text-align:left}
+}
