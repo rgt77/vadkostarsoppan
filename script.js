@@ -586,7 +586,7 @@
   const allowedTankLiters = new Set([30,40,50,60]);
   function setFuel(fuel) { if (!fuelData[fuel] || fuel === state.fuel) return; state.fuel = fuel; render(); }
   function setTankLiters(liters) { if (!allowedTankLiters.has(liters) || liters === tankLiters) return; tankLiters = liters; render(); }
-  function setParty(party) { if (party && (!partyOrder.includes(party) || !scenarios[party])) return; state.party = party; updatePartySelection(); renderScenario(getPrice()); syncUrl(); }
+  function setParty(party) { if (party && (!partyOrder.includes(party) || !scenarios[party])) return; if (party === state.party) return; state.party = party; updatePartySelection(); const health = priceState(); renderScenario(health.status === "fresh" || health.status === "stale" ? getPrice() : NaN); syncUrl(); }
 
   function bindEvents() {
     for (const button of els.trendButtons) {
