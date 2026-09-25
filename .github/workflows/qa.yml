@@ -19,6 +19,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Syntax preflight
+        run: npm run check:syntax
       - name: Run QA
         run: set -o pipefail; npm run qa 2>&1 | tee qa-output.txt
       - name: Upload QA diagnostics
