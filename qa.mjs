@@ -342,7 +342,7 @@ style.replace(/\s+/g,"").includes("@media(hover:hover)") ? pass("Touch-safe hove
 !style.replace(/\s+/g,"").includes(".controls{grid-template-columns") ? pass("Dead controls grid rule removed") : fail("Dead controls grid rule remains");
 
 const healthScript2 = read("scripts/data-health.mjs");
-/const\\s+activeDuty\\s*=/.test(healthScript2) ? pass("Reduction-duty health period resolved") : fail("Reduction-duty health period missing");
+/const\s+activeDuty\s*=/.test(healthScript2) ? pass("Reduction-duty health period resolved") : fail("Reduction-duty health period missing");
 healthScript2.includes("todayUtcDay") && healthScript2.includes("Prisdatum ligger i framtiden") ? pass("Calendar-safe freshness validation") : fail("Freshness date handling regression");
 script.includes("function priceState()") && script.includes('"invalid_date"') && script.includes('"stale"') ? pass("Frontend distinguishes price-data health states") : fail("Frontend data-health states missing");
 style.includes(".data-status--warning") && style.includes(".data-status--error") ? pass("Visible data-health severity states") : fail("Data-health severity styling missing");
