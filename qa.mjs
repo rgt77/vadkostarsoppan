@@ -311,6 +311,10 @@ html.includes('aria-valuemax="3"') && script.includes("3 mätningar") ? pass("Tr
 script.includes("coveragePercent") && script.includes("datatäckning") ? pass("Trend reports data coverage accessibly") : fail("Trend data coverage context missing");
 !JSON.parse(read("data/price-history.json")).trendToleranceDays ? pass("Obsolete trend tolerance metadata removed") : fail("Obsolete trend tolerance remains");
 script.includes("trendPercent") && html.includes('id="trendPercent"') ? pass("Trend percentage context") : fail("Trend percentage missing");
+script.includes("datedByDate") && script.includes("periodReadiness") && script.includes("readiness.get(period).measurements") ? pass("Trend deduplicates dates and validates each period independently") : fail("Trend period readiness regression");
+html.includes('aria-labelledby="trendTitle trendChartSummary"') && !script.includes('trendChart?.setAttribute("aria-label"') ? pass("Trend chart accessible name is non-duplicative") : fail("Trend chart accessibility naming regression");
+html.includes('id="trendStatus" aria-live="polite"') ? pass("Trend changes announced accessibly") : fail("Trend live status missing");
+style.includes("/* Phase 96: deep price-trend refinement */") && style.includes(".trend-chart{height:112px}") ? pass("Trend deep refinement styles present") : fail("Trend deep refinement styles missing");
 
 style.includes("--radius-control") && style.includes("--control-active") ? pass("Unified control design tokens") : fail("Control design tokens missing");
 
