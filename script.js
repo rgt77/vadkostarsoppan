@@ -516,41 +516,66 @@
     }
   }
 
-  function render() {
-    const price = getPrice();
+  function calculationViewModel(price, liters = tankLiters) {
     const ref = calculate(price);
+    if (!ref || !Number.isFinite(liters) || liters <= 0) return null;
+    const taxPct = ref.tax / price * 100;
+    const boundedTaxPct = Math.max(0, Math.min(100, taxPct));
+    return {
+      ref,
+      price,
+      liters,
+      tankTotal: price * liters,
+      marketTank: ref.market * liters,
+      energyTank: ref.blendDependent ? null : ref.taxPeriod.energyTax * liters,
+      carbonTank: ref.blendDependent ? null : ref.taxPeriod.carbonTax * liters,
+      vatTank: ref.vat * liters,
+      taxTank: ref.tax * liters,
+      taxPct,
+      boundedTaxPct
+    };
+  }
 
-    if (!ref) {
+  function renderCalculation(view) {
+    if (!view) {
       setText(els.tankTotal, "Data saknas");
       setText(els.literPrice, "—");
-      renderDataStatus(ref);
       return;
     }
-
-    for (const button of els.fuelButtons) {
-      button.setAttribute("aria-pressed", String(button.dataset.fuel === state.fuel));
-    }
-
+    const { ref, price, liters, tankTotal, marketTank, energyTank, carbonTank, vatTank, taxTank, taxPct, boundedTaxPct } = view;
     setText(els.fuelLabel, ref.fuel.label);
-    setText(els.tankTotal, fmt(price * tankLiters));
+    setText(els.tankTotal, fmt(tankTotal));
     setText(els.literPrice, fmt(price));
-    setText(els.marketTank, fmt(ref.market * tankLiters) + " kr");
-    setText(els.energyTaxLabel, ref.blendDependent ? "Energiskatt" : "Energiskatt");
-    setText(els.carbonTaxLabel, ref.blendDependent ? "Koldioxidskatt" : "Koldioxidskatt");
-    setText(els.energyTank, ref.blendDependent ? "Varierar med bränslemixen" : fmt(ref.taxPeriod.energyTax * tankLiters) + " kr");
-    setText(els.carbonTank, ref.blendDependent ? "Varierar med bränslemixen" : fmt(ref.taxPeriod.carbonTax * tankLiters) + " kr");
-    setText(els.vatTank, fmt(ref.vat * tankLiters) + " kr");
+    setText(els.marketTank, fmt(marketTank) + " kr");
+    setText(els.energyTaxLabel, "Energiskatt");
+    setText(els.carbonTaxLabel, "Koldioxidskatt");
+    setText(els.energyTank, ref.blendDependent ? "Varierar med bränslemixen" : fmt(energyTank) + " kr");
+    setText(els.carbonTank, ref.blendDependent ? "Varierar med bränslemixen" : fmt(carbonTank) + " kr");
+    setText(els.vatTank, fmt(vatTank) + " kr");
     setText(els.taxSummaryLabel, ref.blendDependent ? "Moms (känd del)" : "Skatt och moms");
-    setText(els.taxTank, fmt(ref.tax * tankLiters) + " kr");
-    const taxPct = ref.tax / price * 100;
+    setText(els.taxTank, fmt(taxTank) + " kr");
     setText(els.taxShare, ref.blendDependent ? wholePercent.format(taxPct) + " % moms" : wholePercent.format(taxPct) + " % skatt och moms");
     setText(els.nonTaxShare, ref.blendDependent ? "Punktskatt varierar med bränslemixen" : wholePercent.format(100 - taxPct) + " % övrigt");
-    if (els.taxBarFill) { const boundedTaxPct = Math.max(0, Math.min(100, taxPct)); els.taxBarFill.style.width = boundedTaxPct + "%"; els.taxBarFill.parentElement?.setAttribute("aria-valuenow", String(Math.round(boundedTaxPct))); }
-
+    if (els.taxBarFill) {
+      els.taxBarFill.style.width = boundedTaxPct + "%";
+      els.taxBarFill.parentElement?.setAttribute("aria-valuenow", String(Math.round(boundedTaxPct)));
+    }
     els.priceSource.href = priceData.source;
     els.taxSource.href = ref.fuel.taxSource;
+  }
 
-    renderDataStatus(ref);
+  function renderSelections() {
+    for (const button of els.fuelButtons) button.setAttribute("aria-pressed", String(button.dataset.fuel === state.fuel));
+    for (const button of els.tankSizeButtons) button.setAttribute("aria-pressed", String(Number(button.dataset.tankSize) === tankLiters));
+    for (const node of els.tankLiterLabels) setText(node, String(tankLiters));
+  }
+
+  function render() {
+    const price = getPrice();
+    const view = calculationViewModel(price);
+    renderSelections();
+    renderCalculation(view);
+    renderDataStatus(view?.ref ?? null);
     renderTrend(price);
     renderScenario(price);
     syncUrl();
@@ -569,8 +594,6 @@
         const liters = Number(button.dataset.tankSize);
         if (!Number.isFinite(liters) || liters <= 0) return;
         tankLiters = liters;
-        for (const node of els.tankLiterLabels) setText(node, String(tankLiters));
-        for (const choice of els.tankSizeButtons) choice.setAttribute("aria-pressed", String(choice === button));
         render();
       });
     }
