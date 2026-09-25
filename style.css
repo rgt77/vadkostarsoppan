@@ -549,3 +549,6 @@ a { -webkit-tap-highlight-color: transparent; }
 
 /* Phase 80: final first-screen balance */
 @media(min-width:641px){.controls{padding:20px}.controls+.result-card{margin-top:20px}}@media(max-width:480px){.result-card .card-head{gap:10px}.result-card .overline{margin-bottom:5px}.result-card .tank-total{padding-top:2px}}
+
+/* Phase 81: make tax share immediately scannable */
+.tax-share-row{margin-top:6px}.tax-share-row small:first-child{font-size:11px}.tax-bar{height:7px;margin-top:10px;border-radius:99px;background:var(--card);overflow:hidden}.tax-bar span{display:block;height:100%;border-radius:inherit;background:var(--text);transition:width .2s ease}@media(max-width:480px){.tax-summary{padding:15px}.tax-summary>div:first-child{align-items:center}.tax-share-row{grid-template-columns:1fr}.tax-share-row small{text-align:left}.tax-bar{height:8px}}
