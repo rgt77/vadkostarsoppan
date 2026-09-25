@@ -661,3 +661,5 @@ a { -webkit-tap-highlight-color: transparent; }
 @media(prefers-reduced-motion:reduce){.trend-progress span,.tax-bar span{transition:none}}
 
 .skip-link{position:fixed;top:8px;left:8px;z-index:1000;transform:translateY(-160%);padding:10px 14px;border:2px solid var(--text);border-radius:var(--radius-control);background:var(--card);color:var(--text);font-weight:700;text-decoration:none}.skip-link:focus{transform:translateY(0)}:where(button,a,summary):focus-visible{outline:2px solid var(--text);outline-offset:3px}.tax-bar[role="progressbar"]{position:relative}
+
+.runtime-error .data-status{border:2px solid var(--text)}.runtime-error .data-status::after{content:" Ett oväntat fel har inträffat. Ladda om sidan innan du använder resultatet.";font-weight:700}
