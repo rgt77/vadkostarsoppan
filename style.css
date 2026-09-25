@@ -555,3 +555,6 @@ a { -webkit-tap-highlight-color: transparent; }
 
 /* Phase 82: improve expanded cost hierarchy */
 .breakdown-list>div:first-child dt,.breakdown-list>div:first-child dd{color:var(--text);font-weight:750}.breakdown-list dd{font-size:12px}.breakdown-list>div:last-child{border-bottom:0}
+
+/* Phase 85: strengthen breakdown disclosure */
+.breakdown-details>summary{justify-content:space-between}.breakdown-details>summary::after{content:"+";font-size:16px;font-weight:500;color:var(--muted)}.breakdown-details[open]>summary::after{content:"−"}
