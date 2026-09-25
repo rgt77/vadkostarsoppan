@@ -606,3 +606,7 @@ a { -webkit-tap-highlight-color: transparent; }
   .trend-stats{grid-template-columns:1fr}
   .trend-stats span:last-child{text-align:left}
 }
+
+
+/* Phase 97: deep scenario refinement */
+.scenario-card{padding-bottom:22px}.party-choice-label{margin-bottom:0}.party-result{margin-top:16px}.party-result:not(.empty){border-color:var(--text)}.party-result.unavailable{border-color:var(--line);background:var(--soft)}.scenario-meta{margin-top:10px;padding:9px 11px;border-left:2px solid var(--line);color:var(--muted);font-size:10px;line-height:1.45}.scenario-comparison{display:grid;grid-template-columns:1fr auto;gap:6px 16px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:10px}.scenario-comparison[hidden]{display:none}.scenario-comparison span{color:var(--muted)}.scenario-comparison strong{text-align:right;font-variant-numeric:tabular-nums}.policy-details{margin-top:8px;border-top:1px solid var(--line)}.policy-details>summary{justify-content:space-between}.policy-details>summary::after{content:"+";font-size:16px;color:var(--muted)}.policy-details[open]>summary::after{content:"−"}.policy-facts strong{font-size:11px}.policy-facts p{margin:5px 0 0;color:var(--muted);font-size:10px;line-height:1.55}@media(max-width:480px){.scenario-card{padding:17px}.party-result{gap:14px}.party-price-line strong{font-size:46px}.scenario-comparison{width:100%}.scenario-meta{font-size:10px}.policy-details>summary{min-height:48px}}
