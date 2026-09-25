@@ -118,7 +118,7 @@
       <p class="party-choice-label">Välj parti för att se dokumenterat scenario</p>
       <div class="party-grid" id="partyGrid" role="group" aria-label="Välj parti"></div>
 
-      <div class="party-result empty" id="partyResult" aria-live="polite">
+      <div class="party-result empty" id="partyResult" role="status" aria-live="polite" aria-atomic="true">
         <div class="party-price-wrap">
           <span class="result-label" id="scenarioLabel">Välj ett parti</span>
           <div class="party-price-line">
@@ -131,8 +131,8 @@
         <div class="scenario-comparison" id="scenarioComparison" hidden><span>Nuvarande</span><strong id="scenarioBaseTank">— kr</strong><span>Scenario</span><strong id="scenarioResultTank">— kr</strong></div>
       </div>
 
-      <div class="scenario-meta" id="scenarioMeta" hidden></div>
-      <details class="policy-details" id="policyDetails" hidden><summary>Visa underlag</summary><p class="scenario-note" id="scenarioNote">Om ett parti inte har publicerat tillräckligt exakta nivåer visar vi inget påhittat pris.</p><div class="policy-facts" id="policyFacts"></div><a class="source-link" id="partySource" href="#" target="_blank" rel="noopener noreferrer">Visa partiets källa ↗</a></details>
+      <div class="scenario-meta" id="scenarioMeta" hidden aria-label="Scenarioinformation"></div>
+      <details class="policy-details" id="policyDetails" hidden><summary>Underlag och källa</summary><p class="scenario-note" id="scenarioNote">Om ett parti inte har publicerat tillräckligt exakta nivåer visar vi inget påhittat pris.</p><div class="policy-facts" id="policyFacts"></div><a class="source-link" id="partySource" href="#" target="_blank" rel="noopener noreferrer">Visa partiets källa ↗</a></details>
     </section>
 
     <details class="method">
