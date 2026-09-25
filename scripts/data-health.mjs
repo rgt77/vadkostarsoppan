@@ -45,12 +45,14 @@ for (const [key,p] of Object.entries(policies)) {
   const blocked = monitored?.status === "access_blocked";
   add(`policy:${key}`, healthy || blocked ? "ok" : "warning", healthy ? "Officiell källa bevakas" : blocked ? "Officiell källa verifierad men blockerar automatisk hämtning (HTTP 403)" : monitored ? "Källan kunde inte nås vid senaste kontroll" : "Bevakning ännu ej initialiserad", p.source);
 }
-const invalidPrices = ["petrol","petrol98","e85","diesel"].filter(k => !Number.isFinite(prices.national?.[k]) || prices.national[k] < 5 || prices.national[k] > 50);
+const requiredFuelKeys = ["petrol","petrol98","e85","diesel"];
+const invalidPrices = requiredFuelKeys.filter(k => !Number.isFinite(prices.national?.[k]) || prices.national[k] < 5 || prices.national[k] > 50);
 add("prices:plausibility", invalidPrices.length ? "error" : "ok", invalidPrices.length ? `Orimligt eller saknat rikssnitt: ${invalidPrices.join(", ")}` : "Fyra rimliga nationella rikssnitt", prices.source);
 const priceHistory = JSON.parse(fs.readFileSync("data/price-history.json","utf8"));
 const snapshots = priceHistory.snapshots || [];
 const latestHistory = snapshots.at(-1);
-add("prices:history-sync", latestHistory?.date === prices.updatedAt ? "ok":"error", latestHistory?.date === prices.updatedAt ? "Senaste historikdatum matchar publicerat rikssnitt" : "Prishistorik och publicerat rikssnitt är inte synkroniserade", prices.source);
+const latestHistoryComplete = requiredFuelKeys.every(k => Number.isFinite(latestHistory?.national?.[k]));
+add("prices:history-sync", latestHistory?.date === prices.updatedAt && latestHistoryComplete ? "ok":"error", latestHistory?.date === prices.updatedAt && latestHistoryComplete ? "Senaste historikdatum matchar publicerat rikssnitt" : "Prishistorik och publicerat rikssnitt är inte komplett synkroniserade", prices.source);
 const orderedHistory = snapshots.every((row,index)=>index===0 || snapshots[index-1].date < row.date);
 add("prices:history-order", orderedHistory ? "ok":"error", orderedHistory ? "Prishistoriken är strikt kronologisk" : "Prishistoriken innehåller dubbletter eller fel ordning", prices.source);
 add("policy:reduction-duty",activeDuty?"ok":"error",activeDuty?`Reduktionsplikt ${activeDuty.petrolPct}% bensin / ${activeDuty.dieselPct}% diesel`:"Ingen aktiv reduktionspliktsperiod",duty.source);
