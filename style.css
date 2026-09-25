@@ -543,3 +543,6 @@ a { -webkit-tap-highlight-color: transparent; }
 
 /* Phase 77: make the primary number the visual anchor */
 .result-card .tank-total strong{font-weight:850}.result-card .tank-total>small:first-child{font-weight:750;letter-spacing:.04em;text-transform:uppercase}
+
+/* Phase 78: compact first screen on phones */
+@media(max-width:480px){.topbar{min-height:52px}.shell{padding-top:24px}.intro h1{font-size:36px}.intro>p:last-child{max-width:34ch;line-height:1.4}.controls{padding:12px}.tank-size-control{margin-top:22px}}
