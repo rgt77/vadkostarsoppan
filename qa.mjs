@@ -290,7 +290,7 @@ html.includes("Pris före skatt &amp; moms") ? pass("Plain-language residual lab
 html.includes('data-trend-days="365"') && script.includes("state.trendDays") && script.includes("trendLine.setAttribute") ? pass("Compact trend period controls") : fail("Trend controls missing");
 html.includes('<details class="policy-details"') && html.indexOf('id="scenarioNote"') > html.indexOf('<details class="policy-details"') ? pass("Scenario methodology progressively disclosed") : fail("Scenario methodology disclosure regression");
 
-html.includes('class="breakdown-details"') && html.includes("Visa kostnadsdelar") ? pass("Progressive cost breakdown") : fail("Cost breakdown disclosure missing");
+html.includes('class="breakdown-details"') && html.includes("Så fördelas tankkostnaden") ? pass("Progressive cost breakdown") : fail("Cost breakdown disclosure missing");
 
 
 script.includes("Sedan första mätningen") && script.includes("coverageDays") && script.includes("button.disabled") && html.includes('id="trendCoverage"') ? pass("Coverage-aware trend component") : fail("Trend readability regression");
@@ -324,7 +324,7 @@ style.replace(/\s+/g,"").includes("--touch-min:44px") && /min-height:\s*var\(--t
 
 style.includes("--space-section") && style.includes("--space-card") && style.includes("--touch-min") ? pass("Phase 4 spacing and touch tokens") : fail("Phase 4 layout tokens missing");
 html.includes("result-card") && html.includes("scenario-card") ? pass("Semantic result card hooks") : fail("Result card hooks missing");
-/\.tax-summary\s*\{[^}]*margin-top:\s*18px;[^}]*padding-top:\s*15px;[^}]*border-top:\s*1px solid var\(--line\);[^}]*\}/s.test(style) ? pass("Tax summary hierarchy") : fail("Tax summary hierarchy missing");
+/\.tax-summary\s*\{[^}]*margin-top:\s*18px;[^}]*padding:\s*15px 14px 13px;[^}]*border:\s*1px solid var\(--line\);[^}]*background:\s*var\(--soft\);[^}]*\}/s.test(style) ? pass("Tax summary hierarchy") : fail("Tax summary hierarchy missing");
 
 !style.replace(/\s+/g,"").includes("var(--muted,#") && !style.replace(/\s+/g,"").includes("var(--text,#") ? pass("CSS token fallbacks consolidated") : fail("Redundant CSS token fallbacks remain");
 html.includes('data-tank-size="30" aria-pressed="false"') && html.includes('data-tank-size="60" aria-pressed="false"') ? pass("Complete tank selector accessibility state") : fail("Tank selector initial state incomplete");
@@ -338,7 +338,7 @@ const healthScript2 = read("scripts/data-health.mjs");
 healthScript2.includes("const activeDuty=") ? pass("Reduction-duty health period resolved") : fail("Reduction-duty health period missing");
 !style.replace(/\s+/g,"").includes("var(--line,#") ? pass("Line token fallbacks consolidated") : fail("Redundant line token fallback remains");
 /\.breakdown-details summary/.test(style) && /\.policy-details summary/.test(style) ? pass("Details controls share touch target") : fail("Details touch target mismatch");
-html.includes("Så räknar vi och våra källor") ? pass("Method disclosure label is explicit") : fail("Method disclosure label regression");
+html.includes("Metod och källor") ? pass("Method disclosure label is explicit") : fail("Method disclosure label regression");
 
 !style.replace(/\s+/g,"").includes(".tank-size-controlbutton{min-height:58px") ? pass("Duplicate tank control CSS removed") : fail("Duplicate tank control CSS remains");
 /\.trend-periods button\s*\{[^}]*min-height:\s*var\(--touch-min\)/s.test(style) ? pass("Trend periods use shared touch token") : fail("Trend touch token regression");
