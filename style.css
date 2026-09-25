@@ -546,3 +546,6 @@ a { -webkit-tap-highlight-color: transparent; }
 
 /* Phase 78: compact first screen on phones */
 @media(max-width:480px){.topbar{min-height:52px}.shell{padding-top:24px}.intro h1{font-size:36px}.intro>p:last-child{max-width:34ch;line-height:1.4}.controls{padding:12px}.tank-size-control{margin-top:22px}}
+
+/* Phase 80: final first-screen balance */
+@media(min-width:641px){.controls{padding:20px}.controls+.result-card{margin-top:20px}}@media(max-width:480px){.result-card .card-head{gap:10px}.result-card .overline{margin-bottom:5px}.result-card .tank-total{padding-top:2px}}
