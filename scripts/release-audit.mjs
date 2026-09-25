@@ -23,10 +23,14 @@ const normalizedCss=css.replace(/\s+/g,"");
 ok(normalizedCss.includes("@media(max-width:380px)")&&normalizedCss.includes("@media(max-width:520px)")&&normalizedCss.includes("@media(max-width:640px)"),"Smala brytpunkter saknas");
 ok(css.includes("prefers-reduced-motion"),"Reduced-motion-stöd saknas");
 ok(css.includes(":focus-visible"),"Synligt tangentbordsfokus saknas");
+ok(html.includes('class="skip-link" href="#mainContent"')&&html.includes('id="mainContent"'),"Skip-länk till huvudinnehåll saknas");
+ok(html.includes('class="tax-bar" role="progressbar"')&&html.includes('aria-valuemax="100"'),"Skatteandel saknar progressbar-semantik");
 ok(js.includes("history.replaceState"),"URL-state saknas");
 ok(js.includes('.catch(')&&js.includes('addEventListener("error"'),"Frontend saknar defensiv felhantering");
+ok(js.includes('addEventListener("unhandledrejection"'),"Unhandled promise rejection fångas inte");
+ok(js.includes("function calculationViewModel(")&&js.includes("function renderCalculation("),"Beräkning och DOM-rendering är inte separerade");
 
-const report={date:new Intl.DateTimeFormat("sv-SE",{timeZone:"Europe/Stockholm"}).format(new Date()),status:failures.length?"error":"ok",checks:13,failures};
+const report={date:new Intl.DateTimeFormat("sv-SE",{timeZone:"Europe/Stockholm"}).format(new Date()),status:failures.length?"error":"ok",checks:17,failures};
 fs.writeFileSync("data/release-audit.json",JSON.stringify(report,null,2)+"\n");
 console.log(JSON.stringify(report,null,2));
 if(failures.length)process.exit(1);
