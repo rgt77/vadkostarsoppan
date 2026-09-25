@@ -581,6 +581,10 @@
     syncUrl();
   }
 
+  function setFuel(fuel) { if (!fuelData[fuel]) return; state.fuel = fuel; render(); }
+  function setTankLiters(liters) { if (![30,40,50,60].includes(liters)) return; tankLiters = liters; render(); }
+  function setParty(party) { if (party && (!partyOrder.includes(party) || !scenarios[party])) return; state.party = party; updatePartySelection(); renderScenario(getPrice()); syncUrl(); }
+
   function bindEvents() {
     for (const button of els.trendButtons) {
       button.addEventListener("click", () => {
@@ -593,23 +597,18 @@
       button.addEventListener("click", () => {
         const liters = Number(button.dataset.tankSize);
         if (!Number.isFinite(liters) || liters <= 0) return;
-        tankLiters = liters;
-        render();
+        setTankLiters(liters);
       });
     }
     for (const button of els.fuelButtons) {
       button.addEventListener("click", () => {
-        state.fuel = button.dataset.fuel;
-        render();
+        setFuel(button.dataset.fuel);
       });
     }
 
 
     els.scenarioReset?.addEventListener("click", () => {
-      state.party = "";
-      updatePartySelection();
-      renderScenario(getPrice());
-      syncUrl();
+      setParty("");
     });
 
   els.partyGrid?.addEventListener("keydown", event => {
@@ -624,10 +623,7 @@
       const button = event.target.closest("[data-party]");
       if (!button) return;
 
-      state.party = button.dataset.party;
-      updatePartySelection();
-      renderScenario(getPrice());
-      syncUrl();
+      setParty(button.dataset.party);
     });
   }
 
