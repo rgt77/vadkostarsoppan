@@ -338,7 +338,7 @@ const healthScript2 = read("scripts/data-health.mjs");
 healthScript2.includes("const activeDuty=") ? pass("Reduction-duty health period resolved") : fail("Reduction-duty health period missing");
 !style.replace(/\s+/g,"").includes("var(--line,#") ? pass("Line token fallbacks consolidated") : fail("Redundant line token fallback remains");
 /\.breakdown-details summary/.test(style) && /\.policy-details summary/.test(style) ? pass("Details controls share touch target") : fail("Details touch target mismatch");
-html.includes("Metod och källor") ? pass("Method disclosure label is explicit") : fail("Method disclosure label regression");
+html.includes("Så räknar vi") ? pass("Method disclosure label is explicit") : fail("Method disclosure label regression");
 
 !style.replace(/\s+/g,"").includes(".tank-size-controlbutton{min-height:58px") ? pass("Duplicate tank control CSS removed") : fail("Duplicate tank control CSS remains");
 /\.trend-periods button\s*\{[^}]*min-height:\s*var\(--touch-min\)/s.test(style) ? pass("Trend periods use shared touch token") : fail("Trend touch token regression");
