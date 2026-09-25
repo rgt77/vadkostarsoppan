@@ -29,9 +29,11 @@ jobs:
       - name: Monitor official free sources
         run: node scripts/check-official-sources.mjs
       - name: Generate data health
+        id: health
         run: node scripts/data-health.mjs
         continue-on-error: true
       - name: Run QA
+        id: qa
         run: npm run qa
         continue-on-error: true
       - name: Persist monitoring state
@@ -53,3 +55,11 @@ jobs:
           body="Automatisk bevakning har upptäckt ändrat innehåll. Ingen sakuppgift ändras automatiskt; källan ska verifieras innan data uppdateras."
           existing=$(gh issue list --state open --search '"Officiell datakälla ändrad" in:title' --json number --jq '.[0].number // empty')
           if [ -n "$existing" ]; then gh issue comment "$existing" --body "$body"; else gh issue create --title "Officiell datakälla ändrad: $names" --body "$body"; fi
+
+      - name: Enforce monitoring result
+        if: always()
+        run: |
+          failed=0
+          if [ "${{ steps.health.outcome }}" != "success" ]; then echo "Data health reported an error."; failed=1; fi
+          if [ "${{ steps.qa.outcome }}" != "success" ]; then echo "QA reported an error."; failed=1; fi
+          exit "$failed"
