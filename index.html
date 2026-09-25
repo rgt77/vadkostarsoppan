@@ -85,15 +85,15 @@
 
       <section class="price-trend" id="priceTrend" hidden aria-labelledby="trendTitle">
         <div class="trend-title-row"><div><span class="trend-kicker">RIKSSNITT · KR/L</span><h3 id="trendTitle">Prisutveckling</h3></div><span class="trend-coverage" id="trendCoverage">Historik byggs upp</span></div>
-        <div class="trend-periods" role="group" aria-label="Välj tidsperiod"><button type="button" data-trend-days="7">7 dagar</button><button type="button" data-trend-days="30">30 dagar</button><button type="button" data-trend-days="365">1 år</button></div>
-        <div class="trend-status" id="trendStatus">
+        <div class="trend-periods" role="group" aria-label="Välj tidsperiod för prisutveckling"><button type="button" data-trend-days="7">7 dagar</button><button type="button" data-trend-days="30">30 dagar</button><button type="button" data-trend-days="365">1 år</button></div>
+        <div class="trend-status" id="trendStatus" aria-live="polite">
           <div class="trend-change"><span id="trendDirection">Sedan första mätningen</span><strong id="trendSelected">—</strong><small id="trendPercent"></small></div>
           <div class="trend-prices" id="trendPrices" hidden aria-label="Prisjämförelse"><div><span>Från</span><strong id="trendFromPrice">—</strong></div><span class="trend-arrow">→</span><div><span>Nu</span><strong id="trendToPrice">—</strong></div></div>
         </div>
         <div class="trend-chart-wrap" id="trendChartWrap" hidden>
           <span class="trend-y trend-y--high" id="trendHigh">—</span><span class="trend-y trend-y--low" id="trendLow">—</span>
-          <svg id="trendChart" class="trend-chart" viewBox="0 0 320 96" preserveAspectRatio="none" role="img" aria-label="Prisgraf"><line class="trend-grid-line" x1="0" y1="14" x2="320" y2="14"></line><line class="trend-grid-line" x1="0" y1="50" x2="320" y2="50"></line><line class="trend-grid-line" x1="0" y1="86" x2="320" y2="86"></line><polyline id="trendLine" points=""></polyline><circle id="trendLastPoint" class="trend-last-point" cx="0" cy="0" r="3.5" hidden></circle></svg>
-          <div class="trend-axis"><span id="trendStartDate">—</span><span id="trendEndDate">—</span></div><div class="trend-stats" id="trendStats"><span>Lägst <strong id="trendMinStat">—</strong></span><span>Högst <strong id="trendMaxStat">—</strong></span></div><div class="trend-chart-summary" id="trendChartSummary" aria-live="polite"></div>
+          <svg id="trendChart" class="trend-chart" viewBox="0 0 320 96" preserveAspectRatio="none" role="img" aria-labelledby="trendTitle trendChartSummary"><line class="trend-grid-line" x1="0" y1="14" x2="320" y2="14"></line><line class="trend-grid-line" x1="0" y1="50" x2="320" y2="50"></line><line class="trend-grid-line" x1="0" y1="86" x2="320" y2="86"></line><polyline id="trendLine" points=""></polyline><circle id="trendLastPoint" class="trend-last-point" cx="0" cy="0" r="3.5" hidden></circle></svg>
+          <div class="trend-axis"><span id="trendStartDate">—</span><span id="trendEndDate">—</span></div><div class="trend-stats" id="trendStats"><span>Lägst <strong id="trendMinStat">—</strong></span><span>Högst <strong id="trendMaxStat">—</strong></span></div><div class="trend-chart-summary" id="trendChartSummary"></div>
         </div>
         <div class="trend-empty" id="trendEmpty" hidden><div class="trend-empty-head"><strong>Vi bygger prishistoriken</strong><span id="trendProgressLabel">—</span></div><span id="trendEmptyText">Nya rikssnitt sparas dagligen.</span><div class="trend-progress" role="progressbar" aria-label="Mätningar till första grafen" aria-valuemin="0" aria-valuemax="3" aria-valuenow="0"><span id="trendProgressFill"></span></div></div><p class="trend-help" id="trendRange">Nya rikssnitt sparas dagligen.</p>
       </section>
