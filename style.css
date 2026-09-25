@@ -207,9 +207,9 @@ a { -webkit-tap-highlight-color: transparent; }
   font-variant-numeric: tabular-nums;
 }
 
-.tax-summary { margin-top: 18px; padding-top: 15px; border-top: 1px solid var(--line); }
+.tax-summary { margin-top: 18px; padding: 15px 14px 13px; border: 1px solid var(--line); border-radius: var(--radius-active); background: var(--soft); }
 
-.tax-summary strong { font-size: 18px; line-height: 1.15; }
+.tax-summary strong { font-size: 20px; line-height: 1.15; }
 
 .tax-summary small {
   display: block;
