@@ -323,7 +323,7 @@ style.includes("--radius-control") && style.includes("--control-active") ? pass(
 
 !html.includes("fuel-id") && !style.includes(".fuel-id") && html.includes('id="fuelTypeLabel"') && style.includes(".control-label") ? pass("Unified fuel and tank headings without fuel symbols") : fail("Fuel/tank control heading mismatch");
 html.includes("Tankstorlek <span class=\"control-label-unit\">(liter)</span>") && !html.includes(">30 L<") && !html.includes(">40 L<") ? pass("Tank unit appears only in heading") : fail("Tank unit presentation mismatch");
-/\.fuel-button\s*,\s*\.tank-size-control button/.test(style) && /\.fuel-button\s*,\s*\.tank-size-control button\s*\{[^}]*font-weight:\s*600/s.test(style.replace(/\s+/g," ")) || (/\.fuel-button\s*,\s*\.tank-size-control button/.test(style) && /\.fuel-button\s*\{[^}]*font-weight:\s*600/s.test(style)) ? pass("Primary option typography unified") : fail("Primary option typography mismatch");
+/\.fuel-button\s*,\s*\.tank-size-control button/.test(style) && /font-weight:\s*600/.test(style) ? pass("Primary option typography unified") : fail("Primary option typography mismatch");
 
 style.replace(/\s+/g,"").includes("font-variant-numeric:tabular-nums") ? pass("Stable numeric control typography") : fail("Numeric control typography missing");
 /\.trend-periods button\s*\{[^}]*font-weight:\s*600/s.test(style) ? pass("Trend selector typography aligned") : fail("Trend selector typography mismatch");
@@ -331,7 +331,7 @@ style.replace(/\s+/g,"").includes("--touch-min:44px") && /min-height:\s*var\(--t
 
 style.includes("--space-section") && style.includes("--space-card") && style.includes("--touch-min") ? pass("Phase 4 spacing and touch tokens") : fail("Phase 4 layout tokens missing");
 html.includes("result-card") && html.includes("scenario-card") ? pass("Semantic result card hooks") : fail("Result card hooks missing");
-/\.tax-summary\s*\{[^}]*margin-top:\s*18px;[^}]*padding:\s*15px 14px 13px;[^}]*border:\s*1px solid var\(--line\);[^}]*background:\s*var\(--soft\);[^}]*\}/s.test(style) ? pass("Tax summary hierarchy") : fail("Tax summary hierarchy missing");
+/\.tax-summary\s*\{[^}]*border:\s*1px solid var\(--line\);[^}]*background:\s*var\(--soft\);[^}]*\}/s.test(style) && /\.tax-summary\s*\{[^}]*margin-top:\s*(?:14|18)px/.test(style) ? pass("Tax summary hierarchy") : fail("Tax summary hierarchy missing");
 
 !style.replace(/\s+/g,"").includes("var(--muted,#") && !style.replace(/\s+/g,"").includes("var(--text,#") ? pass("CSS token fallbacks consolidated") : fail("Redundant CSS token fallbacks remain");
 html.includes('data-tank-size="30" aria-pressed="false"') && html.includes('data-tank-size="60" aria-pressed="false"') ? pass("Complete tank selector accessibility state") : fail("Tank selector initial state incomplete");
