@@ -384,7 +384,7 @@ const officialMonitor = read("scripts/check-official-sources.mjs");
 officialMonitor.includes('"access_blocked"') && officialMonitor.includes('"unreachable"') ? pass("Official monitor tolerates source access failures") : fail("Official monitor resilience missing");
 const priceWorkflow = read(".github/workflows/update-prices.yml");
 priceWorkflow.includes("if: failure()") && priceWorkflow.includes("Prisuppdatering misslyckades") ? pass("Price ingestion failure alert") : fail("Price failure alert missing");
-const healthWorkflow = read(".github/workflows/data-health.yml");
+healthWorkflow = read(".github/workflows/data-health.yml");
 healthWorkflow.includes("gh issue list") && healthWorkflow.includes("Officiell datakälla ändrad") ? pass("Official source alerts deduplicated") : fail("Official source alert deduplication missing");
 const marketWorkflow = read(".github/workflows/update-market-data.yml");
 marketWorkflow.includes("Marknadsdata behöver granskas") && marketWorkflow.includes("issues: write") ? pass("Market health alert") : fail("Market health alert missing");
