@@ -350,7 +350,7 @@ healthScript2.includes("latestHistoryComplete") && healthScript2.includes("valid
 script.includes("function priceState()") && script.includes('"invalid_date"') && script.includes('"stale"') ? pass("Frontend distinguishes price-data health states") : fail("Frontend data-health states missing");
 script.includes('window.addEventListener("error"') && script.includes('window.addEventListener("unhandledrejection"') && style.includes(".runtime-error .data-status") ? pass("Unexpected runtime failures become visible") : fail("Runtime failure visibility missing");
 style.includes(".data-status--warning") && style.includes(".data-status--error") ? pass("Visible data-health severity states") : fail("Data-health severity styling missing");
-const const healthWorkflow2 = read(".github/workflows/data-health.yml");
+const healthWorkflow2 = read(".github/workflows/data-health.yml");
 healthWorkflow2.includes("Enforce monitoring result") && healthWorkflow2.includes("steps.health.outcome") && healthWorkflow2.includes("steps.qa.outcome") ? pass("Data-health workflow persists then enforces failures") : fail("Data-health workflow can mask failures");
 !style.replace(/\s+/g,"").includes("var(--line,#") ? pass("Line token fallbacks consolidated") : fail("Redundant line token fallback remains");
 /\.breakdown-details(?:>|\\s)summary/.test(style) && /\.policy-details(?:>|\\s)summary/.test(style) ? pass("Details controls share touch target") : fail("Details touch target mismatch");
@@ -387,7 +387,7 @@ const officialMonitor = read("scripts/check-official-sources.mjs");
 officialMonitor.includes('"access_blocked"') && officialMonitor.includes('"unreachable"') ? pass("Official monitor tolerates source access failures") : fail("Official monitor resilience missing");
 const priceWorkflow = read(".github/workflows/update-prices.yml");
 priceWorkflow.includes("if: failure()") && priceWorkflow.includes("Prisuppdatering misslyckades") ? pass("Price ingestion failure alert") : fail("Price failure alert missing");
-healthWorkflow = read(".github/workflows/data-health.yml");
+const healthWorkflow = read(".github/workflows/data-health.yml");
 healthWorkflow.includes("gh issue list") && healthWorkflow.includes("Officiell datakälla ändrad") ? pass("Official source alerts deduplicated") : fail("Official source alert deduplication missing");
 const marketWorkflow = read(".github/workflows/update-market-data.yml");
 marketWorkflow.includes("Marknadsdata behöver granskas") && marketWorkflow.includes("issues: write") ? pass("Market health alert") : fail("Market health alert missing");
