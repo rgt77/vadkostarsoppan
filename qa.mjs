@@ -349,8 +349,8 @@ healthScript2.includes("todayUtcDay") && healthScript2.includes("Prisdatum ligge
 script.includes("function priceState()") && script.includes('"invalid_date"') && script.includes('"stale"') ? pass("Frontend distinguishes price-data health states") : fail("Frontend data-health states missing");
 script.includes('window.addEventListener("error"') && script.includes('window.addEventListener("unhandledrejection"') && style.includes(".runtime-error .data-status") ? pass("Unexpected runtime failures become visible") : fail("Runtime failure visibility missing");
 style.includes(".data-status--warning") && style.includes(".data-status--error") ? pass("Visible data-health severity states") : fail("Data-health severity styling missing");
-const healthWorkflow = read(".github/workflows/data-health.yml");
-healthWorkflow.includes("Enforce monitoring result") && healthWorkflow.includes("steps.health.outcome") && healthWorkflow.includes("steps.qa.outcome") ? pass("Data-health workflow persists then enforces failures") : fail("Data-health workflow can mask failures");
+const const healthWorkflow2 = read(".github/workflows/data-health.yml");
+healthWorkflow2.includes("Enforce monitoring result") && healthWorkflow2.includes("steps.health.outcome") && healthWorkflow2.includes("steps.qa.outcome") ? pass("Data-health workflow persists then enforces failures") : fail("Data-health workflow can mask failures");
 !style.replace(/\s+/g,"").includes("var(--line,#") ? pass("Line token fallbacks consolidated") : fail("Redundant line token fallback remains");
 /\.breakdown-details(?:>|\\s)summary/.test(style) && /\.policy-details(?:>|\\s)summary/.test(style) ? pass("Details controls share touch target") : fail("Details touch target mismatch");
 html.includes("Så räknar vi") ? pass("Method disclosure label is explicit") : fail("Method disclosure label regression");
