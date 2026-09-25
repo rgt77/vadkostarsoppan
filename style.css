@@ -531,51 +531,38 @@ a { -webkit-tap-highlight-color: transparent; }
 
 .data-status{margin-top:14px;padding:10px 12px;border-radius:var(--radius-active);background:var(--soft);font-size:11px;line-height:1.4}
 
-/* Phase 70: keep the primary journey visually dominant */
-.controls + .result-card{margin-top:18px}.result-card + .scenario-card{margin-top:22px}.method{margin-top:22px}.method>summary{color:var(--muted);font-size:12px;font-weight:700}.method[open]>summary{color:var(--text)}
-@media(max-width:480px){.shell{padding-top:32px}.intro{margin-bottom:18px}.controls + .result-card{margin-top:14px}.result-card + .scenario-card,.method{margin-top:18px}}
 
-/* Phase 74: first-screen control hierarchy */
-.controls .control-label{color:var(--text)}.controls .fuel-control:first-child .control-label::before{content:"1 · ";color:var(--muted)}.controls .tank-size-control .control-label::before{content:"2 · ";color:var(--muted)}
-
-/* Phase 75: strengthen selected choices without extra decoration */
+/* Consolidated refinements: phases 70–100 */
+.controls .control-label{color:var(--text)}
+.controls .fuel-control:first-child .control-label::before{content:"1 · ";color:var(--muted)}
+.controls .tank-size-control .control-label::before{content:"2 · ";color:var(--muted)}
 .fuel-button[aria-pressed="true"],.tank-size-control button[aria-pressed="true"]{box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)}
-
-/* Phase 77: make the primary number the visual anchor */
-.result-card .tank-total strong{font-weight:850}.result-card .tank-total>small:first-child{font-weight:750;letter-spacing:.04em;text-transform:uppercase}
-
-/* Phase 78: compact first screen on phones */
-@media(max-width:480px){.topbar{min-height:52px}.shell{padding-top:24px}.intro h1{font-size:36px}.intro>p:last-child{max-width:34ch;line-height:1.4}.controls{padding:12px}.tank-size-control{margin-top:22px}}
-
-/* Phase 80: final first-screen balance */
-@media(min-width:641px){.controls{padding:20px}.controls+.result-card{margin-top:20px}}@media(max-width:480px){.result-card .card-head{gap:10px}.result-card .overline{margin-bottom:5px}.result-card .tank-total{padding-top:2px}}
-
-/* Phase 81: make tax share immediately scannable */
-.tax-share-row{margin-top:6px}.tax-share-row small:first-child{font-size:11px}.tax-bar{height:7px;margin-top:10px;border-radius:99px;background:var(--card);overflow:hidden}.tax-bar span{display:block;height:100%;border-radius:inherit;background:var(--text);transition:width .2s ease}@media(max-width:480px){.tax-summary{padding:15px}.tax-summary>div:first-child{align-items:center}.tax-share-row{grid-template-columns:1fr}.tax-share-row small{text-align:left}.tax-bar{height:8px}}
-
-/* Phase 82: improve expanded cost hierarchy */
-.breakdown-list>div:first-child dt,.breakdown-list>div:first-child dd{color:var(--text);font-weight:750}.breakdown-list dd{font-size:12px}.breakdown-list>div:last-child{border-bottom:0}
-
-/* Phase 85: strengthen breakdown disclosure */
-.breakdown-details>summary{justify-content:space-between}.breakdown-details>summary::after{content:"+";font-size:16px;font-weight:500;color:var(--muted)}.breakdown-details[open]>summary::after{content:"−"}
-
-/* Phase 86: improve mobile cost rows */
-@media(max-width:480px){.breakdown-list>div{padding:11px 0;gap:12px}.breakdown-list dt{font-size:11px}.breakdown-list dd{font-size:13px;white-space:nowrap}}
-
-/* Phase 87: separate tax summary from detail rows */
-.tax-summary{position:relative}.tax-summary::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.55)}
-
-/* Phase 91: keep result metadata secondary */
-.result-card .overline{opacity:.82}.result-card .card-head h2{font-size:20px}.result-card .tank-total>small:last-child{color:var(--muted)}
-
-/* Phase 92: keep supporting details compact */
-.breakdown-details{margin-top:8px}.breakdown-details>summary{padding-block:12px;color:var(--muted)}.breakdown-details[open]>summary{color:var(--text)}
-
-/* Phase 95: final result-card rhythm */
-.result-card .tax-summary{margin-top:14px}.result-card .price-trend{margin-top:16px}.result-card .breakdown-list{margin-top:12px}@media(max-width:480px){.result-card{padding:17px}.result-card .tank-total strong{font-size:56px}}
-
-
-/* Phase 96: deep price-trend refinement */
+.result-card .tank-total strong{font-weight:850}
+.result-card .tank-total>small:first-child{font-weight:750;letter-spacing:.04em;text-transform:uppercase}
+.result-card .overline{opacity:.82}
+.result-card .card-head h2{font-size:20px}
+.result-card .tank-total>small:last-child{color:var(--muted)}
+.result-card .tax-summary{margin-top:14px}
+.result-card .price-trend{margin-top:16px}
+.result-card .breakdown-list{margin-top:12px}
+.controls+.result-card{margin-top:18px}
+.result-card+.scenario-card,.method{margin-top:22px}
+.method>summary{color:var(--muted);font-size:12px;font-weight:700}
+.method[open]>summary{color:var(--text)}
+.tax-share-row{margin-top:6px}
+.tax-share-row small:first-child{font-size:11px}
+.tax-bar{height:7px;margin-top:10px;border-radius:99px;background:var(--card);overflow:hidden}
+.tax-bar span{display:block;height:100%;border-radius:inherit;background:var(--text);transition:width .2s ease}
+.breakdown-list>div:first-child dt,.breakdown-list>div:first-child dd{color:var(--text);font-weight:750}
+.breakdown-list dd{font-size:12px}
+.breakdown-list>div:last-child{border-bottom:0}
+.breakdown-details{margin-top:8px}
+.breakdown-details>summary{justify-content:space-between;padding-block:12px;color:var(--muted)}
+.breakdown-details[open]>summary{color:var(--text)}
+.breakdown-details>summary::after,.policy-details>summary::after{content:"+";font-size:16px;font-weight:500;color:var(--muted)}
+.breakdown-details[open]>summary::after,.policy-details[open]>summary::after{content:"−"}
+.tax-summary{position:relative}
+.tax-summary::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.55)}
 .price-trend{margin-top:18px;padding:20px 0 18px}
 .trend-title-row{align-items:center}
 .trend-coverage{background:var(--soft);border-color:transparent}
@@ -590,27 +577,85 @@ a { -webkit-tap-highlight-color: transparent; }
 .trend-stats{margin-top:10px;padding-top:10px}
 .trend-help{margin-top:10px}
 .trend-periods button:focus-visible{outline:2px solid currentColor;outline-offset:-2px}
+.scenario-card{padding-bottom:22px}
+.party-choice-label{margin-bottom:0}
+.party-result{margin-top:16px}
+.party-result:not(.empty){border-color:var(--text)}
+.party-result.unavailable{border-color:var(--line);background:var(--soft)}
+.scenario-meta{margin-top:10px;padding:9px 11px;border-left:2px solid var(--line);color:var(--muted);font-size:10px;line-height:1.45}
+.scenario-comparison{display:grid;grid-template-columns:1fr auto;gap:6px 16px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:10px}
+.scenario-comparison[hidden]{display:none}
+.scenario-comparison span{color:var(--muted)}
+.scenario-comparison strong{text-align:right;font-variant-numeric:tabular-nums}
+.policy-details{margin-top:8px;border-top:1px solid var(--line)}
+.policy-details>summary{justify-content:space-between}
+.policy-facts strong{font-size:11px}
+.policy-facts p{margin:5px 0 0;color:var(--muted);font-size:10px;line-height:1.55}
+.data-status{border:1px solid transparent}
+.data-status--ok{border-color:var(--line)}
+.data-status--warning{border-color:var(--text)}
+.data-status--error{border:2px solid var(--text);background:var(--card)}
+.data-status--warning strong,.data-status--error strong{display:inline-block;margin-right:3px}
+@media(min-width:641px){.controls{padding:20px}.controls+.result-card{margin-top:20px}}
 @media(max-width:480px){
+  .topbar{min-height:52px}
+  .shell{padding-top:24px}
+  .intro{margin-bottom:18px}
+  .intro h1{font-size:36px}
+  .intro>p:last-child{max-width:34ch;line-height:1.4}
+  .controls{padding:12px}
+  .tank-size-control{margin-top:22px}
+  .controls+.result-card{margin-top:14px}
+  .result-card+.scenario-card,.method{margin-top:18px}
+  .result-card{padding:17px}
+  .result-card .card-head{gap:10px}
+  .result-card .overline{margin-bottom:5px}
+  .result-card .tank-total{padding-top:2px}
+  .result-card .tank-total strong{font-size:56px}
+  .tax-summary{padding:15px}
+  .tax-summary>div:first-child{align-items:center}
+  .tax-share-row{grid-template-columns:1fr}
+  .tax-share-row small{text-align:left}
+  .tax-bar{height:8px}
+  .breakdown-list>div{padding:11px 0;gap:12px}
+  .breakdown-list dt{font-size:11px}
+  .breakdown-list dd{font-size:13px;white-space:nowrap}
   .price-trend{padding:18px 0}
   .trend-title-row{align-items:flex-start}
-  .trend-status{padding:12px;gap:12px}
+  .trend-status{grid-template-columns:1fr;align-items:start;padding:12px;gap:12px}
   .trend-change strong{font-size:32px}
-  .trend-prices{padding:9px 10px}
-  .trend-chart-wrap{padding-left:34px}
+  .trend-prices{width:100%;justify-content:space-between;padding:9px 10px}
+  .trend-chart-wrap{margin-top:15px;padding-left:34px}
   .trend-chart{height:116px}
+  .trend-periods button{min-height:48px}
+  .trend-help{font-size:9px}
   .trend-axis,.trend-y{font-size:10px}
-  .trend-stats{grid-template-columns:1fr 1fr}
+  .trend-stats{display:grid;grid-template-columns:1fr 1fr}
   .trend-stats span:last-child{text-align:right}
+  .party-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+  .party-grid button{min-height:56px}
+  .party-choice-label{font-size:11px;line-height:1.35}
+  .scenario-card{padding:17px}
+  .scenario-card .card-head{gap:12px}
+  .scenario-card .card-head h2{font-size:20px}
+  .party-result{gap:14px}
+  .party-price-line strong{font-size:46px}
+  .scenario-comparison{width:100%}
+  .scenario-meta{font-size:10px}
+  .policy-details>summary{min-height:48px}
+  .data-status{padding:11px 12px;font-size:11px}
 }
 @media(max-width:380px){
+  .party-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .party-grid button{min-height:52px}
+  .scenario-card{padding-inline:16px}
+  .trend-title-row{align-items:flex-start;flex-direction:column}
+  .trend-coverage{align-self:flex-start}
+  .trend-status{display:block}
+  .trend-prices{margin-top:12px}
+  .trend-prices div{flex:1}
+  .trend-prices div:last-child{text-align:right}
   .trend-stats{grid-template-columns:1fr}
   .trend-stats span:last-child{text-align:left}
 }
-
-
-/* Phase 97: deep scenario refinement */
-.scenario-card{padding-bottom:22px}.party-choice-label{margin-bottom:0}.party-result{margin-top:16px}.party-result:not(.empty){border-color:var(--text)}.party-result.unavailable{border-color:var(--line);background:var(--soft)}.scenario-meta{margin-top:10px;padding:9px 11px;border-left:2px solid var(--line);color:var(--muted);font-size:10px;line-height:1.45}.scenario-comparison{display:grid;grid-template-columns:1fr auto;gap:6px 16px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:10px}.scenario-comparison[hidden]{display:none}.scenario-comparison span{color:var(--muted)}.scenario-comparison strong{text-align:right;font-variant-numeric:tabular-nums}.policy-details{margin-top:8px;border-top:1px solid var(--line)}.policy-details>summary{justify-content:space-between}.policy-details>summary::after{content:"+";font-size:16px;color:var(--muted)}.policy-details[open]>summary::after{content:"−"}.policy-facts strong{font-size:11px}.policy-facts p{margin:5px 0 0;color:var(--muted);font-size:10px;line-height:1.55}@media(max-width:480px){.scenario-card{padding:17px}.party-result{gap:14px}.party-price-line strong{font-size:46px}.scenario-comparison{width:100%}.scenario-meta{font-size:10px}.policy-details>summary{min-height:48px}}
-
-
-/* Phase 98: explicit data-health states */
-.data-status{border:1px solid transparent}.data-status--ok{border-color:var(--line)}.data-status--warning{border-color:var(--text)}.data-status--error{border:2px solid var(--text);background:var(--card)}.data-status--warning strong,.data-status--error strong{display:inline-block;margin-right:3px}@media(max-width:480px){.data-status{padding:11px 12px;font-size:11px}}
+@media(prefers-reduced-motion:reduce){.trend-progress span,.tax-bar span{transition:none}}
