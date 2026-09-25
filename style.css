@@ -130,6 +130,8 @@ a { -webkit-tap-highlight-color: transparent; }
 .result-card,
 .scenario-card { overflow: hidden; }
 
+.result-card { border-width: 2px; }
+
 .card-head {
   display: flex;
   align-items: flex-start;
