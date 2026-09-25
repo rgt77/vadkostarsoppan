@@ -169,14 +169,24 @@
     };
   }
 
-  function scenarioPrice(basePrice, scenario) {
+  function scenarioEvaluation(basePrice, scenario) {
     const model = scenario?.priceModel;
-    if (!["party_delta", "stated_target"].includes(model?.type) || !Number.isFinite(model.delta)) return null;
     const referenceDate = priceData.updatedAt || todayIso();
-    if (model.validFrom && referenceDate < model.validFrom) return null;
-    if (model.validTo && referenceDate > model.validTo) return null;
-    if (Array.isArray(model.fuels) && !model.fuels.includes(state.fuel)) return null;
-    return basePrice + model.delta;
+    if (!scenario || !model) return { status: "missing" };
+    if (!["party_delta", "stated_target"].includes(model.type) || !Number.isFinite(model.delta)) return { status: "not_quantified" };
+    if (model.validFrom && referenceDate < model.validFrom) return { status: "outside_date", referenceDate };
+    if (model.validTo && referenceDate > model.validTo) return { status: "outside_date", referenceDate };
+    if (Array.isArray(model.fuels) && !model.fuels.includes(state.fuel)) return { status: "unsupported_fuel", referenceDate };
+    const price = basePrice + model.delta;
+    if (!Number.isFinite(price) || price <= 0) return { status: "invalid_result", referenceDate };
+    return { status: "available", price, referenceDate };
+  }
+
+  function scenarioUnavailableText(evaluation, scenario) {
+    if (evaluation.status === "unsupported_fuel") return "Det dokumenterade scenariot gäller inte " + fuelData[state.fuel].label + ".";
+    if (evaluation.status === "outside_date") return "Referensdagen ligger utanför scenariots dokumenterade giltighet.";
+    if (evaluation.status === "invalid_result") return "Underlaget ger inget giltigt beräkningsresultat.";
+    return scenario.method;
   }
 
   function loadStateFromUrl() {
@@ -279,7 +289,8 @@
       els.scenarioMeta.hidden = false;
       els.scenarioMeta.textContent = (evidenceLabels[scenario.evidence] || "Källbundet scenario") + " · referenspris " + (priceData.updatedAt || "—") + " · källan verifierad " + (scenario.verifiedAt || "—");
     }
-    const resultLiter = scenarioPrice(basePrice, scenario);
+    const evaluation = scenarioEvaluation(basePrice, scenario);
+    const resultLiter = evaluation.status === "available" ? evaluation.price : null;
 
     if (resultLiter === null) {
       els.partyResult.classList.add("unavailable");
@@ -288,7 +299,7 @@
       els.scenarioTankUnit.hidden = true;
       setText(els.scenarioLiterPrice, "");
       setText(els.scenarioDelta, "");
-      setText(els.scenarioNote, scenario.method + (scenario.priceModel?.validFrom ? " Den valda bränsletypen eller referensdagen ligger utanför det dokumenterade scenariots giltighet." : ""));
+      setText(els.scenarioNote, scenarioUnavailableText(evaluation, scenario) + (evaluation.status === "not_quantified" ? "" : " " + scenario.method));
     } else {
       const baseTank = basePrice * tankLiters;
       const resultTank = resultLiter * tankLiters;
