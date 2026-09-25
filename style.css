@@ -570,3 +570,6 @@ a { -webkit-tap-highlight-color: transparent; }
 
 /* Phase 92: keep supporting details compact */
 .breakdown-details{margin-top:8px}.breakdown-details>summary{padding-block:12px;color:var(--muted)}.breakdown-details[open]>summary{color:var(--text)}
+
+/* Phase 95: final result-card rhythm */
+.result-card .tax-summary{margin-top:14px}.result-card .price-trend{margin-top:16px}.result-card .breakdown-list{margin-top:12px}@media(max-width:480px){.result-card{padding:17px}.result-card .tank-total strong{font-size:56px}}
