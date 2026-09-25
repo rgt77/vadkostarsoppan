@@ -522,3 +522,5 @@ a { -webkit-tap-highlight-color: transparent; }
 
 
 @media(max-width:480px){.price-trend{padding:16px 0}.trend-title-row h3{font-size:18px}.trend-status{grid-template-columns:1fr;align-items:start;gap:10px}.trend-change strong{font-size:30px}.trend-prices{width:100%;justify-content:space-between}.trend-chart-wrap{margin-top:15px;padding-left:32px}.trend-chart{height:104px}.trend-periods button{min-height:48px}.trend-help{font-size:9px}}
+
+@media(max-width:480px){.party-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.party-grid button{min-height:56px}.party-choice-label{font-size:11px;line-height:1.35}.scenario-card .card-head{gap:12px}.scenario-card .card-head h2{font-size:20px}}
