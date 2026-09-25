@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="/style.css?v=0.70.0">
 </head>
 <body>
+  <a class="skip-link" href="#mainContent">Hoppa till innehållet</a>
   <noscript><div class="noscript">JavaScript behöver vara aktiverat för att kalkylen ska fungera.</div></noscript>
 
   <header class="topbar">
@@ -32,7 +33,7 @@
     <span class="updated" id="updatedLabel" aria-live="polite">Prisdata —</span>
   </header>
 
-  <main class="shell">
+  <main class="shell" id="mainContent">
     <header class="intro">
       <p class="eyebrow">RIKSSNITT FÖR SVERIGE</p>
       <h1>Vad kostar det att tanka?</h1>
@@ -101,7 +102,7 @@
       <div class="tax-summary">
         <div><span id="taxSummaryLabel">Skatt och moms</span><strong id="taxTank">— kr</strong></div>
         <div class="tax-share-row"><small id="taxShare">— av tankningen</small><small id="nonTaxShare">— övrigt</small></div>
-        <div class="tax-bar" aria-hidden="true"><span id="taxBarFill"></span></div>
+        <div class="tax-bar" role="progressbar" aria-label="Andel skatt och moms" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-hidden="true"><span id="taxBarFill"></span></div>
       </div>
     </section>
 
