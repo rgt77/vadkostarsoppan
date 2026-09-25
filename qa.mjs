@@ -293,7 +293,7 @@ html.includes('<details class="policy-details"') && html.indexOf('id="scenarioNo
 html.includes('class="breakdown-details"') && html.includes("Visa prisets delar") ? pass("Progressive cost breakdown") : fail("Cost breakdown disclosure missing");
 script.includes("scenarioEvaluation") && script.includes('"unsupported_fuel"') && script.includes('"outside_date"') && script.includes('"invalid_result"') ? pass("Scenario availability states explicit") : fail("Scenario availability states missing");
 html.includes('role="status" aria-live="polite" aria-atomic="true"') ? pass("Scenario result announced accessibly") : fail("Scenario live result semantics missing");
-style.includes("/* Phase 97: deep scenario refinement */") && style.includes(".scenario-comparison") ? pass("Scenario deep refinement styles present") : fail("Scenario deep refinement styles missing");
+style.includes("/* Consolidated refinements: phases 70–100 */") && style.includes(".scenario-comparison") ? pass("Scenario deep refinement styles present") : fail("Scenario deep refinement styles missing");
 
 
 script.includes("Sedan första mätningen") && script.includes("coverageDays") && script.includes("button.disabled") && html.includes('id="trendCoverage"') ? pass("Coverage-aware trend component") : fail("Trend readability regression");
@@ -317,7 +317,7 @@ script.includes("trendPercent") && html.includes('id="trendPercent"') ? pass("Tr
 script.includes("datedByDate") && script.includes("periodReadiness") && script.includes("readiness.get(period).measurements") ? pass("Trend deduplicates dates and validates each period independently") : fail("Trend period readiness regression");
 html.includes('aria-labelledby="trendTitle trendChartSummary"') && !script.includes('trendChart?.setAttribute("aria-label"') ? pass("Trend chart accessible name is non-duplicative") : fail("Trend chart accessibility naming regression");
 html.includes('id="trendStatus" aria-live="polite"') ? pass("Trend changes announced accessibly") : fail("Trend live status missing");
-style.includes("/* Phase 96: deep price-trend refinement */") && style.includes(".trend-chart{height:112px}") ? pass("Trend deep refinement styles present") : fail("Trend deep refinement styles missing");
+style.includes("/* Consolidated refinements: phases 70–100 */") && style.includes(".trend-chart{height:112px}") ? pass("Trend deep refinement styles present") : fail("Trend deep refinement styles missing");
 
 style.includes("--radius-control") && style.includes("--control-active") ? pass("Unified control design tokens") : fail("Control design tokens missing");
 
@@ -340,6 +340,7 @@ style.replace(/\s+/g,"").includes("@media(hover:hover)") ? pass("Touch-safe hove
 
 !style.replace(/\s+/g,"").includes(".party-button:hover") && /\.party-button:not\(\[aria-pressed=[\"\']true[\"\']\]\):hover/.test(style) ? pass("Party hover is touch-safe") : fail("Party hover regression");
 !style.replace(/\s+/g,"").includes(".controls{grid-template-columns") ? pass("Dead controls grid rule removed") : fail("Dead controls grid rule remains");
+(style.match(/\/\* Phase /g) ?? []).length === 0 && (style.match(/@media\(max-width:480px\)/g) ?? []).length <= 5 ? pass("Accumulated phase CSS consolidated") : fail("Phase CSS accumulation remains");
 
 const healthScript2 = read("scripts/data-health.mjs");
 /const\s+activeDuty\s*=/.test(healthScript2) ? pass("Reduction-duty health period resolved") : fail("Reduction-duty health period missing");
