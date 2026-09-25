@@ -509,7 +509,7 @@
     setText(els.taxTank, fmt(ref.tax * tankLiters) + " kr");
     const taxPct = ref.tax / price * 100;
     setText(els.taxShare, ref.blendDependent ? wholePercent.format(taxPct) + " % moms" : wholePercent.format(taxPct) + " % skatt + moms");
-    setText(els.nonTaxShare, ref.blendDependent ? "Punktskatt varierar med bränslemixen" : wholePercent.format(100 - taxPct) + " % före skatt & moms");
+    setText(els.nonTaxShare, ref.blendDependent ? "Punktskatt varierar med bränslemixen" : wholePercent.format(100 - taxPct) + " % övrigt");
     if (els.taxBarFill) els.taxBarFill.style.width = Math.max(0, Math.min(100, taxPct)) + "%";
 
     els.priceSource.href = priceData.source;
