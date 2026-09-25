@@ -133,9 +133,18 @@
       ? Math.floor((newer - older) / 86400000)
       : null;
   }
+  function priceState() {
+    const value = Number(priceData.national?.[state.fuel]);
+    const updatedAge = daysBetween(priceData.updatedAt);
+    const retrievedAge = daysBetween(priceData.retrievedAt);
+    if (!Number.isFinite(value) || value < 5 || value > 50) return { status: "invalid", value: NaN, updatedAge, retrievedAge };
+    if (updatedAge === null || updatedAge < 0 || retrievedAge === null || retrievedAge < 0) return { status: "invalid_date", value, updatedAge, retrievedAge };
+    if (updatedAge > 3 || retrievedAge > 2) return { status: "stale", value, updatedAge, retrievedAge };
+    return { status: "fresh", value, updatedAge, retrievedAge };
+  }
+
   function getPrice() {
-    const national = Number(priceData.national?.[state.fuel]);
-    return Number.isFinite(national) ? national : NaN;
+    return priceState().value;
   }
 
   function getTaxPeriod(fuel, date = todayIso()) {
@@ -350,31 +359,28 @@
   }
 
   function renderDataStatus(ref) {
-    const age = daysBetween(priceData.updatedAt);
-    const warningAfter = Number(siteData.priceWarningAfterDays) || 2;
-    const priceStatus = age === null
-      ? "okänt datum"
-      : age <= 0
-        ? "uppdaterad idag"
-        : age === 1
-          ? "1 dag gammal"
-          : age + " dagar gammal";
+    const health = priceState();
+    const dateLabel = priceData.updatedAt || "—";
+    setText(els.updatedLabel, "Prisdata " + dateLabel + (health.status === "stale" ? " · äldre data" : health.status === "fresh" ? "" : " · kontrollera"));
 
-    setText(
-      els.updatedLabel,
-      "Prisdata " + (priceData.updatedAt || "—") + (age !== null && age > warningAfter ? " · kontrollera" : "")
-    );
-
+    if (health.status === "invalid" || health.status === "invalid_date") {
+      els.dataStatus.className = "data-status data-status--error";
+      els.dataStatus.innerHTML = "<strong>Datastatus</strong> Prisunderlaget kan inte verifieras. Resultatet ska inte användas förrän nästa giltiga uppdatering.";
+      return;
+    }
+    if (health.status === "stale") {
+      els.dataStatus.className = "data-status data-status--warning";
+      els.dataStatus.innerHTML = "<strong>Datastatus</strong> Senaste verifierade rikssnittet är " + health.updatedAge + " dagar gammalt. Beloppen visas som senast kända värden.";
+      return;
+    }
+    els.dataStatus.className = "data-status data-status--ok";
     if (ref?.blendDependent) {
-      els.dataStatus.innerHTML = "<strong>Datastatus</strong> Prisdata " + priceStatus + ". För E85 beror punktskatten på bränslets faktiska bio-/bensinandel; vi visar därför inte en konstruerad fast punktskatt.";
+      els.dataStatus.innerHTML = "<strong>Datastatus</strong> Prisdata aktuell. För E85 beror punktskatten på bränslets faktiska bio-/bensinandel; vi visar därför inte en konstruerad fast punktskatt.";
     } else if (ref?.taxPeriod) {
-      els.dataStatus.innerHTML =
-        "<strong>Datastatus</strong> Prisdata " + priceStatus +
-        ". Skattesatsen gäller " + ref.taxPeriod.validFrom + "–" + ref.taxPeriod.validTo +
-        ". Partikällorna är källmärkta med verifieringsdatum.";
+      els.dataStatus.innerHTML = "<strong>Datastatus</strong> Prisdata aktuell. Skattesatsen gäller " + ref.taxPeriod.validFrom + "–" + ref.taxPeriod.validTo + ".";
     } else {
-      els.dataStatus.innerHTML =
-        "<strong>Datastatus</strong> Ingen giltig skatteperiod finns för dagens datum. Kalkylen behöver uppdateras.";
+      els.dataStatus.className = "data-status data-status--error";
+      els.dataStatus.innerHTML = "<strong>Datastatus</strong> Ingen giltig skatteperiod finns för dagens datum. Kalkylen behöver uppdateras.";
     }
   }
 
