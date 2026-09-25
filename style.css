@@ -537,3 +537,6 @@ a { -webkit-tap-highlight-color: transparent; }
 
 /* Phase 74: first-screen control hierarchy */
 .controls .control-label{color:var(--text)}.controls .fuel-control:first-child .control-label::before{content:"1 · ";color:var(--muted)}.controls .tank-size-control .control-label::before{content:"2 · ";color:var(--muted)}
+
+/* Phase 75: strengthen selected choices without extra decoration */
+.fuel-button[aria-pressed="true"],.tank-size-control button[aria-pressed="true"]{box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)}
