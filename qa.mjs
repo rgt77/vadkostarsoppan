@@ -290,7 +290,7 @@ html.includes("Pris före skatt &amp; moms") ? pass("Plain-language residual lab
 html.includes('data-trend-days="365"') && script.includes("state.trendDays") && script.includes("trendLine.setAttribute") ? pass("Compact trend period controls") : fail("Trend controls missing");
 html.includes('<details class="policy-details"') && html.indexOf('id="scenarioNote"') > html.indexOf('<details class="policy-details"') ? pass("Scenario methodology progressively disclosed") : fail("Scenario methodology disclosure regression");
 
-html.includes('class="breakdown-details"') && html.includes("Se hela kostnadsfördelningen") ? pass("Progressive cost breakdown") : fail("Cost breakdown disclosure missing");
+html.includes('class="breakdown-details"') && html.includes("Visa prisets delar") ? pass("Progressive cost breakdown") : fail("Cost breakdown disclosure missing");
 
 
 script.includes("Sedan första mätningen") && script.includes("coverageDays") && script.includes("button.disabled") && html.includes('id="trendCoverage"') ? pass("Coverage-aware trend component") : fail("Trend readability regression");
