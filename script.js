@@ -572,12 +572,14 @@
 
   function render() {
     const price = getPrice();
+    const health = priceState();
     const view = calculationViewModel(price);
     renderSelections();
     renderCalculation(view);
     renderDataStatus(view?.ref ?? null);
     renderTrend(price);
-    renderScenario(price);
+    if (health.status === "fresh" || health.status === "stale") renderScenario(price);
+    else renderScenario(NaN);
     syncUrl();
   }
 
