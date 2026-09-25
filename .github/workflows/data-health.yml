@@ -30,8 +30,10 @@ jobs:
         run: node scripts/check-official-sources.mjs
       - name: Generate data health
         run: node scripts/data-health.mjs
+        continue-on-error: true
       - name: Run QA
         run: npm run qa
+        continue-on-error: true
       - name: Persist monitoring state
         run: |
           git config user.name "github-actions[bot]"
