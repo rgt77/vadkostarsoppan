@@ -343,6 +343,11 @@ style.replace(/\s+/g,"").includes("@media(hover:hover)") ? pass("Touch-safe hove
 
 const healthScript2 = read("scripts/data-health.mjs");
 healthScript2.includes("const activeDuty=") ? pass("Reduction-duty health period resolved") : fail("Reduction-duty health period missing");
+healthScript2.includes("todayUtcDay") && healthScript2.includes("Prisdatum ligger i framtiden") ? pass("Calendar-safe freshness validation") : fail("Freshness date handling regression");
+script.includes("function priceState()") && script.includes('"invalid_date"') && script.includes('"stale"') ? pass("Frontend distinguishes price-data health states") : fail("Frontend data-health states missing");
+style.includes(".data-status--warning") && style.includes(".data-status--error") ? pass("Visible data-health severity states") : fail("Data-health severity styling missing");
+const healthWorkflow = read(".github/workflows/data-health.yml");
+healthWorkflow.includes("Enforce monitoring result") && healthWorkflow.includes("steps.health.outcome") && healthWorkflow.includes("steps.qa.outcome") ? pass("Data-health workflow persists then enforces failures") : fail("Data-health workflow can mask failures");
 !style.replace(/\s+/g,"").includes("var(--line,#") ? pass("Line token fallbacks consolidated") : fail("Redundant line token fallback remains");
 /\.breakdown-details summary/.test(style) && /\.policy-details summary/.test(style) ? pass("Details controls share touch target") : fail("Details touch target mismatch");
 html.includes("Så räknar vi") ? pass("Method disclosure label is explicit") : fail("Method disclosure label regression");
