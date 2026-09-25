@@ -567,3 +567,6 @@ a { -webkit-tap-highlight-color: transparent; }
 
 /* Phase 91: keep result metadata secondary */
 .result-card .overline{opacity:.82}.result-card .card-head h2{font-size:20px}.result-card .tank-total>small:last-child{color:var(--muted)}
+
+/* Phase 92: keep supporting details compact */
+.breakdown-details{margin-top:8px}.breakdown-details>summary{padding-block:12px;color:var(--muted)}.breakdown-details[open]>summary{color:var(--text)}
