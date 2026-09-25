@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.70.0",
   "scripts": {
-    "qa": "node qa.mjs && node tests/market-parser.mjs",
+    "qa": "npm run check:syntax && node qa.mjs && node tests/market-parser.mjs",
     "update:prices": "node scripts/update-price-data.mjs",
     "monitor:policy": "node scripts/check-policy-sources.mjs",
     "monitor:official": "node scripts/check-official-sources.mjs",
@@ -13,6 +13,7 @@
     "audit:production": "node scripts/production-audit.mjs",
     "audit:release": "node scripts/release-audit.mjs",
     "smoke:live": "node scripts/live-smoke.mjs",
-    "audit:performance": "node scripts/performance-budget.mjs"
+    "audit:performance": "node scripts/performance-budget.mjs",
+    "check:syntax": "node --check qa.mjs && node --check script.js && node --check scripts/data-health.mjs && node --check scripts/update-price-data.mjs && node --check scripts/update-market-data.mjs"
   }
 }
