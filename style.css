@@ -564,3 +564,6 @@ a { -webkit-tap-highlight-color: transparent; }
 
 /* Phase 87: separate tax summary from detail rows */
 .tax-summary{position:relative}.tax-summary::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.55)}
+
+/* Phase 91: keep result metadata secondary */
+.result-card .overline{opacity:.82}.result-card .card-head h2{font-size:20px}.result-card .tank-total>small:last-child{color:var(--muted)}
