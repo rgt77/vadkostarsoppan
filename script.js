@@ -151,31 +151,33 @@
     return fuel?.taxPeriods?.find(period => period.validFrom <= date && date <= period.validTo) ?? null;
   }
 
+  const validMoney = value => Number.isFinite(value) && value >= 0;
+  const validVatRate = value => Number.isFinite(value) && value >= 0 && value <= 100;
+
   function calculate(price) {
     const fuel = fuelData[state.fuel];
-    const taxPeriod = getTaxPeriod(fuel);
-    if (!fuel || !Number.isFinite(price)) return null;
+    if (!fuel || !Number.isFinite(price) || price <= 0 || !validVatRate(fuel.vatRate)) return null;
+
+    const vatFactor = 1 + fuel.vatRate / 100;
+    const beforeVat = price / vatFactor;
+    const vat = price - beforeVat;
+    if (!validMoney(beforeVat) || !validMoney(vat)) return null;
 
     if (fuel.taxModel === "blend_dependent") {
-      const beforeVat = price / (1 + fuel.vatRate / 100);
-      const vat = price - beforeVat;
-      return { fuel, taxPeriod: null, vat, market: beforeVat, tax: vat, blendDependent: true };
+      return { fuel, taxPeriod: null, vat, market: beforeVat, tax: vat, total: price, blendDependent: true };
     }
-    if (!taxPeriod) return null;
 
-    const beforeVat = price / (1 + fuel.vatRate / 100);
-    const vat = price - beforeVat;
-    const market = beforeVat - taxPeriod.energyTax - taxPeriod.carbonTax;
+    const taxPeriod = getTaxPeriod(fuel);
+    if (!taxPeriod || !validMoney(taxPeriod.energyTax) || !validMoney(taxPeriod.carbonTax)) return null;
+    const exciseTax = taxPeriod.energyTax + taxPeriod.carbonTax;
+    const market = beforeVat - exciseTax;
+    const tax = exciseTax + vat;
+    if (!validMoney(market) || !validMoney(tax)) return null;
 
-    if (!Number.isFinite(market) || market < 0) return null;
+    const reconstructed = market + exciseTax + vat;
+    if (Math.abs(reconstructed - price) > 0.000001) return null;
 
-    return {
-      fuel,
-      taxPeriod,
-      vat,
-      market,
-      tax: taxPeriod.energyTax + taxPeriod.carbonTax + vat
-    };
+    return { fuel, taxPeriod, vat, market, exciseTax, tax, total: price, blendDependent: false };
   }
 
   function scenarioEvaluation(basePrice, scenario) {
