@@ -208,7 +208,9 @@
 
     if (fuelData[fuel]) state.fuel = fuel;
     if (partyOrder.includes(party) && scenarios[party]) state.party = party;
+    else if (party !== null) state.party = "";
     if ([30,40,50,60].includes(tank)) tankLiters = tank;
+    else if (params.has("tank")) tankLiters = Number(siteData.typicalTankLiters) || 40;
   }
 
   function syncUrl() {
