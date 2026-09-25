@@ -130,7 +130,7 @@ a { -webkit-tap-highlight-color: transparent; }
 .result-card,
 .scenario-card { overflow: hidden; }
 
-.result-card { border-width: 2px; }
+.result-card { border-width: 2px; box-shadow: 0 8px 24px rgba(21,21,21,.04); }
 
 .card-head {
   display: flex;
