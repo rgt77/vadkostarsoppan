@@ -357,6 +357,9 @@ html.includes("Så räknar vi") ? pass("Method disclosure label is explicit") : 
 !style.replace(/\s+/g,"").includes("background:#f3f3ef") && !style.replace(/\s+/g,"").includes("background:#deded8") ? pass("Trend neutrals use theme tokens") : fail("Hardcoded trend neutrals remain");
 
 html.includes('id="taxSummaryLabel"') && script.includes('"Moms (känd del)"') && script.includes('"Varierar med bränslemixen"') ? pass("E85 tax semantics are explicit") : fail("E85 tax semantics regression");
+script.includes("const validMoney") && script.includes("const validVatRate") && script.includes("reconstructed") ? pass("Core calculation validates numeric invariants") : fail("Core calculation invariant guards missing");
+script.includes("exciseTax") && script.includes("total: price") ? pass("Core calculation exposes explicit totals") : fail("Core calculation total semantics missing");
+script.includes('setAttribute("aria-valuenow"') && script.includes("boundedTaxPct") ? pass("Tax-share meter stays bounded and accessible") : fail("Tax-share meter bounds missing");
 script.includes('"Punktskatt varierar med bränslemixen"') ? pass("E85 tax share avoids false total") : fail("E85 tax share misleading");
 
 html.includes("30–60 liters tankning") ? pass("Metadata matches selectable tank sizes") : fail("Metadata tank-size claim stale");
