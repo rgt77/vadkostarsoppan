@@ -534,3 +534,6 @@ a { -webkit-tap-highlight-color: transparent; }
 /* Phase 70: keep the primary journey visually dominant */
 .controls + .result-card{margin-top:18px}.result-card + .scenario-card{margin-top:22px}.method{margin-top:22px}.method>summary{color:var(--muted);font-size:12px;font-weight:700}.method[open]>summary{color:var(--text)}
 @media(max-width:480px){.shell{padding-top:32px}.intro{margin-bottom:18px}.controls + .result-card{margin-top:14px}.result-card + .scenario-card,.method{margin-top:18px}}
+
+/* Phase 74: first-screen control hierarchy */
+.controls .control-label{color:var(--text)}.controls .fuel-control:first-child .control-label::before{content:"1 · ";color:var(--muted)}.controls .tank-size-control .control-label::before{content:"2 · ";color:var(--muted)}
