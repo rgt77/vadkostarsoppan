@@ -540,3 +540,6 @@ a { -webkit-tap-highlight-color: transparent; }
 
 /* Phase 75: strengthen selected choices without extra decoration */
 .fuel-button[aria-pressed="true"],.tank-size-control button[aria-pressed="true"]{box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)}
+
+/* Phase 77: make the primary number the visual anchor */
+.result-card .tank-total strong{font-weight:850}.result-card .tank-total>small:first-child{font-weight:750;letter-spacing:.04em;text-transform:uppercase}
