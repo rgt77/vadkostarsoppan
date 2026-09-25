@@ -552,3 +552,6 @@ a { -webkit-tap-highlight-color: transparent; }
 
 /* Phase 81: make tax share immediately scannable */
 .tax-share-row{margin-top:6px}.tax-share-row small:first-child{font-size:11px}.tax-bar{height:7px;margin-top:10px;border-radius:99px;background:var(--card);overflow:hidden}.tax-bar span{display:block;height:100%;border-radius:inherit;background:var(--text);transition:width .2s ease}@media(max-width:480px){.tax-summary{padding:15px}.tax-summary>div:first-child{align-items:center}.tax-share-row{grid-template-columns:1fr}.tax-share-row small{text-align:left}.tax-bar{height:8px}}
+
+/* Phase 82: improve expanded cost hierarchy */
+.breakdown-list>div:first-child dt,.breakdown-list>div:first-child dd{color:var(--text);font-weight:750}.breakdown-list dd{font-size:12px}.breakdown-list>div:last-child{border-bottom:0}
