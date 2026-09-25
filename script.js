@@ -505,7 +505,7 @@
     setText(els.energyTank, ref.blendDependent ? "Varierar med bränslemixen" : fmt(ref.taxPeriod.energyTax * tankLiters) + " kr");
     setText(els.carbonTank, ref.blendDependent ? "Varierar med bränslemixen" : fmt(ref.taxPeriod.carbonTax * tankLiters) + " kr");
     setText(els.vatTank, fmt(ref.vat * tankLiters) + " kr");
-    setText(els.taxSummaryLabel, ref.blendDependent ? "Moms (känd del)" : "Skatt + moms");
+    setText(els.taxSummaryLabel, ref.blendDependent ? "Moms (känd del)" : "Skatt och moms");
     setText(els.taxTank, fmt(ref.tax * tankLiters) + " kr");
     const taxPct = ref.tax / price * 100;
     setText(els.taxShare, ref.blendDependent ? wholePercent.format(taxPct) + " % moms" : wholePercent.format(taxPct) + " % skatt + moms");
