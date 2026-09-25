@@ -11,6 +11,9 @@ on:
       - "script.js"
       - "fuel-data.js"
       - "policy-data.js"
+      - "404.html"
+      - "qa.mjs"
+      - "package.json"
       - "scripts/release-audit.mjs"
       - ".github/workflows/release-audit.yml"
 
