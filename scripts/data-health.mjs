@@ -5,7 +5,15 @@ const loadWindow = file => {
   new Function("window", fs.readFileSync(file, "utf8"))(w);
   return w;
 };
-const days = date => Math.floor((Date.now() - Date.parse(date + "T12:00:00Z")) / 86400000);
+const utcDay = value => {
+  const ms = Date.parse(value + "T00:00:00Z");
+  return Number.isFinite(ms) ? Math.floor(ms / 86400000) : null;
+};
+const todayUtcDay = utcDay(new Date().toISOString().slice(0,10));
+const days = date => {
+  const day = utcDay(date);
+  return day === null || todayUtcDay === null ? null : todayUtcDay - day;
+};
 const prices = loadWindow("price-data.js").PRICE_DATA;
 const fuels = loadWindow("fuel-data.js").FUEL_DATA;
 const policies = loadWindow("policy-data.js").POLICY_SCENARIOS;
@@ -20,8 +28,8 @@ const checks = []; // Health status excludes informational anomalies from warnin
 const add=(id,status,message,source=null)=>checks.push({id,status,message,source});
 const priceAge = days(prices.updatedAt);
 const retrievalAge = days(prices.retrievedAt);
-add("prices:freshness", priceAge>=0 && priceAge<=3 ? "ok":"error", `Prisdata är ${priceAge} dag(ar) gammal`, prices.source);
-add("prices:retrieval", retrievalAge>=0 && retrievalAge<=2 ? "ok":"error", `Priskällan hämtades för ${retrievalAge} dag(ar) sedan`, prices.source);
+add("prices:freshness", priceAge!==null && priceAge>=0 && priceAge<=3 ? "ok":"error", priceAge===null ? "Prisdatum saknas eller är ogiltigt" : priceAge<0 ? "Prisdatum ligger i framtiden" : `Prisdata är ${priceAge} dag(ar) gammal`, prices.source);
+add("prices:retrieval", retrievalAge!==null && retrievalAge>=0 && retrievalAge<=2 ? "ok":"error", retrievalAge===null ? "Hämtningsdatum saknas eller är ogiltigt" : retrievalAge<0 ? "Hämtningsdatum ligger i framtiden" : `Priskällan hämtades för ${retrievalAge} dag(ar) sedan`, prices.source);
 add("prices:dates", prices.retrievedAt >= prices.updatedAt ? "ok":"error", prices.retrievedAt >= prices.updatedAt ? "Hämtningsdatum är förenligt med källdatum" : "Hämtningsdatum är äldre än källdatum", prices.source);
 for (const [fuelKey,fuel] of Object.entries(fuels)) {
   if (fuel.taxModel === "blend_dependent") {
@@ -47,7 +55,7 @@ const orderedHistory = snapshots.every((row,index)=>index===0 || snapshots[index
 add("prices:history-order", orderedHistory ? "ok":"error", orderedHistory ? "Prishistoriken är strikt kronologisk" : "Prishistoriken innehåller dubbletter eller fel ordning", prices.source);
 add("policy:reduction-duty",activeDuty?"ok":"error",activeDuty?`Reduktionsplikt ${activeDuty.petrolPct}% bensin / ${activeDuty.dieselPct}% diesel`:"Ingen aktiv reduktionspliktsperiod",duty.source);
 const fxAge=market.fx?.observationDate ? days(market.fx.observationDate) : null;
-add("market:usdsek",market.fx?.usdSek>0 && fxAge!==null && fxAge<=7?"ok":"warning",market.fx?.usdSek>0?`USD/SEK ${market.fx.usdSek}, ${fxAge} dag(ar) gammal`:"Väntar på första Riksbankshämtningen",market.fx?.source);
+add("market:usdsek",market.fx?.usdSek>0 && fxAge!==null && fxAge>=0 && fxAge<=7?"ok":"warning",market.fx?.usdSek>0?(fxAge===null?"USD/SEK har ogiltigt observationsdatum":fxAge<0?"USD/SEK-observationen ligger i framtiden":`USD/SEK ${market.fx.usdSek}, ${fxAge} dag(ar) gammal`):"Väntar på första Riksbankshämtningen",market.fx?.source);
 const summary={
   date: now.slice(0,10),
   status:checks.some(x=>x.status==="error")?"error":checks.some(x=>x.status==="warning")?"warning":"ok",
