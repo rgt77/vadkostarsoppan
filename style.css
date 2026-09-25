@@ -558,3 +558,6 @@ a { -webkit-tap-highlight-color: transparent; }
 
 /* Phase 85: strengthen breakdown disclosure */
 .breakdown-details>summary{justify-content:space-between}.breakdown-details>summary::after{content:"+";font-size:16px;font-weight:500;color:var(--muted)}.breakdown-details[open]>summary::after{content:"−"}
+
+/* Phase 86: improve mobile cost rows */
+@media(max-width:480px){.breakdown-list>div{padding:11px 0;gap:12px}.breakdown-list dt{font-size:11px}.breakdown-list dd{font-size:13px;white-space:nowrap}}
