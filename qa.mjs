@@ -336,7 +336,7 @@ html.includes("result-card") && html.includes("scenario-card") ? pass("Semantic 
 !style.replace(/\s+/g,"").includes("var(--muted,#") && !style.replace(/\s+/g,"").includes("var(--text,#") ? pass("CSS token fallbacks consolidated") : fail("Redundant CSS token fallbacks remain");
 html.includes('data-tank-size="30" aria-pressed="false"') && html.includes('data-tank-size="60" aria-pressed="false"') ? pass("Complete tank selector accessibility state") : fail("Tank selector initial state incomplete");
 script.includes('image.loading = "lazy"') ? pass("Party logos lazy loaded") : fail("Party logo loading strategy missing");
-style.replace(/\s+/g,"").includes("@media(hover:hover)") ? pass("Touch-safe hover states") : fail("Hover capability guard missing");
+style.replace(/\s+/g,"").includes("@media(hover:hover)") || style.replace(/\s+/g,"").includes("@media(hover:hover)and(pointer:fine)") ? pass("Touch-safe hover states") : fail("Hover capability guard missing");
 
 !style.replace(/\s+/g,"").includes(".party-button:hover") && /\.party-button:not\(\[aria-pressed=[\"\']true[\"\']\]\):hover/.test(style) ? pass("Party hover is touch-safe") : fail("Party hover regression");
 !style.replace(/\s+/g,"").includes(".controls{grid-template-columns") ? pass("Dead controls grid rule removed") : fail("Dead controls grid rule remains");
