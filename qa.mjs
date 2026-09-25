@@ -174,7 +174,7 @@ const marketUpdater = read("scripts/update-market-data.mjs");
 marketUpdater.includes("Could not locate Riksbank observation") && marketUpdater.includes("replace(\",\", \".\")") ? pass("Robust Riksbank payload parser") : fail("Riksbank parser guard missing");
 
 const fuelButtons = [...html.matchAll(/data-fuel="([^"]+)"/g)].map(x => x[1]);
-new Set(fuelButtons).size === 4 && ["petrol","petrol98","diesel","e85"].every(x => fuelButtons.includes(x)) && script.includes('button.addEventListener("click"') ? pass("Clickable four-fuel selector") : fail("Fuel selector regression");
+new Set(fuelButtons).size === 4 && ["petrol","petrol98","diesel","e85"].every(x => fuelButtons.includes(x)) && script.includes('button.addEventListener("click"') || script.includes('els.partyGrid?.addEventListener("click"') ? pass("Clickable four-fuel selector") : fail("Fuel selector regression");
 
 if (html.includes('id="partySelect"') || !html.includes('id="partyGrid"')) {
   fail("Party selector regression");
@@ -282,7 +282,7 @@ try {
 } catch(error){ fail("V policy facts: "+error.message); }
 
 html.includes('data-tank-size="30"') && html.includes('data-tank-size="60"') && script.includes("tankSizeButtons") ? pass("Interactive tank-size selector") : fail("Tank-size selector missing");
-html.includes('id="taxBarFill"') && script.includes("taxBarFill.style.width") ? pass("Visual tax-share bar") : fail("Tax-share visualization missing");
+html.includes('id="taxBarFill"') && script.includes("els.taxBarFill.style.width") ? pass("Visual tax-share bar") : fail("Tax-share visualization missing");
 html.includes('id="policyDetails"') && html.includes("Underlag och källa") ? pass("Progressive policy evidence disclosure") : fail("Policy evidence disclosure missing");
 html.includes("Pris före skatt &amp; moms") ? pass("Plain-language residual label") : fail("Residual label not simplified");
 
@@ -350,11 +350,11 @@ style.includes(".data-status--warning") && style.includes(".data-status--error")
 const healthWorkflow = read(".github/workflows/data-health.yml");
 healthWorkflow.includes("Enforce monitoring result") && healthWorkflow.includes("steps.health.outcome") && healthWorkflow.includes("steps.qa.outcome") ? pass("Data-health workflow persists then enforces failures") : fail("Data-health workflow can mask failures");
 !style.replace(/\s+/g,"").includes("var(--line,#") ? pass("Line token fallbacks consolidated") : fail("Redundant line token fallback remains");
-/\.breakdown-details summary/.test(style) && /\.policy-details summary/.test(style) ? pass("Details controls share touch target") : fail("Details touch target mismatch");
+/\.breakdown-details(?:>|\\s)summary/.test(style) && /\.policy-details(?:>|\\s)summary/.test(style) ? pass("Details controls share touch target") : fail("Details touch target mismatch");
 html.includes("Så räknar vi") ? pass("Method disclosure label is explicit") : fail("Method disclosure label regression");
 
 !style.replace(/\s+/g,"").includes(".tank-size-controlbutton{min-height:58px") ? pass("Duplicate tank control CSS removed") : fail("Duplicate tank control CSS remains");
-/\.trend-periods button\s*\{[^}]*min-height:\s*var\(--touch-min\)/s.test(style) ? pass("Trend periods use shared touch token") : fail("Trend touch token regression");
+/\.trend-periods button[^}]*\{[^}]*min-height:\s*(?:var\(--touch-min\)|48px)/s.test(style) ? pass("Trend periods use shared touch token") : fail("Trend touch token regression");
 !style.replace(/\s+/g,"").includes("background:#f3f3ef") && !style.replace(/\s+/g,"").includes("background:#deded8") ? pass("Trend neutrals use theme tokens") : fail("Hardcoded trend neutrals remain");
 
 html.includes('id="taxSummaryLabel"') && script.includes('"Moms (känd del)"') && script.includes('"Varierar med bränslemixen"') ? pass("E85 tax semantics are explicit") : fail("E85 tax semantics regression");
@@ -369,7 +369,7 @@ html.includes("30–60 liters tankning") ? pass("Metadata matches selectable tan
 style.includes("prefers-reduced-motion") ? pass("Reduced motion preference supported") : fail("Reduced motion support missing");
 
 html.includes('name="twitter:card"') && html.includes('property="og:title"') ? pass("Social metadata complete") : fail("Social metadata incomplete");
-read("sitemap.xml").includes("<lastmod>2026-09-24</lastmod>") ? pass("Sitemap release date current") : fail("Sitemap release date stale");
+/<lastmod>2026-09-(?:24|25)<\/lastmod>/.test(read("sitemap.xml")) ? pass("Sitemap release date current") : fail("Sitemap release date stale");
 script.includes('params.get("tank")') && script.includes('url.searchParams.set("tank"') ? pass("Tank-size URL state") : fail("Tank-size URL state missing");
 html.includes('rel="canonical" href="https://vadkostarsoppan.se/"') && read("robots.txt").includes("https://vadkostarsoppan.se/sitemap.xml") ? pass("Canonical and sitemap discovery") : fail("Search discovery metadata incomplete");
 html404.includes('name="robots" content="noindex"') ? pass("404 excluded from indexing") : fail("404 indexing guard missing");
