@@ -475,9 +475,12 @@ a { -webkit-tap-highlight-color: transparent; }
     gap: 15px;
   }
 
-  .tank-total { text-align: left; }
+  .tank-total { width: 100%; text-align: left; }
   .tank-total > div { justify-content: flex-start; }
-  .tank-total strong { font-size: 50px; }
+  .tank-total strong { font-size: 54px; }
+  .tank-total small:last-child { margin-top: 8px; font-size: 11px; }
+  .tax-summary { margin-top: 16px; padding: 14px; }
+  .tax-summary strong { font-size: 22px; }
 
   .party-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
