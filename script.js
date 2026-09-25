@@ -387,9 +387,14 @@
     if (!/^\d{4}-\d{2}-\d{2}$/.test(latestDate || "")) { els.priceTrend.hidden = true; return; }
 
     const latestMs = Date.parse(latestDate + "T12:00:00Z");
-    const dated = snapshots.map(item => ({ item, ms: Date.parse(item.date + "T12:00:00Z"), value: historyPrice(item) }))
-      .filter(x => Number.isFinite(x.ms) && x.value !== null && x.ms <= latestMs)
-      .sort((a,b) => a.ms-b.ms);
+    const datedByDate = new Map();
+    for (const item of snapshots) {
+      const ms = Date.parse(item?.date + "T12:00:00Z");
+      const value = historyPrice(item);
+      if (!Number.isFinite(ms) || value === null || ms > latestMs) continue;
+      datedByDate.set(item.date, { item, ms, value });
+    }
+    const dated = [...datedByDate.values()].sort((a,b) => a.ms-b.ms);
     if (!dated.length) { els.priceTrend.hidden = true; return; }
 
     const first = dated[0];
@@ -398,14 +403,25 @@
     setText(els.trendCoverage, observedDays === 1 ? "1 mätning" : observedDays + " mätningar");
 
     const minimumObservations = period => Math.max(3, Math.ceil((period + 1) * .5));
-    const availability = new Map([7,30,365].map(period => [period, coverageDays >= period && observedDays >= minimumObservations(period)]));
+    const periodReadiness = period => {
+      const startMs = latestMs - period * 86400000;
+      const periodPoints = dated.filter(x => x.ms >= startMs);
+      const measurements = new Set(periodPoints.map(x => x.item.date)).size;
+      return {
+        available: coverageDays >= period && measurements >= minimumObservations(period),
+        measurements,
+        required: minimumObservations(period)
+      };
+    };
+    const readiness = new Map([7,30,365].map(period => [period, periodReadiness(period)]));
+    const availability = new Map([...readiness].map(([period, info]) => [period, info.available]));
     for (const button of els.trendButtons) {
       const period = Number(button.dataset.trendDays);
       const available = availability.get(period);
       button.disabled = !available;
       button.setAttribute("aria-disabled", String(!available));
       const remainingForPeriod = Math.max(0, period - coverageDays);
-      const remainingMeasurements = Math.max(0, minimumObservations(period) - observedDays);
+      const remainingMeasurements = Math.max(0, readiness.get(period).required - readiness.get(period).measurements);
       const periodName = period === 365 ? "1 år" : period + " dagar";
       const lockedReason = remainingForPeriod > 0
         ? remainingForPeriod + (remainingForPeriod === 1 ? " dag kvar" : " dagar kvar")
@@ -464,14 +480,14 @@
       const coveragePercent = Math.round(coverageRatio * 100);
       const chartSummary = fuelData[state.fuel].label + ": " + fmt(oldPrice) + " till " + fmt(currentPrice) + " kr/l, " + (unchanged ? "oförändrat" : delta > 0 ? "upp " + fmt(Math.abs(delta)) : "ned " + fmt(Math.abs(delta))) + " kr/l. Lägst " + fmt(min) + " den " + formatTrendDate(points[minIndex].item.date) + ", högst " + fmt(max) + " den " + formatTrendDate(points[maxIndex].item.date) + ". " + periodObservedDays + " mätningar, " + coveragePercent + " procent datatäckning.";
       setText(els.trendChartSummary, chartSummary);
-      els.trendChart?.setAttribute("aria-label", chartSummary);
+      els.trendChart?.removeAttribute("aria-label");
       els.trendChartWrap.hidden=false; els.trendEmpty.hidden=true;
       setText(els.trendRange,"Rikssnitt för " + fuelData[state.fuel].label + " · " + formatTrendDate(actualStartDate, true) + "–" + formatTrendDate(latestDate, true) + " · " + periodObservedDays + " mätningar.");
     } else {
       els.trendLine.setAttribute("points",""); if (els.trendLastPoint) els.trendLastPoint.hidden=true; if (els.trendStats) els.trendStats.hidden=true; setText(els.trendChartSummary, ""); els.trendChartWrap.hidden=true; els.trendEmpty.hidden=false;
-      const measurementsNeeded=Math.max(0,3-observedDays);
+      const measurementsNeeded=Math.max(0,3-distinctDates);
       setText(els.trendEmptyText, measurementsNeeded > 0 ? "Grafen visas efter " + measurementsNeeded + (measurementsNeeded===1 ? " ytterligare mätning." : " ytterligare mätningar.") : "Grafen visas vid nästa kompletta uppdatering.");
-      const collectedMeasurements = Math.min(3, observedDays);
+      const collectedMeasurements = Math.min(3, distinctDates);
       if (els.trendProgressLabel) setText(els.trendProgressLabel, collectedMeasurements + " / 3 mätningar");
       if (els.trendProgressFill) {
         els.trendProgressFill.style.width = Math.max(8, collectedMeasurements / 3 * 100) + "%";
