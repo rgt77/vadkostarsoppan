@@ -465,6 +465,11 @@ a { -webkit-tap-highlight-color: transparent; }
     border-radius: var(--radius-control);
   }
 
+  .controls { padding: 14px; }
+  .fuel-toggle, .tank-size-control > div { gap: 4px; }
+  .fuel-button, .tank-size-control button { min-height: 48px; }
+  .party-choice-label { margin-top: 12px; }
+
   .card-head {
     flex-direction: column;
     gap: 15px;
