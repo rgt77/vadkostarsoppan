@@ -224,6 +224,7 @@ a { -webkit-tap-highlight-color: transparent; }
   text-align: right;
 }
 .tax-share-row { gap: 12px; }
+.tax-share-row small:first-child { color: var(--text); font-weight: 700; }
 
 .party-head { align-items: end; }
 
