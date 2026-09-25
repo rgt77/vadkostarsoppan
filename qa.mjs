@@ -292,6 +292,7 @@ html.includes('<details class="policy-details"') && html.indexOf('id="scenarioNo
 
 html.includes('class="breakdown-details"') && html.includes("Visa prisets delar") ? pass("Progressive cost breakdown") : fail("Cost breakdown disclosure missing");
 script.includes("scenarioEvaluation") && script.includes('"unsupported_fuel"') && script.includes('"outside_date"') && script.includes('"invalid_result"') ? pass("Scenario availability states explicit") : fail("Scenario availability states missing");
+script.includes('health.status === "fresh" || health.status === "stale"') && script.includes("renderScenario(NaN)") ? pass("Invalid price data cannot feed scenario calculations") : fail("Scenario invalid-data boundary missing");
 html.includes('role="status" aria-live="polite" aria-atomic="true"') ? pass("Scenario result announced accessibly") : fail("Scenario live result semantics missing");
 style.includes("/* Consolidated refinements: phases 70–100 */") && style.includes(".scenario-comparison") ? pass("Scenario deep refinement styles present") : fail("Scenario deep refinement styles missing");
 
