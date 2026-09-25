@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: "22"
       - name: Run QA
-        run: npm run qa 2>&1 | tee qa-output.txt
+        run: set -o pipefail; npm run qa 2>&1 | tee qa-output.txt
       - name: Upload QA diagnostics
         if: always()
         uses: actions/upload-artifact@v4
