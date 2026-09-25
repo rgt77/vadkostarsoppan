@@ -1,22 +1,22 @@
 {
-  "date": "2026-09-24",
-  "status": "ok",
+  "date": "2026-09-25",
+  "status": "error",
   "counts": {
-    "ok": 20,
+    "ok": 18,
     "warning": 0,
-    "error": 0
+    "error": 2
   },
   "checks": [
     {
       "id": "prices:freshness",
-      "status": "ok",
-      "message": "Prisdata är 0 dag(ar) gammal",
+      "status": "error",
+      "message": "Prisdata är -1 dag(ar) gammal",
       "source": "https://www.carculated.se/bensinpriser"
     },
     {
       "id": "prices:retrieval",
-      "status": "ok",
-      "message": "Priskällan hämtades för 0 dag(ar) sedan",
+      "status": "error",
+      "message": "Priskällan hämtades för -1 dag(ar) sedan",
       "source": "https://www.carculated.se/bensinpriser"
     },
     {
