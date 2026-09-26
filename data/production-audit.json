@@ -2,7 +2,7 @@
   "date": "2026-09-26",
   "status": "warning",
   "counts": {
-    "ok": 9,
+    "ok": 11,
     "warning": 1,
     "error": 0
   },
@@ -20,6 +20,12 @@
       "severity": "warning"
     },
     {
+      "id": "prices:complete",
+      "ok": true,
+      "message": "Alla fyra nationella bränslepriser finns",
+      "severity": "error"
+    },
+    {
       "id": "prices:fresh",
       "ok": true,
       "message": "Prisdata är 0 dagar gammal",
@@ -30,6 +36,12 @@
       "ok": true,
       "message": "Prishistorik har 4 mätningar",
       "severity": "warning"
+    },
+    {
+      "id": "prices:latest-complete",
+      "ok": true,
+      "message": "Senaste historikmätningen innehåller alla bränslen",
+      "severity": "error"
     },
     {
       "id": "prices:latest-history",
