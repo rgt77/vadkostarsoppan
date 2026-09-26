@@ -32,7 +32,7 @@ Produktionsdriften är självövervakande: prisinhämtning körs var sjätte tim
 
 ## Produktionsvalidering
 
-En daglig produktionsaudit verifierar att data-health är grön, pris- och marknadsdata är färska, senaste priset finns i historiken och att historikserierna är kronologiskt sammanhängande. Resultatet sparas i `data/production-audit.json`. Blockerande driftfel ger en deduplicerad GitHub-issue. Kort historik flaggas endast som varning medan serien byggs upp organiskt; historiska priser konstrueras inte.
+En daglig produktionsaudit verifierar att data-health saknar blockerande fel, pris- och marknadsdata är färska, senaste priset finns i historiken och att historikserierna är kronologiskt sammanhängande. Resultatet sparas i `data/production-audit.json`. Blockerande driftfel ger en deduplicerad GitHub-issue. Kort historik flaggas endast som varning medan serien byggs upp organiskt; historiska priser konstrueras inte.
 
 ## Release gate
 
@@ -54,4 +54,4 @@ npm run qa
 
 ## Publicering
 
-Statiska assets publiceras via Cloudflare från `main`. Aktuell applikationsversion: **0.50.0**.
+Statiska assets publiceras via Cloudflare från `main`. Aktuell applikationsversion: **0.70.0**.
