@@ -38,6 +38,8 @@ jobs:
         run: npm run qa
       - name: Check live production
         id: smoke
+        env:
+          EXPECTED_VERSION: "0.70.0"
         continue-on-error: true
         run: node scripts/live-smoke.mjs
       - name: Alert on live failure
