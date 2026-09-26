@@ -58,7 +58,7 @@
     {
       "id": "market:fresh",
       "ok": true,
-      "message": "Marknadsdata är 2 dagar gammal",
+      "message": "Marknadsdata är 1 dagar gammal",
       "severity": "warning"
     },
     {
