@@ -22,7 +22,7 @@ permissions:
 
 concurrency:
   group: production-audit
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   audit:
