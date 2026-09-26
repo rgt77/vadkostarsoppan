@@ -12,6 +12,9 @@ try{
  if(expectedVersion) check("home:version",liveVersion===expectedVersion,`Live-sidan kör ${liveVersion||"okänd version"}, förväntat ${expectedVersion}`);
  else check("home:version",Boolean(liveVersion),liveVersion?`Live-version ${liveVersion}`:"Live-version kunde inte identifieras");
  check("home:canonical",html.includes('href="https://vadkostarsoppan.se/"'),"Canonical saknas live");
+ check("home:app-script",html.includes("script.js"),"Applikationsskript saknas live");
+ check("home:price-data",html.includes("price-data.js"),"Prisdata-skript saknas live");
+ check("home:fuel-data",html.includes("fuel-data.js"),"Bränsledata-skript saknas live");
  const robots=await get("/robots.txt"); const robotsText=await robots.text();
  check("robots:http",robots.ok,`robots.txt svarade HTTP ${robots.status}`);
  check("robots:sitemap",robotsText.includes("https://vadkostarsoppan.se/sitemap.xml"),"robots.txt saknar sitemap");
