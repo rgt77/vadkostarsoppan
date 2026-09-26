@@ -9,6 +9,13 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/live-smoke.yml"
+      - "scripts/live-smoke.mjs"
+      - "index.html"
+      - "script.js"
+      - "style.css"
+      - "price-data.js"
+      - "fuel-data.js"
+      - "policy-data.js"
 
 permissions:
   contents: read
