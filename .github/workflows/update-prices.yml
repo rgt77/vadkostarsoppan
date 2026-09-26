@@ -36,16 +36,19 @@ jobs:
       - name: Run QA
         run: npm run qa
 
+      - name: Refresh data health
+        run: node scripts/data-health.mjs
+
       - name: Commit updated prices
         shell: bash
         run: |
-          if git diff --quiet -- price-data.js data/price-history.json; then
+          if git diff --quiet -- price-data.js data/price-history.json data/data-health.json; then
             echo "No price changes."
             exit 0
           fi
           git config user.name "vadkostarsoppan-data"
           git config user.email "actions@users.noreply.github.com"
-          git add price-data.js data/price-history.json
+          git add price-data.js data/price-history.json data/data-health.json
           git commit -m "Data: refresh fuel prices"
           git pull --rebase origin main
           git push
