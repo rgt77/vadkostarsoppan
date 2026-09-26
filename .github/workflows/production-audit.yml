@@ -9,6 +9,12 @@ on:
     paths:
       - "scripts/production-audit.mjs"
       - ".github/workflows/production-audit.yml"
+      - "price-data.js"
+      - "fuel-data.js"
+      - "policy-data.js"
+      - "data/price-history.json"
+      - "data/market-data.json"
+      - "data/data-health.json"
 
 permissions:
   contents: write
