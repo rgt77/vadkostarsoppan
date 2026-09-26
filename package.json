@@ -14,6 +14,6 @@
     "audit:release": "node scripts/release-audit.mjs",
     "smoke:live": "node scripts/live-smoke.mjs",
     "audit:performance": "node scripts/performance-budget.mjs",
-    "check:syntax": "node --check qa.mjs && node --check script.js && node --check scripts/data-health.mjs && node --check scripts/update-price-data.mjs && node --check scripts/update-market-data.mjs"
+    "check:syntax": "node --check qa.mjs && node --check script.js && node --check scripts/data-health.mjs && node --check scripts/update-price-data.mjs && node --check scripts/update-market-data.mjs && node --check scripts/production-audit.mjs && node --check scripts/release-audit.mjs && node --check scripts/live-smoke.mjs && node --check scripts/performance-budget.mjs"
   }
 }
