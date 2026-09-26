@@ -5,16 +5,14 @@
       "url": "https://www.centerpartiet.se/nyheter/arkiv-2026/2026-08-31-centerpartiet-mer-fossilfritt-i-tanken-utan-hogre-pris-vid-pump",
       "hash": "9a859ee50b9c18fd239f286d094e008e8bf0405064cd3581ddd4f4066d3b8c91",
       "contentType": "text/html;charset=UTF-8",
-      "status": "unreachable",
-      "error": "fetch failed"
+      "status": "ok"
     },
     "kd": {
       "name": "Kristdemokraterna",
       "url": "https://kristdemokraterna.se/arkiv/nyheter/2024/2024-08-27-vi-sanker-drivmedelsskatten-och-utslappen",
       "hash": "21059c7d289e064c55eecf7a017d65a0c4903c20990d61cca14c0e557c06acfe",
       "contentType": "text/html;charset=UTF-8",
-      "status": "unreachable",
-      "error": "fetch failed"
+      "status": "ok"
     },
     "l": {
       "name": "Liberalerna",
@@ -42,8 +40,7 @@
       "url": "https://www.socialdemokraterna.se/nyheter/nyheter/2026-03-20-s-kraver-tillfallig-skattesankning-pa-bensin-och-diesel",
       "hash": "e1757f121f096740646277af0fcbc06e352a839b02559fa3fa225b924100ca4c",
       "contentType": "text/html;charset=UTF-8",
-      "status": "unreachable",
-      "error": "fetch failed"
+      "status": "ok"
     },
     "sd": {
       "name": "Sverigedemokraterna",
