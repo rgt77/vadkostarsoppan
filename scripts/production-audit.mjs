@@ -13,7 +13,8 @@ const market=readJson("data/market-data.json");
 const marketHistory=readJson("data/market-history.json");
 const health=readJson("data/data-health.json");
 
-check("health:status",health.status==="ok","Data health är OK",`Data health: ${health.status}`);
+check("health:errors",(health.counts?.error??0)===0,"Data health har inga blockerande fel",`Data health har ${health.counts?.error??0} blockerande fel`);
+check("health:warnings",(health.counts?.warning??0)===0,"Data health har inga varningar",`Data health har ${health.counts?.warning??0} varning(ar) som bör granskas`,"warning");
 check("prices:fresh",age(prices.updatedAt)<=3,`Prisdata är ${age(prices.updatedAt)} dagar gammal`,`Prisdata är för gammal: ${age(prices.updatedAt)} dagar`);
 check("prices:history",priceHistory.snapshots?.length>=2,`Prishistorik har ${priceHistory.snapshots?.length??0} mätningar`,"Prishistoriken har färre än 2 mätningar","warning");
 check("prices:latest-history",priceHistory.snapshots?.at(-1)?.date===prices.updatedAt,"Senaste priset finns i historiken","Senaste priset saknas i historiken");
