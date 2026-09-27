@@ -574,3 +574,5 @@ a { -webkit-tap-highlight-color: transparent; }
 .policy-status-row small{grid-column:1/-1;color:var(--muted);font-size:.72rem;line-height:1.4;text-transform:none;letter-spacing:0}.policy-status-row small:empty{display:none}@media(max-width:640px){.policy-status-row small{grid-column:2}}
 
 .party-method-note{margin:6px 0 0;color:var(--muted);font-size:.72rem;line-height:1.45}
+
+.policy-comparison .policy-known{grid-column:1/-1;padding:2px 0 10px;border-bottom:1px solid var(--line)}.policy-known strong{max-width:70ch;font-size:.88rem;line-height:1.45}@media(max-width:640px){.policy-comparison .policy-known{display:block}.policy-known span{margin-bottom:5px}}
