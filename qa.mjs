@@ -295,9 +295,9 @@ html.includes('data-tank-size="30"') && html.includes('data-tank-size="60"') && 
 html.includes('id="taxBarFill"') && script.includes("els.taxBarFill.style.width") ? pass("Visual tax-share bar") : fail("Tax-share visualization missing");
 html.includes('id="policyDetails"') && html.includes("Fördjupning och källa") ? pass("Progressive policy evidence disclosure") : fail("Policy evidence disclosure missing");
 html.includes('id="policyComparison"') && html.includes('id="policyStatus"') && html.includes('id="policyPump"') && html.includes('id="policyInstrument"') && html.includes('id="policyCompensation"') && html.includes('id="policyReason"') ? pass("Normalized party comparison UI") : fail("Party comparison UI missing");
-script.includes('Exakt partisiffra finns') && script.includes('Exakt siffra · tidsbegränsad') && script.includes('Exakt pumppris saknas') && script.includes('Redan i dagens rikssnitt') ? pass("Plain-language party calculation states") : fail("Party calculation states unclear");
+script.includes("POLICY_STATUS_META") && script.includes("statusMeta[comparison.calculability]") ? pass("UI consumes centralized calculation states") : fail("Calculation states duplicated or disconnected");
 html.includes("Fördjupning och källa") ? pass("Party detail disclosure is secondary") : fail("Party detail disclosure label missing");
-try { const w={}; new Function("window",read("policy-data.js"))(w); const cmp=w.POLICY_COMPARISON??{}; ["c","kd","l","mp","m","s","sd","v"].every(k=>cmp[k]?.pump&&cmp[k]?.instrument&&cmp[k]?.compensation&&cmp[k]?.reason&&cmp[k]?.calculability) ? pass("Eight-party comparison schema") : fail("Party comparison schema incomplete"); const validCalc=new Set(["direct","direct_temporary","partial","baseline"]); ["c","kd","l","mp","m","s","sd","v"].every(k=>validCalc.has(cmp[k]?.calculability)) ? pass("Neutral calculation status taxonomy") : fail("Invalid calculation status"); } catch(error){ fail("Party comparison schema: "+error.message); }
+try { const w={}; new Function("window",read("policy-data.js"))(w); const cmp=w.POLICY_COMPARISON??{}; const meta=w.POLICY_STATUS_META??{}; ["direct","direct_temporary","partial","baseline"].every(k=>meta[k]?.label&&meta[k]?.detail) ? pass("Central party status semantics") : fail("Party status semantics incomplete"); ["c","kd","l","mp","m","s","sd","v"].every(k=>cmp[k]?.pump&&cmp[k]?.instrument&&cmp[k]?.compensation&&cmp[k]?.reason&&cmp[k]?.calculability) ? pass("Eight-party comparison schema") : fail("Party comparison schema incomplete"); const validCalc=new Set(["direct","direct_temporary","partial","baseline"]); ["c","kd","l","mp","m","s","sd","v"].every(k=>validCalc.has(cmp[k]?.calculability)) ? pass("Neutral calculation status taxonomy") : fail("Invalid calculation status"); } catch(error){ fail("Party comparison schema: "+error.message); }
 html.includes("Pris före skatt &amp; moms") ? pass("Plain-language residual label") : fail("Residual label not simplified");
 
 
@@ -437,3 +437,5 @@ if (failures.length) {
 }
 console.log("\nPASS");
 
+
+script.includes('if (model.validFrom && referenceDate < model.validFrom)') && script.includes('if (model.validTo && referenceDate > model.validTo)') ? pass("Political scenario validity window enforced") : fail("Scenario validity window missing");
