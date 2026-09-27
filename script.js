@@ -326,13 +326,13 @@
     const resultLiter = evaluation.status === "available" ? evaluation.price : null;
     if (els.partyAnswer && comparison) {
       els.partyAnswer.hidden = false;
-      els.partyAnswer.textContent = resultLiter === null ? comparison.known : "Beräknat från partiets dokumenterade prisuppgift för valt bränsle och tankstorlek.";
+      els.partyAnswer.textContent = resultLiter === null ? comparison.known : "Dokumenterad prisuppgift: " + fmt(resultLiter) + " kr/l · " + state.liters + " liter = " + fmt(resultLiter * state.liters) + " kr.";
     }
 
     if (resultLiter === null) {
       els.partyResult.classList.add("unavailable");
       els.scenarioTankPrice.classList.add("text-result");
-      setText(els.scenarioTankPrice, "Ej möjligt att räkna exakt");
+      setText(els.scenarioTankPrice, "Ingen exakt prisuppgift");
       els.scenarioTankUnit.hidden = true;
       setText(els.scenarioLiterPrice, "");
       setText(els.scenarioDelta, "");
