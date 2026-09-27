@@ -56,9 +56,9 @@ window.POLICY_SCENARIOS = {
   sd: {
     name: "Sverigedemokraterna",
     priceModel: { type: "not_quantified" },
-    evidence: "not_quantified",
-    verifiedAt: "2026-09-23",
-    method: "Partiet publicerar numeriska historiska drivmedelsdata och genomförda/tidsbegränsade åtgärder. De används som bakgrund, men inte som ett permanent framtida kr/l-pris utan en uttrycklig framtida nivå.",
+    evidence: "quantified_inputs",
+    verifiedAt: "2026-09-27",
+    method: "SD:s underlag innehåller kvantifierade historiska och genomförda 2026-åtgärder. De tidsbegränsade skattesänkningarna ingår redan i dagens observerade rikssnitt och dras därför inte av igen. Ingen separat permanent framtida kr/l-nivå används utan ett uttryckligt nytt underlag.",
     source: "https://val2026.sd.se/drivmedel/",
     facts: "data/policy-facts-sd.json"
   },
