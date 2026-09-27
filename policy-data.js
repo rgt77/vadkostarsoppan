@@ -39,8 +39,8 @@ window.POLICY_SCENARIOS = {
     name: "Moderaterna",
     priceModel: { type: "party_delta", delta: -3, validFrom: "2026-07-01", validTo: "2026-11-30", fuels: ["petrol", "diesel"] },
     evidence: "party_estimate",
-    verifiedAt: "2026-09-23",
-    method: "−3 kr/l är Moderaternas uppgift om den ytterligare tillfälliga sänkningen vid pump. Scenariot används bara för Bensin 95 och diesel under 1 juli–30 november 2026 och är inte en permanent prisprognos.",
+    verifiedAt: "2026-09-27",
+    method: "−3 kr/l är Moderaternas uppgift om den ytterligare tillfälliga skattesänkningens effekt vid full prisövervältring. Scenariot används bara för Bensin 95 och diesel 1 juli–30 november 2026. Det är en tidsbunden parti-/regeringsuppskattning, inte en garanti om faktisk stationsprisförändring eller en permanent prisprognos.",
     source: "https://moderaterna.se/nyhet/ytterligare-sankt-skatt-pa-drivmedel/",
     facts: "data/policy-facts-m.json"
   },
