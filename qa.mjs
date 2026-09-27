@@ -141,7 +141,7 @@ try {
   const scenarios = w.POLICY_SCENARIOS ?? {};
   const keys = ["c", "kd", "l", "mp", "m", "s", "sd", "v"];
   const allowed = new Set(["not_quantified", "party_delta", "stated_target"]);
-  const evidence = new Set(["not_quantified", "party_estimate", "party_stated_target"]);
+  const evidence = new Set(["not_quantified", "party_estimate", "party_stated_target", "quantified_inputs"]);
 
   keys.every(key => scenarios[key]) ? pass("Eight parties") : fail("Party missing");
   keys.every(key => String(scenarios[key]?.source ?? "").startsWith("https://"))
