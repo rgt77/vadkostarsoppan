@@ -6,6 +6,7 @@
   const priceData = window.PRICE_DATA ?? {};
   const scenarios = window.POLICY_SCENARIOS ?? {};
   const comparisons = window.POLICY_COMPARISON ?? {};
+  const statusMeta = window.POLICY_STATUS_META ?? {};
 
   let tankLiters = Number(siteData.typicalTankLiters) || 40;
   const partyOrder = ["c", "kd", "l", "mp", "m", "s", "sd", "v"];
@@ -309,14 +310,14 @@
     const comparison = comparisons[state.party];
     if (comparison && els.policyComparison) {
       els.policyComparison.hidden = false;
-      const statusLabels = { direct: "Exakt partisiffra finns", direct_temporary: "Exakt siffra · tidsbegränsad", partial: "Exakt pumppris saknas", baseline: "Redan i dagens rikssnitt" };
-      setText(els.policyStatus, statusLabels[comparison.calculability] || "Ej exakt beräkningsbart");
+      const status = statusMeta[comparison.calculability] || { label: "Ej exakt beräkningsbart", detail: "" };
+      setText(els.policyStatus, status.label);
       setText(els.policyPump, comparison.pump);
       setText(els.policyInstrument, comparison.instrument);
       setText(els.policyCompensation, comparison.compensation);
       setText(els.policyReason, comparison.reason);
       els.policyComparison.dataset.calculability = comparison.calculability;
-      els.policyComparison.setAttribute("aria-label", scenario.name + ": " + (statusLabels[comparison.calculability] || "ingen exakt prisberäkning"));
+      els.policyComparison.setAttribute("aria-label", scenario.name + ": " + status.label);
     }
     const evaluation = scenarioEvaluation(basePrice, scenario);
     const resultLiter = evaluation.status === "available" ? evaluation.price : null;
