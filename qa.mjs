@@ -459,3 +459,5 @@ script.includes('Dokumenterad prisuppgift: ') && script.includes('state.liters +
 script.includes('Ingen exakt prisuppgift') && !script.includes('Ej möjligt att räkna exakt') ? pass("Non-calculable party state uses neutral copy") : fail("Non-calculable party state copy unclear");
 
 !html.includes('id="policyKnown"') && !html.includes('id="policyPump"') && !script.includes("els.policyKnown") && !script.includes("els.policyPump") ? pass("Party primary answer not duplicated in secondary panel") : fail("Duplicate party answer remains");
+
+script.includes("function setFuel(fuel)") && script.includes("state.fuel = fuel; render();") && script.includes("function setTankLiters(liters)") && script.includes("tankLiters = liters; render();") && script.includes("renderScenario(price)") ? pass("Selected party stays synchronized with fuel and tank") : fail("Party answer can become stale after input change");
