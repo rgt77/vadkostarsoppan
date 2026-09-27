@@ -246,7 +246,7 @@ try {
 try {
   const mFacts = JSON.parse(read("data/policy-facts-m.json"));
   const ids = new Set(mFacts.facts?.map(x => x.id));
-  ["eu_min_tax_2026","additional_relief_2026","reduction_duty_current","tax_indexation_2026"].every(x => ids.has(x)) ? pass("M sourced policy facts") : fail("M policy facts incomplete");
+  ["eu_min_tax_2026","additional_relief_2026","reduction_duty_current","tax_indexation_2026","extension_position_2026","collective_transport_2026","opposition_price_claim_2026"].every(x => ids.has(x)) ? pass("M sourced policy facts") : fail("M policy facts incomplete");
   mFacts.facts?.every(x => String(x.source ?? "").startsWith("https://moderaterna.se/")) ? pass("M official fact sources") : fail("M fact source invalid");
   script.includes('policyBackground') && script.includes('"m":') ? pass("M contextual evidence UI") : fail("M contextual evidence UI missing");
   script.includes("model.validFrom") && script.includes("model.fuels") ? pass("Bounded political scenario guard") : fail("Bounded scenario guard missing");
