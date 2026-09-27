@@ -572,3 +572,5 @@ a { -webkit-tap-highlight-color: transparent; }
 .policy-status-row small{grid-column:1/-1;color:var(--muted);font-size:.72rem;line-height:1.4;text-transform:none;letter-spacing:0}@media(max-width:640px){.policy-status-row small{grid-column:2}}
 .party-method-note{margin:6px 0 0;color:var(--muted);font-size:.72rem;line-height:1.45}
 
+
+.policy-support small{display:block;margin-top:4px;color:var(--muted);font-size:.7rem;line-height:1.35}
