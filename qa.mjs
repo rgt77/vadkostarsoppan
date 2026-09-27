@@ -293,7 +293,7 @@ try {
 
 html.includes('data-tank-size="30"') && html.includes('data-tank-size="60"') && script.includes("tankSizeButtons") ? pass("Interactive tank-size selector") : fail("Tank-size selector missing");
 html.includes('id="taxBarFill"') && script.includes("els.taxBarFill.style.width") ? pass("Visual tax-share bar") : fail("Tax-share visualization missing");
-html.includes('id="policyDetails"') && html.includes("Underlag och källa") ? pass("Progressive policy evidence disclosure") : fail("Policy evidence disclosure missing");
+html.includes('id="policyDetails"') && html.includes("Fördjupning och källa") ? pass("Progressive policy evidence disclosure") : fail("Policy evidence disclosure missing");
 html.includes('id="policyComparison"') && html.includes('id="policyStatus"') && html.includes('id="policyPump"') && html.includes('id="policyInstrument"') && html.includes('id="policyCompensation"') && html.includes('id="policyReason"') ? pass("Normalized party comparison UI") : fail("Party comparison UI missing");
 script.includes('Exakt partisiffra finns') && script.includes('Exakt siffra · tidsbegränsad') && script.includes('Exakt pumppris saknas') && script.includes('Redan i dagens rikssnitt') ? pass("Plain-language party calculation states") : fail("Party calculation states unclear");
 html.includes("Fördjupning och källa") ? pass("Party detail disclosure is secondary") : fail("Party detail disclosure label missing");
