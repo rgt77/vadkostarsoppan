@@ -309,7 +309,7 @@
     setText(els.scenarioLabel, scenario.name);
     if (els.scenarioMeta) {
       els.scenarioMeta.hidden = false;
-      els.scenarioMeta.textContent = (evidenceLabels[scenario.evidence] || "Källbundet scenario") + " · referenspris " + (priceData.updatedAt || "—") + " · källan verifierad " + (scenario.verifiedAt || "—");
+      els.scenarioMeta.textContent = (evidenceLabels[scenario.evidence] || "Dokumenterat underlag") + " · Prisdata " + (priceData.updatedAt || "—") + " · Politik verifierad " + (scenario.verifiedAt || "—");
     }
     const comparison = comparisons[state.party];
     if (comparison && els.policyComparison) {
