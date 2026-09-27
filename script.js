@@ -69,7 +69,7 @@
     scenarioBaseTank: $("scenarioBaseTank"),
     scenarioResultTank: $("scenarioResultTank"),
     policyFacts: $("policyFacts"),
-    policyComparison: $("policyComparison"), policyPump: $("policyPump"), policyInstrument: $("policyInstrument"), policyCompensation: $("policyCompensation"), policyReason: $("policyReason"),
+    policyComparison: $("policyComparison"), policyStatus: $("policyStatus"), policyPump: $("policyPump"), policyInstrument: $("policyInstrument"), policyCompensation: $("policyCompensation"), policyReason: $("policyReason"),
     priceSource: $("priceSource"),
     taxSource: $("taxSource"),
     dataStatus: $("dataStatus"),
@@ -309,6 +309,8 @@
     const comparison = comparisons[state.party];
     if (comparison && els.policyComparison) {
       els.policyComparison.hidden = false;
+      const statusLabels = { direct: "Direkt beräkningsbart", direct_temporary: "Tidsbegränsat beräkningsbart", partial: "Delvis beräkningsbart", baseline: "Ingår redan i rikssnittet" };
+      setText(els.policyStatus, statusLabels[comparison.calculability] || "Ej exakt beräkningsbart");
       setText(els.policyPump, comparison.pump);
       setText(els.policyInstrument, comparison.instrument);
       setText(els.policyCompensation, comparison.compensation);
