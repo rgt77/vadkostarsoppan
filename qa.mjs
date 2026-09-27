@@ -254,7 +254,7 @@ try {
 try {
   const lFacts = JSON.parse(read("data/policy-facts-l.json"));
   const ids = new Set(lFacts.facts?.map(x => x.id));
-  ["climate_report_2022","reduction_duty_2025"].every(x => ids.has(x)) ? pass("L sourced policy facts") : fail("L policy facts incomplete");
+  ["climate_report_2022","reduction_duty_2025","tax_compensation_2025","temporary_tax_cut_2026","public_transport_relief_2026","biofuel_priority_current"].every(x => ids.has(x)) ? pass("L sourced policy facts") : fail("L policy facts incomplete");
   lFacts.facts?.every(x => String(x.source ?? "").startsWith("https://www.liberalerna.se/")) ? pass("L official fact sources") : fail("L fact source invalid");
   script.includes('policyBackground') && script.includes('"l":') ? pass("L contextual evidence UI") : fail("L contextual evidence UI missing");
 } catch (error) { fail("L policy facts: " + error.message); }
