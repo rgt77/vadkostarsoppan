@@ -83,3 +83,10 @@ window.POLICY_COMPARISON = {
   sd: { pump: "Redan i dagens rikssnitt", instrument: "10 % reduktionsplikt · genomförda tillfälliga skattesänkningar", compensation: "—", calculability: "baseline", reason: "Genomförda 2026-sänkningar får inte dras av från dagens pris en gång till." },
   v: { pump: "Ingen exakt kr/l", instrument: "Högre reduktionsplikt · drivmedelsskatt som styrmedel", compensation: "Riktat bilstöd · geografisk modell · Sverigebiljett", calculability: "partial", reason: "Exakt reduktionsnivå och nationell kr/l-effekt anges inte." }
 };
+
+window.POLICY_STATUS_META = {
+  direct: { label: "Exakt partisiffra finns", detail: "Partiet anger en numerisk pumppriseffekt som kan visas med tydlig attribution." },
+  direct_temporary: { label: "Exakt siffra · tidsbegränsad", detail: "Den numeriska effekten gäller bara under den dokumenterade perioden." },
+  partial: { label: "Exakt pumppris saknas", detail: "Det finns konkreta policyparametrar, men inte tillräckligt underlag för ett exakt nationellt literpris." },
+  baseline: { label: "Redan i dagens rikssnitt", detail: "Åtgärden är redan genomförd och får inte räknas av från dagens pris en gång till." }
+};
