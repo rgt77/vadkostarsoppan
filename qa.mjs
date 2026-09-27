@@ -464,3 +464,6 @@ script.includes("function setFuel(fuel)") && script.includes("state.fuel = fuel;
 
 script.includes('button.classList.toggle("selected", selected)') && script.includes('button.tabIndex = selected || !state.party ? 0 : -1') ? pass("Party visual, ARIA and focus state synchronized") : fail("Party selection state can diverge");
 script.includes('if (!buttons.length) return;') && script.includes('["ArrowLeft","ArrowRight","Home","End"]') ? pass("Party keyboard navigation defensive") : fail("Party keyboard navigation not defensive");
+
+script.includes('Prisdata ') && script.includes('Politik verifierad ') && script.includes("evidenceLabels[scenario.evidence]") ? pass("Party evidence provenance visible") : fail("Party provenance metadata unclear");
+!script.includes('referenspris " +') && !script.includes('källan verifierad " +') ? pass("Technical party metadata copy removed") : fail("Technical metadata copy remains");
