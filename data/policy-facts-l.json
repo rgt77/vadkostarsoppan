@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "updatedAt": "2026-09-23",
+  "version": 2,
+  "updatedAt": "2026-09-27",
   "party": "l",
   "name": "Liberalerna",
   "facts": [
@@ -20,6 +20,63 @@
       "dieselPct": 10,
       "source": "https://www.liberalerna.se/nyheter/ny-reduktionsplikt-en-liberal-budgetvinst-for-klimatet",
       "note": "Senare liberal dokumentation beskriver höjning från 6 till 10 procent kombinerad med sänkt drivmedelsskatt för att motverka priseffekten."
+    },
+    {
+      "id": "tax_compensation_2025",
+      "kind": "tax_policy",
+      "date": "2024-08-27",
+      "scope": [
+        "petrol",
+        "diesel"
+      ],
+      "proposal": "Sänka drivmedelsskatten för att kompensera prispåslaget när reduktionsplikten höjs från 6 till 10 procent.",
+      "statedPumpPriceIntent": "oförändrat",
+      "source": "https://taby.liberalerna.se/ny-reduktionsplikt-en-liberal-budgetvinst-for-klimatet/",
+      "calculationRole": "party_stated_target_only",
+      "note": "Partiets lokala officiella sida beskriver kompensationen och målet om oförändrat pumppris, men anger inte en isolerad kr/l-komponent."
+    },
+    {
+      "id": "temporary_tax_cut_2026",
+      "kind": "temporary_government_measure",
+      "date": "2026-05-13",
+      "scope": [
+        "petrol",
+        "diesel"
+      ],
+      "deltaSekPerLiter": -3,
+      "source": "https://www.liberalerna.se/nyheter/regeringen-genomfor-ett-krispaket-for-att-mota-energikrisen",
+      "calculationRole": "time_bounded_government_measure_not_permanent_party_scenario",
+      "note": "Liberalernas sida anger att regeringen sänker bränsleskatten med tre kronor under energikrisen. Behandlas som tidsbunden regeringsåtgärd, inte som permanent L-politik."
+    },
+    {
+      "id": "public_transport_relief_2026",
+      "kind": "household_support",
+      "date": "2026-05-26",
+      "validFrom": "2026-07-01",
+      "validTo": "2026-12-31",
+      "measure": "Halverat pris på månadskort eller motsvarande periodkort där regionen genomför åtgärden.",
+      "source": "https://www.liberalerna.se/nyheter/halverat-pris-pa-kollektivtrafik",
+      "calculationRole": "separate_household_support_not_pump_price",
+      "note": "Påverkar inte pumppriset och ska därför inte ingå i drivmedelskalkylen."
+    },
+    {
+      "id": "biofuel_priority_current",
+      "kind": "current_policy_direction",
+      "date": "2026",
+      "proposal": "Biobränslen bör i högre grad prioriteras till sektorer som är svåra att elektrifiera.",
+      "source": "https://www.liberalerna.se/politik/biobranslen",
+      "calculationRole": "not_directly_quantifiable"
     }
+  ],
+  "assessment": {
+    "status": "partially_quantifiable",
+    "priceScenario": "not_independently_quantified",
+    "summary": "Liberalerna står bakom 10 procents reduktionsplikt och har dokumenterat att skatten sänktes för att kompensera priseffekten. Under energikrisen 2026 stödde partiet dessutom en tillfällig skattesänkning på tre kronor. Den senare åtgärden är tidsbunden regeringspolitik och behandlas inte som ett permanent framtida L-pris."
+  },
+  "safeguards": [
+    "Do not treat the stated unchanged pump-price intent as an independently verified zero delta.",
+    "Do not present the temporary 2026 three-krona government tax cut as a permanent future Liberal Party price.",
+    "Keep public-transport support separate from pump-price calculations.",
+    "Do not interpret reduction-duty percentages as direct biofuel volume shares."
   ]
 }
