@@ -271,8 +271,8 @@ try {
 try {
   const sFacts = JSON.parse(read("data/policy-facts-s.json"));
   const ids = new Set(sFacts.facts?.map(x => x.id));
-  ["temporary_fuel_tax_cut_2026","fuel_price_direction_2026"].every(x => ids.has(x)) ? pass("S sourced policy facts") : fail("S policy facts incomplete");
-  sFacts.facts?.every(x => String(x.source ?? "").startsWith("https://www.socialdemokraterna.se/")) ? pass("S official fact sources") : fail("S fact source invalid");
+  ["temporary_fuel_tax_cut_2026","fuel_price_direction_2026","sverigebranslet_2026","diesel_standard_mk3","historical_sverigebranslet_price_2024","temporary_tax_cut_2026_riksdag"].every(x => ids.has(x)) ? pass("S sourced policy facts") : fail("S policy facts incomplete");
+  sFacts.facts?.every(x => ["https://www.socialdemokraterna.se/","https://www.riksdagen.se/"].some(prefix => String(x.source ?? "").startsWith(prefix))) ? pass("S official fact sources") : fail("S fact source invalid");
   script.includes('policyBackground') && script.includes('"s":') ? pass("S contextual evidence UI") : fail("S contextual evidence UI missing");
 } catch (error) { fail("S policy facts: " + error.message); }
 
