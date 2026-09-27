@@ -10,13 +10,13 @@
     {
       "id": "prices:freshness",
       "status": "ok",
-      "message": "Prisdata är 1 dag(ar) gammal",
+      "message": "Prisdata är 0 dag(ar) gammal",
       "source": "https://www.carculated.se/bensinpriser"
     },
     {
       "id": "prices:retrieval",
       "status": "ok",
-      "message": "Priskällan hämtades för 1 dag(ar) sedan",
+      "message": "Priskällan hämtades för 0 dag(ar) sedan",
       "source": "https://www.carculated.se/bensinpriser"
     },
     {
@@ -59,13 +59,13 @@
       "id": "policy:kd",
       "status": "warning",
       "message": "Källan kunde inte nås vid senaste kontroll",
-      "source": "https://kristdemokraterna.se/arkiv/nyheter/2024/2024-08-27-vi-sanker-drivmedelsskatten-och-utslappen"
+      "source": "https://kristdemokraterna.se/var-politik/politik-a-till-o/drivmedelspriser"
     },
     {
       "id": "policy:l",
       "status": "ok",
       "message": "Officiell källa bevakas",
-      "source": "https://www.liberalerna.se/wp-content/uploads/klimatomstallning-i-en-vaxande-ekonomi.pdf"
+      "source": "https://www.liberalerna.se/nyheter/regeringen-genomfor-ett-krispaket-for-att-mota-energikrisen"
     },
     {
       "id": "policy:mp",
