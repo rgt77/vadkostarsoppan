@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "updatedAt": "2026-09-23",
+  "version": 2,
+  "updatedAt": "2026-09-27",
   "party": "s",
   "name": "Socialdemokraterna",
   "facts": [
@@ -22,6 +22,71 @@
       "date": "2026",
       "source": "https://www.socialdemokraterna.se/var-politik/a-till-o/ekonomi",
       "note": "Partiet anger att drivmedelsskatten inte ska höjas och att svensk produktion av biobränslen ska byggas ut."
+    },
+    {
+      "id": "sverigebranslet_2026",
+      "kind": "policy_model",
+      "date": "2025-10",
+      "scope": [
+        "petrol",
+        "diesel"
+      ],
+      "petrolBaseBlendPct": 10,
+      "dieselBaseBlendPct": 19.3,
+      "variableAdditionalBlend": true,
+      "proposal": "Stabil basinblandning kombinerad med en tilläggsinblandning som kan variera utifrån prisbilden.",
+      "source": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/motion/utgiftsomrade-20-klimat-miljo-och-natur_hd023732/html/",
+      "calculationRole": "quantified_inputs_require_market_model"
+    },
+    {
+      "id": "diesel_standard_mk3",
+      "kind": "fuel_standard_proposal",
+      "date": "2025",
+      "scope": [
+        "diesel"
+      ],
+      "proposal": "Övergång från svensk MK1 till europeisk dieselstandard MK3 för större möjlig inblandning och bredare leverantörsutbud.",
+      "source": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/motion/med-anledning-av-prop-202425131-nya-regler-for_hc023368/",
+      "calculationRole": "not_direct_price_input"
+    },
+    {
+      "id": "historical_sverigebranslet_price_2024",
+      "kind": "historical_party_estimate",
+      "date": "2023-11",
+      "scope": [
+        "diesel"
+      ],
+      "historicalPetrolBaseBlendPct": 7.8,
+      "historicalDieselBaseBlendPct": 19.3,
+      "claimedDieselPriceEffectAtLeastSekPerLiter": -4,
+      "source": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/motion/med-anledning-av-prop-20232428-sankning-av_hb022761/",
+      "calculationRole": "historical_context_only",
+      "note": "2023 års motion uppskattade minst 4 kr/l lägre dieselpris med då gällande 2024-priser och kompletterande åtgärder. Får inte appliceras på dagens 2026-pris."
+    },
+    {
+      "id": "temporary_tax_cut_2026_riksdag",
+      "kind": "policy_proposal",
+      "date": "2026-03",
+      "scope": [
+        "petrol",
+        "diesel"
+      ],
+      "temporary": true,
+      "deltaSekPerLiter": null,
+      "source": "https://www.socialdemokraterna.se/nyheter/nyheter/2026-03-20-s-kraver-tillfallig-skattesankning-pa-bensin-och-diesel",
+      "calculationRole": "not_quantified"
     }
+  ],
+  "assessment": {
+    "status": "partially_quantifiable",
+    "priceScenario": "not_independently_quantified",
+    "summary": "S har 2026 både krävt en tillfällig skattesänkning på bensin och diesel utan angiven kr/l-nivå och i budgetmotionen fortsatt föreslå Sverigebränslet med basinblandning 19,3 procent diesel och 10,0 procent bensin. Modellen har rörlig tilläggsinblandning för prisstabilitet, vilket gör ett exakt pumppris omöjligt utan ytterligare marknadsantaganden."
+  },
+  "safeguards": [
+    "Do not apply the historical at-least −4 SEK/l diesel estimate to 2026 prices.",
+    "Do not convert Sverigebränslet blend percentages directly into a pump-price delta; renewable and fossil component costs are required.",
+    "Treat the variable additional blend as an unknown until its rule or selected level is documented.",
+    "Do not invent a numeric value for the March 2026 temporary tax-cut demand.",
+    "Distinguish current 2026 proposals from older 2023/2024 Sverigebränslet parameters."
   ]
 }
