@@ -7,6 +7,7 @@ const js = read("script.js");
 const files = ["index.html","style.css","script.js","fuel-data.js","price-data.js","policy-data.js"];
 const bytes = Object.fromEntries(files.map(path => [path, fs.statSync(path).size]));
 const total = Object.values(bytes).reduce((a,b)=>a+b,0);
+const partyUiBytes = bytes["style.css"] + bytes["policy-data.js"];
 const failures = [];
 const assert = (ok, message) => { if (!ok) failures.push(message); };
 
@@ -14,6 +15,7 @@ assert(bytes["index.html"] <= 20_000, "index.html exceeds 20 KB");
 assert(bytes["style.css"] <= 26_500, "style.css exceeds 26.5 KB");
 assert(bytes["script.js"] <= 40_000, "script.js exceeds 40 KB");
 assert(total <= 100_000, "critical local app payload exceeds 100 KB");
+assert(partyUiBytes <= 45_000, "party UI + policy data exceeds 45 KB");
 assert(!/https?:\/\/[^"'\s>]+\.(?:woff2?|ttf|otf)/i.test(html + css), "remote font dependency detected");
 assert((html.match(/<script\b/g) ?? []).length <= 4, "too many initial scripts");
 assert((html.match(/<link[^>]+rel=["']stylesheet["']/g) ?? []).length <= 1, "too many blocking stylesheets");
@@ -22,9 +24,10 @@ assert(js.includes('image.loading = "lazy"'), "party images must remain lazy-loa
 const report = {
   generatedAt: new Date().toISOString(),
   status: failures.length ? "fail" : "ok",
-  budgets: { indexHtml: 20000, css: 26500, js: 40000, criticalLocalPayload: 100000 },
+  budgets: { indexHtml: 20000, css: 26500, js: 40000, criticalLocalPayload: 100000, partyUiAndPolicy: 45000 },
   bytes,
   criticalLocalPayload: total,
+  partyUiBytes,
   failures
 };
 fs.writeFileSync("data/performance-audit.json", JSON.stringify(report, null, 2) + "\n");
