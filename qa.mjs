@@ -229,8 +229,9 @@ try {
 try {
   const sdFacts = JSON.parse(read("data/policy-facts-sd.json"));
   const ids = new Set(sdFacts.facts?.map(x => x.id));
-  ["pump_prices_2022_2026","reduction_duty_2022","reduction_duty_2024","tax_2024_2025","temporary_tax_2026"].every(x => ids.has(x)) ? pass("SD sourced policy facts") : fail("SD policy facts incomplete");
+  ["pump_prices_2022_2026","reduction_duty_2022","reduction_duty_2024","tax_2024_2025","temporary_tax_2026","eu_minimum_tax_2026","additional_tax_2026","current_reduction_duty_2026","forward_price_level_2026"].every(x => ids.has(x)) ? pass("SD sourced policy facts") : fail("SD policy facts incomplete");
   sdFacts.facts?.every(x => String(x.source ?? "").startsWith("https://")) ? pass("SD fact sources") : fail("SD fact source missing");
+  sdFacts.safeguards?.some(x => x.includes("current national pump price")) ? pass("SD double-count safeguard") : fail("SD double-count safeguard missing");
   script.includes('policyBackground') && script.includes('"sd":') && html.includes('id="policyFacts"') ? pass("SD contextual evidence UI") : fail("SD contextual evidence UI missing");
 } catch (error) { fail("SD policy facts: " + error.message); }
 
