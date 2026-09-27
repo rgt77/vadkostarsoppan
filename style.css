@@ -665,6 +665,6 @@ a { -webkit-tap-highlight-color: transparent; }
 .runtime-error .data-status{border:2px solid var(--text)}.runtime-error .data-status::after{content:" Ett oväntat fel har inträffat. Ladda om sidan innan du använder resultatet.";font-weight:700}
 
 /* v4.9 normalized party comparison */
-.policy-comparison{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px;padding:14px;border:1px solid var(--line,#dfe3e6);border-radius:14px;background:var(--surface-soft,#f7f8f8)}
-.policy-comparison>div{min-width:0}.policy-comparison span{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted,#687176);margin-bottom:4px}.policy-comparison strong{display:block;font-size:.92rem;line-height:1.35}.policy-comparison p{grid-column:1/-1;margin:2px 0 0;padding-top:10px;border-top:1px solid var(--line,#dfe3e6);font-size:.86rem;line-height:1.5;color:var(--muted,#596267)}
+.policy-comparison{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--soft)}
+.policy-comparison>div{min-width:0}.policy-comparison span{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px}.policy-comparison strong{display:block;font-size:.92rem;line-height:1.35}.policy-comparison p{grid-column:1/-1;margin:2px 0 0;padding-top:10px;border-top:1px solid var(--line);font-size:.86rem;line-height:1.5;color:var(--muted)}
 @media(max-width:640px){.policy-comparison{grid-template-columns:1fr}.policy-comparison p{grid-column:1}}
