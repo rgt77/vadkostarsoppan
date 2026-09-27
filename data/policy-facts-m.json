@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "updatedAt": "2026-09-23",
+  "version": 2,
+  "updatedAt": "2026-09-27",
   "party": "m",
   "name": "Moderaterna",
   "facts": [
@@ -12,7 +12,9 @@
       "dieselPumpReliefApprox": 0.4,
       "unit": "SEK/l incl VAT",
       "source": "https://moderaterna.se/nyhet/stod-till-hushall-till-foljd-av-okade-energipriser/",
-      "note": "Moderaternas uppgift om ungefärlig effekt vid full prisövervältring när skatten tillfälligt sänktes till EU:s miniminivå."
+      "note": "Moderaternas uppgift om ungefärlig effekt vid full prisövervältring när skatten tillfälligt sänktes till EU:s miniminivå.",
+      "validTo": "2026-09-30",
+      "calculationRole": "documented_tax_relief_full_pass_through"
     },
     {
       "id": "additional_relief_2026",
@@ -22,7 +24,8 @@
       "pumpRelief": 3,
       "unit": "SEK/l",
       "source": "https://moderaterna.se/nyhet/ytterligare-sankt-skatt-pa-drivmedel/",
-      "note": "Partiet beskriver ytterligare 3 kr/l vid pump som en tillfällig åtgärd; inte en permanent framtida prisnivå."
+      "note": "Partiet beskriver ytterligare 3 kr/l vid pump som en tillfällig åtgärd; inte en permanent framtida prisnivå.",
+      "calculationRole": "time_bounded_party_estimate_full_pass_through"
     },
     {
       "id": "reduction_duty_current",
@@ -39,6 +42,56 @@
       "indexed": false,
       "source": "https://moderaterna.se/var-politik/drivmedelspriser/",
       "note": "Partiet uppger att bensin- och dieselskatten inte räknas upp under 2026."
+    },
+    {
+      "id": "extension_position_2026",
+      "kind": "conditional_future_position",
+      "date": "2026-09",
+      "scope": [
+        "petrol",
+        "diesel"
+      ],
+      "proposal": "Partiet uppger att det är berett att förlänga den tillfälliga skattesänkningen om omvärldsläget består.",
+      "source": "https://moderaterna.se/var-politik/drivmedelspriser/",
+      "calculationRole": "not_price_input_until_extended",
+      "note": "Villkorad framtida hållning; ingen ny giltighetsperiod eller permanent nivå ska antas."
+    },
+    {
+      "id": "collective_transport_2026",
+      "kind": "household_support",
+      "date": "2026",
+      "measure": "50 procent lägre pris på månadskort där stödet genomförs.",
+      "source": "https://moderaterna.se/nyhet/nu-halverar-vi-priset-i-kollektivtrafiken/",
+      "calculationRole": "separate_household_support_not_pump_price"
+    },
+    {
+      "id": "opposition_price_claim_2026",
+      "kind": "counterfactual_claim",
+      "date": "2026",
+      "scope": [
+        "petrol",
+        "diesel"
+      ],
+      "claimedRangeSekPerLiter": {
+        "min": 5,
+        "max": 10
+      },
+      "assumedDieselReductionDutyPct": 60,
+      "source": "https://moderaterna.se/nyhet/vanstersidan-kan-chockhoja-branslepriset-med-tio-kronor-per-liter/",
+      "calculationRole": "political_counterfactual_not_own_price_input",
+      "note": "Partiets beräkning av andra partiers möjliga politik; får inte användas som Moderaternas eget pris eller som webbplatsens prognos."
     }
+  ],
+  "assessment": {
+    "status": "quantified_time_bounded_measure",
+    "priceScenario": "party_estimate_full_pass_through",
+    "summary": "Moderaternas aktuella sida anger cirka 1 kr/l bensin och 0,40 kr/l diesel från 1 maj 2026 samt ytterligare 3 kr/l 1 juli–30 november. Siffrorna beskriver skattesänkningens uppskattade effekt vid full prisövervältring och ska inte beskrivas som garanterad faktisk stationsprisförändring."
+  },
+  "safeguards": [
+    "Label all stated pump relief as party/government estimates assuming full price pass-through, not observed guaranteed station-price changes.",
+    "Do not extend the −3 SEK/l scenario beyond 2026-11-30 unless a new documented decision or proposal supplies a new period.",
+    "Keep collective-transport support separate from pump-price calculations.",
+    "Do not use Moderaterna's counterfactual 5–10 SEK/l claim about opposing parties as this site's forecast or as another party's scenario.",
+    "Do not interpret the 10 percent reduction duty as a direct biofuel volume share."
   ]
 }
