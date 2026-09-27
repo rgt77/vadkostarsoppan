@@ -70,7 +70,7 @@
     scenarioBaseTank: $("scenarioBaseTank"),
     scenarioResultTank: $("scenarioResultTank"),
     policyFacts: $("policyFacts"),
-    policyComparison: $("policyComparison"), policyKnown: $("policyKnown"), policyStatus: $("policyStatus"), policyStatusHelp: $("policyStatusHelp"), policyPump: $("policyPump"), policyInstrument: $("policyInstrument"), policyCompensation: $("policyCompensation"), policyReason: $("policyReason"),
+    policyComparison: $("policyComparison"), policyStatus: $("policyStatus"), policyStatusHelp: $("policyStatusHelp"), policyInstrument: $("policyInstrument"), policyCompensation: $("policyCompensation"), policyReason: $("policyReason"),
     priceSource: $("priceSource"),
     taxSource: $("taxSource"),
     dataStatus: $("dataStatus"),
@@ -312,10 +312,8 @@
     if (comparison && els.policyComparison) {
       els.policyComparison.hidden = false;
       const status = statusMeta[comparison.calculability] || { label: "Ej exakt beräkningsbart", detail: "" };
-      setText(els.policyKnown, comparison.known || "Dokumenterat underlag finns.");
       setText(els.policyStatus, status.label);
       setText(els.policyStatusHelp, status.detail);
-      setText(els.policyPump, comparison.pump);
       setText(els.policyInstrument, comparison.instrument);
       setText(els.policyCompensation, comparison.compensation);
       setText(els.policyReason, comparison.reason);
