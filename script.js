@@ -8,7 +8,7 @@
 
   let tankLiters = Number(siteData.typicalTankLiters) || 40;
   const partyOrder = ["c", "kd", "l", "mp", "m", "s", "sd", "v"];
-  const evidenceLabels = { party_estimate: "Partiets uppskattning", party_stated_target: "Partiets uttalade mål", not_quantified: "Ej numeriskt kvantifierat" };
+  const evidenceLabels = { party_estimate: "Partiets uppskattning", party_stated_target: "Partiets uttalade mål", quantified_inputs: "Delvis beräkningsbart underlag", not_quantified: "Ej numeriskt kvantifierat" };
   const partyLogos = {
     c: "https://commons.wikimedia.org/wiki/Special:FilePath/C%20v1.svg",
     kd: "https://commons.wikimedia.org/wiki/Special:FilePath/Kd%20v1.svg",
@@ -22,7 +22,7 @@
 
   const policyBackground = {
       "v": "Vänsterpartiet beskriver drivmedelsbeskattning som ett klimatstyrmedel men vill ekonomiskt kompensera personer som saknar alternativ till bilen, särskilt i gles- och landsbygd och hushåll med lägre inkomster. Partiet vill på sikt ha geografiskt differentierad vägtrafikbeskattning med lägre skatt på landsbygden och högre i städer. V vill också höja reduktionsplikten från 10 %, men anger ingen exakt ny nivå. Därför konstrueras inget V-pris.",
-      "c": "Centerpartiets klimatplan från 6 augusti 2026 vill ta bort skatten på biodrivmedel som blandas in i bensin och diesel, med målet att kunna öka inblandningen utan att priset vid pump stiger. Planen innehåller också elektrifieringsmål för 2030: 90 % av nya personbilar, 75 % av nya lätta lastbilar och 50 % av nya tunga lastbilar ska vara helt eldrivna.",
+      "c": "Centerpartiets aktuella 2026-förslag vill skattebefria biodrivmedel som blandas i bensin och diesel och beskriver en ökning från 10 till 17 procent 2028 utan högre pumppris som mål. Partiet vill också bygga upp en biodieselreserv på 2 miljarder kronor. Äldre Tanka svenskt-material innehåller prisuppskattningar, men de byggde på 30,5 procents inblandning och dåtidens skatter och används därför inte som ett 2026-prisscenario.",
       "s": "Den 20 mars 2026 krävde Socialdemokraterna en tillfällig skattesänkning på bensin och diesel för att dämpa effekten av stigande drivmedelspriser. Den officiella källan anger ingen exakt skattesänkning eller kr/l-effekt, så hemsidan visar förslaget men konstruerar inget S-pris.",
       "l": "Liberalernas klimatrapport beskriver reduktionsplikten som en övergångslösning medan fordonsflottan elektrifieras och att biodrivmedel på sikt bör prioriteras till sektorer som är svårare att elektrifiera. Senare liberal dokumentation anger 10 % reduktionsplikt för bensin och diesel, kombinerad med sänkt drivmedelsskatt för att motverka priseffekten. Underlaget anger ingen tillräckligt specificerad aktuell kr/l-nivå, därför konstrueras inget L-pris.",
       "kd": "KD:s officiella underlag från 27 augusti 2024 beskriver en ändrad mix mellan drivmedelsskatt och reduktionsplikt. Ett tidigare KD-underlag anger 6 % reduktionsplikt för både bensin och diesel från 1 januari 2024 och uppskattade då att diesel kunde bli 5,50 kr/l billigare. 5,50 kr/l visas endast som KD:s historiska uppskattning och används inte som ett aktuellt 2026-prisscenario.",
