@@ -246,7 +246,7 @@ try {
 try {
   const kdFacts = JSON.parse(read("data/policy-facts-kd.json"));
   const ids = new Set(kdFacts.facts?.map(x => x.id));
-  ["tax_reduction_mix_2024","reduction_duty_2024","diesel_estimate_2024"].every(x => ids.has(x)) ? pass("KD sourced policy facts") : fail("KD policy facts incomplete");
+  ["current_fuel_policy_2026","eu_minimum_position_2026","tax_reduction_mix_2024","reduction_duty_2024","diesel_estimate_2024","historical_comparison_2025_2026","speech_counterfactual_2026"].every(x => ids.has(x)) ? pass("KD sourced policy facts") : fail("KD policy facts incomplete");
   kdFacts.facts?.every(x => String(x.source ?? "").startsWith("https://kristdemokraterna.se/")) ? pass("KD official fact sources") : fail("KD fact source invalid");
   script.includes('policyBackground') && script.includes('"kd":') ? pass("KD contextual evidence UI") : fail("KD contextual evidence UI missing");
 } catch (error) { fail("KD policy facts: " + error.message); }
@@ -269,7 +269,7 @@ try {
 
 try {
  const cFacts=JSON.parse(read("data/policy-facts-c.json")); const ids=new Set(cFacts.facts?.map(x=>x.id));
- ["climate_plan_transport_2026","biofuel_tax_exemption_2026","ev_sales_targets_2030"].every(x=>ids.has(x)) ? pass("C sourced policy facts") : fail("C policy facts incomplete");
+ ["biofuel_tax_exemption_2026","renewable_blend_2028","pump_price_intent_2026","strategic_biofuel_reserve_2026","biofuel_reserve_funding_2026","historical_tanka_svenskt_2023"].every(x=>ids.has(x)) ? pass("C sourced policy facts") : fail("C policy facts incomplete");
  cFacts.facts?.every(x=>String(x.source??"").startsWith("https://www.centerpartiet.se/")) ? pass("C official fact sources") : fail("C fact source invalid");
  script.includes('policyBackground') && script.includes('"c":') ? pass("C contextual evidence UI") : fail("C contextual evidence UI missing");
 } catch(error){ fail("C policy facts: "+error.message); }
