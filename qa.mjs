@@ -453,3 +453,7 @@ const policyText=read("policy-data.js"); !/m:\s*\{[\s\S]*?priceModel:\s*\{\s*typ
 policyText.includes('baselineTreatment: "already_reflected"') && policyText.includes('statedApproxPumpRelief: 3') ? pass("M enacted relief retained as baseline evidence") : fail("M baseline evidence missing");
 
 html.includes('id="partyAnswer"') && script.includes("resultLiter === null ? comparison.known") ? pass("Documented party answer prioritized without exact price") : fail("Party answer fallback missing");
+
+html.includes("Vad innebär partiernas drivmedelspolitik?") ? pass("Party section promise matches evidence") : fail("Party section overpromises price calculation");
+script.includes('Dokumenterad prisuppgift: ') && script.includes('state.liters + " liter = "') ? pass("Calculable party answer is self-contained") : fail("Calculable party answer lacks direct result");
+script.includes('Ingen exakt prisuppgift') && !script.includes('Ej möjligt att räkna exakt') ? pass("Non-calculable party state uses neutral copy") : fail("Non-calculable party state copy unclear");
