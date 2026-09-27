@@ -17,7 +17,7 @@ const required = [
   "scripts/production-audit.mjs", ".github/workflows/production-audit.yml",
   "scripts/release-audit.mjs", ".github/workflows/release-audit.yml", "data/release-audit.json",
   "scripts/live-smoke.mjs", ".github/workflows/live-smoke.yml",
-  "404.html", "data/policy-facts-sd.json", "data/policy-facts-m.json", "data/policy-facts-kd.json", "data/policy-facts-l.json", "data/policy-facts-s.json", "data/policy-facts-c.json", "data/policy-facts-v.json"
+  "404.html", "data/policy-facts-mp.json", "data/policy-facts-sd.json", "data/policy-facts-m.json", "data/policy-facts-kd.json", "data/policy-facts-l.json", "data/policy-facts-s.json", "data/policy-facts-c.json", "data/policy-facts-v.json"
 ];
 const failures = [];
 const warnings = [];
@@ -233,6 +233,15 @@ try {
   sdFacts.facts?.every(x => String(x.source ?? "").startsWith("https://")) ? pass("SD fact sources") : fail("SD fact source missing");
   script.includes('policyBackground') && script.includes('"sd":') && html.includes('id="policyFacts"') ? pass("SD contextual evidence UI") : fail("SD contextual evidence UI missing");
 } catch (error) { fail("SD policy facts: " + error.message); }
+
+try {
+  const mpFacts = JSON.parse(read("data/policy-facts-mp.json"));
+  const ids = new Set(mpFacts.facts?.map(x => x.id));
+  ["pump_price_effect_2026","reduction_duty_2026","carbon_tax_alignment_2026","green_dividend_2026","phase_revenue_2026","spring_transport_support_2026"].every(x => ids.has(x)) ? pass("MP sourced policy facts") : fail("MP policy facts incomplete");
+  mpFacts.facts?.every(x => String(x.source ?? "").startsWith("https://www.mp.se/")) ? pass("MP official fact sources") : fail("MP fact source invalid");
+  script.includes('policyBackground') && script.includes('"mp":') ? pass("MP contextual evidence UI") : fail("MP contextual evidence UI missing");
+  script.includes('model.fuels') ? pass("MP fuel scope guard") : fail("MP fuel scope guard missing");
+} catch (error) { fail("MP policy facts: " + error.message); }
 
 try {
   const mFacts = JSON.parse(read("data/policy-facts-m.json"));
