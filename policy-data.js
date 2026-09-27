@@ -20,10 +20,10 @@ window.POLICY_SCENARIOS = {
   l: {
     name: "Liberalerna",
     priceModel: { type: "not_quantified" },
-    evidence: "not_quantified",
-    verifiedAt: "2026-09-23",
-    method: "Liberalernas källor dokumenterar reduktionsplikt, skattekompensation och en långsiktig elektrifieringsinriktning, men anger inte en aktuell komplett kr/l-nivå som kan användas för ett exakt framtida prisscenario.",
-    source: "https://www.liberalerna.se/wp-content/uploads/klimatomstallning-i-en-vaxande-ekonomi.pdf",
+    evidence: "quantified_inputs",
+    verifiedAt: "2026-09-27",
+    method: "Liberalerna dokumenterar 10 procents reduktionsplikt och skattekompensation med målet att motverka priseffekten. Under energikrisen 2026 stödde partiet även en tillfällig skattesänkning på 3 kr/l. Den tidsbundna åtgärden används inte som ett permanent framtida L-pris, och något separat aktuellt permanent kr/l-scenario anges därför inte.",
+    source: "https://www.liberalerna.se/nyheter/regeringen-genomfor-ett-krispaket-for-att-mota-energikrisen",
     facts: "data/policy-facts-l.json"
   },
   mp: {
