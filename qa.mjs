@@ -444,3 +444,5 @@ script.includes("setText(els.policyStatusHelp, status.detail)") ? pass("Calculat
 style.includes(".policy-status-row small") ? pass("Calculation status help responsive style") : fail("Calculation status help style missing");
 
 const perfScript=read("scripts/performance-budget.mjs"); perfScript.includes("partyUiBytes") && perfScript.includes("45_000") ? pass("Party UI payload budget") : fail("Party UI payload guard missing");
+
+html.includes("Samma metod används för alla partier") && html.includes("inget exakt pumppris när underlaget kräver egna antaganden") ? pass("Equal party methodology disclosed") : fail("Equal party methodology disclosure missing");
