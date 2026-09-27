@@ -28,11 +28,12 @@ window.POLICY_SCENARIOS = {
   },
   mp: {
     name: "Miljöpartiet",
-    priceModel: { type: "party_delta", delta: 2.2 },
+    priceModel: { type: "party_delta", delta: 2.2, fuels: ["petrol", "diesel"] },
     evidence: "party_estimate",
-    verifiedAt: "2026-09-23",
-    method: "+2,2 kr/l är partiets egen uppskattade pumppriseffekt för budgetscenariot. Den appliceras här på referenspriset och är inte en oberoende prognos.",
-    source: "https://www.mp.se/wp-content/uploads/2025/10/mp-budgetmotion-2026.pdf"
+    verifiedAt: "2026-09-27",
+    method: "+2,2 kr/l är Miljöpartiets egen beräknade pumppriseffekt för 2026 års infasning: reduktionsplikt 12 % för bensin och 25 % för diesel samt höjd koldioxidskatt på bensin. Den gröna utdelningen 2 900 kr per vuxen och år för vissa lands- och glesbygdshushåll hålls separat från pumppriset.",
+    source: "https://www.mp.se/wp-content/uploads/2025/10/mp-budgetmotion-2026.pdf",
+    facts: "data/policy-facts-mp.json"
   },
   m: {
     name: "Moderaterna",
