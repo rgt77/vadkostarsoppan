@@ -64,7 +64,7 @@
     scenarioNote: $("scenarioNote"),
     partySource: $("partySource"),
     scenarioReferenceDate: $("scenarioReferenceDate"),
-    scenarioMeta: $("scenarioMeta"),
+    scenarioMeta: $("scenarioMeta"), partyAnswer: $("partyAnswer"),
     scenarioReset: $("scenarioReset"),
     scenarioComparison: $("scenarioComparison"),
     scenarioBaseTank: $("scenarioBaseTank"),
@@ -283,6 +283,7 @@
     if (els.scenarioComparison) els.scenarioComparison.hidden = true;
     if (els.policyFacts) els.policyFacts.replaceChildren();
     if (els.policyComparison) els.policyComparison.hidden = true;
+    if (els.partyAnswer) { els.partyAnswer.hidden = true; els.partyAnswer.textContent = ""; }
     if (els.policyDetails) { els.policyDetails.hidden = !scenario; els.policyDetails.open = false; }
 
     els.partyResult.className = "party-result";
@@ -323,6 +324,10 @@
     }
     const evaluation = scenarioEvaluation(basePrice, scenario);
     const resultLiter = evaluation.status === "available" ? evaluation.price : null;
+    if (els.partyAnswer && comparison) {
+      els.partyAnswer.hidden = false;
+      els.partyAnswer.textContent = resultLiter === null ? comparison.known : "Beräknat från partiets dokumenterade prisuppgift för valt bränsle och tankstorlek.";
+    }
 
     if (resultLiter === null) {
       els.partyResult.classList.add("unavailable");
