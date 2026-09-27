@@ -70,7 +70,7 @@
     scenarioBaseTank: $("scenarioBaseTank"),
     scenarioResultTank: $("scenarioResultTank"),
     policyFacts: $("policyFacts"),
-    policyComparison: $("policyComparison"), policyStatus: $("policyStatus"), policyStatusHelp: $("policyStatusHelp"), policyInstrument: $("policyInstrument"), policyCompensation: $("policyCompensation"), policyReason: $("policyReason"),
+    policyComparison: $("policyComparison"), policyStatus: $("policyStatus"), policyStatusHelp: $("policyStatusHelp"), policyFuels: $("policyFuels"), policyInstrument: $("policyInstrument"), policyCompensation: $("policyCompensation"), policyReason: $("policyReason"),
     priceSource: $("priceSource"),
     taxSource: $("taxSource"),
     dataStatus: $("dataStatus"),
@@ -317,6 +317,8 @@
       const status = statusMeta[comparison.calculability] || { label: "Ej exakt beräkningsbart", detail: "" };
       setText(els.policyStatus, status.label);
       setText(els.policyStatusHelp, status.detail);
+      const applicableFuels = scenario.priceModel?.fuels;
+      setText(els.policyFuels, Array.isArray(applicableFuels) ? applicableFuels.map(fuel => fuelData[fuel]?.label || fuel).join(" · ") : "Övergripande policy");
       setText(els.policyInstrument, comparison.instrument);
       setText(els.policyCompensation, comparison.compensation);
       setText(els.policyReason, comparison.reason);
