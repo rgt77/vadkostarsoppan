@@ -65,9 +65,9 @@ window.POLICY_SCENARIOS = {
   v: {
     name: "Vänsterpartiet",
     priceModel: { type: "not_quantified" },
-    evidence: "not_quantified",
-    verifiedAt: "2026-09-23",
-    method: "Vänsterpartiet vill använda drivmedelsbeskattning som klimatstyrmedel men kombinera den med ekonomisk kompensation och på sikt geografiskt differentierad vägtrafikbeskattning. Någon komplett aktuell kr/l-nivå anges inte, därför konstrueras inget V-pris.",
+    evidence: "quantified_inputs",
+    verifiedAt: "2026-09-27",
+    method: "Vänsterpartiet vill höja reduktionsplikten från 10 procent men anger ingen exakt ny nivå. Partiet motsatte sig 2026 års tillfälliga drivmedelsskattesänkning och föreslår i stället riktad hushållskompensation med inkomstgränser samt högre stöd där kollektivtrafiken är dålig. Stödet hålls separat från pumppriset, därför konstrueras inget exakt V-pris.",
     source: "https://www.vansterpartiet.se/var-politik/politik-a-o/drivmedelsbeskattning/",
     facts: "data/policy-facts-v.json"
   }
