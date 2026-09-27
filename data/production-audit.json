@@ -28,13 +28,13 @@
     {
       "id": "prices:fresh",
       "ok": true,
-      "message": "Prisdata är 1 dagar gammal",
+      "message": "Prisdata är 0 dagar gammal",
       "severity": "error"
     },
     {
       "id": "prices:history",
       "ok": true,
-      "message": "Prishistorik har 4 mätningar",
+      "message": "Prishistorik har 5 mätningar",
       "severity": "warning"
     },
     {
