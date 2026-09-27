@@ -451,3 +451,5 @@ script.includes("setText(els.policyKnown, comparison.known") ? pass("Known polic
 
 const policyText=read("policy-data.js"); !/m:\s*\{[\s\S]*?priceModel:\s*\{\s*type:\s*"party_delta"/.test(policyText) ? pass("M enacted tax cut not double-counted") : fail("M enacted tax cut still applied as delta");
 policyText.includes('baselineTreatment: "already_reflected"') && policyText.includes('statedApproxPumpRelief: 3') ? pass("M enacted relief retained as baseline evidence") : fail("M baseline evidence missing");
+
+html.includes('id="partyAnswer"') && script.includes("resultLiter === null ? comparison.known") ? pass("Documented party answer prioritized without exact price") : fail("Party answer fallback missing");
