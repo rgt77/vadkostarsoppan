@@ -272,7 +272,10 @@
 
   function updatePartySelection() {
     for (const button of els.partyGrid?.children ?? []) {
-      button.setAttribute("aria-pressed", String(button.dataset.party === state.party));
+      const selected = button.dataset.party === state.party;
+      button.setAttribute("aria-pressed", String(selected));
+      button.classList.toggle("selected", selected);
+      button.tabIndex = selected || !state.party ? 0 : -1;
     }
   }
 
@@ -641,9 +644,11 @@
   els.partyGrid?.addEventListener("keydown", event => {
       if (!["ArrowLeft","ArrowRight","Home","End"].includes(event.key)) return;
       const buttons = [...els.partyGrid.querySelectorAll("[data-party]")];
+      if (!buttons.length) return;
       const current = Math.max(0, buttons.indexOf(document.activeElement));
       const next = event.key === "Home" ? 0 : event.key === "End" ? buttons.length - 1 : (current + (event.key === "ArrowRight" ? 1 : -1) + buttons.length) % buttons.length;
-      event.preventDefault(); buttons[next]?.focus();
+      event.preventDefault();
+      buttons[next]?.focus();
     });
 
     els.partyGrid?.addEventListener("click", event => {
