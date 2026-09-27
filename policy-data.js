@@ -37,10 +37,10 @@ window.POLICY_SCENARIOS = {
   },
   m: {
     name: "Moderaterna",
-    priceModel: { type: "party_delta", delta: -3, validFrom: "2026-07-01", validTo: "2026-11-30", fuels: ["petrol", "diesel"] },
-    evidence: "party_estimate",
+    priceModel: { type: "not_quantified", baselineTreatment: "already_reflected", validFrom: "2026-07-01", validTo: "2026-11-30", fuels: ["petrol", "diesel"], statedApproxPumpRelief: 3 },
+    evidence: "quantified_inputs",
     verifiedAt: "2026-09-27",
-    method: "−3 kr/l är Moderaternas uppgift om den ytterligare tillfälliga skattesänkningens effekt vid full prisövervältring. Scenariot används bara för Bensin 95 och diesel 1 juli–30 november 2026. Det är en tidsbunden parti-/regeringsuppskattning, inte en garanti om faktisk stationsprisförändring eller en permanent prisprognos.",
+    method: "Den tillfälliga skattesänkningen motsvarar cirka 3 kr/l inklusive moms vid full prisövervältring och gäller 1 juli–30 november 2026. Åtgärden är genomförd och ingår därför redan i dagens observerade rikssnitt; den dras inte av en gång till som ett hypotetiskt M-pris.",
     source: "https://moderaterna.se/nyhet/ytterligare-sankt-skatt-pa-drivmedel/",
     facts: "data/policy-facts-m.json"
   },
@@ -78,7 +78,7 @@ window.POLICY_COMPARISON = {
   kd: { known: "Partiets dokumenterade inriktning är reduktionsplikt vid EU:s miniminivå.", pump: "Ingen exakt kr/l", instrument: "Reduktionsplikt vid EU:s miniminivå", compensation: "—", calculability: "partial", reason: "Aktuell exakt svensk nivå/prisdifferens saknas i partiets underlag." },
   l: { known: "10 % reduktionsplikt och skattekompensation är dokumenterade delar av linjen.", pump: "Ingen permanent kr/l", instrument: "10 % reduktionsplikt · skattekompensation", compensation: "Tillfällig skattesänkning och kollektivtrafikstöd", calculability: "partial", reason: "3 kr/l är tidsbunden regeringsåtgärd, inte permanent L-pris." },
   mp: { known: "Partiet anger cirka +2,20 kr/l under infasningen samt separat grön utdelning för målgruppen.", pump: "+2,20 kr/l", instrument: "12 % bensin · 25 % diesel · koldioxidskatt", compensation: "Grön utdelning 2 900 kr/vuxen/år för målgruppen", calculability: "direct", reason: "Partiet anger själv en sammanhållen pumppriseffekt." },
-  m: { known: "Den tillfälliga 2026-sänkningen anges motsvara cirka 3 kr/l vid full prisövervältring.", pump: "−3,00 kr/l under perioden", instrument: "10 % reduktionsplikt · tillfällig skattesänkning", compensation: "Kollektivtrafikstöd separat", calculability: "direct_temporary", reason: "Gäller 1 juli–30 november 2026 och förutsätter full prisövervältring." },
+  m: { known: "Den genomförda tillfälliga 2026-sänkningen anges motsvara cirka 3 kr/l vid full prisövervältring.", pump: "Redan i dagens rikssnitt", instrument: "10 % reduktionsplikt · genomförd tillfällig skattesänkning", compensation: "Kollektivtrafikstöd separat", calculability: "baseline", reason: "Sänkningen gäller 1 juli–30 november 2026 men är redan inbakad i dagens observerade rikssnitt och får inte dras av igen." },
   s: { known: "Sverigebränslet anger 10 % bas för bensin och 19,3 % för diesel plus en rörlig del.", pump: "Ingen exakt kr/l", instrument: "Sverigebränslet: 10 % bensin · 19,3 % diesel + rörlig del", compensation: "Tillfällig skattesänkning föreslagen", calculability: "partial", reason: "Rörlig inblandning och bränslekomponentkostnader saknas för exakt pris." },
   sd: { known: "Genomförda 2026-skattesänkningar och 10 % reduktionsplikt ingår redan i dagens observerade pris.", pump: "Redan i dagens rikssnitt", instrument: "10 % reduktionsplikt · genomförda tillfälliga skattesänkningar", compensation: "—", calculability: "baseline", reason: "Genomförda 2026-sänkningar får inte dras av från dagens pris en gång till." },
   v: { known: "Partiet vill höja reduktionsplikten och kombinera styrningen med riktad kompensation.", pump: "Ingen exakt kr/l", instrument: "Högre reduktionsplikt · drivmedelsskatt som styrmedel", compensation: "Riktat bilstöd · geografisk modell · Sverigebiljett", calculability: "partial", reason: "Exakt reduktionsnivå och nationell kr/l-effekt anges inte." }
