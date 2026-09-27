@@ -461,3 +461,6 @@ script.includes('Ingen exakt prisuppgift') && !script.includes('Ej möjligt att 
 !html.includes('id="policyKnown"') && !html.includes('id="policyPump"') && !script.includes("els.policyKnown") && !script.includes("els.policyPump") ? pass("Party primary answer not duplicated in secondary panel") : fail("Duplicate party answer remains");
 
 script.includes("function setFuel(fuel)") && script.includes("state.fuel = fuel; render();") && script.includes("function setTankLiters(liters)") && script.includes("tankLiters = liters; render();") && script.includes("renderScenario(price)") ? pass("Selected party stays synchronized with fuel and tank") : fail("Party answer can become stale after input change");
+
+script.includes('button.classList.toggle("selected", selected)') && script.includes('button.tabIndex = selected || !state.party ? 0 : -1') ? pass("Party visual, ARIA and focus state synchronized") : fail("Party selection state can diverge");
+script.includes('if (!buttons.length) return;') && script.includes('["ArrowLeft","ArrowRight","Home","End"]') ? pass("Party keyboard navigation defensive") : fail("Party keyboard navigation not defensive");
