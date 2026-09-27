@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-26",
+  "date": "2026-09-27",
   "status": "warning",
   "counts": {
     "ok": 11,
@@ -28,7 +28,7 @@
     {
       "id": "prices:fresh",
       "ok": true,
-      "message": "Prisdata är 0 dagar gammal",
+      "message": "Prisdata är 1 dagar gammal",
       "severity": "error"
     },
     {
@@ -58,7 +58,7 @@
     {
       "id": "market:fresh",
       "ok": true,
-      "message": "Marknadsdata är 1 dagar gammal",
+      "message": "Marknadsdata är 2 dagar gammal",
       "severity": "warning"
     },
     {
