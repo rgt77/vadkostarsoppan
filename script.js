@@ -309,13 +309,14 @@
     const comparison = comparisons[state.party];
     if (comparison && els.policyComparison) {
       els.policyComparison.hidden = false;
-      const statusLabels = { direct: "Direkt beräkningsbart", direct_temporary: "Tidsbegränsat beräkningsbart", partial: "Delvis beräkningsbart", baseline: "Ingår redan i rikssnittet" };
+      const statusLabels = { direct: "Exakt partisiffra finns", direct_temporary: "Exakt siffra · tidsbegränsad", partial: "Exakt pumppris saknas", baseline: "Redan i dagens rikssnitt" };
       setText(els.policyStatus, statusLabels[comparison.calculability] || "Ej exakt beräkningsbart");
       setText(els.policyPump, comparison.pump);
       setText(els.policyInstrument, comparison.instrument);
       setText(els.policyCompensation, comparison.compensation);
       setText(els.policyReason, comparison.reason);
       els.policyComparison.dataset.calculability = comparison.calculability;
+      els.policyComparison.setAttribute("aria-label", scenario.name + ": " + (statusLabels[comparison.calculability] || "ingen exakt prisberäkning"));
     }
     const evaluation = scenarioEvaluation(basePrice, scenario);
     const resultLiter = evaluation.status === "available" ? evaluation.price : null;
