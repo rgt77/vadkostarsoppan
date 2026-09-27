@@ -448,3 +448,6 @@ const perfScript=read("scripts/performance-budget.mjs"); perfScript.includes("pa
 html.includes("Samma metod används för alla partier") && html.includes("inget exakt pumppris när underlaget kräver egna antaganden") ? pass("Equal party methodology disclosed") : fail("Equal party methodology disclosure missing");
 
 script.includes("setText(els.policyKnown, comparison.known") ? pass("Known policy facts rendered") : fail("Known policy facts not rendered");
+
+const policyText=read("policy-data.js"); !/m:\s*\{[\s\S]*?priceModel:\s*\{\s*type:\s*"party_delta"/.test(policyText) ? pass("M enacted tax cut not double-counted") : fail("M enacted tax cut still applied as delta");
+policyText.includes('baselineTreatment: "already_reflected"') && policyText.includes('statedApproxPumpRelief: 3') ? pass("M enacted relief retained as baseline evidence") : fail("M baseline evidence missing");
