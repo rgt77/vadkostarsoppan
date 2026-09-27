@@ -1,10 +1,10 @@
 window.POLICY_SCENARIOS = {
   c: {
     name: "Centerpartiet",
-    priceModel: { type: "stated_target", delta: 0 },
-    evidence: "party_stated_target",
-    verifiedAt: "2026-09-23",
-    method: "0 kr/l är partiets uttalade mål för pumppriset i förslaget, inte en oberoende verifierad kostnadsberäkning.",
+    priceModel: { type: "partially_quantifiable", statedTargetDelta: 0, targetBlendPct2028: 17 },
+    evidence: "quantified_policy_inputs",
+    verifiedAt: "2026-09-27",
+    method: "Centerpartiet anger skattebefrielse för inblandade biodrivmedel och beskriver en ökning från 10 till 17 procent 2028. Målet är att detta ska ske utan högre pumppris, men 0 kr/l behandlas som partiets uttalade mål och inte som en oberoende verifierad priseffekt.",
     source: "https://www.centerpartiet.se/nyheter/arkiv-2026/2026-08-31-centerpartiet-mer-fossilfritt-i-tanken-utan-hogre-pris-vid-pump",
     facts: "data/policy-facts-c.json"
   },
