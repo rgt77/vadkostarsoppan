@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "updatedAt": "2026-09-23",
+  "version": 2,
+  "updatedAt": "2026-09-27",
   "party": "sd",
   "name": "Sverigedemokraterna",
   "facts": [
@@ -60,6 +60,73 @@
       "unit": "SEK/l",
       "source": "https://val2026.sd.se/drivmedel/",
       "note": "Partiets beskrivning av ett tidsbegränsat EU-undantag. Ska inte användas som permanent framtida partipris."
+    },
+    {
+      "id": "eu_minimum_tax_2026",
+      "kind": "enacted_joint_measure",
+      "validFrom": "2026-05-01",
+      "validTo": "2026-09-30",
+      "scope": [
+        "petrol",
+        "diesel"
+      ],
+      "petrolEnergyTaxCutExVat": 0.82,
+      "dieselEnergyTaxCutSekPerLiterExVat": 0.319,
+      "source": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/betankande/extra-andringsbudget-for-2026-sankt-skatt-pa_hd01fiu48/",
+      "calculationRole": "current_baseline_context_not_additional_delta"
+    },
+    {
+      "id": "additional_tax_2026",
+      "kind": "enacted_joint_measure",
+      "validFrom": "2026-07-01",
+      "validTo": "2026-11-30",
+      "scope": [
+        "petrol",
+        "diesel"
+      ],
+      "carbonTaxCutSekPerLiter": 2.4,
+      "statedApproxPumpReliefSekPerLiter": 3,
+      "source": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/betankande/extra-andringsbudget-for-2026-stod-till-ukraina_hd01fiu47/html/",
+      "calculationRole": "current_baseline_context_not_additional_delta",
+      "note": "2,40 kr/l skattesänkning motsvarar cirka 3 kr/l inklusive moms vid full övervältring."
+    },
+    {
+      "id": "current_reduction_duty_2026",
+      "kind": "current_policy_level",
+      "date": "2026",
+      "scope": [
+        "petrol",
+        "diesel"
+      ],
+      "petrolPct": 10,
+      "dieselPct": 10,
+      "source": "https://val2026.sd.se/drivmedel/",
+      "calculationRole": "current_baseline_context"
+    },
+    {
+      "id": "forward_price_level_2026",
+      "kind": "forward_policy_assessment",
+      "date": "2026-09-27",
+      "scope": [
+        "petrol",
+        "diesel"
+      ],
+      "exactFutureDeltaAvailable": false,
+      "source": "https://val2026.sd.se/drivmedel/",
+      "calculationRole": "not_quantified",
+      "note": "Den aktuella SD-sidan redovisar genomförda sänkningar och historiska utfall men ingen separat permanent framtida kr/l-nivå att applicera ovanpå dagens rikssnitt."
     }
+  ],
+  "assessment": {
+    "status": "quantified_current_measures",
+    "priceScenario": "already_reflected_in_current_baseline",
+    "summary": "SD:s 2026-underlag innehåller kvantifierade, genomförda och tidsbegränsade skatteåtgärder samt historiska prisjämförelser. Eftersom dagens rikssnitt redan observeras under dessa åtgärder ska de inte dras av en gång till som ett separat SD-scenario."
+  },
+  "safeguards": [
+    "Do not treat the 2022–2026 observed price decline as a causal estimate of SD policy.",
+    "Do not subtract enacted 2026 tax cuts from a current national pump price that already reflects them.",
+    "Do not extend the temporary 2026 relief beyond its documented validity without a new source.",
+    "Keep joint government/Tidö measures distinct from a hypothetical future SD-only price.",
+    "Do not infer a future permanent price from historical tax and reduction-duty changes."
   ]
 }
