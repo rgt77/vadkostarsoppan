@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-27",
+  "party": "mp",
+  "name": "Miljöpartiet",
+  "assessment": {
+    "status": "quantified_party_scenario",
+    "priceScenario": "party_estimate",
+    "summary": "MP:s budgetmotion för 2026 kvantifierar ett cirka 2,2 kr/l högre pumppris under infasningen av ett svenskt handelssystem. Samma underlag anger reduktionsplikt 25 procent diesel och 12 procent bensin samt 2 900 kr per vuxen i grön utdelning för vissa lands- och glesbygdshushåll med lägre inkomster."
+  },
+  "facts": [
+    {
+      "id": "pump_price_effect_2026",
+      "kind": "party_price_estimate",
+      "date": "2025-10-06",
+      "scope": [
+        "petrol",
+        "diesel"
+      ],
+      "deltaSekPerLiter": 2.2,
+      "proposal": "Beräknat prispåslag vid pump under infasningen av ett svenskt handelssystem.",
+      "source": "https://www.mp.se/wp-content/uploads/2025/10/mp-budgetmotion-2026.pdf",
+      "calculationRole": "party_estimate_price_input"
+    },
+    {
+      "id": "reduction_duty_2026",
+      "kind": "policy_level",
+      "date": "2026",
+      "scope": [
+        "petrol",
+        "diesel"
+      ],
+      "petrolPct": 12,
+      "dieselPct": 25,
+      "source": "https://www.mp.se/wp-content/uploads/2025/10/mp-budgetmotion-2026.pdf",
+      "calculationRole": "policy_input_not_direct_volume_share"
+    },
+    {
+      "id": "carbon_tax_alignment_2026",
+      "kind": "tax_policy",
+      "date": "2026",
+      "scope": [
+        "petrol"
+      ],
+      "proposal": "Höja koldioxidskatten på bensin för att motsvara prispåslaget på diesel.",
+      "source": "https://www.mp.se/wp-content/uploads/2025/10/mp-budgetmotion-2026.pdf",
+      "calculationRole": "component_of_party_price_estimate"
+    },
+    {
+      "id": "green_dividend_2026",
+      "kind": "household_compensation",
+      "date": "2026",
+      "adultSekPerYear": 2900,
+      "childShare": 0.5,
+      "target": "hushåll i lands- och glesbygd med lägre inkomster",
+      "source": "https://www.mp.se/wp-content/uploads/2025/10/mp-budgetmotion-2026.pdf",
+      "calculationRole": "separate_household_support_not_pump_price"
+    },
+    {
+      "id": "phase_revenue_2026",
+      "kind": "budget_revenue",
+      "date": "2026",
+      "amountSek": 4050000000,
+      "source": "https://www.mp.se/wp-content/uploads/2025/10/mp-budgetmotion-2026.pdf",
+      "calculationRole": "context_for_green_dividend"
+    },
+    {
+      "id": "spring_transport_support_2026",
+      "kind": "household_support",
+      "date": "2026-04-27",
+      "amountSekPerPersonYear": 2900,
+      "budgetSek": 4050000000,
+      "target": "människor i glesbygd och landsbygd med lägre inkomst",
+      "source": "https://www.mp.se/wp-content/uploads/2026/04/miljopartiets-varmotion-2026.pdf",
+      "calculationRole": "separate_household_support_not_pump_price"
+    }
+  ],
+  "safeguards": [
+    "Label +2.2 SEK/l as Miljöpartiet's own budget estimate, not an independent forecast.",
+    "Apply the party price estimate only to petrol and diesel, not E85.",
+    "Keep the 2,900 SEK/person/year support separate from pump-price calculations.",
+    "Do not interpret reduction-duty percentages as direct biofuel volume shares.",
+    "Do not subtract household compensation from every user's tank cost; eligibility and annual driving differ."
+  ]
+}
