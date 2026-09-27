@@ -5,22 +5,20 @@
       "url": "https://www.centerpartiet.se/nyheter/arkiv-2026/2026-08-31-centerpartiet-mer-fossilfritt-i-tanken-utan-hogre-pris-vid-pump",
       "hash": "9a859ee50b9c18fd239f286d094e008e8bf0405064cd3581ddd4f4066d3b8c91",
       "contentType": "text/html;charset=UTF-8",
-      "status": "unreachable",
-      "error": "fetch failed"
+      "status": "ok"
     },
     "kd": {
       "name": "Kristdemokraterna",
-      "url": "https://kristdemokraterna.se/arkiv/nyheter/2024/2024-08-27-vi-sanker-drivmedelsskatten-och-utslappen",
-      "hash": "21059c7d289e064c55eecf7a017d65a0c4903c20990d61cca14c0e557c06acfe",
+      "url": "https://kristdemokraterna.se/var-politik/politik-a-till-o/drivmedelspriser",
+      "hash": "86bd9f26736654a60e9f1337d0283dddaea42779e621787a2b1fa1c9110c1696",
       "contentType": "text/html;charset=UTF-8",
-      "status": "unreachable",
-      "error": "fetch failed"
+      "status": "ok"
     },
     "l": {
       "name": "Liberalerna",
-      "url": "https://www.liberalerna.se/wp-content/uploads/klimatomstallning-i-en-vaxande-ekonomi.pdf",
-      "hash": "e8e3b643ac27eb90f4f8d49ef8fc8d621d2d54f4a863d702286a11ec36a885d8",
-      "contentType": "application/pdf",
+      "url": "https://www.liberalerna.se/nyheter/regeringen-genomfor-ett-krispaket-for-att-mota-energikrisen",
+      "hash": "715bfe80513ddc83e04b01db1ffde43ad81327c1f37b491bf72cd373e69deb7e",
+      "contentType": "text/html; charset=UTF-8",
       "status": "ok"
     },
     "mp": {
@@ -42,8 +40,7 @@
       "url": "https://www.socialdemokraterna.se/nyheter/nyheter/2026-03-20-s-kraver-tillfallig-skattesankning-pa-bensin-och-diesel",
       "hash": "e1757f121f096740646277af0fcbc06e352a839b02559fa3fa225b924100ca4c",
       "contentType": "text/html;charset=UTF-8",
-      "status": "unreachable",
-      "error": "fetch failed"
+      "status": "ok"
     },
     "sd": {
       "name": "Sverigedemokraterna",
