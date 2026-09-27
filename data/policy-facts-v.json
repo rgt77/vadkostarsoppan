@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "updatedAt": "2026-09-23",
+  "version": 2,
+  "updatedAt": "2026-09-27",
   "party": "v",
   "name": "Vänsterpartiet",
   "facts": [
@@ -25,6 +25,69 @@
       "publicTransportTicketSek": 450,
       "source": "https://www.vansterpartiet.se/var-politik/politik-a-o/drivmedelsbeskattning/",
       "note": "V föreslår ökat stöd till kollektivtrafik och järnväg, Sverigebiljett för regional kollektivtrafik samt elbilspremie för låg- och medelinkomsttagare."
+    },
+    {
+      "id": "reduction_duty_direction_2026",
+      "kind": "current_policy_direction",
+      "updated": "2026-05-26",
+      "scope": [
+        "petrol",
+        "diesel"
+      ],
+      "currentReferencePct": 10,
+      "proposedDirection": "increase",
+      "exactProposedPct": null,
+      "source": "https://www.vansterpartiet.se/var-politik/klimatmalen-till-2030/",
+      "calculationRole": "not_quantified"
+    },
+    {
+      "id": "reject_temporary_fuel_tax_cut_2026",
+      "kind": "parliamentary_position",
+      "date": "2026",
+      "scope": [
+        "petrol",
+        "diesel"
+      ],
+      "proposal": "Avslå regeringens tillfälliga sänkning av skatten på bensin och diesel.",
+      "source": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/motion/med-anledning-av-prop-202526236-extra_hd024092/",
+      "calculationRole": "counterfactual_tax_baseline_requires_exact_reversal_model"
+    },
+    {
+      "id": "targeted_car_owner_compensation_2026",
+      "kind": "household_support",
+      "date": "2026",
+      "incomePhaseOutMonthlySek": 45000,
+      "doubleSupportPoorTransit": true,
+      "eligibility": "bilägare med medianinkomst eller lägre; avtrappning upp till 45 000 kr/mån",
+      "source": "https://www.vansterpartiet.se/wp-content/uploads/2026/04/V-Budget_vam2026.pdf",
+      "calculationRole": "separate_household_support_not_pump_price"
+    },
+    {
+      "id": "sweden_ticket_2027",
+      "kind": "public_transport_policy",
+      "date": "2026",
+      "validFrom": "2027",
+      "adultMonthlySek": 450,
+      "reducedMonthlySek": 225,
+      "reducedGroups": [
+        "barn",
+        "unga",
+        "pensionärer"
+      ],
+      "source": "https://www.riksdagen.se/sv/webb-tv/video/debatt-om-forslag/extra-andringsbudget-for-2026-stod-till-ukraina_hd01fiu47/",
+      "calculationRole": "separate_transport_cost_not_pump_price"
     }
+  ],
+  "assessment": {
+    "status": "partially_quantifiable_support",
+    "priceScenario": "not_quantified",
+    "summary": "V vill höja reduktionsplikten från dagens 10 procent men anger ingen exakt ny nivå. Partiet motsatte sig 2026 års tillfälliga drivmedelsskattesänkning och föreslog i stället riktad kompensation till bilägare med lägre inkomster, med dubbel ersättning där kollektivtrafiken är särskilt dålig. Stödet är hushållskompensation och inte ett pumppris."
+  },
+  "safeguards": [
+    "Do not invent a reduction-duty percentage above 10 percent; V states only that it should be raised.",
+    "Do not translate household compensation into SEK/l or subtract it from a tank without household eligibility and usage assumptions.",
+    "Keep the proposed geographic road-traffic tax separate from national pump prices.",
+    "Do not treat rejection of the government's temporary tax cut as a precise V pump-price delta unless the exact counterfactual tax schedule is modelled.",
+    "Keep the 450/225 SEK public-transport ticket separate from fuel-price calculations."
   ]
 }
