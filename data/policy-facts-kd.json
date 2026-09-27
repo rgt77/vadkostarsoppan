@@ -1,9 +1,21 @@
 {
-  "version": 1,
-  "updatedAt": "2026-09-23",
+  "version": 2,
+  "updatedAt": "2026-09-27",
   "party": "kd",
   "name": "Kristdemokraterna",
   "facts": [
+    {
+      "id": "current_fuel_policy_2026",
+      "kind": "current_policy_position",
+      "date": "2026-07-03",
+      "scope": [
+        "petrol",
+        "diesel"
+      ],
+      "proposal": "Bibehålla reduktionsplikten på EU:s miniminivå och hålla nere drivmedelsskatter.",
+      "source": "https://kristdemokraterna.se/var-politik/politik-a-till-o/drivmedelspriser",
+      "calculationRole": "current_direction_not_exact_delta"
+    },
     {
       "id": "tax_reduction_mix_2024",
       "kind": "historical_policy_measure",
@@ -28,6 +40,58 @@
       "unit": "SEK/l",
       "source": "https://kristdemokraterna.se/arkiv/nyheter/2023/2023-05-07-billigare-bensin-och-diesel---for-att-hela-sverige-ska-fungera",
       "note": "KD:s dåvarande uppskattning: diesel kunde bli 5,50 kr/l billigare. Historisk partiuppskattning, inte ett aktuellt 2026-scenario."
+    },
+    {
+      "id": "eu_minimum_position_2026",
+      "kind": "current_policy_level",
+      "date": "2026",
+      "scope": [
+        "petrol",
+        "diesel"
+      ],
+      "proposal": "Reduktionsplikten ska bibehållas på EU:s miniminivå.",
+      "source": "https://kristdemokraterna.se/var-politik/politikomraden/kommunikationer--it",
+      "calculationRole": "quantified_only_when_eu_minimum_is_mapped_to_applicable_swedish_rule"
+    },
+    {
+      "id": "historical_comparison_2025_2026",
+      "kind": "historical_party_estimate",
+      "date": "2023-05-07",
+      "scope": [
+        "diesel"
+      ],
+      "comparisonDeltaSekPerLiter": {
+        "2025": -6,
+        "2026": -7
+      },
+      "comparisonAgainst": "dåvarande rödgröna förslag",
+      "source": "https://kristdemokraterna.se/arkiv/nyheter/2023/2023-05-07-billigare-bensin-och-diesel---for-att-hela-sverige-ska-fungera",
+      "calculationRole": "historical_counterfactual_only",
+      "note": "Jämförelse mot ett dåvarande motförslag, inte ett aktuellt 2026-avdrag från dagens pumppris."
+    },
+    {
+      "id": "speech_counterfactual_2026",
+      "kind": "party_claim",
+      "date": "2026-04-17",
+      "scope": [
+        "petrol",
+        "diesel"
+      ],
+      "counterfactualDeltaSekPerLiter": 5,
+      "source": "https://kristdemokraterna.se/arkiv/nyheter/2026/2026-04-17-tro-pa-sverige---ebbas-tal-pa-kd-dagarna-2026",
+      "calculationRole": "political_counterfactual_not_price_input",
+      "note": "Partiledartalets uppgift om att bränslepriset annars hade varit 5 kr högre saknar på sidan en specificerad beräkningsmodell och används inte i kalkylen."
     }
+  ],
+  "assessment": {
+    "status": "partially_quantifiable",
+    "priceScenario": "not_independently_quantified",
+    "summary": "KD:s aktuella 2026-linje är att hålla reduktionsplikten på EU:s miniminivå. Partiet anger inte på sin aktuella drivmedelssida en fullständig ny kr/l-nivå för ett framtida scenario; äldre prisuppskattningar hålls därför historiska."
+  },
+  "safeguards": [
+    "Do not apply the historical 5.50 SEK/l diesel estimate to current 2026 pump prices.",
+    "Do not subtract the historical 6–7 SEK/l comparison from current prices; it compared against a then-proposed counterfactual.",
+    "Do not use the 2026 speech claim of 5 SEK/l as a price input without a documented calculation basis.",
+    "Treat EU-minimum language as a policy direction until the applicable numerical rule and implementation are explicitly mapped."
   ]
 }
