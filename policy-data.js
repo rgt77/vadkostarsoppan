@@ -47,9 +47,9 @@ window.POLICY_SCENARIOS = {
   s: {
     name: "Socialdemokraterna",
     priceModel: { type: "not_quantified" },
-    evidence: "not_quantified",
-    verifiedAt: "2026-09-23",
-    method: "Socialdemokraterna kräver en tillfällig skattesänkning på bensin och diesel, men den officiella källan anger ingen exakt skattesänkning eller kr/l-effekt. Därför konstrueras inget numeriskt S-scenario.",
+    evidence: "quantified_inputs",
+    verifiedAt: "2026-09-27",
+    method: "Socialdemokraterna kräver en tillfällig skattesänkning utan angiven kr/l-nivå och föreslår Sverigebränslet med 19,3 % basinblandning för diesel och 10,0 % för bensin samt rörlig tilläggsinblandning. Dessa är kvantifierade policyindata men räcker inte till ett exakt pumppris utan marknads- och blandningsantaganden.",
     source: "https://www.socialdemokraterna.se/nyheter/nyheter/2026-03-20-s-kraver-tillfallig-skattesankning-pa-bensin-och-diesel",
     facts: "data/policy-facts-s.json"
   },
