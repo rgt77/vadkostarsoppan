@@ -467,3 +467,6 @@ script.includes('if (!buttons.length) return;') && script.includes('["ArrowLeft"
 
 script.includes('Prisdata ') && script.includes('Politik verifierad ') && script.includes("evidenceLabels[scenario.evidence]") ? pass("Party evidence provenance visible") : fail("Party provenance metadata unclear");
 !script.includes('referenspris " +') && !script.includes('källan verifierad " +') ? pass("Technical party metadata copy removed") : fail("Technical metadata copy remains");
+
+html.includes("Separat stöd / kompensation") && html.includes("Räknas inte in i pumppriset.") ? pass("Household support separated from pump price") : fail("Support can be confused with pump price");
+!script.includes("policyCompensation") || script.includes("setText(els.policyCompensation, comparison.compensation)") ? pass("Compensation remains display-only") : fail("Compensation rendering unclear");
