@@ -286,8 +286,8 @@ try {
 
 try {
  const vFacts=JSON.parse(read("data/policy-facts-v.json")); const ids=new Set(vFacts.facts?.map(x=>x.id));
- ["fuel_tax_position_2026","geographic_road_tax","sustainable_travel_support"].every(x=>ids.has(x)) ? pass("V sourced policy facts") : fail("V policy facts incomplete");
- vFacts.facts?.every(x=>String(x.source??"").startsWith("https://www.vansterpartiet.se/")) ? pass("V official fact sources") : fail("V fact source invalid");
+ ["fuel_tax_position_2026","geographic_road_tax","sustainable_travel_support","reduction_duty_direction_2026","reject_temporary_fuel_tax_cut_2026","targeted_car_owner_compensation_2026","sweden_ticket_2027"].every(x=>ids.has(x)) ? pass("V sourced policy facts") : fail("V policy facts incomplete");
+ vFacts.facts?.every(x=>["https://www.vansterpartiet.se/","https://www.riksdagen.se/"].some(prefix=>String(x.source??"").startsWith(prefix))) ? pass("V official fact sources") : fail("V fact source invalid");
  script.includes('policyBackground') && script.includes('"v":') ? pass("V contextual evidence UI") : fail("V contextual evidence UI missing");
 } catch(error){ fail("V policy facts: "+error.message); }
 
