@@ -1,12 +1,12 @@
 {
-  "version": 2,
+  "version": 3,
   "updatedAt": "2026-09-27",
   "party": "c",
   "name": "Centerpartiet",
   "assessment": {
     "status": "partially_quantifiable",
     "priceScenario": "not_independently_quantified",
-    "summary": "Förslaget innehåller konkreta styrmedel och en angiven inblandningsnivå för 2028, men saknar tillräckligt underlag för ett oberoende exakt framtida pumppris."
+    "summary": "Aktuella 2026-källor anger skattebefrielse för inblandade biodrivmedel, en ökning från 10 till 17 procent 2028 och en biodieselreserv på 2 miljarder kronor. Dessa är kvantifierade policyindata, men räcker inte för ett oberoende exakt pumppris utan antaganden om bränslemix, skattebas och marknadspris."
   },
   "facts": [
     {
@@ -49,11 +49,52 @@
       "source": "https://www.centerpartiet.se/download/18.6cda1b9f19936660f5013f9/1759839478397/Centerpartiets_budgetmotion_2026_webb.pdf",
       "calculationRole": "not_directly_quantifiable",
       "note": "Budgetmotionen föreslår en strategisk reserv av biodrivmedel för att pressa och stabilisera priset."
+    },
+    {
+      "id": "biofuel_reserve_funding_2026",
+      "kind": "budget_commitment",
+      "date": "2026-08-31",
+      "amountSek": 2000000000,
+      "scope": [
+        "diesel",
+        "biofuel"
+      ],
+      "proposal": "Bygga upp en biodieselreserv på två miljarder kronor.",
+      "source": "https://www.centerpartiet.se/nyheter/arkiv-2026/2026-08-31-centerpartiet-9-av-10-nya-bilar-ska-vara-elbilar-2030",
+      "calculationRole": "context_not_direct_price_input"
+    },
+    {
+      "id": "historical_tanka_svenskt_2023",
+      "kind": "historical_party_estimate",
+      "date": "2023-05-11",
+      "scope": [
+        "diesel"
+      ],
+      "historicalAssumptionBlendPct": 30.5,
+      "components": [
+        {
+          "measure": "Skattebefrielse för biodrivmedel inom reduktionsplikten",
+          "estimatedDeltaSekPerLiter": -1
+        },
+        {
+          "measure": "Sänkt reduktionspliktsavgift till 3,20 kr/kg CO2",
+          "estimatedDeltaSekPerLiter": -1
+        },
+        {
+          "measure": "Moms på biobränsle till 6 procent",
+          "estimatedDeltaSekPerLiter": -1
+        }
+      ],
+      "combinedPartyClaimSekPerLiter": -4,
+      "source": "https://www.centerpartiet.se/nyheter/2023/2023-05-11-tanka-svenskt-alla-ska-ha-rad-att-tanka-gront-svenskt-biobransle",
+      "calculationRole": "historical_context_only",
+      "note": "Historiska partiuppskattningar med dåvarande 30,5 procents inblandning. Får inte appliceras på 2026 års rikssnitt."
     }
   ],
   "safeguards": [
     "Do not convert the stated zero-price-increase target into an independently verified price forecast.",
     "Do not infer a tax saving without a defensible blend composition and applicable tax base.",
-    "Keep EV support separate from pump-price calculations."
+    "Keep EV support separate from pump-price calculations.",
+    "Do not apply the 2023 Tanka svenskt −4 kr/l claim or its component estimates to 2026 prices; assumptions and blend levels differ."
   ]
 }
