@@ -470,3 +470,6 @@ script.includes('Prisdata ') && script.includes('Politik verifierad ') && script
 
 html.includes("Separat stöd / kompensation") && html.includes("Räknas inte in i pumppriset.") ? pass("Household support separated from pump price") : fail("Support can be confused with pump price");
 !script.includes("policyCompensation") || script.includes("setText(els.policyCompensation, comparison.compensation)") ? pass("Compensation remains display-only") : fail("Compensation rendering unclear");
+
+html.includes('id="policyFuels"') && script.includes("applicableFuels") && script.includes('join(" · ")') ? pass("Party fuel applicability visible") : fail("Party fuel scope hidden");
+script.includes('fuelData[fuel]?.label || fuel') && script.includes('"Övergripande policy"') ? pass("Fuel scope uses user labels and safe fallback") : fail("Fuel scope rendering incomplete");
