@@ -5,6 +5,7 @@
   const siteData = window.SITE_DATA ?? {};
   const priceData = window.PRICE_DATA ?? {};
   const scenarios = window.POLICY_SCENARIOS ?? {};
+  const comparisons = window.POLICY_COMPARISON ?? {};
 
   let tankLiters = Number(siteData.typicalTankLiters) || 40;
   const partyOrder = ["c", "kd", "l", "mp", "m", "s", "sd", "v"];
@@ -68,6 +69,7 @@
     scenarioBaseTank: $("scenarioBaseTank"),
     scenarioResultTank: $("scenarioResultTank"),
     policyFacts: $("policyFacts"),
+    policyComparison: $("policyComparison"), policyPump: $("policyPump"), policyInstrument: $("policyInstrument"), policyCompensation: $("policyCompensation"), policyReason: $("policyReason"),
     priceSource: $("priceSource"),
     taxSource: $("taxSource"),
     dataStatus: $("dataStatus"),
@@ -279,6 +281,7 @@
     if (els.scenarioReset) els.scenarioReset.hidden = !scenario;
     if (els.scenarioComparison) els.scenarioComparison.hidden = true;
     if (els.policyFacts) els.policyFacts.replaceChildren();
+    if (els.policyComparison) els.policyComparison.hidden = true;
     if (els.policyDetails) { els.policyDetails.hidden = !scenario; els.policyDetails.open = false; }
 
     els.partyResult.className = "party-result";
@@ -302,6 +305,15 @@
     if (els.scenarioMeta) {
       els.scenarioMeta.hidden = false;
       els.scenarioMeta.textContent = (evidenceLabels[scenario.evidence] || "Källbundet scenario") + " · referenspris " + (priceData.updatedAt || "—") + " · källan verifierad " + (scenario.verifiedAt || "—");
+    }
+    const comparison = comparisons[state.party];
+    if (comparison && els.policyComparison) {
+      els.policyComparison.hidden = false;
+      setText(els.policyPump, comparison.pump);
+      setText(els.policyInstrument, comparison.instrument);
+      setText(els.policyCompensation, comparison.compensation);
+      setText(els.policyReason, comparison.reason);
+      els.policyComparison.dataset.calculability = comparison.calculability;
     }
     const evaluation = scenarioEvaluation(basePrice, scenario);
     const resultLiter = evaluation.status === "available" ? evaluation.price : null;
