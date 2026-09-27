@@ -72,3 +72,14 @@ window.POLICY_SCENARIOS = {
     facts: "data/policy-facts-v.json"
   }
 };
+
+window.POLICY_COMPARISON = {
+  c: { pump: "Ingen exakt kr/l", instrument: "Skattebefrielse för biodrivmedel · 17 % mål 2028", compensation: "Biodieselreserv 2 mdkr", calculability: "partial", reason: "Kostnaden för ökad inblandning är inte fastställd." },
+  kd: { pump: "Ingen exakt kr/l", instrument: "Reduktionsplikt vid EU:s miniminivå", compensation: "—", calculability: "partial", reason: "Aktuell exakt svensk nivå/prisdifferens saknas i partiets underlag." },
+  l: { pump: "Ingen permanent kr/l", instrument: "10 % reduktionsplikt · skattekompensation", compensation: "Tillfällig skattesänkning och kollektivtrafikstöd", calculability: "partial", reason: "3 kr/l är tidsbunden regeringsåtgärd, inte permanent L-pris." },
+  mp: { pump: "+2,20 kr/l", instrument: "12 % bensin · 25 % diesel · koldioxidskatt", compensation: "Grön utdelning 2 900 kr/vuxen/år för målgruppen", calculability: "direct", reason: "Partiet anger själv en sammanhållen pumppriseffekt." },
+  m: { pump: "−3,00 kr/l under perioden", instrument: "10 % reduktionsplikt · tillfällig skattesänkning", compensation: "Kollektivtrafikstöd separat", calculability: "direct_temporary", reason: "Gäller 1 juli–30 november 2026 och förutsätter full prisövervältring." },
+  s: { pump: "Ingen exakt kr/l", instrument: "Sverigebränslet: 10 % bensin · 19,3 % diesel + rörlig del", compensation: "Tillfällig skattesänkning föreslagen", calculability: "partial", reason: "Rörlig inblandning och bränslekomponentkostnader saknas för exakt pris." },
+  sd: { pump: "Redan i dagens rikssnitt", instrument: "10 % reduktionsplikt · genomförda tillfälliga skattesänkningar", compensation: "—", calculability: "baseline", reason: "Genomförda 2026-sänkningar får inte dras av från dagens pris en gång till." },
+  v: { pump: "Ingen exakt kr/l", instrument: "Högre reduktionsplikt · drivmedelsskatt som styrmedel", compensation: "Riktat bilstöd · geografisk modell · Sverigebiljett", calculability: "partial", reason: "Exakt reduktionsnivå och nationell kr/l-effekt anges inte." }
+};
