@@ -486,7 +486,7 @@ a { -webkit-tap-highlight-color: transparent; }
 .trend-periods button:focus-visible{outline:2px solid currentColor;outline-offset:-2px}
 .scenario-card{padding-bottom:22px}
 .party-choice-label{margin-bottom:0}
-.party-result{margin-top:16px}
+.party-result{margin-top:16px}.party-answer{grid-column:1/-1;margin:0 0 2px;font-size:15px;font-weight:700;line-height:1.45}
 .party-result:not(.empty){border-color:var(--text)}
 .party-result.unavailable{border-color:var(--line);background:var(--soft)}
 .scenario-meta{margin-top:10px;padding:9px 11px;border-left:2px solid var(--line);color:var(--muted);font-size:10px;line-height:1.45}
