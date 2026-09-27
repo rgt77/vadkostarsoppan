@@ -294,7 +294,7 @@ try {
 html.includes('data-tank-size="30"') && html.includes('data-tank-size="60"') && script.includes("tankSizeButtons") ? pass("Interactive tank-size selector") : fail("Tank-size selector missing");
 html.includes('id="taxBarFill"') && script.includes("els.taxBarFill.style.width") ? pass("Visual tax-share bar") : fail("Tax-share visualization missing");
 html.includes('id="policyDetails"') && html.includes("Fördjupning och källa") ? pass("Progressive policy evidence disclosure") : fail("Policy evidence disclosure missing");
-html.includes('id="policyComparison"') && html.includes('id="policyStatus"') && html.includes('id="policyPump"') && html.includes('id="policyInstrument"') && html.includes('id="policyCompensation"') && html.includes('id="policyReason"') ? pass("Normalized party comparison UI") : fail("Party comparison UI missing");
+html.includes('id="policyComparison"') && html.includes('id="policyStatus"') && html.includes('id="policyStatusHelp"') && html.includes('id="policyPump"') && html.includes('id="policyInstrument"') && html.includes('id="policyCompensation"') && html.includes('id="policyReason"') ? pass("Normalized party comparison UI") : fail("Party comparison UI missing");
 script.includes("POLICY_STATUS_META") && script.includes("statusMeta[comparison.calculability]") ? pass("UI consumes centralized calculation states") : fail("Calculation states duplicated or disconnected");
 html.includes("Fördjupning och källa") ? pass("Party detail disclosure is secondary") : fail("Party detail disclosure label missing");
 try { const w={}; new Function("window",read("policy-data.js"))(w); const cmp=w.POLICY_COMPARISON??{}; const meta=w.POLICY_STATUS_META??{}; ["direct","direct_temporary","partial","baseline"].every(k=>meta[k]?.label&&meta[k]?.detail) ? pass("Central party status semantics") : fail("Party status semantics incomplete"); ["c","kd","l","mp","m","s","sd","v"].every(k=>cmp[k]?.pump&&cmp[k]?.instrument&&cmp[k]?.compensation&&cmp[k]?.reason&&cmp[k]?.calculability) ? pass("Eight-party comparison schema") : fail("Party comparison schema incomplete"); const validCalc=new Set(["direct","direct_temporary","partial","baseline"]); ["c","kd","l","mp","m","s","sd","v"].every(k=>validCalc.has(cmp[k]?.calculability)) ? pass("Neutral calculation status taxonomy") : fail("Invalid calculation status"); } catch(error){ fail("Party comparison schema: "+error.message); }
@@ -439,3 +439,6 @@ console.log("\nPASS");
 
 
 script.includes('if (model.validFrom && referenceDate < model.validFrom)') && script.includes('if (model.validTo && referenceDate > model.validTo)') ? pass("Political scenario validity window enforced") : fail("Scenario validity window missing");
+
+script.includes("setText(els.policyStatusHelp, status.detail)") ? pass("Calculation status explanation rendered") : fail("Calculation status explanation missing");
+style.includes(".policy-status-row small") ? pass("Calculation status help responsive style") : fail("Calculation status help style missing");
