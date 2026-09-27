@@ -1,32 +1,59 @@
 {
-  "version": 1,
-  "updatedAt": "2026-09-23",
+  "version": 2,
+  "updatedAt": "2026-09-27",
   "party": "c",
   "name": "Centerpartiet",
+  "assessment": {
+    "status": "partially_quantifiable",
+    "priceScenario": "not_independently_quantified",
+    "summary": "Förslaget innehåller konkreta styrmedel och en angiven inblandningsnivå för 2028, men saknar tillräckligt underlag för ett oberoende exakt framtida pumppris."
+  },
   "facts": [
     {
-      "id": "climate_plan_transport_2026",
-      "kind": "policy_plan",
-      "date": "2026-08-06",
-      "source": "https://www.centerpartiet.se/nyheter/arkiv-2026/2026-08-06-fler-elbilar-och-mer-hallbart-drivmedel---centerpartiets-klimatplan",
-      "note": "Centerpartiets klimatplan anger elektrifieringsmål, bredare elbilsbonus, laddsatsningar och ökad användning av biodrivmedel."
-    },
-    {
       "id": "biofuel_tax_exemption_2026",
-      "kind": "policy_proposal",
-      "date": "2026-08-06",
-      "source": "https://www.centerpartiet.se/nyheter/arkiv-2026/2026-08-06-fler-elbilar-och-mer-hallbart-drivmedel---centerpartiets-klimatplan",
-      "note": "Partiet vill inleda processen för att ta bort skatten på biodrivmedel som blandas in i bensin och diesel så att inblandningen kan höjas utan att pumppriset stiger."
+      "kind": "tax_policy",
+      "date": "2026-08-31",
+      "scope": [
+        "petrol",
+        "diesel"
+      ],
+      "proposal": "Skattebefria biodrivmedel som blandas med fossila drivmedel.",
+      "source": "https://www.centerpartiet.se/nyheter/arkiv-2026/2026-08-31-centerpartiet-mer-fossilfritt-i-tanken-utan-hogre-pris-vid-pump",
+      "calculationRole": "input_requires_blend_and_tax_base"
     },
     {
-      "id": "ev_sales_targets_2030",
-      "kind": "policy_target",
-      "date": "2030",
-      "passengerCarsPct": 90,
-      "lightTrucksPct": 75,
-      "heavyTrucksPct": 50,
-      "source": "https://www.centerpartiet.se/nyheter/arkiv-2026/2026-08-06-fler-elbilar-och-mer-hallbart-drivmedel---centerpartiets-klimatplan",
-      "note": "Andel nya fordon som enligt Centerpartiets mål ska vara helt eldrivna 2030."
+      "id": "renewable_blend_2028",
+      "kind": "blend_target",
+      "date": "2026-09-02",
+      "targetYear": 2028,
+      "currentPct": 10,
+      "targetPct": 17,
+      "unit": "percent",
+      "source": "https://www.centerpartiet.se/centerpartiet-lokalt/vastra-gotaland/vastra-gotalandsregionen/nyheter/nyhetsarkiv/2026-09-02-klimatmalen-kan-nas-utan-dyrare-drivmedel",
+      "calculationRole": "quantified_policy_input",
+      "note": "Källan beskriver en ökning från 10 till 17 procent för att klara EU:s klimatkrav."
+    },
+    {
+      "id": "pump_price_intent_2026",
+      "kind": "stated_outcome",
+      "date": "2026-08-31",
+      "deltaSekPerLiter": 0,
+      "source": "https://www.centerpartiet.se/nyheter/arkiv-2026/2026-08-31-centerpartiet-mer-fossilfritt-i-tanken-utan-hogre-pris-vid-pump",
+      "calculationRole": "party_stated_target_only",
+      "note": "Partiet anger att ökad biodrivmedelsinblandning ska kunna ske utan högre pris vid pump. Detta är ett uttalat mål, inte en oberoende prisberäkning."
+    },
+    {
+      "id": "strategic_biofuel_reserve_2026",
+      "kind": "market_policy",
+      "date": "2026",
+      "source": "https://www.centerpartiet.se/download/18.6cda1b9f19936660f5013f9/1759839478397/Centerpartiets_budgetmotion_2026_webb.pdf",
+      "calculationRole": "not_directly_quantifiable",
+      "note": "Budgetmotionen föreslår en strategisk reserv av biodrivmedel för att pressa och stabilisera priset."
     }
+  ],
+  "safeguards": [
+    "Do not convert the stated zero-price-increase target into an independently verified price forecast.",
+    "Do not infer a tax saving without a defensible blend composition and applicable tax base.",
+    "Keep EV support separate from pump-price calculations."
   ]
 }
