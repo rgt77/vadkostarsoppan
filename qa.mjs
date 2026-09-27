@@ -457,3 +457,5 @@ html.includes('id="partyAnswer"') && script.includes("resultLiter === null ? com
 html.includes("Vad innebär partiernas drivmedelspolitik?") ? pass("Party section promise matches evidence") : fail("Party section overpromises price calculation");
 script.includes('Dokumenterad prisuppgift: ') && script.includes('state.liters + " liter = "') ? pass("Calculable party answer is self-contained") : fail("Calculable party answer lacks direct result");
 script.includes('Ingen exakt prisuppgift') && !script.includes('Ej möjligt att räkna exakt') ? pass("Non-calculable party state uses neutral copy") : fail("Non-calculable party state copy unclear");
+
+!html.includes('id="policyKnown"') && !html.includes('id="policyPump"') && !script.includes("els.policyKnown") && !script.includes("els.policyPump") ? pass("Party primary answer not duplicated in secondary panel") : fail("Duplicate party answer remains");
