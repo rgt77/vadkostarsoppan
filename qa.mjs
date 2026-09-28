@@ -301,7 +301,6 @@ try { const w={}; new Function("window",read("policy-data.js"))(w); const cmp=w.
 html.includes("Pris före skatt &amp; moms") ? pass("Plain-language residual label") : fail("Residual label not simplified");
 
 
-html.includes('data-trend-days="365"') && script.includes("state.trendDays") && script.includes("trendLine.setAttribute") ? pass("Compact trend period controls") : fail("Trend controls missing");
 html.includes('<details class="policy-details"') && html.indexOf('id="scenarioNote"') > html.indexOf('<details class="policy-details"') ? pass("Scenario methodology progressively disclosed") : fail("Scenario methodology disclosure regression");
 
 html.includes('class="breakdown-details"') && html.includes("Visa prisets delar") ? pass("Progressive cost breakdown") : fail("Cost breakdown disclosure missing");
@@ -311,28 +310,6 @@ html.includes('role="status" aria-live="polite" aria-atomic="true"') ? pass("Sce
 style.includes("/* Consolidated refinements: phases 70–100 */") && style.includes(".scenario-comparison") ? pass("Scenario deep refinement styles present") : fail("Scenario deep refinement styles missing");
 
 
-script.includes("Sedan första mätningen") && script.includes("coverageDays") && script.includes("button.disabled") && html.includes('id="trendCoverage"') ? pass("Coverage-aware trend component") : fail("Trend readability regression");
-script.includes("enoughForChart") && script.includes("distinctDates >= 3") ? pass("Trend chart minimum-data guard") : fail("Trend chart data guard missing");
-script.includes("coverageDays >= period") && script.includes("minimumObservations") ? pass("Trend requires complete representative periods") : fail("Trend period completeness guard missing");
-!script.includes("trendToleranceDays") ? pass("Trend uses exact dates") : fail("Trend still uses date tolerance");
-(style.match(/\/\* Price trend \*\//g) ?? []).length === 1 && !style.includes("Price trend v2") ? pass("Trend CSS consolidated") : fail("Duplicate trend CSS remains");
-html.includes('id="trendLastPoint"') && html.includes("trend-grid-line") ? pass("Trend chart visual guides") : fail("Trend chart guides missing");
-html.includes('id="trendEmpty"') && html.includes('id="trendProgressFill"') && html.includes('role="progressbar"') ? pass("Trend empty-state progress") : fail("Trend empty state missing");
-script.includes("observedDays") && script.includes("mätningar") ? pass("Trend distinguishes measurements from elapsed days") : fail("Trend measurement count missing");
-html.includes('id="trendChartSummary"') && script.includes("chartSummary") ? pass("Accessible trend chart summary") : fail("Trend chart summary missing");
-script.includes("formatTrendDate") && script.includes('Intl.DateTimeFormat("sv-SE"') ? pass("Swedish trend dates") : fail("Trend dates not localized");
-script.includes("measurementsNeeded") && script.includes("collectedMeasurements") ? pass("Precise trend empty-state requirements") : fail("Trend empty-state requirements unclear");
-script.includes("minIndex") && script.includes("maxIndex") ? pass("Trend summary includes extrema dates") : fail("Trend extrema context missing");
-script.includes("pointSpanMs") && script.includes("p.ms-pointStartMs") ? pass("Trend uses proportional time axis") : fail("Trend x-axis is not time-proportional");
-html.includes('id="trendMinStat"') && html.includes('id="trendMaxStat"') ? pass("Visible trend extrema summary") : fail("Trend extrema summary missing");
-html.includes('aria-valuemax="3"') && script.includes("3 mätningar") ? pass("Trend progress matches graph readiness") : fail("Trend progress semantics mismatch");
-script.includes("coveragePercent") && script.includes("datatäckning") ? pass("Trend reports data coverage accessibly") : fail("Trend data coverage context missing");
-!JSON.parse(read("data/price-history.json")).trendToleranceDays ? pass("Obsolete trend tolerance metadata removed") : fail("Obsolete trend tolerance remains");
-script.includes("trendPercent") && html.includes('id="trendPercent"') ? pass("Trend percentage context") : fail("Trend percentage missing");
-script.includes("datedByDate") && script.includes("periodReadiness") && script.includes("readiness.get(period).measurements") ? pass("Trend deduplicates dates and validates each period independently") : fail("Trend period readiness regression");
-html.includes('aria-labelledby="trendTitle trendChartSummary"') && !script.includes('trendChart?.setAttribute("aria-label"') ? pass("Trend chart accessible name is non-duplicative") : fail("Trend chart accessibility naming regression");
-html.includes('id="trendStatus" aria-live="polite"') ? pass("Trend changes announced accessibly") : fail("Trend live status missing");
-style.includes("/* Consolidated refinements: phases 70–100 */") && style.includes(".trend-chart{height:112px}") ? pass("Trend deep refinement styles present") : fail("Trend deep refinement styles missing");
 
 style.includes("--radius-control") && style.includes("--control-active") ? pass("Unified control design tokens") : fail("Control design tokens missing");
 
@@ -341,7 +318,6 @@ html.includes("Tankstorlek <span class=\"control-label-unit\">(liter)</span>") &
 /\.fuel-button\s*,\s*\.tank-size-control button/.test(style) && /font-weight:\s*600/.test(style) ? pass("Primary option typography unified") : fail("Primary option typography mismatch");
 
 style.replace(/\s+/g,"").includes("font-variant-numeric:tabular-nums") ? pass("Stable numeric control typography") : fail("Numeric control typography missing");
-/\.trend-periods button\s*\{[^}]*font-weight:\s*600/s.test(style) ? pass("Trend selector typography aligned") : fail("Trend selector typography mismatch");
 style.replace(/\s+/g,"").includes("--touch-min:44px") && /min-height:\s*var\(--touch-min\)/.test(style) ? pass("Minimum touch target guard") : fail("Touch target guard missing");
 
 style.includes("--space-section") && style.includes("--space-card") && style.includes("--touch-min") ? pass("Phase 4 spacing and touch tokens") : fail("Phase 4 layout tokens missing");
@@ -371,8 +347,6 @@ healthWorkflow2.includes("Enforce monitoring result") && healthWorkflow2.include
 html.includes("Så räknar vi") ? pass("Method disclosure label is explicit") : fail("Method disclosure label regression");
 
 !style.replace(/\s+/g,"").includes(".tank-size-controlbutton{min-height:58px") ? pass("Duplicate tank control CSS removed") : fail("Duplicate tank control CSS remains");
-/\.trend-periods button[^}]*\{[^}]*min-height:\s*(?:var\(--touch-min\)|48px)/s.test(style) ? pass("Trend periods use shared touch token") : fail("Trend touch token regression");
-!style.replace(/\s+/g,"").includes("background:#f3f3ef") && !style.replace(/\s+/g,"").includes("background:#deded8") ? pass("Trend neutrals use theme tokens") : fail("Hardcoded trend neutrals remain");
 
 html.includes('id="taxSummaryLabel"') && script.includes('"Moms (känd del)"') && script.includes('"Varierar med bränslemixen"') ? pass("E85 tax semantics are explicit") : fail("E85 tax semantics regression");
 script.includes("const validMoney") && script.includes("const validVatRate") && script.includes("reconstructed") ? pass("Core calculation validates numeric invariants") : fail("Core calculation invariant guards missing");
@@ -476,3 +450,5 @@ script.includes('fuelData[fuel]?.label || fuel') && script.includes('"Övergripa
 
 script.includes('evaluation.status === "unsupported_fuel"') && script.includes('"Ingen dokumenterad prisberäkning för "') && script.includes('"Gäller inte valt bränsle"') ? pass("Unsupported party fuel gets direct answer") : fail("Unsupported fuel remains generic");
 script.includes('scenarioUnavailableText(evaluation, scenario)') && script.includes('"Det dokumenterade scenariot gäller inte "') ? pass("Unsupported fuel keeps explanatory detail") : fail("Unsupported fuel detail missing");
+
+!html.includes('id="priceTrend"') && !html.includes("Prisutveckling") && !script.includes("renderTrend") && !script.includes("priceHistory") && !script.includes('fetch("/data/price-history.json"') ? pass("Public price-trend feature removed") : fail("Price-trend UI or runtime remains");
