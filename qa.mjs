@@ -473,3 +473,6 @@ html.includes("Separat stöd / kompensation") && html.includes("Räknas inte in 
 
 html.includes('id="policyFuels"') && script.includes("applicableFuels") && script.includes('join(" · ")') ? pass("Party fuel applicability visible") : fail("Party fuel scope hidden");
 script.includes('fuelData[fuel]?.label || fuel') && script.includes('"Övergripande policy"') ? pass("Fuel scope uses user labels and safe fallback") : fail("Fuel scope rendering incomplete");
+
+script.includes('evaluation.status === "unsupported_fuel"') && script.includes('"Ingen dokumenterad prisberäkning för "') && script.includes('"Gäller inte valt bränsle"') ? pass("Unsupported party fuel gets direct answer") : fail("Unsupported fuel remains generic");
+script.includes('scenarioUnavailableText(evaluation, scenario)') && script.includes('"Det dokumenterade scenariot gäller inte "') ? pass("Unsupported fuel keeps explanatory detail") : fail("Unsupported fuel detail missing");
