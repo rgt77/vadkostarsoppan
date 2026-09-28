@@ -49,6 +49,11 @@
     carbonTaxLabel: $("carbonTaxLabel"),
     carbonTank: $("carbonTank"),
     vatTank: $("vatTank"),
+    taxSummaryLabel: $("taxSummaryLabel"),
+    taxTank: $("taxTank"),
+    taxShare: $("taxShare"),
+    nonTaxShare: $("nonTaxShare"),
+    taxBarFill: $("taxBarFill"),
     policyDetails: $("policyDetails"),
     partyResult: $("partyResult"),
     scenarioLabel: $("scenarioLabel"),
@@ -74,12 +79,14 @@
   const state = {
     fuel: fuelData[siteData.defaultFuel] ? siteData.defaultFuel : "petrol",
     party: "",
+
   };
 
   const money = new Intl.NumberFormat("sv-SE", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   });
+  const wholePercent = new Intl.NumberFormat("sv-SE", { maximumFractionDigits: 0 });
   const swedishDate = new Intl.DateTimeFormat("sv-SE", {
     timeZone: "Europe/Stockholm",
     year: "numeric",
@@ -386,52 +393,85 @@
     }
   }
 
-  function historyPrice(snapshot) {
-    const value = Number(snapshot?.national?.[state.fuel]);
-    return Number.isFinite(value) && value > 0 ? value : null;
-  }
 
-  function formatTrendDate(iso, withYear = false) {
-    const date = new Date(iso + "T12:00:00Z");
-    if (!Number.isFinite(date.getTime())) return iso;
-    return new Intl.DateTimeFormat("sv-SE", { day: "numeric", month: "short", ...(withYear ? { year: "numeric" } : {}), timeZone: "UTC" }).format(date);
-  }
 
-  function renderTrend(currentPrice) {
-    const snapshots = priceHistory?.snapshots ?? [];
-    if (!snapshots.length || !Number.isFinite(currentPrice)) { els.priceTrend.hidden = true; return; }
-    const latestDate = priceData.updatedAt;
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(latestDate || "")) { els.priceTrend.hidden = true; return; }
 
-    const latestMs = Date.parse(latestDate + "T12:00:00Z");
-    const datedByDate = new Map();
-    for (const item of snapshots) {
-      const ms = Date.parse(item?.date + "T12:00:00Z");
-      const value = historyPrice(item);
-      if (!Number.isFinite(ms) || value === null || ms > latestMs) continue;
-      datedByDate.set(item.date, { item, ms, value });
-    }
-    const dated = [...datedByDate.values()].sort((a,b) => a.ms-b.ms);
-    if (!dated.length) { els.priceTrend.hidden = true; return; }
 
-    const first = dated[0];
-    const coverageDays = Math.max(0, Math.round((latestMs-first.ms)/86400000));
-    const observedDays = new Set(dated.map(x => x.item.date)).size;
-    setText(els.trendCoverage, observedDays === 1 ? "1 mätning" : observedDays + " mätningar");
 
-    const minimumObservations = period => Math.max(3, Math.ceil((period + 1) * .5));
-    const periodReadiness = period => {
-      const startMs = latestMs - period * 86400000;
-      const periodPoints = dated.filter(x => x.ms >= startMs);
-      const measurements = new Set(periodPoints.map(x => x.item.date)).size;
-      return {
-        available: coverageDays >= period && measurements >= minimumObservations(period),
-        measurements,
-        required: minimumObservations(period)
-      };
+
+
+  function calculationViewModel(price, liters = tankLiters) {
+    const ref = calculate(price);
+    if (!ref || !Number.isFinite(liters) || liters <= 0) return null;
+    const taxPct = ref.tax / price * 100;
+    const boundedTaxPct = Math.max(0, Math.min(100, taxPct));
+    return {
+      ref,
+      price,
+      liters,
+      tankTotal: price * liters,
+      marketTank: ref.market * liters,
+      energyTank: ref.blendDependent ? null : ref.taxPeriod.energyTax * liters,
+      carbonTank: ref.blendDependent ? null : ref.taxPeriod.carbonTax * liters,
+      vatTank: ref.vat * liters,
+      taxTank: ref.tax * liters,
+      taxPct,
+      boundedTaxPct
     };
-    const readiness = new Map([7,30,365].map(period => [period, periodReadiness(period)]));
-    const availability = new Map([...readiness].map(([period, info]) => [period, info.available]));
+  }
+
+  function renderCalculation(view) {
+    if (!view) {
+      setText(els.tankTotal, "Data saknas");
+      setText(els.literPrice, "—");
+      return;
+    }
+    const { ref, price, liters, tankTotal, marketTank, energyTank, carbonTank, vatTank, taxTank, taxPct, boundedTaxPct } = view;
+    setText(els.fuelLabel, ref.fuel.label);
+    setText(els.tankTotal, fmt(tankTotal));
+    setText(els.literPrice, fmt(price));
+    setText(els.marketTank, fmt(marketTank) + " kr");
+    setText(els.energyTaxLabel, "Energiskatt");
+    setText(els.carbonTaxLabel, "Koldioxidskatt");
+    setText(els.energyTank, ref.blendDependent ? "Varierar med bränslemixen" : fmt(energyTank) + " kr");
+    setText(els.carbonTank, ref.blendDependent ? "Varierar med bränslemixen" : fmt(carbonTank) + " kr");
+    setText(els.vatTank, fmt(vatTank) + " kr");
+    setText(els.taxSummaryLabel, ref.blendDependent ? "Moms (känd del)" : "Skatt och moms");
+    setText(els.taxTank, fmt(taxTank) + " kr");
+    setText(els.taxShare, ref.blendDependent ? wholePercent.format(taxPct) + " % moms" : wholePercent.format(taxPct) + " % skatt och moms");
+    setText(els.nonTaxShare, ref.blendDependent ? "Punktskatt varierar med bränslemixen" : wholePercent.format(100 - taxPct) + " % övrigt");
+    if (els.taxBarFill) {
+      els.taxBarFill.style.width = boundedTaxPct + "%";
+      els.taxBarFill.parentElement?.setAttribute("aria-valuenow", String(Math.round(boundedTaxPct)));
+    }
+    els.priceSource.href = priceData.source;
+    els.taxSource.href = ref.fuel.taxSource;
+  }
+
+  function renderSelections() {
+    for (const button of els.fuelButtons) button.setAttribute("aria-pressed", String(button.dataset.fuel === state.fuel));
+    for (const button of els.tankSizeButtons) button.setAttribute("aria-pressed", String(Number(button.dataset.tankSize) === tankLiters));
+    for (const node of els.tankLiterLabels) setText(node, String(tankLiters));
+  }
+
+  function render() {
+    const price = getPrice();
+    const health = priceState();
+    const view = calculationViewModel(price);
+    renderSelections();
+    renderCalculation(view);
+    renderDataStatus(view?.ref ?? null);
+    if (health.status === "fresh" || health.status === "stale") renderScenario(price);
+    else renderScenario(NaN);
+    syncUrl();
+  }
+
+  const allowedTankLiters = new Set([30,40,50,60]);
+  function setFuel(fuel) { if (!fuelData[fuel] || fuel === state.fuel) return; state.fuel = fuel; render(); }
+  function setTankLiters(liters) { if (!allowedTankLiters.has(liters) || liters === tankLiters) return; tankLiters = liters; render(); }
+  function setParty(party) { if (party && (!partyOrder.includes(party) || !scenarios[party])) return; if (party === state.party) return; state.party = party; updatePartySelection(); const health = priceState(); renderScenario(health.status === "fresh" || health.status === "stale" ? getPrice() : NaN); syncUrl(); }
+
+  function bindEvents() {
     for (const button of els.tankSizeButtons) {
       button.addEventListener("click", () => {
         const liters = Number(button.dataset.tankSize);
