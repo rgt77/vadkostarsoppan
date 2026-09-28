@@ -329,13 +329,17 @@
     const resultLiter = evaluation.status === "available" ? evaluation.price : null;
     if (els.partyAnswer && comparison) {
       els.partyAnswer.hidden = false;
-      els.partyAnswer.textContent = resultLiter === null ? comparison.known : "Dokumenterad prisuppgift: " + fmt(resultLiter) + " kr/l · " + state.liters + " liter = " + fmt(resultLiter * state.liters) + " kr.";
+      els.partyAnswer.textContent = evaluation.status === "unsupported_fuel"
+        ? "Ingen dokumenterad prisberäkning för " + fuelData[state.fuel].label + ". " + comparison.known
+        : resultLiter === null
+          ? comparison.known
+          : "Dokumenterad prisuppgift: " + fmt(resultLiter) + " kr/l · " + state.liters + " liter = " + fmt(resultLiter * state.liters) + " kr.";
     }
 
     if (resultLiter === null) {
       els.partyResult.classList.add("unavailable");
       els.scenarioTankPrice.classList.add("text-result");
-      setText(els.scenarioTankPrice, "Ingen exakt prisuppgift");
+      setText(els.scenarioTankPrice, evaluation.status === "unsupported_fuel" ? "Gäller inte valt bränsle" : "Ingen exakt prisuppgift");
       els.scenarioTankUnit.hidden = true;
       setText(els.scenarioLiterPrice, "");
       setText(els.scenarioDelta, "");
