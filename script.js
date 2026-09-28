@@ -74,38 +74,11 @@
     priceSource: $("priceSource"),
     taxSource: $("taxSource"),
     dataStatus: $("dataStatus"),
-    priceTrend: $("priceTrend"),
-    trendButtons: [...document.querySelectorAll("[data-trend-days]")],
-    trendCoverage: $("trendCoverage"),
-    trendDirection: $("trendDirection"),
-    trendSelected: $("trendSelected"),
-    trendPercent: $("trendPercent"),
-    trendRange: $("trendRange"),
-    trendPrices: $("trendPrices"),
-    trendFromPrice: $("trendFromPrice"),
-    trendToPrice: $("trendToPrice"),
-    trendChartWrap: $("trendChartWrap"),
-    trendChart: $("trendChart"),
-    trendLine: $("trendLine"),
-    trendLastPoint: $("trendLastPoint"),
-    trendHigh: $("trendHigh"),
-    trendLow: $("trendLow"),
-    trendStartDate: $("trendStartDate"),
-    trendEndDate: $("trendEndDate"),
-    trendStats: $("trendStats"),
-    trendMinStat: $("trendMinStat"),
-    trendMaxStat: $("trendMaxStat"),
-    trendChartSummary: $("trendChartSummary"),
-    trendEmpty: $("trendEmpty"),
-    trendEmptyText: $("trendEmptyText"),
-    trendProgressFill: $("trendProgressFill"),
-    trendProgressLabel: $("trendProgressLabel")
   };
 
   const state = {
     fuel: fuelData[siteData.defaultFuel] ? siteData.defaultFuel : "petrol",
     party: "",
-    trendDays: 30
   };
 
   const money = new Intl.NumberFormat("sv-SE", {
@@ -419,8 +392,6 @@
     }
   }
 
-  let priceHistory = null;
-
   function historyPrice(snapshot) {
     const value = Number(snapshot?.national?.[state.fuel]);
     return Number.isFinite(value) && value > 0 ? value : null;
@@ -467,168 +438,6 @@
     };
     const readiness = new Map([7,30,365].map(period => [period, periodReadiness(period)]));
     const availability = new Map([...readiness].map(([period, info]) => [period, info.available]));
-    for (const button of els.trendButtons) {
-      const period = Number(button.dataset.trendDays);
-      const available = availability.get(period);
-      button.disabled = !available;
-      button.setAttribute("aria-disabled", String(!available));
-      const remainingForPeriod = Math.max(0, period - coverageDays);
-      const remainingMeasurements = Math.max(0, readiness.get(period).required - readiness.get(period).measurements);
-      const periodName = period === 365 ? "1 år" : period + " dagar";
-      const lockedReason = remainingForPeriod > 0
-        ? remainingForPeriod + (remainingForPeriod === 1 ? " dag kvar" : " dagar kvar")
-        : remainingMeasurements + (remainingMeasurements === 1 ? " mätning kvar" : " mätningar kvar");
-      button.title = available ? "" : periodName + " · " + lockedReason;
-      button.setAttribute("aria-label", available ? periodName : periodName + ", " + lockedReason);
-    }
-
-    let days = state.trendDays;
-    if (!availability.get(days)) {
-      const availablePeriods = [7,30,365].filter(x => availability.get(x));
-      days = availablePeriods.at(-1) ?? 0;
-    }
-    for (const button of els.trendButtons) button.setAttribute("aria-pressed", String(days > 0 && Number(button.dataset.trendDays) === days));
-    els.priceTrend.hidden = false;
-
-    const effectiveStartMs = days > 0 ? latestMs-days*86400000 : first.ms;
-    const points = dated.filter(x => x.ms >= effectiveStartMs);
-    const periodElapsedDays = Math.max(1, Math.round((latestMs - Math.max(effectiveStartMs, first.ms))/86400000) + 1);
-    const periodObservedDays = new Set(points.map(p => p.item.date)).size;
-    const coverageRatio = Math.min(1, periodObservedDays / periodElapsedDays);
-    const target = days > 0 ? dated.find(x => x.ms >= effectiveStartMs) ?? first : first;
-    const oldPrice = target.value;
-    const delta = currentPrice-oldPrice;
-    const percent = oldPrice > 0 ? delta/oldPrice*100 : 0;
-    const unchanged = Math.abs(delta) < .005;
-    const periodLabel = days === 365 ? "1 år" : days > 0 ? days + " dagar" : (coverageDays === 0 ? "idag" : "sedan " + formatTrendDate(first.item.date, true));
-    const actualStartDate = target.item.date;
-
-    setText(els.trendDirection, days > 0 ? "Förändring · " + periodLabel : "Sedan första mätningen");
-    setText(els.trendSelected, unchanged ? "±0,00 kr/l" : (delta > 0 ? "+" : "−") + fmt(Math.abs(delta)) + " kr/l");
-    setText(els.trendPercent, unchanged ? "0,0 %" : (percent > 0 ? "+" : "−") + Math.abs(percent).toLocaleString("sv-SE",{minimumFractionDigits:1,maximumFractionDigits:1}) + " %");
-    setText(els.trendFromPrice, fmt(oldPrice) + " kr/l");
-    setText(els.trendToPrice, fmt(currentPrice) + " kr/l");
-    if (els.trendPrices) {
-      els.trendPrices.hidden = coverageDays === 0;
-      els.trendPrices.setAttribute("aria-label", "Från " + fmt(oldPrice) + " till " + fmt(currentPrice) + " kronor per liter");
-    }
-
-    const distinctDates = new Set(points.map(p => p.item.date)).size;
-    const enoughForChart = points.length >= 3 && distinctDates >= 3;
-    if (enoughForChart) {
-      const values=points.map(p=>p.value), min=Math.min(...values), max=Math.max(...values), rawSpan=max-min;
-      const minIndex=values.indexOf(min), maxIndex=values.indexOf(max);
-      const padding=Math.max(.05,rawSpan*.18), chartMin=min-padding, chartMax=max+padding, span=chartMax-chartMin;
-      const pointStartMs=points[0].ms, pointEndMs=points.at(-1).ms, pointSpanMs=Math.max(1,pointEndMs-pointStartMs);
-      const coords=points.map(p=>(((p.ms-pointStartMs)/pointSpanMs)*320).toFixed(1)+","+(88-(p.value-chartMin)/span*76).toFixed(1)).join(" ");
-      els.trendLine.setAttribute("points",coords);
-      if (els.trendLastPoint) { const last=coords.split(" ").at(-1).split(","); els.trendLastPoint.setAttribute("cx",last[0]); els.trendLastPoint.setAttribute("cy",last[1]); els.trendLastPoint.hidden=false; }
-      setText(els.trendHigh,fmt(max)); setText(els.trendLow,fmt(min));
-      setText(els.trendMinStat, fmt(min) + " kr/l · " + formatTrendDate(points[minIndex].item.date));
-      setText(els.trendMaxStat, fmt(max) + " kr/l · " + formatTrendDate(points[maxIndex].item.date));
-      if (els.trendStats) els.trendStats.hidden=false;
-      setText(els.trendStartDate, formatTrendDate(points[0].item.date));
-      setText(els.trendEndDate, formatTrendDate(points.at(-1).item.date));
-      const coveragePercent = Math.round(coverageRatio * 100);
-      const chartSummary = fuelData[state.fuel].label + ": " + fmt(oldPrice) + " till " + fmt(currentPrice) + " kr/l, " + (unchanged ? "oförändrat" : delta > 0 ? "upp " + fmt(Math.abs(delta)) : "ned " + fmt(Math.abs(delta))) + " kr/l. Lägst " + fmt(min) + " den " + formatTrendDate(points[minIndex].item.date) + ", högst " + fmt(max) + " den " + formatTrendDate(points[maxIndex].item.date) + ". " + periodObservedDays + " mätningar, " + coveragePercent + " procent datatäckning.";
-      setText(els.trendChartSummary, chartSummary);
-      els.trendChart?.removeAttribute("aria-label");
-      els.trendChartWrap.hidden=false; els.trendEmpty.hidden=true;
-      setText(els.trendRange,"Rikssnitt för " + fuelData[state.fuel].label + " · " + formatTrendDate(actualStartDate, true) + "–" + formatTrendDate(latestDate, true) + " · " + periodObservedDays + " mätningar.");
-    } else {
-      els.trendLine.setAttribute("points",""); if (els.trendLastPoint) els.trendLastPoint.hidden=true; if (els.trendStats) els.trendStats.hidden=true; setText(els.trendChartSummary, ""); els.trendChartWrap.hidden=true; els.trendEmpty.hidden=false;
-      const measurementsNeeded=Math.max(0,3-distinctDates);
-      setText(els.trendEmptyText, measurementsNeeded > 0 ? "Grafen visas efter " + measurementsNeeded + (measurementsNeeded===1 ? " ytterligare mätning." : " ytterligare mätningar.") : "Grafen visas vid nästa kompletta uppdatering.");
-      const collectedMeasurements = Math.min(3, distinctDates);
-      if (els.trendProgressLabel) setText(els.trendProgressLabel, collectedMeasurements + " / 3 mätningar");
-      if (els.trendProgressFill) {
-        els.trendProgressFill.style.width = Math.max(8, collectedMeasurements / 3 * 100) + "%";
-        els.trendProgressFill.parentElement?.setAttribute("aria-valuenow", String(collectedMeasurements));
-      }
-      setText(els.trendRange,"Rikssnitt för " + fuelData[state.fuel].label + " · uppdateras dagligen.");
-    }
-  }
-
-  function calculationViewModel(price, liters = tankLiters) {
-    const ref = calculate(price);
-    if (!ref || !Number.isFinite(liters) || liters <= 0) return null;
-    const taxPct = ref.tax / price * 100;
-    const boundedTaxPct = Math.max(0, Math.min(100, taxPct));
-    return {
-      ref,
-      price,
-      liters,
-      tankTotal: price * liters,
-      marketTank: ref.market * liters,
-      energyTank: ref.blendDependent ? null : ref.taxPeriod.energyTax * liters,
-      carbonTank: ref.blendDependent ? null : ref.taxPeriod.carbonTax * liters,
-      vatTank: ref.vat * liters,
-      taxTank: ref.tax * liters,
-      taxPct,
-      boundedTaxPct
-    };
-  }
-
-  function renderCalculation(view) {
-    if (!view) {
-      setText(els.tankTotal, "Data saknas");
-      setText(els.literPrice, "—");
-      return;
-    }
-    const { ref, price, liters, tankTotal, marketTank, energyTank, carbonTank, vatTank, taxTank, taxPct, boundedTaxPct } = view;
-    setText(els.fuelLabel, ref.fuel.label);
-    setText(els.tankTotal, fmt(tankTotal));
-    setText(els.literPrice, fmt(price));
-    setText(els.marketTank, fmt(marketTank) + " kr");
-    setText(els.energyTaxLabel, "Energiskatt");
-    setText(els.carbonTaxLabel, "Koldioxidskatt");
-    setText(els.energyTank, ref.blendDependent ? "Varierar med bränslemixen" : fmt(energyTank) + " kr");
-    setText(els.carbonTank, ref.blendDependent ? "Varierar med bränslemixen" : fmt(carbonTank) + " kr");
-    setText(els.vatTank, fmt(vatTank) + " kr");
-    setText(els.taxSummaryLabel, ref.blendDependent ? "Moms (känd del)" : "Skatt och moms");
-    setText(els.taxTank, fmt(taxTank) + " kr");
-    setText(els.taxShare, ref.blendDependent ? wholePercent.format(taxPct) + " % moms" : wholePercent.format(taxPct) + " % skatt och moms");
-    setText(els.nonTaxShare, ref.blendDependent ? "Punktskatt varierar med bränslemixen" : wholePercent.format(100 - taxPct) + " % övrigt");
-    if (els.taxBarFill) {
-      els.taxBarFill.style.width = boundedTaxPct + "%";
-      els.taxBarFill.parentElement?.setAttribute("aria-valuenow", String(Math.round(boundedTaxPct)));
-    }
-    els.priceSource.href = priceData.source;
-    els.taxSource.href = ref.fuel.taxSource;
-  }
-
-  function renderSelections() {
-    for (const button of els.fuelButtons) button.setAttribute("aria-pressed", String(button.dataset.fuel === state.fuel));
-    for (const button of els.tankSizeButtons) button.setAttribute("aria-pressed", String(Number(button.dataset.tankSize) === tankLiters));
-    for (const node of els.tankLiterLabels) setText(node, String(tankLiters));
-  }
-
-  function render() {
-    const price = getPrice();
-    const health = priceState();
-    const view = calculationViewModel(price);
-    renderSelections();
-    renderCalculation(view);
-    renderDataStatus(view?.ref ?? null);
-    renderTrend(price);
-    if (health.status === "fresh" || health.status === "stale") renderScenario(price);
-    else renderScenario(NaN);
-    syncUrl();
-  }
-
-  const allowedTankLiters = new Set([30,40,50,60]);
-  function setFuel(fuel) { if (!fuelData[fuel] || fuel === state.fuel) return; state.fuel = fuel; render(); }
-  function setTankLiters(liters) { if (!allowedTankLiters.has(liters) || liters === tankLiters) return; tankLiters = liters; render(); }
-  function setParty(party) { if (party && (!partyOrder.includes(party) || !scenarios[party])) return; if (party === state.party) return; state.party = party; updatePartySelection(); const health = priceState(); renderScenario(health.status === "fresh" || health.status === "stale" ? getPrice() : NaN); syncUrl(); }
-
-  function bindEvents() {
-    for (const button of els.trendButtons) {
-      button.addEventListener("click", () => {
-        if (button.disabled) return;
-        state.trendDays = Number(button.dataset.trendDays) || 7;
-        renderTrend(getPrice());
-      });
-    }
     for (const button of els.tankSizeButtons) {
       button.addEventListener("click", () => {
         const liters = Number(button.dataset.tankSize);
@@ -675,8 +484,5 @@
   for (const node of els.tankLiterLabels) setText(node, String(tankLiters));
   bindEvents();
   render();
-  fetch("/data/price-history.json", { cache: "no-store" })
-    .then(response => response.ok ? response.json() : null)
-    .then(data => { priceHistory = data; renderTrend(getPrice()); })
-    .catch(() => {});
+
 })();
