@@ -1,6 +1,6 @@
 window.PRICE_DATA = {
-  updatedAt: "2026-09-27",
-  retrievedAt: "2026-09-27",
+  updatedAt: "2026-09-28",
+  retrievedAt: "2026-09-28",
   source: "https://www.carculated.se/bensinpriser",
   national: {
     id: "riket",
@@ -8,6 +8,6 @@ window.PRICE_DATA = {
     petrol: 17.99,
     petrol98: 19.15,
     e85: 15.13,
-    diesel: 22.89
+    diesel: 22.90
   }
 };
