@@ -452,3 +452,5 @@ script.includes('evaluation.status === "unsupported_fuel"') && script.includes('
 script.includes('scenarioUnavailableText(evaluation, scenario)') && script.includes('"Det dokumenterade scenariot gäller inte "') ? pass("Unsupported fuel keeps explanatory detail") : fail("Unsupported fuel detail missing");
 
 !html.includes('id="priceTrend"') && !html.includes("Prisutveckling") && !script.includes("renderTrend") && !script.includes("priceHistory") && !script.includes('fetch("/data/price-history.json"') ? pass("Public price-trend feature removed") : fail("Price-trend UI or runtime remains");
+
+!script.includes("const policyBackground =") && script.includes("const background = scenario.method") ? pass("Political background has one frontend source of truth") : fail("Duplicated political background data remains");
