@@ -49,11 +49,6 @@
     carbonTaxLabel: $("carbonTaxLabel"),
     carbonTank: $("carbonTank"),
     vatTank: $("vatTank"),
-    taxSummaryLabel: $("taxSummaryLabel"),
-    taxTank: $("taxTank"),
-    taxShare: $("taxShare"),
-    nonTaxShare: $("nonTaxShare"),
-    taxBarFill: $("taxBarFill"),
     policyDetails: $("policyDetails"),
     partyResult: $("partyResult"),
     scenarioLabel: $("scenarioLabel"),
@@ -85,7 +80,6 @@
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   });
-  const wholePercent = new Intl.NumberFormat("sv-SE", { maximumFractionDigits: 0 });
   const swedishDate = new Intl.DateTimeFormat("sv-SE", {
     timeZone: "Europe/Stockholm",
     year: "numeric",
