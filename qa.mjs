@@ -445,4 +445,4 @@ script.includes('scenarioUnavailableText(evaluation, scenario)') && script.inclu
 
 !html.includes('id="priceTrend"') && !html.includes("Prisutveckling") && !script.includes("renderTrend") && !script.includes("priceHistory") && !script.includes('fetch("/data/price-history.json"') ? pass("Public price-trend feature removed") : fail("Price-trend UI or runtime remains");
 
-!script.includes("const policyBackground =") && script.includes("const background = scenario.method") && html.includes('id="policyFacts"') && partyKeys.every(key => policy[key]?.method) ? pass("Political background has one frontend source of truth") : fail("Political background source incomplete or duplicated");
+!script.includes("const policyBackground =") && script.includes("const background = scenario.method") && html.includes('id="policyFacts"') && ['c','kd','l','mp','m','s','sd','v'].every(key => scenarios[key]?.method) ? pass("Political background has one frontend source of truth") : fail("Political background source incomplete or duplicated");
