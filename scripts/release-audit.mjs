@@ -26,7 +26,7 @@ ok(css.includes(":focus-visible"),"Synligt tangentbordsfokus saknas");
 ok(html.includes('class="skip-link" href="#mainContent"')&&html.includes('id="mainContent"'),"Skip-länk till huvudinnehåll saknas");
 ok(html.includes('class="tax-bar" role="progressbar"')&&html.includes('aria-valuemax="100"'),"Skatteandel saknar progressbar-semantik");
 ok(js.includes("history.replaceState"),"URL-state saknas");
-ok(js.includes('.catch(')&&js.includes('addEventListener("error"'),"Frontend saknar defensiv felhantering");
+ok(js.includes('addEventListener("error"')&&js.includes('function priceState()')&&js.includes('renderScenario(NaN)'),"Frontend saknar defensiv felhantering");
 ok(js.includes('addEventListener("unhandledrejection"'),"Unhandled promise rejection fångas inte");
 ok(js.includes("function calculationViewModel(")&&js.includes("function renderCalculation("),"Beräkning och DOM-rendering är inte separerade");
 
