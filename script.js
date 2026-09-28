@@ -22,17 +22,6 @@
     v: "https://commons.wikimedia.org/wiki/Special:FilePath/V%C3%A4nsterpartiet%20logo.svg"
   };
 
-  const policyBackground = {
-      "mp": "Miljöpartiets budgetmotion för 2026 beräknar ett prispåslag vid pump på cirka 2,2 kr/l under infasningen av ett svenskt handelssystem. Underlaget anger 12 % reduktionsplikt för bensin och 25 % för diesel samt höjd koldioxidskatt på bensin. Intäkter på cirka 4,05 miljarder kronor kopplas till en grön utdelning på 2 900 kr per vuxen och år för vissa lands- och glesbygdshushåll med lägre inkomster; barn anges få halva beloppet. Utdelningen visas som separat kompensation och räknas inte av från pumppriset.",
-      "v": "Vänsterpartiet vill höja reduktionsplikten från dagens 10 %, men anger ingen exakt ny nivå. Partiet motsatte sig 2026 års tillfälliga sänkning av bensin- och dieselskatten och föreslår i stället riktad kompensation till bilägare med lägre inkomster, med avtrappning upp till 45 000 kr/mån och högre stöd där kollektivtrafiken är särskilt dålig. På sikt vill V också ha geografiskt differentierad vägtrafikbeskattning. Sverigebiljetten föreslås kosta 450 kr/mån för vuxna och 225 kr för barn, unga och pensionärer från 2027. Stöden påverkar hushållens kostnad men är inte ett nationellt pumppris.",
-      "c": "Centerpartiets aktuella 2026-förslag vill skattebefria biodrivmedel som blandas i bensin och diesel och beskriver en ökning från 10 till 17 procent 2028 utan högre pumppris som mål. Partiet vill också bygga upp en biodieselreserv på 2 miljarder kronor. Äldre Tanka svenskt-material innehåller prisuppskattningar, men de byggde på 30,5 procents inblandning och dåtidens skatter och används därför inte som ett 2026-prisscenario.",
-      "s": "Socialdemokraterna kräver 2026 en tillfällig skattesänkning på bensin och diesel men anger ingen exakt kr/l-nivå. I budgetunderlaget för 2026 finns också Sverigebränslet: 19,3 % basinblandning för diesel och 10,0 % för bensin, plus en rörlig tilläggsinblandning som ska kunna anpassas efter prisbilden. Ett äldre S-underlag uppskattade minst 4 kr/l lägre dieselpris under dåvarande 2024-förutsättningar; den siffran är historisk och används inte på dagens pris.",
-      "l": "Liberalerna står bakom 10 procents reduktionsplikt och beskrev skattesänkning som kompensation för prispåslaget. Under energikrisen 2026 presenterade partiet tillsammans med regeringen en tillfällig sänkning av bränsleskatten med 3 kr/l. L drev också halverat periodkort i kollektivtrafiken 1 juli–31 december 2026 där regionerna genomför stödet. Kollektivtrafikstödet påverkar inte pumppriset och 3-kronorsåtgärden behandlas som tidsbunden, inte som ett permanent L-pris.",
-      "kd": "KD:s aktuella 2026-linje är att reduktionsplikten ska ligga på EU:s miniminivå. Äldre underlag anger 6 % för bensin och diesel från 2024 och uppskattade då cirka 5,50 kr/l lägre dieselpris. Samma äldre källa jämförde 2026 med ett dåvarande motförslag och angav 7 kr/l lägre diesel. Dessa siffror är historiska eller kontrafaktiska och används inte som avdrag från dagens pumppris.",
-      "m": "Moderaternas aktuella underlag anger cirka 1,03 kr/l för bensin och 0,40 kr/l för diesel vid full prisövervältring när skatten sänks till EU:s miniminivå, samt ytterligare 3 kr/l 1 juli–30 november 2026. Reduktionsplikten anges till 10 % för bensin och diesel och skatten indexeras inte upp under 2026. Partiet säger att den tillfälliga sänkningen kan förlängas om omvärldsläget består, men ingen sådan framtida period antas här. Separat stöd till kollektivtrafik påverkar inte pumppriset.",
-      "sd": "SD:s drivmedelssida redovisar Bensin 95: 23,54 → 14,34 kr/l och diesel: 26,46 → 16,09 kr/l mellan juni 2022 och juli 2026. Det är ett observerat historiskt prisutfall, inte en isolerad kausal partieffekt. Under 2026 genomfördes också tidsbegränsade skattesänkningar: först till EU:s miniminivå och därefter ytterligare 2,40 kr/l i koldioxidskatt, cirka 3 kr/l inklusive moms vid full övervältring. Eftersom dessa åtgärder redan påverkar dagens rikssnitt dras de inte av igen i ett SD-scenario."
-  };
-
   const $ = id => document.getElementById(id);
   const els = {
     fuelButtons: [...document.querySelectorAll("[data-fuel]")],
@@ -353,7 +342,7 @@
     }
 
     
-    const background = policyBackground[state.party];
+    const background = scenario.method;
     if (background && els.policyFacts) {
       els.policyFacts.hidden = false;
       const title = document.createElement("strong");
