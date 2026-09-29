@@ -5,16 +5,14 @@
       "url": "https://www.centerpartiet.se/nyheter/arkiv-2026/2026-08-31-centerpartiet-mer-fossilfritt-i-tanken-utan-hogre-pris-vid-pump",
       "hash": "9a859ee50b9c18fd239f286d094e008e8bf0405064cd3581ddd4f4066d3b8c91",
       "contentType": "text/html;charset=UTF-8",
-      "status": "unreachable",
-      "error": "fetch failed"
+      "status": "ok"
     },
     "kd": {
       "name": "Kristdemokraterna",
       "url": "https://kristdemokraterna.se/var-politik/politik-a-till-o/drivmedelspriser",
       "hash": "86bd9f26736654a60e9f1337d0283dddaea42779e621787a2b1fa1c9110c1696",
       "contentType": "text/html;charset=UTF-8",
-      "status": "unreachable",
-      "error": "fetch failed"
+      "status": "ok"
     },
     "l": {
       "name": "Liberalerna",
@@ -33,7 +31,7 @@
     "m": {
       "name": "Moderaterna",
       "url": "https://moderaterna.se/nyhet/ytterligare-sankt-skatt-pa-drivmedel/",
-      "hash": "cdf5fd55edeae2d2e7b94ed0ae90656f069830b31e29fb074c6b631ab327b206",
+      "hash": "c5cfac141bca2fda77ba7d37f76d9bdbc41e1d8119b9d27b07c02aa65522fb4a",
       "contentType": "text/html; charset=UTF-8",
       "status": "ok"
     },
@@ -42,8 +40,7 @@
       "url": "https://www.socialdemokraterna.se/nyheter/nyheter/2026-03-20-s-kraver-tillfallig-skattesankning-pa-bensin-och-diesel",
       "hash": "e1757f121f096740646277af0fcbc06e352a839b02559fa3fa225b924100ca4c",
       "contentType": "text/html;charset=UTF-8",
-      "status": "unreachable",
-      "error": "fetch failed"
+      "status": "ok"
     },
     "sd": {
       "name": "Sverigedemokraterna",

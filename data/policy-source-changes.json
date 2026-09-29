@@ -1,3 +1,11 @@
 {
-  "changes": []
+  "changes": [
+    {
+      "key": "m",
+      "name": "Moderaterna",
+      "url": "https://moderaterna.se/nyhet/ytterligare-sankt-skatt-pa-drivmedel/",
+      "oldHash": "cdf5fd55edeae2d2e7b94ed0ae90656f069830b31e29fb074c6b631ab327b206",
+      "newHash": "c5cfac141bca2fda77ba7d37f76d9bdbc41e1d8119b9d27b07c02aa65522fb4a"
+    }
+  ]
 }
