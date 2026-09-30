@@ -12,14 +12,14 @@
   const partyOrder = ["c", "kd", "l", "mp", "m", "s", "sd", "v"];
   const evidenceLabels = { party_estimate: "Partiets uppskattning", party_stated_target: "Partiets uttalade mål", quantified_inputs: "Delvis beräkningsbart underlag", not_quantified: "Ej numeriskt kvantifierat" };
   const partyLogos = {
-    c: "https://commons.wikimedia.org/wiki/Special:FilePath/C%20v1.svg",
-    kd: "https://commons.wikimedia.org/wiki/Special:FilePath/Kd%20v1.svg",
-    l: "https://commons.wikimedia.org/wiki/Special:FilePath/L%20v1.svg",
+    c: "https://media.riksdagen.se/images/Zz1kOTYzMDgxYWEwZjMxMWYxYmQwMGIyMWE1OTYzOTc3Yg%3D%3D",
+    kd: "https://media.riksdagen.se/images/Zz1jZjg0NzM3ZWEwZjMxMWYxOWRiYWYyNTRhMTgzYjY0ZA%3D%3D",
+    l: "https://media.riksdagen.se/images/Zz1jZmZmODI1OGEwZjMxMWYxYTg1MDNlMDEzYThiNTZmYQ%3D%3D",
     mp: "/party-logos/mp.png",
-    m: "https://commons.wikimedia.org/wiki/Special:FilePath/Moderate%20Party%20logo.svg",
+    m: "https://media.riksdagen.se/images/Zz1kOWI0MTQ4MGEwZjMxMWYxYWM2MTBhZjkwMjFjMThmMg%3D%3D",
     s: "/party-logos/s.png",
     sd: "https://www.sd.se/wp-content/uploads/2022/07/logo_sd_logo_blasippa.png",
-    v: "https://commons.wikimedia.org/wiki/Special:FilePath/V%C3%A4nsterpartiet%20logo.svg"
+    v: "https://media.riksdagen.se/images/Zz1kNjgyNDdkZTdjNjExMWYxODJiMjdlYzJhYTZjODliOQ%3D%3D"
   };
 
   const $ = id => document.getElementById(id);
@@ -259,11 +259,11 @@
 
     if (!scenario) {
       els.partyResult.classList.add("empty");
-      setText(els.scenarioLabel, "Välj ett parti");
-      setText(els.scenarioTankPrice, "—");
-      els.scenarioTankUnit.hidden = false;
-      setText(els.scenarioLiterPrice, "— kr/l");
-      setText(els.scenarioDelta, "—");
+      setText(els.scenarioLabel, "Välj ett parti ovan");
+      setText(els.scenarioTankPrice, "");
+      els.scenarioTankUnit.hidden = true;
+      setText(els.scenarioLiterPrice, "");
+      setText(els.scenarioDelta, "");
       setText(els.scenarioNote, "Om ett parti inte har publicerat tillräckligt exakta nivåer visar vi inget påhittat pris.");
       if (els.policyDetails) els.policyDetails.hidden = true;
       if (els.scenarioMeta) { els.scenarioMeta.hidden = true; els.scenarioMeta.textContent = ""; }
