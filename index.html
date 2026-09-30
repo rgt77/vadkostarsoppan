@@ -101,7 +101,7 @@
         <button class="scenario-reset" id="scenarioReset" type="button" hidden>Nollställ</button>
       </div>
 
-      <p class="party-choice-label">Välj parti. Finns en dokumenterad prisuppgift räknar vi på din valda tankning; annars visar vi det som faktiskt är känt.</p><p class="party-method-note">Samma metod används för alla partier. Vi visar inget exakt pumppris när underlaget kräver egna antaganden.</p>
+      <p class="party-choice-label">Välj parti. Vi räknar på din tankning när partiets dokumenterade underlag räcker; annars visar vi vad som är känt utan att hitta på ett pris.</p>
       <div class="party-grid" id="partyGrid" role="group" aria-label="Välj parti"></div>
 
       <div class="party-result empty" id="partyResult" role="status" aria-live="polite" aria-atomic="true"><p class="party-answer" id="partyAnswer" hidden></p>
@@ -126,11 +126,11 @@
       <summary>Så räknar vi</summary>
       <div class="method-content">
         <p class="method-lead">Beräkningen bygger på aktuellt svenskt rikssnitt och publicerade skatter.</p>
-        <p><strong>Tankstorlek</strong> kan väljas mellan 30 och 60 liter. 40 liter är förvalt.</p>
+        
         <p><strong>Rikssnittet</strong> bygger på rapporterade stationspriser och kan skilja sig från en viss station.</p>
         <p><strong>Pris före skatt &amp; moms</strong> är pumppris före moms minus energi- och koldioxidskatt. Det är inte samma sak som bensinbolagens vinst.</p>
         <p><strong>Partiscenario</strong> räknas bara när det finns dokumenterade numeriska uppgifter. Annars visas inget konstruerat pris.</p>
-        <p><strong>Marknadsdata</strong> hålls separat från pumppriset. Valutakurs och reduktionsplikt används inte för att konstruera ett spotpris när en verifierad raffinerad produktreferens saknas.</p>
+        
         <p id="dataStatus" class="data-status"><strong>Datastatus</strong> kontrolleras…</p>
         <nav class="method-links" aria-label="Källor">
           <a id="priceSource" href="#" target="_blank" rel="noopener noreferrer">Källa: rikssnitt ↗</a>
