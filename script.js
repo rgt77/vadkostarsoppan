@@ -32,6 +32,7 @@
     fuelLabel: $("fuelLabel"),
     tankTotal: $("tankTotal"),
     literPrice: $("literPrice"),
+    marketPriceLabel: $("marketPriceLabel"),
     marketTank: $("marketTank"),
     energyTaxLabel: $("energyTaxLabel"),
     energyTank: $("energyTank"),
@@ -296,7 +297,7 @@
         ? "Ingen dokumenterad prisberäkning för " + fuelData[state.fuel].label + ". " + comparison.known
         : resultLiter === null
           ? comparison.known
-          : "Dokumenterad prisuppgift: " + fmt(resultLiter) + " kr/l · " + state.liters + " liter = " + fmt(resultLiter * state.liters) + " kr.";
+          : "Dokumenterad prisuppgift: " + fmt(resultLiter) + " kr/l · " + tankLiters + " liter = " + fmt(resultLiter * state.liters) + " kr.";
     }
 
     if (resultLiter === null) {
@@ -419,6 +420,7 @@
     setText(els.fuelLabel, ref.fuel.label);
     setText(els.tankTotal, fmt(tankTotal));
     setText(els.literPrice, fmt(price));
+    setText(els.marketPriceLabel, ref.blendDependent ? "Pris före moms (punktskatt ej särredovisad)" : "Pris före skatt & moms");
     setText(els.marketTank, fmt(marketTank) + " kr");
     setText(els.energyTaxLabel, "Energiskatt");
     setText(els.carbonTaxLabel, "Koldioxidskatt");
