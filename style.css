@@ -537,3 +537,8 @@ a { -webkit-tap-highlight-color: transparent; }
 
 .card-head>*,.party-result>*,.scenario-comparison>*,.tax-summary>*,.policy-comparison>*{min-width:0}
 @media(max-width:360px){.fuel-button>span:last-child{white-space:normal;line-height:1.15}.tank-total strong{font-size:50px}.party-price-line strong{font-size:42px}}
+
+.policy-comparison[hidden]{display:none}
+.party-result.empty{min-height:72px;padding-block:16px}
+.party-result.empty .party-price-line,.party-result.empty .party-delta{display:none}
+.party-result.empty .party-price-wrap{gap:0}
