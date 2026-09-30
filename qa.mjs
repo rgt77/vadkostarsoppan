@@ -57,6 +57,8 @@ expectedPartyKeys.every(key => partyLogoMap[key]) ? pass("All eight party logo s
 expectedPartyKeys.every(key => partyLogoMap[key]?.startsWith("/party-logos/") || partyLogoMap[key]?.startsWith("https://")) ? pass("All party logo sources are explicit assets") : fail("Invalid party logo source");
 expectedPartyKeys.filter(key => partyLogoMap[key]?.startsWith("/party-logos/")).every(key => fs.existsSync("." + partyLogoMap[key])) ? pass("Configured local party logo files exist") : fail("Configured local party logo file missing");
 script.includes('image.addEventListener("error"') && script.includes('button.classList.add("logo-failed")') ? pass("Party logos have visible fallback on load failure") : fail("Party logo fallback missing");
+!Object.values(partyLogoMap).some(src => src.includes("commons.wikimedia.org/wiki/Special:FilePath")) ? pass("Party logos avoid redirect-based Wikimedia sources") : fail("One or more party logos still use redirect-based Wikimedia sources");
+["c","kd","l","m","v"].every(key => partyLogoMap[key]?.startsWith("https://media.riksdagen.se/images/")) ? pass("Previously failing party logos use direct Riksdag media assets") : fail("One or more previously failing party logos lack direct media assets");
 
 const isoToday = new Intl.DateTimeFormat("sv-SE", {
   timeZone: "Europe/Stockholm",
@@ -73,7 +75,7 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = Object.values(w.FUEL_DATA ?? {});
 
-  w.SITE_DATA?.appVersion === "0.70.0" ? pass("Version 0.70.0") : fail("Version mismatch");
+  w.SITE_DATA?.appVersion === "0.70.1" ? pass("Version 0.70.1") : fail("Version mismatch");
   w.SITE_DATA?.typicalTankLiters === 40 ? pass("Tank size 40 L") : fail("Tank size invalid");
 
   for (const fuel of fuels) {
@@ -175,7 +177,7 @@ try {
   fail("Policy data: " + error.message);
 }
 
-html404.includes("style.css?v=0.70.0") ? pass("404 cache version") : fail("404 cache version mismatch");
+html404.includes("style.css?v=0.70.1") ? pass("404 cache version") : fail("404 cache version mismatch");
 script.includes("Partikällorna kontrollerades 2026-09-23") ? fail("Hardcoded policy review date") : pass("No hardcoded policy review date");
 read("scripts/update-price-data.mjs").includes("Implausible") ? pass("Pump price plausibility guard") : fail("Pump price plausibility guard missing");
 const marketUpdater = read("scripts/update-market-data.mjs");
@@ -458,6 +460,8 @@ script.includes('scenarioUnavailableText(evaluation, scenario)') && script.inclu
 style.includes("overflow-wrap:anywhere") && style.includes(".policy-comparison strong") && style.includes(".scenario-meta") ? pass("Long party text protected against horizontal overflow") : fail("Long party text lacks overflow protection");
 style.includes(".page,.card,.controls,.result-card,.scenario-card,.method{max-width:100%;box-sizing:border-box}") ? pass("Primary mobile containers constrained to viewport") : fail("Primary containers can exceed viewport");
 style.includes(".card-head>*") && style.includes("@media(max-width:360px)") && style.includes("white-space:normal") ? pass("Narrow viewport overflow hardening present") : fail("Narrow viewport overflow hardening missing");
+style.includes(".policy-comparison[hidden]{display:none}") ? pass("Inactive policy comparison is truly hidden") : fail("Hidden policy comparison can be forced visible by author CSS");
+script.includes('setText(els.scenarioLabel, "Välj ett parti ovan")') && script.includes('els.scenarioTankUnit.hidden = true') && style.includes(".party-result.empty .party-price-line") ? pass("Empty party state is clean and intentional") : fail("Empty party state still resembles a broken price result");
 html.includes('id="marketPriceLabel"') && script.includes('Pris före moms (punktskatt ej särredovisad)') ? pass("E85 pre-tax label is not misleading") : fail("E85 pre-tax label can misstate unknown excise tax");
 
 const fuelText = read("fuel-data.js");
