@@ -457,3 +457,11 @@ script.includes('scenarioUnavailableText(evaluation, scenario)') && script.inclu
 !style.includes(".price-trend") && !style.includes(".trend-") ? pass("Dead price-trend CSS removed") : fail("Dead price-trend CSS remains");
 style.includes("overflow-wrap:anywhere") && style.includes(".policy-comparison strong") && style.includes(".scenario-meta") ? pass("Long party text protected against horizontal overflow") : fail("Long party text lacks overflow protection");
 style.includes(".page,.card,.controls,.result-card,.scenario-card,.method{max-width:100%;box-sizing:border-box}") ? pass("Primary mobile containers constrained to viewport") : fail("Primary containers can exceed viewport");
+
+const fuelText = read("fuel-data.js");
+fuelText.includes('{ validFrom: "2026-10-01", validTo: "2026-11-30", energyTax: 1.52, carbonTax: 0.87 }') &&
+fuelText.includes('{ validFrom: "2026-10-01", validTo: "2026-11-30", energyTax: 1.150, carbonTax: 0.411 }') &&
+script.includes('timeZone: "Europe/Stockholm"') &&
+script.includes('period.validFrom <= date && date <= period.validTo')
+  ? pass("1 October Swedish tax rollover is automatic and exact")
+  : fail("1 October tax rollover guard missing or incorrect");
