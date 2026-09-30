@@ -50,6 +50,13 @@ const jsIds = [...script.matchAll(/\$\("([^"]+)"\)/g)].map(match => match[1]);
 const missingIds = [...new Set(jsIds.filter(id => !html.includes(`id="${id}"`)))];
 missingIds.length ? fail("Missing JS targets: " + missingIds.join(", ")) : pass("JS targets exist");
 
+
+const partyLogoMap = Object.fromEntries([...script.matchAll(/\b(c|kd|l|mp|m|s|sd|v):\s*"([^"]+)"/g)].map(match => [match[1], match[2]]));
+const expectedPartyKeys = ["c","kd","l","mp","m","s","sd","v"];
+expectedPartyKeys.every(key => partyLogoMap[key]) ? pass("All eight party logo sources configured") : fail("One or more party logo sources missing");
+expectedPartyKeys.every(key => partyLogoMap[key]?.startsWith("/party-logos/")) ? pass("All party logos served locally") : fail("Party logos depend on external runtime sources");
+expectedPartyKeys.every(key => fs.existsSync("." + partyLogoMap[key])) ? pass("All eight local party logo files exist") : fail("One or more local party logo files missing");
+
 const isoToday = new Intl.DateTimeFormat("sv-SE", {
   timeZone: "Europe/Stockholm",
   year: "numeric",
