@@ -452,3 +452,7 @@ script.includes('scenarioUnavailableText(evaluation, scenario)') && script.inclu
 !html.includes('id="priceTrend"') && !html.includes("Prisutveckling") && !script.includes("renderTrend") && !script.includes("priceHistory") && !script.includes('fetch("/data/price-history.json"') ? pass("Public price-trend feature removed") : fail("Price-trend UI or runtime remains");
 
 !script.includes("const policyBackground =") && script.includes("const background = scenario.method") && html.includes('id="policyFacts"') && ['c','kd','l','mp','m','s','sd','v'].every(key => policyText.includes(key + ': {') || policyText.includes(key + ': {')) && ['Centerpartiet','Kristdemokraterna','Liberalerna','Miljöpartiet','Moderaterna','Socialdemokraterna','Sverigedemokraterna','Vänsterpartiet'].every(name => policyText.includes('name: "' + name + '"')) ? pass("Political background has one frontend source of truth") : fail("Political background source incomplete or duplicated");
+
+!style.includes(".price-trend") && !style.includes(".trend-") ? pass("Dead price-trend CSS removed") : fail("Dead price-trend CSS remains");
+style.includes("overflow-wrap:anywhere") && style.includes(".policy-comparison strong") && style.includes(".scenario-meta") ? pass("Long party text protected against horizontal overflow") : fail("Long party text lacks overflow protection");
+style.includes(".page,.card,.controls,.result-card,.scenario-card,.method{max-width:100%;box-sizing:border-box}") ? pass("Primary mobile containers constrained to viewport") : fail("Primary containers can exceed viewport");
