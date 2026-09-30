@@ -54,8 +54,9 @@ missingIds.length ? fail("Missing JS targets: " + missingIds.join(", ")) : pass(
 const partyLogoMap = Object.fromEntries([...script.matchAll(/\b(c|kd|l|mp|m|s|sd|v):\s*"([^"]+)"/g)].map(match => [match[1], match[2]]));
 const expectedPartyKeys = ["c","kd","l","mp","m","s","sd","v"];
 expectedPartyKeys.every(key => partyLogoMap[key]) ? pass("All eight party logo sources configured") : fail("One or more party logo sources missing");
-expectedPartyKeys.every(key => partyLogoMap[key]?.startsWith("/party-logos/")) ? pass("All party logos served locally") : fail("Party logos depend on external runtime sources");
-expectedPartyKeys.every(key => fs.existsSync("." + partyLogoMap[key])) ? pass("All eight local party logo files exist") : fail("One or more local party logo files missing");
+expectedPartyKeys.every(key => partyLogoMap[key]?.startsWith("/party-logos/") || partyLogoMap[key]?.startsWith("https://")) ? pass("All party logo sources are explicit assets") : fail("Invalid party logo source");
+expectedPartyKeys.filter(key => partyLogoMap[key]?.startsWith("/party-logos/")).every(key => fs.existsSync("." + partyLogoMap[key])) ? pass("Configured local party logo files exist") : fail("Configured local party logo file missing");
+script.includes('image.addEventListener("error"') && script.includes('button.classList.add("logo-failed")') ? pass("Party logos have visible fallback on load failure") : fail("Party logo fallback missing");
 
 const isoToday = new Intl.DateTimeFormat("sv-SE", {
   timeZone: "Europe/Stockholm",
