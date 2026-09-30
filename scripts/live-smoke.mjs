@@ -15,6 +15,9 @@ try{
  check("home:app-script",html.includes("script.js"),"Applikationsskript saknas live");
  check("home:price-data",html.includes("price-data.js"),"Prisdata-skript saknas live");
  check("home:fuel-data",html.includes("fuel-data.js"),"Bränsledata-skript saknas live");
+ const app=await get("/script.js"); const appText=await app.text();
+ check("party:all-eight",["c","kd","l","mp","m","s","sd","v"].every(key=>new RegExp("\\b"+key+":\\s*[\"\']").test(appText)),"Alla åtta partiers logokällor kunde inte verifieras i live-scriptet");
+ check("party:fallback",appText.includes('button.classList.add("logo-failed")'),"Live-scriptet saknar logofallback");
  const robots=await get("/robots.txt"); const robotsText=await robots.text();
  check("robots:http",robots.ok,`robots.txt svarade HTTP ${robots.status}`);
  check("robots:sitemap",robotsText.includes("https://vadkostarsoppan.se/sitemap.xml"),"robots.txt saknar sitemap");
