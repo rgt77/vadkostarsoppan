@@ -419,7 +419,7 @@ style.includes(".policy-status-row small") ? pass("Calculation status help respo
 
 const perfScript=read("scripts/performance-budget.mjs"); perfScript.includes("partyUiBytes") && perfScript.includes("45_000") ? pass("Party UI payload budget") : fail("Party UI payload guard missing");
 
-html.includes("Samma metod används för alla partier") && html.includes("inget exakt pumppris när underlaget kräver egna antaganden") ? pass("Equal party methodology disclosed") : fail("Equal party methodology disclosure missing");
+html.includes("utan att hitta på ett pris") && !html.includes("Samma metod används för alla partier") && !html.includes("inget exakt pumppris när underlaget kräver egna antaganden") ? pass("Party methodology copy concise and non-duplicative") : fail("Party methodology copy is missing or redundant");
 
 
 const policyText=read("policy-data.js"); !/m:\s*\{[\s\S]*?priceModel:\s*\{\s*type:\s*"party_delta"/.test(policyText) ? pass("M enacted tax cut not double-counted") : fail("M enacted tax cut still applied as delta");
@@ -428,7 +428,7 @@ policyText.includes('baselineTreatment: "already_reflected"') && policyText.incl
 
 html.includes("Vad innebär partiernas drivmedelspolitik?") ? pass("Party section promise matches evidence") : fail("Party section overpromises price calculation");
 html.includes('id="partyAnswer"') && script.includes("comparison.known") && script.includes('evaluation.status === "unsupported_fuel"') ? pass("Party primary answer covers documented and unsupported-fuel states") : fail("Party primary answer behavior incomplete");
-script.includes('Dokumenterad prisuppgift: ') && script.includes('state.liters + " liter = "') ? pass("Calculable party answer is self-contained") : fail("Calculable party answer lacks direct result");
+script.includes('Dokumenterad prisuppgift: ') && script.includes('tankLiters + " liter = "') && !script.includes('state.liters + " liter = "') ? pass("Calculable party answer uses selected tank size") : fail("Calculable party answer has an invalid liters reference");
 script.includes('Ingen exakt prisuppgift') && !script.includes('Ej möjligt att räkna exakt') ? pass("Non-calculable party state uses neutral copy") : fail("Non-calculable party state copy unclear");
 
 !html.includes('id="policyKnown"') && !html.includes('id="policyPump"') && !script.includes("els.policyKnown") && !script.includes("els.policyPump") ? pass("Party primary answer not duplicated in secondary panel") : fail("Duplicate party answer remains");
@@ -457,6 +457,8 @@ script.includes('scenarioUnavailableText(evaluation, scenario)') && script.inclu
 !style.includes(".price-trend") && !style.includes(".trend-") ? pass("Dead price-trend CSS removed") : fail("Dead price-trend CSS remains");
 style.includes("overflow-wrap:anywhere") && style.includes(".policy-comparison strong") && style.includes(".scenario-meta") ? pass("Long party text protected against horizontal overflow") : fail("Long party text lacks overflow protection");
 style.includes(".page,.card,.controls,.result-card,.scenario-card,.method{max-width:100%;box-sizing:border-box}") ? pass("Primary mobile containers constrained to viewport") : fail("Primary containers can exceed viewport");
+style.includes(".card-head>*") && style.includes("@media(max-width:360px)") && style.includes("white-space:normal") ? pass("Narrow viewport overflow hardening present") : fail("Narrow viewport overflow hardening missing");
+html.includes('id="marketPriceLabel"') && script.includes('Pris före moms (punktskatt ej särredovisad)') ? pass("E85 pre-tax label is not misleading") : fail("E85 pre-tax label can misstate unknown excise tax");
 
 const fuelText = read("fuel-data.js");
 fuelText.includes('{ validFrom: "2026-10-01", validTo: "2026-11-30", energyTax: 1.52, carbonTax: 0.87 }') &&
