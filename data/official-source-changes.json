@@ -1,3 +1,10 @@
 {
-  "changes": []
+  "changes": [
+    {
+      "id": "reduction-duty-energimyndigheten",
+      "url": "https://www.energimyndigheten.se/klimat/transporter/reduktionsplikt/",
+      "oldHash": "a8d3aeb8f146ad26a91609a029de6a83a3ccb29fbc6e448de3e0b1e60012970f",
+      "newHash": "375f56deb6bcbf3d2f5f5d51c4e9f6bf6c388a3fa4b349d0bcea5b57554dc577"
+    }
+  ]
 }
