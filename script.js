@@ -101,6 +101,14 @@
       ? Math.floor((newer - older) / 86400000)
       : null;
   }
+  function taxTransitionCrossed(fuel, fromDate, toDate = todayIso()) {
+    if (!fuel || !fromDate || !toDate || fromDate >= toDate) return false;
+    const transitions = fuel.taxModel === "blend_dependent"
+      ? (fuel.taxTransitionDates || [])
+      : (fuel.taxPeriods || []).slice(1).map(period => period.validFrom);
+    return transitions.some(date => fromDate < date && date <= toDate);
+  }
+
   function priceState() {
     const value = Number(priceData.national?.[state.fuel]);
     const updatedAge = daysBetween(priceData.updatedAt);
@@ -108,6 +116,7 @@
     if (!Number.isFinite(value) || value < 5 || value > 50) return { status: "invalid", value: NaN, updatedAge, retrievedAge };
     if (updatedAge === null || updatedAge < 0 || retrievedAge === null || retrievedAge < 0) return { status: "invalid_date", value, updatedAge, retrievedAge };
     if (updatedAge > 3 || retrievedAge > 2) return { status: "stale", value, updatedAge, retrievedAge };
+    if (taxTransitionCrossed(fuelData[state.fuel], priceData.updatedAt)) return { status: "tax_transition", value, updatedAge, retrievedAge };
     return { status: "fresh", value, updatedAge, retrievedAge };
   }
 
@@ -135,7 +144,8 @@
       return { fuel, taxPeriod: null, vat, market: beforeVat, tax: vat, total: price, blendDependent: true };
     }
 
-    const taxPeriod = getTaxPeriod(fuel);
+    const taxDate = priceData.updatedAt || todayIso();
+    const taxPeriod = getTaxPeriod(fuel, taxDate);
     if (!taxPeriod || !validMoney(taxPeriod.energyTax) || !validMoney(taxPeriod.carbonTax)) return null;
     const exciseTax = taxPeriod.energyTax + taxPeriod.carbonTax;
     const market = beforeVat - exciseTax;
@@ -360,7 +370,11 @@
   function renderDataStatus(ref) {
     const health = priceState();
     const dateLabel = priceData.updatedAt || "—";
-    setText(els.updatedLabel, "Prisdata " + dateLabel + (health.status === "stale" ? " · äldre data" : health.status === "fresh" ? "" : " · kontrollera"));
+    setText(els.updatedLabel, "Prisdata " + dateLabel + (
+      health.status === "stale" ? " · äldre data" :
+      health.status === "tax_transition" ? " · väntar på dagens pris" :
+      health.status === "fresh" ? "" : " · kontrollera"
+    ));
 
     if (health.status === "invalid" || health.status === "invalid_date") {
       els.dataStatus.className = "data-status data-status--error";
@@ -370,6 +384,11 @@
     if (health.status === "stale") {
       els.dataStatus.className = "data-status data-status--warning";
       els.dataStatus.innerHTML = "<strong>Datastatus</strong> Senaste verifierade rikssnittet är " + health.updatedAge + " dagar gammalt. Beloppen visas som senast kända värden.";
+      return;
+    }
+    if (health.status === "tax_transition") {
+      els.dataStatus.className = "data-status data-status--warning";
+      els.dataStatus.innerHTML = "<strong>Datastatus</strong> Senaste verifierade rikssnittet är från " + dateLabel + ". Skatten har ändrats sedan dess, så prisets delar visas med skattesatsen som gällde när rikssnittet mättes. Sidan växlar automatiskt när ett nytt rikssnitt publiceras.";
       return;
     }
     els.dataStatus.className = "data-status data-status--ok";
@@ -452,7 +471,7 @@
     renderSelections();
     renderCalculation(view);
     renderDataStatus(view?.ref ?? null);
-    if (health.status === "fresh" || health.status === "stale") renderScenario(price);
+    if (["fresh","stale","tax_transition"].includes(health.status)) renderScenario(price);
     else renderScenario(NaN);
     syncUrl();
   }
@@ -460,7 +479,7 @@
   const allowedTankLiters = new Set([30,40,50,60]);
   function setFuel(fuel) { if (!fuelData[fuel] || fuel === state.fuel) return; state.fuel = fuel; render(); }
   function setTankLiters(liters) { if (!allowedTankLiters.has(liters) || liters === tankLiters) return; tankLiters = liters; render(); }
-  function setParty(party) { if (party && (!partyOrder.includes(party) || !scenarios[party])) return; if (party === state.party) return; state.party = party; updatePartySelection(); const health = priceState(); renderScenario(health.status === "fresh" || health.status === "stale" ? getPrice() : NaN); syncUrl(); }
+  function setParty(party) { if (party && (!partyOrder.includes(party) || !scenarios[party])) return; if (party === state.party) return; state.party = party; updatePartySelection(); const health = priceState(); renderScenario(["fresh","stale","tax_transition"].includes(health.status) ? getPrice() : NaN); syncUrl(); }
 
   function bindEvents() {
     for (const button of els.tankSizeButtons) {
