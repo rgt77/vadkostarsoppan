@@ -1,5 +1,5 @@
 {
-  "date": "2026-09-30",
+  "date": "2026-10-01",
   "status": "warning",
   "counts": {
     "ok": 17,
@@ -10,7 +10,7 @@
     {
       "id": "prices:freshness",
       "status": "ok",
-      "message": "Prisdata är 0 dag(ar) gammal",
+      "message": "Prisdata är 1 dag(ar) gammal",
       "source": "https://www.carculated.se/bensinpriser"
     },
     {
@@ -28,13 +28,13 @@
     {
       "id": "tax:petrol",
       "status": "ok",
-      "message": "Giltig skatteperiod 2026-07-01–2026-09-30",
+      "message": "Giltig skatteperiod 2026-10-01–2026-11-30",
       "source": "https://www.skatteverket.se/foretag/skatterochavdrag/punktskatter/energiskatter/skattpabransle.4.15532c7b1442f256bae5e56.html"
     },
     {
       "id": "tax:petrol98",
       "status": "ok",
-      "message": "Giltig skatteperiod 2026-07-01–2026-09-30",
+      "message": "Giltig skatteperiod 2026-10-01–2026-11-30",
       "source": "https://www.skatteverket.se/foretag/skatterochavdrag/punktskatter/energiskatter/skattpabransle.4.15532c7b1442f256bae5e56.html"
     },
     {
@@ -46,7 +46,7 @@
     {
       "id": "tax:diesel",
       "status": "ok",
-      "message": "Giltig skatteperiod 2026-07-01–2026-09-30",
+      "message": "Giltig skatteperiod 2026-10-01–2026-11-30",
       "source": "https://www.skatteverket.se/foretag/skatterochavdrag/punktskatter/energiskatter/skattpabransle.4.15532c7b1442f256bae5e56.html"
     },
     {
@@ -124,7 +124,7 @@
     {
       "id": "market:usdsek",
       "status": "ok",
-      "message": "USD/SEK 9.97886, 0 dag(ar) gammal",
+      "message": "USD/SEK 9.97886, 1 dag(ar) gammal",
       "source": "https://api.riksbank.se/swea/v1/Observations/Latest/sekusdpmi"
     }
   ],
