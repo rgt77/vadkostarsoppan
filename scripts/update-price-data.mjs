@@ -29,12 +29,27 @@ const scope = {};
 new Function("window", fs.readFileSync(FILE, "utf8"))(scope);
 const current = scope.PRICE_DATA;
 
-const response = await fetch(SOURCE, {
-  headers: { "user-agent": "vadkostarsoppan-data-updater/1.0" }
-});
-if (!response.ok) throw new Error("Price source returned HTTP " + response.status);
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-const text = plainText(await response.text());
+async function fetchPriceSource() {
+  let lastError;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const response = await fetch(SOURCE, {
+        headers: { "user-agent": "vadkostarsoppan-data-updater/1.0" },
+        signal: AbortSignal.timeout(20000)
+      });
+      if (!response.ok) throw new Error("Price source returned HTTP " + response.status);
+      return plainText(await response.text());
+    } catch (error) {
+      lastError = error;
+      if (attempt < 3) await sleep(attempt * 2000);
+    }
+  }
+  throw new Error("Price source failed after 3 attempts: " + (lastError?.message || "unknown error"));
+}
+
+const text = await fetchPriceSource();
 const petrol98Match = text.match(/Bensin 98\s+([\d,]+)\s+kr\/l/i);
 const e85Match = text.match(/Etanol E85\s+([\d,]+)\s+kr\/l/i);
 
