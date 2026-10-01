@@ -8,7 +8,7 @@ window.FUEL_DATA = {
       { validFrom: "2026-12-01", validTo: "2026-12-31", energyTax: 1.52, carbonTax: 3.27 }
     ],
     taxSource: "https://www.skatteverket.se/foretag/skatterochavdrag/punktskatter/energiskatter/skattpabransle.4.15532c7b1442f256bae5e56.html",
-    verifiedAt: "2026-09-23"
+    verifiedAt: "2026-10-01"
   },
   petrol98: {
     label: "Bensin 98",
@@ -19,15 +19,16 @@ window.FUEL_DATA = {
       { validFrom: "2026-12-01", validTo: "2026-12-31", energyTax: 1.52, carbonTax: 3.27 }
     ],
     taxSource: "https://www.skatteverket.se/foretag/skatterochavdrag/punktskatter/energiskatter/skattpabransle.4.15532c7b1442f256bae5e56.html",
-    verifiedAt: "2026-09-23"
+    verifiedAt: "2026-10-01"
   },
   e85: {
     label: "E85",
     vatRate: 25,
     taxModel: "blend_dependent",
+    taxTransitionDates: ["2026-10-01", "2026-12-01"],
     taxPeriods: [],
     taxSource: "https://www.skatteverket.se/foretag/skatterochavdrag/punktskatter/energiskatter.4.18e1b10334ebe8bc8000843.html",
-    verifiedAt: "2026-09-23"
+    verifiedAt: "2026-10-01"
   },
   diesel: {
     label: "Diesel",
@@ -38,12 +39,12 @@ window.FUEL_DATA = {
       { validFrom: "2026-12-01", validTo: "2026-12-31", energyTax: 1.150, carbonTax: 2.811 }
     ],
     taxSource: "https://www.skatteverket.se/foretag/skatterochavdrag/punktskatter/energiskatter/skattpabransle.4.15532c7b1442f256bae5e56.html",
-    verifiedAt: "2026-09-23"
+    verifiedAt: "2026-10-01"
   }
 };
 
 window.SITE_DATA = {
-  appVersion: "0.70.1",
+  appVersion: "0.70.2",
   defaultFuel: "petrol",
   typicalTankLiters: 40,
   priceWarningAfterDays: 2,
