@@ -10,13 +10,13 @@
     {
       "id": "prices:freshness",
       "status": "ok",
-      "message": "Prisdata är 3 dag(ar) gammal",
+      "message": "Prisdata är 0 dag(ar) gammal",
       "source": "https://www.carculated.se/bensinpriser"
     },
     {
       "id": "prices:retrieval",
       "status": "ok",
-      "message": "Priskällan hämtades för 2 dag(ar) sedan",
+      "message": "Priskällan hämtades för 0 dag(ar) sedan",
       "source": "https://www.carculated.se/bensinpriser"
     },
     {
