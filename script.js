@@ -7,6 +7,7 @@
   const scenarios = window.POLICY_SCENARIOS ?? {};
   const comparisons = window.POLICY_COMPARISON ?? {};
   const statusMeta = window.POLICY_STATUS_META ?? {};
+  const adConfig = window.AD_CONFIG ?? { enabled: false };
 
   let tankLiters = Number(siteData.typicalTankLiters) || 40;
   const partyOrder = ["c", "kd", "l", "mp", "m", "s", "sd", "v"];
@@ -307,7 +308,7 @@
         ? "Ingen dokumenterad prisberäkning för " + fuelData[state.fuel].label + ". " + comparison.known
         : resultLiter === null
           ? comparison.known
-          : "Dokumenterad prisuppgift: " + fmt(resultLiter) + " kr/l · " + tankLiters + " liter = " + fmt(resultLiter * state.liters) + " kr.";
+          : "Dokumenterad prisuppgift: " + fmt(resultLiter) + " kr/l · " + tankLiters + " liter = " + fmt(resultLiter * tankLiters) + " kr.";
     }
 
     if (resultLiter === null) {
@@ -518,6 +519,50 @@
     });
   }
 
+  function initAds() {
+    const containers = [...document.querySelectorAll("[data-ad-slot]")];
+    if (!containers.length || !adConfig.enabled) return;
+
+    if (adConfig.provider !== "adsense" || !/^ca-pub-\d+$/.test(adConfig.client || "")) {
+      return;
+    }
+
+    const configured = containers.filter(container => {
+      const slotId = adConfig.slots?.[container.dataset.adSlot];
+      return /^\d+$/.test(slotId || "");
+    });
+    if (!configured.length) return;
+
+    const adsScript = document.createElement("script");
+    adsScript.async = true;
+    adsScript.crossOrigin = "anonymous";
+    adsScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + encodeURIComponent(adConfig.client);
+    adsScript.addEventListener("error", () => {
+      for (const container of configured) container.hidden = true;
+    }, { once: true });
+    document.head.append(adsScript);
+
+    for (const container of configured) {
+      const slotId = adConfig.slots[container.dataset.adSlot];
+      const ad = document.createElement("ins");
+      ad.className = "adsbygoogle";
+      ad.style.display = "block";
+      ad.dataset.adClient = adConfig.client;
+      ad.dataset.adSlot = slotId;
+      ad.dataset.adFormat = "auto";
+      ad.dataset.fullWidthResponsive = "true";
+
+      container.querySelector(".ad-slot-inner")?.append(ad);
+      container.hidden = false;
+
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch {
+        container.hidden = true;
+      }
+    }
+  }
+
   window.addEventListener("popstate", () => { loadStateFromUrl(); updatePartySelection(); render(); });
   window.addEventListener("error", () => document.documentElement.classList.add("runtime-error"));
   window.addEventListener("unhandledrejection", () => document.documentElement.classList.add("runtime-error"));
@@ -528,5 +573,6 @@
   for (const node of els.tankLiterLabels) setText(node, String(tankLiters));
   bindEvents();
   render();
+  initAds();
 
 })();
