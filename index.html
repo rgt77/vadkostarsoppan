@@ -19,7 +19,7 @@
   <meta name="twitter:title" content="Vad kostar en typisk tankning?">
   <meta name="twitter:description" content="Aktuellt rikssnitt för bensin, diesel och E85, tankkostnad och dokumenterade partiscenarier.">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/style.css?v=0.70.3">
+  <link rel="stylesheet" href="/style.css?v=0.70.4">
 </head>
 <body>
   <a class="skip-link" href="#mainContent">Hoppa till innehållet</a>
@@ -91,6 +91,11 @@
       </div>
     </section>
 
+    <aside class="ad-slot" data-ad-slot="primary" aria-label="Annons" hidden>
+      <span class="ad-label">ANNONS</span>
+      <div class="ad-slot-inner"></div>
+    </aside>
+
     <section class="card scenario-card" aria-labelledby="partyTitle">
       <div class="card-head party-head">
         <div>
@@ -122,6 +127,11 @@
       <details class="policy-details" id="policyDetails" hidden><summary>Fördjupning och källa</summary><p class="scenario-note" id="scenarioNote">Om ett parti inte har publicerat tillräckligt exakta nivåer visar vi inget påhittat pris.</p><div class="policy-facts" id="policyFacts"></div><a class="source-link" id="partySource" href="#" target="_blank" rel="noopener noreferrer">Visa partiets källa ↗</a></details>
     </section>
 
+    <aside class="ad-slot" data-ad-slot="secondary" aria-label="Annons" hidden>
+      <span class="ad-label">ANNONS</span>
+      <div class="ad-slot-inner"></div>
+    </aside>
+
     <details class="method">
       <summary>Så räknar vi</summary>
       <div class="method-content">
@@ -144,9 +154,17 @@
     <span>vadkostarsoppan.se · rikssnitt för Sverige</span>
   </footer>
 
-  <script defer src="/fuel-data.js?v=0.70.3"></script>
-  <script defer src="/price-data.js?v=0.70.3"></script>
-  <script defer src="/policy-data.js?v=0.70.3"></script>
-  <script defer src="/script.js?v=0.70.3"></script>
+  <script>
+    window.AD_CONFIG = {
+      enabled: false,
+      provider: "adsense",
+      client: "",
+      slots: { primary: "", secondary: "" }
+    };
+  </script>
+  <script defer src="/fuel-data.js?v=0.70.4"></script>
+  <script defer src="/price-data.js?v=0.70.4"></script>
+  <script defer src="/policy-data.js?v=0.70.4"></script>
+  <script defer src="/script.js?v=0.70.4"></script>
 </body>
 </html>
