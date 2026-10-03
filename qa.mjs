@@ -75,7 +75,7 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = Object.values(w.FUEL_DATA ?? {});
 
-  w.SITE_DATA?.appVersion === "0.70.3" ? pass("Version 0.70.3") : fail("Version mismatch");
+  w.SITE_DATA?.appVersion === "0.70.4" ? pass("Version 0.70.4") : fail("Version mismatch");
   w.SITE_DATA?.typicalTankLiters === 40 ? pass("Tank size 40 L") : fail("Tank size invalid");
 
   for (const fuel of fuels) {
@@ -177,7 +177,7 @@ try {
   fail("Policy data: " + error.message);
 }
 
-html404.includes("style.css?v=0.70.3") ? pass("404 cache version") : fail("404 cache version mismatch");
+html404.includes("style.css?v=0.70.4") ? pass("404 cache version") : fail("404 cache version mismatch");
 script.includes("Partikällorna kontrollerades 2026-09-23") ? fail("Hardcoded policy review date") : pass("No hardcoded policy review date");
 read("scripts/update-price-data.mjs").includes("Implausible") ? pass("Pump price plausibility guard") : fail("Pump price plausibility guard missing");
 const marketUpdater = read("scripts/update-market-data.mjs");
@@ -491,4 +491,29 @@ script.includes('Skatten har ändrats sedan dess')
 fuelText.includes('taxTransitionDates: ["2026-10-01", "2026-12-01"]')
   ? pass("E85 tax transitions tracked")
   : fail("E85 tax transitions missing");
+
+
+const adSlots = [...html.matchAll(/data-ad-slot="([^"]+)"/g)].map(match => match[1]);
+new Set(adSlots).size === 2 && ["primary","secondary"].every(slot => adSlots.includes(slot))
+  ? pass("Two distinct advertising placements")
+  : fail("Advertising placements missing or duplicated");
+html.includes("window.AD_CONFIG") && html.includes("enabled: false") && script.includes("const adConfig = window.AD_CONFIG")
+  ? pass("Advertising is opt-in and disabled by default")
+  : fail("Advertising opt-in configuration missing");
+script.includes("function initAds()") && script.includes("pagead2.googlesyndication.com/pagead/js/adsbygoogle.js") && script.includes("/^ca-pub-\\d+$/")
+  ? pass("AdSense integration validates publisher configuration")
+  : fail("AdSense integration incomplete");
+style.includes(".ad-slot[hidden]{display:none}") && style.includes(".ad-slot-inner")
+  ? pass("Advertising remains hidden and responsive until activated")
+  : fail("Advertising layout guard missing");
+!script.includes("state.liters")
+  ? pass("Party tank calculation uses the selected tank size")
+  : fail("Invalid state.liters reference remains");
+
+
+if (failures.length) {
+  console.error("\n" + failures.map(message => "✕ " + message).join("\n"));
+  process.exit(1);
+}
+console.log("\nFINAL PASS");
 
