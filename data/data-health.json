@@ -1,22 +1,22 @@
 {
-  "date": "2026-10-05",
-  "status": "warning",
+  "date": "2026-10-06",
+  "status": "error",
   "counts": {
-    "ok": 17,
+    "ok": 16,
     "warning": 3,
-    "error": 0
+    "error": 1
   },
   "checks": [
     {
       "id": "prices:freshness",
       "status": "ok",
-      "message": "Prisdata är 2 dag(ar) gammal",
+      "message": "Prisdata är 3 dag(ar) gammal",
       "source": "https://www.carculated.se/bensinpriser"
     },
     {
       "id": "prices:retrieval",
-      "status": "ok",
-      "message": "Priskällan hämtades för 2 dag(ar) sedan",
+      "status": "error",
+      "message": "Priskällan hämtades för 3 dag(ar) sedan",
       "source": "https://www.carculated.se/bensinpriser"
     },
     {
@@ -124,7 +124,7 @@
     {
       "id": "market:usdsek",
       "status": "ok",
-      "message": "USD/SEK 9.97886, 5 dag(ar) gammal",
+      "message": "USD/SEK 9.97886, 6 dag(ar) gammal",
       "source": "https://api.riksbank.se/swea/v1/Observations/Latest/sekusdpmi"
     }
   ],
