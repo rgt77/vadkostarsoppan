@@ -2,8 +2,8 @@
   "date": "2026-10-08",
   "status": "warning",
   "counts": {
-    "ok": 16,
-    "warning": 4,
+    "ok": 17,
+    "warning": 3,
     "error": 0
   },
   "checks": [
@@ -123,8 +123,8 @@
     },
     {
       "id": "market:usdsek",
-      "status": "warning",
-      "message": "USD/SEK 9.97886, 8 dag(ar) gammal",
+      "status": "ok",
+      "message": "USD/SEK 10.00715, 0 dag(ar) gammal",
       "source": "https://api.riksbank.se/swea/v1/Observations/Latest/sekusdpmi"
     }
   ],
