@@ -521,46 +521,46 @@
 
   function initAds() {
     const containers = [...document.querySelectorAll("[data-ad-slot]")];
-    if (!containers.length || !adConfig.enabled) return;
+    if (!containers.length || !adConfig.enabled || adConfig.provider !== "adsense") return;
+    if (!/^ca-pub-\d+$/.test(adConfig.client || "")) return;
 
-    if (adConfig.provider !== "adsense" || !/^ca-pub-\d+$/.test(adConfig.client || "")) {
-      return;
-    }
-
-    const configured = containers.filter(container => {
-      const slotId = adConfig.slots?.[container.dataset.adSlot];
-      return /^\d+$/.test(slotId || "");
-    });
+    // A certified CMP must supply the IAB TCF interface. No CMP = no ad requests.
+    if (typeof window.__tcfapi !== "function") return;
+    const configured = containers.filter(container =>
+      /^\d+$/.test(adConfig.slots?.[container.dataset.adSlot] || "")
+    );
     if (!configured.length) return;
+    let initialized = false;
 
-    const adsScript = document.createElement("script");
-    adsScript.async = true;
-    adsScript.crossOrigin = "anonymous";
-    adsScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + encodeURIComponent(adConfig.client);
-    adsScript.addEventListener("error", () => {
-      for (const container of configured) container.hidden = true;
-    }, { once: true });
-    document.head.append(adsScript);
+    window.__tcfapi("addEventListener", 2, (tcData, success) => {
+      if (!success || initialized || !["tcloaded", "useractioncomplete"].includes(tcData?.eventStatus)) return;
+      const consent = tcData.gdprApplies === false ||
+        (tcData.purpose?.consents?.[1] === true && tcData.vendor?.consents?.[755] === true);
+      if (!consent) return;
+      initialized = true;
 
-    for (const container of configured) {
-      const slotId = adConfig.slots[container.dataset.adSlot];
-      const ad = document.createElement("ins");
-      ad.className = "adsbygoogle";
-      ad.style.display = "block";
-      ad.dataset.adClient = adConfig.client;
-      ad.dataset.adSlot = slotId;
-      ad.dataset.adFormat = "auto";
-      ad.dataset.fullWidthResponsive = "true";
+      const adsScript = document.createElement("script");
+      adsScript.async = true;
+      adsScript.crossOrigin = "anonymous";
+      adsScript.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" +
+        encodeURIComponent(adConfig.client);
+      adsScript.addEventListener("error", () => {
+        for (const container of configured) container.hidden = true;
+      }, { once: true });
+      document.head.append(adsScript);
 
-      container.querySelector(".ad-slot-inner")?.append(ad);
-      container.hidden = false;
-
-      try {
+      for (const container of configured) {
+        const ad = document.createElement("ins");
+        ad.className = "adsbygoogle";
+        ad.dataset.adClient = adConfig.client;
+        ad.dataset.adSlot = adConfig.slots[container.dataset.adSlot];
+        ad.dataset.adFormat = "auto";
+        ad.dataset.fullWidthResponsive = "true";
+        container.querySelector(".ad-slot-inner")?.append(ad);
+        container.hidden = false;
         (window.adsbygoogle = window.adsbygoogle || []).push({});
-      } catch {
-        container.hidden = true;
       }
-    }
+    });
   }
 
   window.addEventListener("popstate", () => { loadStateFromUrl(); updatePartySelection(); render(); });
