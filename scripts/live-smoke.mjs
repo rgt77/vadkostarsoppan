@@ -18,10 +18,11 @@ try{
  const app=await get("/script.js"); const appText=await app.text();
  check("party:all-eight",["c","kd","l","mp","m","s","sd","v"].every(key=>new RegExp("\\b"+key+":\\s*[\"\']").test(appText)),"Alla åtta partiers logokällor kunde inte verifieras i live-scriptet");
  check("party:fallback",appText.includes('button.classList.add("logo-failed")'),"Live-scriptet saknar logofallback");
- const logoEntries=[...appText.matchAll(/\\b(c|kd|l|mp|m|s|sd|v):\\s*"([^"]+)"/g)];
+ const logoEntries=[...appText.matchAll(/\b(c|kd|l|mp|m|s|sd|v):\s*"([^"]+)"/g)];
+ check("party:logo-count",logoEntries.length===8,`Förväntade åtta logobilder men hittade ${logoEntries.length}`);
  for(const [,key,src] of logoEntries){
    const url=src.startsWith("/")?base+src:src; const controller=new AbortController(); const timer=setTimeout(()=>controller.abort(),15000);
-   try{const res=await fetch(url,{redirect:"follow",signal:controller.signal,headers:{"user-agent":"vadkostarsoppan-live-smoke/1.0"}});check("party:logo:"+key,res.ok,`Partilogotyp ${key.toUpperCase()} svarade HTTP ${res.status}`);}catch(error){check("party:logo:"+key,false,`Partilogotyp ${key.toUpperCase()} kunde inte hämtas: ${error.message}`);}finally{clearTimeout(timer)}
+   try{const res=await fetch(url,{redirect:"follow",signal:controller.signal,headers:{"user-agent":"vadkostarsoppan-live-smoke/1.0"}});check("party:logo:"+key,res.ok && (res.headers.get("content-type")||"").startsWith("image/"),`Partilogotyp ${key.toUpperCase()} svarade HTTP ${res.status}`);}catch(error){check("party:logo:"+key,false,`Partilogotyp ${key.toUpperCase()} kunde inte hämtas: ${error.message}`);}finally{clearTimeout(timer)}
  }
  const robots=await get("/robots.txt"); const robotsText=await robots.text();
  check("robots:http",robots.ok,`robots.txt svarade HTTP ${robots.status}`);
