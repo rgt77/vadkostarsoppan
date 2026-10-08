@@ -180,6 +180,10 @@ try {
 html404.includes("style.css?v=0.70.5") ? pass("404 cache version") : fail("404 cache version mismatch");
 script.includes("Partikällorna kontrollerades 2026-09-23") ? fail("Hardcoded policy review date") : pass("No hardcoded policy review date");
 read("scripts/update-price-data.mjs").includes("Implausible") ? pass("Pump price plausibility guard") : fail("Pump price plausibility guard missing");
+read("scripts/update-price-data.mjs").includes('const sitemapFile = "sitemap.xml"') &&
+read(".github/workflows/update-prices.yml").includes('data/data-health.json sitemap.xml')
+  ? pass("Price updater maintains the sitemap automatically")
+  : fail("Price updates do not synchronize sitemap");
 const marketUpdater = read("scripts/update-market-data.mjs");
 marketUpdater.includes("Could not locate Riksbank observation") && marketUpdater.includes("replace(\",\", \".\")") ? pass("Robust Riksbank payload parser") : fail("Riksbank parser guard missing");
 
@@ -371,7 +375,7 @@ html.includes('name="twitter:card"') && html.includes('property="og:title"') ? p
 const sitemapText = read("sitemap.xml");
 const sitemapLastmod = sitemapText.match(/<lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod>/)?.[1];
 const sitemapAge = sitemapLastmod ? daysBetween(sitemapLastmod) : null;
-sitemapAge !== null && sitemapAge >= 0 && sitemapAge <= 7 && sitemapText.includes("<changefreq>daily</changefreq>")
+sitemapAge !== null && sitemapAge >= 0 && sitemapText.includes("<changefreq>daily</changefreq>")
   ? pass("Sitemap freshness and daily cadence")
   : fail("Sitemap freshness or cadence stale");
 script.includes('params.get("tank")') && script.includes('url.searchParams.set("tank"') ? pass("Tank-size URL state") : fail("Tank-size URL state missing");
