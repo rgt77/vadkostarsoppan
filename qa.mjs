@@ -506,11 +506,6 @@ style.includes(".ad-slot[hidden]{display:none}") && style.includes(".ad-slot-inn
   : fail("Invalid state.liters reference remains");
 
 
-if (failures.length) {
-  console.error("\n" + failures.map(message => "✕ " + message).join("\n"));
-  process.exit(1);
-}
-
 const securityHeaders = read("_headers");
 securityHeaders.includes("https://media.riksdagen.se") && !securityHeaders.includes("https://commons.wikimedia.org")
   ? pass("Party logos allowed by image CSP")
@@ -529,6 +524,12 @@ read("scripts/price-parser.mjs").includes("Missing or implausible national price
 !html.includes('aria-valuenow="0" aria-hidden="true"')
   ? pass("Tax percentage progress remains accessible")
   : fail("Tax percentage meter hidden from assistive technology");
+
+
+if (failures.length) {
+  console.error("\n" + failures.map(message => "✕ " + message).join("\n"));
+  process.exit(1);
+}
 
 console.log("\nFINAL PASS");
 
