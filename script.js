@@ -163,6 +163,7 @@
     const model = scenario?.priceModel;
     const referenceDate = priceData.updatedAt || todayIso();
     if (!scenario || !model) return { status: "missing" };
+    if (!Number.isFinite(basePrice) || basePrice <= 0) return { status: "invalid_price" };
     if (!["party_delta", "stated_target"].includes(model.type) || !Number.isFinite(model.delta)) return { status: "not_quantified" };
     if (model.validFrom && referenceDate < model.validFrom) return { status: "outside_date", referenceDate };
     if (model.validTo && referenceDate > model.validTo) return { status: "outside_date", referenceDate };
@@ -175,6 +176,7 @@
   function scenarioUnavailableText(evaluation, scenario) {
     if (evaluation.status === "unsupported_fuel") return "Det dokumenterade scenariot gäller inte " + fuelData[state.fuel].label + ".";
     if (evaluation.status === "outside_date") return "Referensdagen ligger utanför scenariots dokumenterade giltighet.";
+    if (evaluation.status === "invalid_price") return "Rikssnittet kan inte verifieras. Partiets prisförändring beräknas inte.";
     if (evaluation.status === "invalid_result") return "Underlaget ger inget giltigt beräkningsresultat.";
     return scenario.method;
   }
