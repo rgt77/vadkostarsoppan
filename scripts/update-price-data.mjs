@@ -106,6 +106,14 @@ const output =
 
 fs.writeFileSync(FILE, output);
 
+// Keep search metadata aligned with the latest observed national price snapshot.
+const sitemapFile = "sitemap.xml";
+if (fs.existsSync(sitemapFile)) {
+  const sitemap = fs.readFileSync(sitemapFile, "utf8");
+  const updatedSitemap = sitemap.replace(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/, "<lastmod>" + next.updatedAt + "</lastmod>");
+  if (updatedSitemap !== sitemap) fs.writeFileSync(sitemapFile, updatedSitemap);
+}
+
 const history = fs.existsSync(HISTORY_FILE) ? JSON.parse(fs.readFileSync(HISTORY_FILE, "utf8")) : { version: 1, snapshots: [] };
 const snapshot = { date: next.updatedAt, national: next.national };
 const existingIndex = history.snapshots.findIndex(item => item.date === snapshot.date);
