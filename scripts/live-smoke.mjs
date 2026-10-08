@@ -20,6 +20,7 @@ try{
  check("party:fallback",appText.includes('button.classList.add("logo-failed")'),"Live-scriptet saknar logofallback");
  const logoEntries=[...appText.matchAll(/\b(c|kd|l|mp|m|s|sd|v):\s*"([^"]+)"/g)];
  check("party:logo-count",logoEntries.length===8,`Förväntade åtta logobilder men hittade ${logoEntries.length}`);
+ check("party:local-reliability",["c","kd","l","m","v"].every(key=>logoEntries.some(([,k,src])=>k===key&&src==="/party-logos/"+key+".svg")),"Fem tidigare trasiga partilogotyper måste vara lokala");
  for(const [,key,src] of logoEntries){
    const url=src.startsWith("/")?base+src:src; const controller=new AbortController(); const timer=setTimeout(()=>controller.abort(),15000);
    try{const res=await fetch(url,{redirect:"follow",signal:controller.signal,headers:{"user-agent":"vadkostarsoppan-live-smoke/1.0"}});check("party:logo:"+key,res.ok && (res.headers.get("content-type")||"").startsWith("image/"),`Partilogotyp ${key.toUpperCase()} svarade HTTP ${res.status}`);}catch(error){check("party:logo:"+key,false,`Partilogotyp ${key.toUpperCase()} kunde inte hämtas: ${error.message}`);}finally{clearTimeout(timer)}
