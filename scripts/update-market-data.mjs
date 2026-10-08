@@ -5,9 +5,25 @@ const API_URL = "https://api.riksbank.se/swea/v1/Observations/Latest/sekusdpmi";
 const OUT = "data/market-data.json";
 const HISTORY = "data/market-history.json";
 
-const response = await fetch(API_URL, { headers: { "user-agent": "vadkostarsoppan-market-updater/1.0" } });
-if (!response.ok) throw new Error("Riksbank API returned HTTP " + response.status);
-const payload = await response.json();
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+async function fetchObservation() {
+  let lastError;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const response = await fetch(API_URL, {
+        headers: { "user-agent": "vadkostarsoppan-market-updater/1.0", accept: "application/json" },
+        signal: AbortSignal.timeout(20000)
+      });
+      if (!response.ok) throw new Error("Riksbank API returned HTTP " + response.status);
+      return await response.json();
+    } catch (error) {
+      lastError = error;
+      if (attempt < 3) await wait(attempt * 2000);
+    }
+  }
+  throw new Error("Riksbank API failed after three attempts: " + (lastError?.message || "unknown error"));
+}
+const payload = await fetchObservation();
 const objects = [];
 const visit = value => {
   if (Array.isArray(value)) return value.forEach(visit);
