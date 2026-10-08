@@ -469,6 +469,15 @@ style.includes("overflow-wrap:anywhere") && style.includes(".policy-comparison s
 style.includes(".page,.card,.controls,.result-card,.scenario-card,.method{max-width:100%;box-sizing:border-box}") ? pass("Primary mobile containers constrained to viewport") : fail("Primary containers can exceed viewport");
 style.includes(".card-head>*") && style.includes("@media(max-width:360px)") && style.includes("white-space:normal") ? pass("Narrow viewport overflow hardening present") : fail("Narrow viewport overflow hardening missing");
 style.includes(".policy-comparison[hidden]{display:none}") ? pass("Inactive policy comparison is truly hidden") : fail("Hidden policy comparison can be forced visible by author CSS");
+
+html.includes('class="party-toolbar"') &&
+html.indexOf('id="scenarioReset"') < html.indexOf('id="partyTitle"') &&
+style.includes(".scenario-card .party-head { display: block; }") &&
+style.includes(".party-toolbar { display: flex;") &&
+style.includes(".party-toolbar .scenario-reset[hidden] { display: none; }") &&
+style.includes("white-space: nowrap;")
+  ? pass("Reset button stays in the party toolbar without adding a mobile row")
+  : fail("Reset button can create a new row on mobile");
 script.includes('setText(els.scenarioLabel, "Välj ett parti ovan")') && script.includes('els.scenarioTankUnit.hidden = true') && style.includes(".party-result.empty .party-price-line") ? pass("Empty party state is clean and intentional") : fail("Empty party state still resembles a broken price result");
 html.includes('id="marketPriceLabel"') && script.includes('Pris före moms (punktskatt ej särredovisad)') ? pass("E85 pre-tax label is not misleading") : fail("E85 pre-tax label can misstate unknown excise tax");
 
