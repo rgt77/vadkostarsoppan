@@ -5,25 +5,6 @@ const SOURCE = "https://www.carculated.se/bensinpriser";
 const FILE = "price-data.js";
 const HISTORY_FILE = "data/price-history.json";
 
-const decode = text => text
-  .replace(/&nbsp;|&#160;/gi, " ")
-  .replace(/&aring;/gi, "å")
-  .replace(/&auml;/gi, "ä")
-  .replace(/&ouml;/gi, "ö")
-  .replace(/&Aring;/g, "Å")
-  .replace(/&Auml;/g, "Ä")
-  .replace(/&Ouml;/g, "Ö")
-  .replace(/&amp;/gi, "&")
-  .replace(/&#39;|&apos;/gi, "'")
-  .replace(/&quot;/gi, '"');
-
-const plainText = html => decode(
-  html
-    .replace(/<script\b[\s\S]*?<\/script>/gi, " ")
-    .replace(/<style\b[\s\S]*?<\/style>/gi, " ")
-    .replace(/<[^>]+>/g, " ")
-).replace(/\s+/g, " ").trim();
-
 const scope = {};
 new Function("window", fs.readFileSync(FILE, "utf8"))(scope);
 const current = scope.PRICE_DATA;
@@ -39,7 +20,7 @@ async function fetchPriceSource() {
         signal: AbortSignal.timeout(20000)
       });
       if (!response.ok) throw new Error("Price source returned HTTP " + response.status);
-      return plainText(await response.text());
+      return await response.text();
     } catch (error) {
       lastError = error;
       if (attempt < 3) await sleep(attempt * 2000);
