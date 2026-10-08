@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { parseFuelPrices } from "./price-parser.mjs";
 
 const SOURCE = "https://www.carculated.se/bensinpriser";
 const FILE = "price-data.js";
@@ -22,8 +23,6 @@ const plainText = html => decode(
     .replace(/<style\b[\s\S]*?<\/style>/gi, " ")
     .replace(/<[^>]+>/g, " ")
 ).replace(/\s+/g, " ").trim();
-
-const number = value => Number(value.replace(",", "."));
 
 const scope = {};
 new Function("window", fs.readFileSync(FILE, "utf8"))(scope);
@@ -50,19 +49,7 @@ async function fetchPriceSource() {
 }
 
 const text = await fetchPriceSource();
-const petrol98Match = text.match(/Bensin 98\s+([\d,]+)\s+kr\/l/i);
-const e85Match = text.match(/Etanol E85\s+([\d,]+)\s+kr\/l/i);
-
-const updatedMatch = text.match(/Prisdata uppdaterad\s+(\d{4}-\d{2}-\d{2})/i);
-const nationalMatch = text.match(
-  /Snittpriset på 95-oktanig bensin är just nu\s+([\d,]+)\s+kr\/liter och diesel kostar\s+([\d,]+)\s+kr\/liter/i
-);
-
-if (!updatedMatch || !nationalMatch) {
-  throw new Error("Could not parse national price metadata");
-}
-
-
+const parsed = parseFuelPrices(text);
 
 const stockholmDate = new Intl.DateTimeFormat("sv-SE", {
   timeZone: "Europe/Stockholm",
@@ -75,22 +62,19 @@ const validPrice = (value, label) => {
   if (!Number.isFinite(value) || value < 5 || value > 50) throw new Error(`Implausible ${label}: ${value}`);
   return value;
 };
-const sourceAgeDays = Math.floor((Date.parse(stockholmDate + "T12:00:00Z") - Date.parse(updatedMatch[1] + "T12:00:00Z")) / 86400000);
+const sourceAgeDays = Math.floor((Date.parse(stockholmDate + "T12:00:00Z") - Date.parse(parsed.updatedAt + "T12:00:00Z")) / 86400000);
 if (!Number.isFinite(sourceAgeDays) || sourceAgeDays < 0 || sourceAgeDays > 3) {
-  throw new Error(`Price source date is not current enough: ${updatedMatch[1]} (${sourceAgeDays} days)`);
+  throw new Error(`Price source date is not current enough: ${parsed.updatedAt} (${sourceAgeDays} days)`);
 }
 
 const next = {
-  updatedAt: updatedMatch[1],
+  updatedAt: parsed.updatedAt,
   retrievedAt: stockholmDate,
   source: SOURCE,
   national: {
     id: "riket",
     name: "Hela Sverige",
-    petrol: number(nationalMatch[1]),
-    petrol98: petrol98Match ? number(petrol98Match[1]) : current.national.petrol98,
-    e85: e85Match ? number(e85Match[1]) : current.national.e85,
-    diesel: number(nationalMatch[2])
+    ...parsed.national
   }
 };
 
