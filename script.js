@@ -13,14 +13,14 @@
   const partyOrder = ["c", "kd", "l", "mp", "m", "s", "sd", "v"];
   const evidenceLabels = { party_estimate: "Partiets uppskattning", party_stated_target: "Partiets uttalade mål", quantified_inputs: "Delvis beräkningsbart underlag", not_quantified: "Ej numeriskt kvantifierat" };
   const partyLogos = {
-    c: "https://media.riksdagen.se/images/Zz1kOTYzMDgxYWEwZjMxMWYxYmQwMGIyMWE1OTYzOTc3Yg%3D%3D",
-    kd: "https://media.riksdagen.se/images/Zz1jZjg0NzM3ZWEwZjMxMWYxOWRiYWYyNTRhMTgzYjY0ZA%3D%3D",
-    l: "https://media.riksdagen.se/images/Zz1jZmZmODI1OGEwZjMxMWYxYTg1MDNlMDEzYThiNTZmYQ%3D%3D",
+    c: "/party-logos/c.svg",
+    kd: "/party-logos/kd.svg",
+    l: "/party-logos/l.svg",
     mp: "/party-logos/mp.png",
-    m: "https://media.riksdagen.se/images/Zz1kOWI0MTQ4MGEwZjMxMWYxYWM2MTBhZjkwMjFjMThmMg%3D%3D",
+    m: "/party-logos/m.svg",
     s: "/party-logos/s.png",
     sd: "https://www.sd.se/wp-content/uploads/2022/07/logo_sd_logo_blasippa.png",
-    v: "https://media.riksdagen.se/images/Zz1kNjgyNDdkZTdjNjExMWYxODJiMjdlYzJhYTZjODliOQ%3D%3D"
+    v: "/party-logos/v.svg"
   };
 
   const $ = id => document.getElementById(id);
