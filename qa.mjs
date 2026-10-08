@@ -58,7 +58,7 @@ expectedPartyKeys.every(key => partyLogoMap[key]?.startsWith("/party-logos/") ||
 expectedPartyKeys.filter(key => partyLogoMap[key]?.startsWith("/party-logos/")).every(key => fs.existsSync("." + partyLogoMap[key])) ? pass("Configured local party logo files exist") : fail("Configured local party logo file missing");
 script.includes('image.addEventListener("error"') && script.includes('button.classList.add("logo-failed")') ? pass("Party logos have visible fallback on load failure") : fail("Party logo fallback missing");
 !Object.values(partyLogoMap).some(src => src.includes("commons.wikimedia.org/wiki/Special:FilePath")) ? pass("Party logos avoid redirect-based Wikimedia sources") : fail("One or more party logos still use redirect-based Wikimedia sources");
-["c","kd","l","m","v"].every(key => partyLogoMap[key]?.startsWith("https://media.riksdagen.se/images/")) ? pass("Previously failing party logos use direct Riksdag media assets") : fail("One or more previously failing party logos lack direct media assets");
+["c","kd","l","m","v"].every(key => partyLogoMap[key] === "/party-logos/" + key + ".svg" && fs.existsSync("party-logos/" + key + ".svg")) ? pass("Previously failing party logos are local SVG assets") : fail("One or more formerly broken party logos lack local assets");
 
 const isoToday = new Intl.DateTimeFormat("sv-SE", {
   timeZone: "Europe/Stockholm",
@@ -515,9 +515,9 @@ style.includes(".ad-slot[hidden]{display:none}") && style.includes(".ad-slot-inn
 
 
 const securityHeaders = read("_headers");
-securityHeaders.includes("https://media.riksdagen.se") && !securityHeaders.includes("https://commons.wikimedia.org")
-  ? pass("Party logos allowed by image CSP")
-  : fail("CSP can block party logos");
+securityHeaders.includes("img-src 'self'") && !securityHeaders.includes("https://media.riksdagen.se") && !securityHeaders.includes("https://commons.wikimedia.org")
+  ? pass("Local party logos are allowed by strict image CSP")
+  : fail("CSP leaves obsolete external logo sources enabled");
 !html.includes("<script>") && read("fuel-data.js").includes("window.AD_CONFIG")
   ? pass("No CSP-blocked inline ad settings")
   : fail("Inline script is blocked by strict CSP");
