@@ -17,6 +17,13 @@ try{
  check("home:fuel-data",html.includes("fuel-data.js"),"Bränsledata-skript saknas live");
  const css=await get("/style.css");
  check("style:http",css.ok,"CSS svarade HTTP "+css.status);
+ const cssText=await css.text();
+ check("party:reset-toolbar",html.includes('class="party-toolbar"') &&
+   html.indexOf('id="scenarioReset"') < html.indexOf('id="partyTitle"') &&
+   cssText.includes(".scenario-card .party-head { display: block; }") &&
+   cssText.includes(".party-toolbar { display: flex;") &&
+   cssText.includes(".party-toolbar .scenario-reset[hidden] { display: none; }"),
+   "Nollställ riskerar att hamna på en egen mobilrad");
  const price=await get("/price-data.js");
  check("prices:http",price.ok,"Prisdata svarade HTTP "+price.status);
  const priceText=await price.text();
