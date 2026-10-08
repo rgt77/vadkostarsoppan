@@ -6,3 +6,9 @@ package.json
 qa.mjs
 .github
 .github/**
+scripts
+scripts/**
+tests
+tests/**
+data
+data/**
