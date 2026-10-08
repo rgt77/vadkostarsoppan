@@ -16,10 +16,11 @@ async function fetchPriceSource() {
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       const response = await fetch(SOURCE, {
-        headers: { "user-agent": "vadkostarsoppan-data-updater/1.0" },
+        headers: { "user-agent": "vadkostarsoppan-data-updater/1.0", accept: "text/html" },
         signal: AbortSignal.timeout(20000)
       });
       if (!response.ok) throw new Error("Price source returned HTTP " + response.status);
+      if (!(response.headers.get("content-type") || "").toLowerCase().includes("text/html")) throw new Error("Price source returned non-HTML content");
       return await response.text();
     } catch (error) {
       lastError = error;
