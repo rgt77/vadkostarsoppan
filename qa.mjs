@@ -75,7 +75,7 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = Object.values(w.FUEL_DATA ?? {});
 
-  w.SITE_DATA?.appVersion === "0.70.4" ? pass("Version 0.70.4") : fail("Version mismatch");
+  w.SITE_DATA?.appVersion === "0.70.5" ? pass("Version 0.70.5") : fail("Version mismatch");
   w.SITE_DATA?.typicalTankLiters === 40 ? pass("Tank size 40 L") : fail("Tank size invalid");
 
   for (const fuel of fuels) {
@@ -177,7 +177,7 @@ try {
   fail("Policy data: " + error.message);
 }
 
-html404.includes("style.css?v=0.70.4") ? pass("404 cache version") : fail("404 cache version mismatch");
+html404.includes("style.css?v=0.70.5") ? pass("404 cache version") : fail("404 cache version mismatch");
 script.includes("Partikällorna kontrollerades 2026-09-23") ? fail("Hardcoded policy review date") : pass("No hardcoded policy review date");
 read("scripts/update-price-data.mjs").includes("Implausible") ? pass("Pump price plausibility guard") : fail("Pump price plausibility guard missing");
 const marketUpdater = read("scripts/update-market-data.mjs");
@@ -412,11 +412,6 @@ liveSmokeWorkflow.includes('cron: "32 6 * * *"') && liveSmokeWorkflow.includes("
 
 
 if (warnings.length) console.warn("\n" + warnings.map(message => "! " + message).join("\n"));
-if (failures.length) {
-  console.error("\n" + failures.map(message => "✕ " + message).join("\n"));
-  process.exit(1);
-}
-console.log("\nPASS");
 
 
 script.includes('if (model.validFrom && referenceDate < model.validFrom)') && script.includes('if (model.validTo && referenceDate > model.validTo)') ? pass("Political scenario validity window enforced") : fail("Scenario validity window missing");
@@ -497,10 +492,10 @@ const adSlots = [...html.matchAll(/data-ad-slot="([^"]+)"/g)].map(match => match
 new Set(adSlots).size === 2 && ["primary","secondary"].every(slot => adSlots.includes(slot))
   ? pass("Two distinct advertising placements")
   : fail("Advertising placements missing or duplicated");
-html.includes("window.AD_CONFIG") && html.includes("enabled: false") && script.includes("const adConfig = window.AD_CONFIG")
+!html.includes("window.AD_CONFIG") && read("fuel-data.js").includes("window.AD_CONFIG") && read("fuel-data.js").includes("enabled: false") && script.includes("const adConfig = window.AD_CONFIG")
   ? pass("Advertising is opt-in and disabled by default")
   : fail("Advertising opt-in configuration missing");
-script.includes("function initAds()") && script.includes("pagead2.googlesyndication.com/pagead/js/adsbygoogle.js") && script.includes("/^ca-pub-\\d+$/")
+script.includes("function initAds()") && script.includes("pagead2.googlesyndication.com/pagead/js/adsbygoogle.js") && script.includes("/^ca-pub-\\d+$/") && script.includes("typeof window.__tcfapi")
   ? pass("AdSense integration validates publisher configuration")
   : fail("AdSense integration incomplete");
 style.includes(".ad-slot[hidden]{display:none}") && style.includes(".ad-slot-inner")
@@ -515,5 +510,25 @@ if (failures.length) {
   console.error("\n" + failures.map(message => "✕ " + message).join("\n"));
   process.exit(1);
 }
+
+const securityHeaders = read("_headers");
+securityHeaders.includes("https://media.riksdagen.se") && !securityHeaders.includes("https://commons.wikimedia.org")
+  ? pass("Party logos allowed by image CSP")
+  : fail("CSP can block party logos");
+!html.includes("<script>") && read("fuel-data.js").includes("window.AD_CONFIG")
+  ? pass("No CSP-blocked inline ad settings")
+  : fail("Inline script is blocked by strict CSP");
+script.includes('typeof window.__tcfapi !== "function"') && script.includes('tcData.purpose?.consents?.[1]') &&
+script.includes('tcData.vendor?.consents?.[755]')
+  ? pass("Advertising requires TCF consent")
+  : fail("Advertising can load without CMP consent");
+read("scripts/update-price-data.mjs").includes('parseFuelPrices(text)') &&
+read("scripts/price-parser.mjs").includes("Missing or implausible national price")
+  ? pass("Price updater rejects incomplete source data")
+  : fail("Price updater can silently reuse stale fuel prices");
+!html.includes('aria-valuenow="0" aria-hidden="true"')
+  ? pass("Tax percentage progress remains accessible")
+  : fail("Tax percentage meter hidden from assistive technology");
+
 console.log("\nFINAL PASS");
 
