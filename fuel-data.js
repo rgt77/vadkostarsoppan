@@ -50,3 +50,11 @@ window.SITE_DATA = {
   priceWarningAfterDays: 2,
   marketWarningAfterDays: 7
 };
+
+/* Advertising is disabled until AdSense and a certified consent manager are configured. */
+window.AD_CONFIG = {
+  enabled: false,
+  provider: "adsense",
+  client: "",
+  slots: { primary: "", secondary: "" }
+};
