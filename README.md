@@ -54,4 +54,20 @@ npm run qa
 
 ## Publicering
 
-Statiska assets publiceras via Cloudflare från `main`. Aktuell applikationsversion: **0.70.0**.
+Statiska assets publiceras via Cloudflare från `main`. Aktuell applikationsversion: **0.70.5**.
+
+## Quality review 2026-10-08
+
+- Price ingestion validates all four national prices, rejects incomplete source data, and refuses to silently carry over yesterday's fuel price as today's.
+- `npm run qa` tests source parser, live calculation formulas, tax-period boundaries, static structure and market parsing.
+- The public price breakdown uses the tax schedule corresponding to the observed pump price date.
+- `_headers` allows Riksdag image hosts for party symbols while keeping script execution restricted to first-party code.
+- The static deployment excludes monitoring scripts, tests and internal data logs.
+
+## Advertising and consent
+
+Two labelled and responsive advertising placements are prepared, but `window.AD_CONFIG.enabled` is `false`.
+Configuration resides in `fuel-data.js`, not in blocked inline JavaScript.
+Before enabling: secure AdSense approval, integrate a Google-certified CMP implementing IAB TCF, validate consent handling and adjust CSP to allow the specific AdSense requests. An account ID alone must never turn on tracking or ads.
+No advertising network is contacted while advertising is disabled.
+
