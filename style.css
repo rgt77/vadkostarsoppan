@@ -192,7 +192,7 @@ a { -webkit-tap-highlight-color: transparent; }
 .party-choice-label {
   margin: 14px 0 -6px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
 }
 .party-grid {
@@ -249,7 +249,7 @@ a { -webkit-tap-highlight-color: transparent; }
 }
 .party-name {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
   line-height: 1;
 }
@@ -280,7 +280,7 @@ a { -webkit-tap-highlight-color: transparent; }
 }
 .result-label {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 750;
   letter-spacing: .06em;
   text-transform: uppercase;
@@ -313,7 +313,7 @@ a { -webkit-tap-highlight-color: transparent; }
 .scenario-note {
   margin: 11px 0 0;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.55;
 }
 .source-link {
@@ -322,7 +322,7 @@ a { -webkit-tap-highlight-color: transparent; }
   min-height: var(--touch-min);
   margin-top: 9px;
   color: var(--text);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   text-underline-offset: 3px;
 }
@@ -345,7 +345,7 @@ a { -webkit-tap-highlight-color: transparent; }
 .method-content p {
   margin: 0 0 9px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.55;
 }
 .method-links {
@@ -550,4 +550,7 @@ a { -webkit-tap-highlight-color: transparent; }
 .ad-slot-inner{min-height:90px;width:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .ad-slot .adsbygoogle{width:100%;max-width:100%}
 @media(max-width:480px){.ad-slot{margin-top:14px;padding:8px 0}.ad-slot-inner{min-height:100px}}
+/* Keep headings and long external data readable on narrow displays. */
+.brand,.card-head h2,.method-content,.breakdown-list dt,.party-price-wrap{min-width:0;overflow-wrap:anywhere}
+@media(max-width:380px){.party-name{font-size:11px}.party-choice-label{font-size:12px}}
 
