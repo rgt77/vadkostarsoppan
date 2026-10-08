@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.70.5",
   "scripts": {
-    "qa": "npm run check:syntax && node qa.mjs && npm run test:prices && node tests/market-parser.mjs",
+    "qa": "npm run check:syntax && node qa.mjs && npm run test:prices && npm run test:calculation && node tests/market-parser.mjs",
     "update:prices": "node scripts/update-price-data.mjs",
     "monitor:policy": "node scripts/check-policy-sources.mjs",
     "monitor:official": "node scripts/check-official-sources.mjs",
@@ -14,7 +14,8 @@
     "audit:release": "node scripts/release-audit.mjs",
     "smoke:live": "node scripts/live-smoke.mjs",
     "audit:performance": "node scripts/performance-budget.mjs",
-    "check:syntax": "node --check qa.mjs && node --check script.js && node --check scripts/data-health.mjs && node --check scripts/update-price-data.mjs && node --check scripts/update-market-data.mjs && node --check scripts/production-audit.mjs && node --check scripts/release-audit.mjs && node --check scripts/live-smoke.mjs && node --check scripts/performance-budget.mjs && node --check scripts/price-parser.mjs && node --check tests/price-parser.mjs",
-    "test:prices": "node tests/price-parser.mjs"
+    "check:syntax": "node --check qa.mjs && node --check script.js && node --check scripts/data-health.mjs && node --check scripts/update-price-data.mjs && node --check scripts/update-market-data.mjs && node --check scripts/production-audit.mjs && node --check scripts/release-audit.mjs && node --check scripts/live-smoke.mjs && node --check scripts/performance-budget.mjs && node --check scripts/price-parser.mjs && node --check tests/price-parser.mjs && node --check tests/calculation.mjs",
+    "test:prices": "node tests/price-parser.mjs",
+    "test:calculation": "node tests/calculation.mjs"
   }
 }
