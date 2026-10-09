@@ -14,6 +14,8 @@ on:
       - "party-logos/**"
       - "tests/browser-qa.mjs"
       - "tests/accessibility.mjs"
+      - "package.json"
+      - "qa.mjs"
       - ".github/workflows/browser-qa.yml"
 
 permissions:
