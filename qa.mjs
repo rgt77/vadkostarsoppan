@@ -75,7 +75,7 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = Object.values(w.FUEL_DATA ?? {});
 
-  w.SITE_DATA?.appVersion === "0.70.7" ? pass("Version 0.70.7") : fail("Version mismatch");
+  w.SITE_DATA?.appVersion === "0.70.8" ? pass("Version 0.70.8") : fail("Version mismatch");
   w.SITE_DATA?.typicalTankLiters === 40 ? pass("Tank size 40 L") : fail("Tank size invalid");
 
   for (const fuel of fuels) {
@@ -177,7 +177,7 @@ try {
   fail("Policy data: " + error.message);
 }
 
-html404.includes("style.css?v=0.70.7") ? pass("404 cache version") : fail("404 cache version mismatch");
+html404.includes("style.css?v=0.70.8") ? pass("404 cache version") : fail("404 cache version mismatch");
 script.includes("Partikällorna kontrollerades 2026-09-23") ? fail("Hardcoded policy review date") : pass("No hardcoded policy review date");
 read("scripts/update-price-data.mjs").includes("Implausible") ? pass("Pump price plausibility guard") : fail("Pump price plausibility guard missing");
 read("scripts/update-price-data.mjs").includes('const sitemapFile = "sitemap.xml"') &&
@@ -371,6 +371,10 @@ script.includes('"Punktskatt varierar med bränslemixen"') ? pass("E85 tax share
 
 html.includes("30–60 liters tankning") ? pass("Metadata matches selectable tank sizes") : fail("Metadata tank-size claim stale");
 style.includes("prefers-reduced-motion") ? pass("Reduced motion preference supported") : fail("Reduced motion support missing");
+
+style.includes("--muted: #5e605a;") && style.includes(".result-card .overline{opacity:1}")
+  ? pass("Muted text contrast remains readable against page and cards")
+  : fail("Muted text contrast regression");
 html.includes('class="skip-link" href="#mainContent"') && html.includes('id="mainContent"') ? pass("Keyboard skip navigation") : fail("Skip navigation missing");
 html.includes('class="tax-bar" role="progressbar"') && html.includes('aria-valuemax="100"') ? pass("Tax share exposed as accessible meter") : fail("Tax share accessibility semantics missing");
 style.includes(":where(button,a,summary):focus-visible") ? pass("Global visible keyboard focus") : fail("Global focus-visible treatment missing");
