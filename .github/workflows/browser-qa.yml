@@ -1,0 +1,59 @@
+name: Browser QA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "style.css"
+      - "script.js"
+      - "fuel-data.js"
+      - "price-data.js"
+      - "policy-data.js"
+      - "party-logos/**"
+      - "tests/browser-qa.mjs"
+      - ".github/workflows/browser-qa.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: browser-qa
+  cancel-in-progress: true
+
+jobs:
+  responsive-browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Run static QA
+        run: npm run qa
+      - name: Install browser test runtime
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Serve current application
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/browser-qa-server.log 2>&1 &
+          echo $! > /tmp/browser-qa-server.pid
+          for i in $(seq 1 20); do
+            if curl --fail --silent http://127.0.0.1:4173/ > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/browser-qa-server.log
+          exit 1
+      - name: Test responsive layout and interactivity
+        run: node tests/browser-qa.mjs
+      - name: Upload screenshots and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-qa-screenshots
+          path: artifacts/
+          if-no-files-found: warn
+          retention-days: 7
