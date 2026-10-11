@@ -99,6 +99,35 @@ try {
       const cleared = await geometry(page);
       assert.ok(Math.abs(cleared.grid.top - cleared.card.top - (before.grid.top - before.card.top)) <= 2, "Reset moved the party grid");
 
+      // Verify every fuel × tank-volume combination against the published prices.
+      // Run the full calculation matrix on one narrow and one desktop viewport.
+      if ([320, 1024].includes(width)) {
+        const prices = await page.evaluate(() => window.PRICE_DATA?.national);
+        assert.ok(prices, "National prices are missing from the page");
+        const currency = new Intl.NumberFormat("sv-SE", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+        for (const fuel of ["petrol", "petrol98", "diesel", "e85"]) {
+          await page.locator(`[data-fuel="${fuel}"]`).click();
+          assert.equal(await page.locator(`[data-fuel="${fuel}"]`).getAttribute("aria-pressed"), "true");
+          assert.equal((await page.locator("#literPrice").textContent()).trim(), currency.format(prices[fuel]));
+          for (const liters of [30, 40, 50, 60]) {
+            const volumeButton = page.locator(`[data-tank-size="${liters}"]`);
+            await volumeButton.click();
+            assert.equal(await volumeButton.getAttribute("aria-pressed"), "true");
+            const actual = (await page.locator("#tankTotal").textContent()).trim();
+            const expected = currency.format(prices[fuel] * liters);
+            assert.equal(actual, expected, `Incorrect tank total for ${fuel}, ${liters} L at ${width}px`);
+            assert.equal((await page.locator("[data-tank-liters]").first().textContent()).trim(), String(liters));
+            assert.equal(new URL(page.url()).searchParams.get("fuel"), fuel);
+            assert.equal(new URL(page.url()).searchParams.get("tank"), liters === 40 ? null : String(liters));
+            assert.equal(await page.locator("#taxBarFill").evaluate(el => Number.parseFloat(el.style.width) >= 0 && Number.parseFloat(el.style.width) <= 100), true);
+          }
+        }
+        console.log(`PASS calculation matrix at ${width}px: 16 fuel/volume combinations`);
+      }
+
       // Fuel selector must recalculate, and advertisements must be off by default.
       await page.locator('[data-fuel="diesel"]').first().click();
       assert.equal(await page.locator('[data-fuel="diesel"]').first().getAttribute("aria-pressed"), "true");
