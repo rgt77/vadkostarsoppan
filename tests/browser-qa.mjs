@@ -46,7 +46,11 @@ try {
     });
     const page = await context.newPage();
     const errors = [];
+    const adRequests = [];
     page.on("pageerror", error => errors.push(error.message));
+    page.on("request", request => {
+      if (/googlesyndication|doubleclick|googleadservices/i.test(request.url())) adRequests.push(request.url());
+    });
     try {
       const response = await page.goto(base, { waitUntil: "domcontentloaded", timeout: 30000 });
       assert.ok(response?.ok(), `HTTP ${response?.status()} at ${width}px`);
@@ -132,6 +136,8 @@ try {
       await page.locator('[data-fuel="diesel"]').first().click();
       assert.equal(await page.locator('[data-fuel="diesel"]').first().getAttribute("aria-pressed"), "true");
       assert.equal(await page.locator(".ad-slot:visible").count(), 0);
+      assert.equal(adRequests.length, 0, "Ad requests occurred while advertising is disabled");
+      assert.ok(await page.locator('footer a[href="/integritet.html"]').isVisible(), "Privacy disclosure link missing");
       assert.equal(errors.length, 0, `Browser errors: ${errors.join("; ")}`);
       checkLayout(await geometry(page), false);
       console.log(`PASS viewport ${width}px | 8 parties | no overflow | stable reset | rendered local logos`);
