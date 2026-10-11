@@ -575,3 +575,15 @@ a { -webkit-tap-highlight-color: transparent; }
 .brand,.card-head h2,.method-content,.breakdown-list dt,.party-price-wrap{min-width:0;overflow-wrap:anywhere}
 @media(max-width:380px){.party-name{font-size:11px}.party-choice-label{font-size:12px}}
 
+/* Privacy and publisher transparency */
+.footer{justify-content:space-between;gap:12px;flex-wrap:wrap}
+.footer a,.privacy-back{color:var(--text);font-size:12px;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.privacy-page{max-width:720px}
+.privacy-page .intro h1{font-size:clamp(32px,7vw,44px);line-height:1.1}
+.privacy-content{line-height:1.65}
+.privacy-content h2{font-size:18px;line-height:1.3;letter-spacing:-.02em;margin:26px 0 9px}
+.privacy-content h2:first-child{margin-top:0}
+.privacy-content p{font-size:14px;margin:0 0 14px;color:var(--text);overflow-wrap:anywhere}
+.privacy-content a{color:var(--text);text-decoration:underline;text-underline-offset:3px}
+.privacy-content .privacy-updated{color:var(--muted);font-size:12px;margin-top:27px;margin-bottom:0}
+@media(max-width:480px){.footer{align-items:center;padding-block:13px}.privacy-content{padding:18px}.privacy-page .intro h1{font-size:34px}}
