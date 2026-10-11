@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - "index.html"
+      - "integritet.html"
       - "style.css"
       - "script.js"
       - "fuel-data.js"
