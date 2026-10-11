@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-10",
+  "date": "2026-10-11",
   "status": "ok",
   "counts": {
     "ok": 12,
@@ -34,7 +34,7 @@
     {
       "id": "prices:history",
       "ok": true,
-      "message": "Prishistorik har 11 mätningar",
+      "message": "Prishistorik har 12 mätningar",
       "severity": "warning"
     },
     {
@@ -58,7 +58,7 @@
     {
       "id": "market:fresh",
       "ok": true,
-      "message": "Marknadsdata är 1 dagar gammal",
+      "message": "Marknadsdata är 2 dagar gammal",
       "severity": "warning"
     },
     {
