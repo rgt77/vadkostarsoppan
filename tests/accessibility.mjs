@@ -63,6 +63,13 @@ try {
       await page.locator(".breakdown-details summary").click();
       await audit(page, "e85-breakdown", width);
 
+      if ([390, 1440].includes(width)) {
+        const privacy = await page.goto(base + "/integritet.html", { waitUntil: "domcontentloaded" });
+        assert.ok(privacy?.ok(), "Privacy page did not load");
+        assert.equal(await page.locator("h1").textContent(), "Integritet och annonser");
+        await audit(page, "privacy-disclosure", width);
+      }
+
       assert.deepEqual(browserErrors, []);
     } catch (error) {
       failures.push(`${width}px: ${error.stack || error}`);
