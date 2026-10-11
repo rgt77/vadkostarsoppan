@@ -2,7 +2,7 @@ import fs from "node:fs";
 
 const read = file => fs.readFileSync(file, "utf8");
 const required = [
-  "index.html", "style.css", "script.js",
+  "index.html", "integritet.html", "style.css", "script.js", "scripts/ad-readiness.mjs",
   "fuel-data.js", "price-data.js", "policy-data.js",
   "party-logos/mp.png", "party-logos/s.png",
   "scripts/update-price-data.mjs",
@@ -75,7 +75,7 @@ try {
   new Function("window", read("fuel-data.js"))(w);
   const fuels = Object.values(w.FUEL_DATA ?? {});
 
-  w.SITE_DATA?.appVersion === "0.70.8" ? pass("Version 0.70.8") : fail("Version mismatch");
+  w.SITE_DATA?.appVersion === "0.70.9" ? pass("Version 0.70.9") : fail("Version mismatch");
   w.SITE_DATA?.typicalTankLiters === 40 ? pass("Tank size 40 L") : fail("Tank size invalid");
 
   for (const fuel of fuels) {
@@ -177,7 +177,7 @@ try {
   fail("Policy data: " + error.message);
 }
 
-html404.includes("style.css?v=0.70.8") ? pass("404 cache version") : fail("404 cache version mismatch");
+html404.includes("style.css?v=0.70.9") ? pass("404 cache version") : fail("404 cache version mismatch");
 script.includes("Partikällorna kontrollerades 2026-09-23") ? fail("Hardcoded policy review date") : pass("No hardcoded policy review date");
 read("scripts/update-price-data.mjs").includes("Implausible") ? pass("Pump price plausibility guard") : fail("Pump price plausibility guard missing");
 read("scripts/update-price-data.mjs").includes('const sitemapFile = "sitemap.xml"') &&
@@ -545,6 +545,22 @@ read("scripts/price-parser.mjs").includes("Missing or implausible national price
 !html.includes('aria-valuenow="0" aria-hidden="true"')
   ? pass("Tax percentage progress remains accessible")
   : fail("Tax percentage meter hidden from assistive technology");
+
+
+
+const privacyPage = read("integritet.html");
+html.includes('href="/integritet.html"') &&
+privacyPage.includes('rel="canonical" href="https://vadkostarsoppan.se/integritet.html"') &&
+privacyPage.includes("Cookies och tekniska uppgifter") &&
+privacyPage.includes("Ansvar och kontakt") &&
+read("sitemap.xml").includes("<loc>https://vadkostarsoppan.se/integritet.html</loc>")
+  ? pass("Privacy disclosure accessible and listed in sitemap")
+  : fail("Privacy disclosure or site navigation missing");
+read("scripts/ad-readiness.mjs").includes("Ad readiness PREPARATION PASSED") &&
+read("scripts/ad-readiness.mjs").includes("ads.txt") &&
+read("fuel-data.js").includes("enabled: false")
+  ? pass("AdSense preflight and disabled-by-default protection present")
+  : fail("Ad monetization preflight missing");
 
 
 if (failures.length) {
