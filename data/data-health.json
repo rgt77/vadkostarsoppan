@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-12",
+  "date": "2026-10-13",
   "status": "warning",
   "counts": {
     "ok": 19,
@@ -10,7 +10,7 @@
     {
       "id": "prices:freshness",
       "status": "ok",
-      "message": "Prisdata är 0 dag(ar) gammal",
+      "message": "Prisdata är 1 dag(ar) gammal",
       "source": "https://www.carculated.se/bensinpriser"
     },
     {
@@ -124,7 +124,7 @@
     {
       "id": "market:usdsek",
       "status": "ok",
-      "message": "USD/SEK 10.01386, 0 dag(ar) gammal",
+      "message": "USD/SEK 10.01386, 1 dag(ar) gammal",
       "source": "https://api.riksbank.se/swea/v1/Observations/Latest/sekusdpmi"
     }
   ],
