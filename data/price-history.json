@@ -160,10 +160,10 @@
       "national": {
         "id": "riket",
         "name": "Hela Sverige",
-        "petrol": 18.66,
-        "petrol98": 19.48,
+        "petrol": 18.64,
+        "petrol98": 19.71,
         "e85": 15.27,
-        "diesel": 22.54
+        "diesel": 22.9
       }
     }
   ],
