@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-13",
+  "date": "2026-10-14",
   "status": "warning",
   "counts": {
     "ok": 11,
@@ -28,13 +28,13 @@
     {
       "id": "prices:fresh",
       "ok": true,
-      "message": "Prisdata är 1 dagar gammal",
+      "message": "Prisdata är 0 dagar gammal",
       "severity": "error"
     },
     {
       "id": "prices:history",
       "ok": true,
-      "message": "Prishistorik har 13 mätningar",
+      "message": "Prishistorik har 15 mätningar",
       "severity": "warning"
     },
     {
