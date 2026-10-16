@@ -5,9 +5,9 @@ window.PRICE_DATA = {
   national: {
     id: "riket",
     name: "Hela Sverige",
-    petrol: 18.28,
-    petrol98: 19.39,
-    e85: 15.07,
-    diesel: 22.72
+    petrol: 18.10,
+    petrol98: 19.26,
+    e85: 14.95,
+    diesel: 22.64
   }
 };
