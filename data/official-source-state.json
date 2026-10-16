@@ -2,15 +2,15 @@
   "sources": {
     "tax-skatteverket": {
       "url": "https://www.skatteverket.se/foretag/skatterochavdrag/punktskatter/energiskatter/skattpabransle.4.15532c7b1442f256bae5e56.html",
-      "hash": "a4170bfa9388c19f44e803f101bc65b7d7108763d7e0f339aefcc31ed383d53d",
+      "hash": "392088622c2133ee284f8e26d25c9189d6bace87483a19a222c913d2d60e70f9",
       "status": "ok",
-      "checkedAt": "2026-10-16T04:59:24.440Z"
+      "checkedAt": "2026-10-16T11:54:44.470Z"
     },
     "reduction-duty-energimyndigheten": {
       "url": "https://www.energimyndigheten.se/klimat/transporter/reduktionsplikt/",
       "hash": "375f56deb6bcbf3d2f5f5d51c4e9f6bf6c388a3fa4b349d0bcea5b57554dc577",
       "status": "ok",
-      "checkedAt": "2026-10-16T04:59:24.757Z"
+      "checkedAt": "2026-10-16T11:54:44.809Z"
     }
   }
 }
