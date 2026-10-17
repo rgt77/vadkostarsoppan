@@ -8,6 +8,6 @@ window.PRICE_DATA = {
     petrol: 18.04,
     petrol98: 19.76,
     e85: 14.94,
-    diesel: 22.62
+    diesel: 22.63
   }
 };
