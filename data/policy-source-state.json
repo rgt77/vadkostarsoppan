@@ -33,8 +33,7 @@
       "url": "https://moderaterna.se/nyhet/ytterligare-sankt-skatt-pa-drivmedel/",
       "hash": "6d53ec5be3243603dce9eeebe3dffe64b3d37dff69ec5db71aa18af600034f45",
       "contentType": "text/html; charset=UTF-8",
-      "status": "unreachable",
-      "error": "HTTP 404"
+      "status": "ok"
     },
     "s": {
       "name": "Socialdemokraterna",
