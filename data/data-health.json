@@ -2,8 +2,8 @@
   "date": "2026-10-21",
   "status": "warning",
   "counts": {
-    "ok": 18,
-    "warning": 2,
+    "ok": 19,
+    "warning": 1,
     "error": 0
   },
   "checks": [
@@ -75,8 +75,8 @@
     },
     {
       "id": "policy:m",
-      "status": "warning",
-      "message": "Källan kunde inte nås vid senaste kontroll",
+      "status": "ok",
+      "message": "Officiell källa bevakas",
       "source": "https://moderaterna.se/nyhet/ytterligare-sankt-skatt-pa-drivmedel/"
     },
     {
