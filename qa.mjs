@@ -5,7 +5,7 @@ const required = [
   "index.html", "integritet.html", "style.css", "script.js", "scripts/ad-readiness.mjs",
   "fuel-data.js", "price-data.js", "policy-data.js",
   "party-logos/mp.png", "party-logos/s.png",
-  "scripts/update-price-data.mjs",
+  "scripts/update-price-data.mjs", "scripts/price-fetch.mjs", "tests/price-fetch.mjs",
   ".github/workflows/update-prices.yml",
   ".github/workflows/data-health.yml",
   "scripts/data-health.mjs",
@@ -538,7 +538,8 @@ script.includes('typeof window.__tcfapi !== "function"') && script.includes('tcD
 script.includes('tcData.vendor?.consents?.[755]')
   ? pass("Advertising requires TCF consent")
   : fail("Advertising can load without CMP consent");
-read("scripts/update-price-data.mjs").includes('parseFuelPrices(text)') &&
+read("scripts/update-price-data.mjs").includes('fetchPriceSnapshot(SOURCE)') &&
+read("scripts/price-fetch.mjs").includes("return parseFuelPrices(await response.text())") &&
 read("scripts/price-parser.mjs").includes("Missing or implausible national price")
   ? pass("Price updater rejects incomplete source data")
   : fail("Price updater can silently reuse stale fuel prices");
