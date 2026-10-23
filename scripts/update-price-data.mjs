@@ -21,7 +21,8 @@ async function fetchPriceSource() {
       });
       if (!response.ok) throw new Error("Price source returned HTTP " + response.status);
       if (!(response.headers.get("content-type") || "").toLowerCase().includes("text/html")) throw new Error("Price source returned non-HTML content");
-      return await response.text();
+      // Parsing inside the retry block handles temporary incomplete HTML too.
+      return parseFuelPrices(await response.text());
     } catch (error) {
       lastError = error;
       if (attempt < 3) await sleep(attempt * 2000);
@@ -30,8 +31,7 @@ async function fetchPriceSource() {
   throw new Error("Price source failed after 3 attempts: " + (lastError?.message || "unknown error"));
 }
 
-const text = await fetchPriceSource();
-const parsed = parseFuelPrices(text);
+const parsed = await fetchPriceSource();
 
 const stockholmDate = new Intl.DateTimeFormat("sv-SE", {
   timeZone: "Europe/Stockholm",
