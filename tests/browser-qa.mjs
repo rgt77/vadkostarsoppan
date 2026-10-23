@@ -135,18 +135,19 @@ try {
       // Fuel selector must recalculate, and advertisements must be off by default.
       await page.locator('[data-fuel="diesel"]').first().click();
       assert.equal(await page.locator('[data-fuel="diesel"]').first().getAttribute("aria-pressed"), "true");
-      const selectedAppearance = await page.locator('[data-fuel="diesel"] > span').first().evaluate(el => ({
-        text: getComputedStyle(el).color,
-        buttonText: getComputedStyle(el.parentElement).color,
-        background: getComputedStyle(el.parentElement).backgroundColor,
-        matched: el.matches('.fuel-button[aria-pressed="true"] > span'),
-        cssLoaded: [...document.styleSheets].some(sheet => sheet.href?.includes("style.css")),
-        sheets: [...document.styleSheets].map(sheet => ({ href: sheet.href, count: sheet.cssRules?.length || 0,
-          activeRules: [...(sheet.cssRules || [])].filter(rule => rule.cssText.includes('fuel-button[aria-pressed')).map(rule => rule.cssText.slice(0, 230)).slice(0, 5)
-        }))
+      // Verify after style/layout has been painted; aria-pressed updates synchronously,
+      // while the visible style is committed on a subsequent frame.
+      await page.evaluate(() => new Promise(resolve =>
+        requestAnimationFrame(() => requestAnimationFrame(resolve))
+      ));
+      const appearance = await page.locator('[data-fuel="diesel"] > span').first().evaluate(el => ({
+        foreground: getComputedStyle(el).color,
+        background: getComputedStyle(el.parentElement).backgroundColor
       }));
-      assert.equal(selectedAppearance.text, "rgb(255, 255, 255)",
-        "Selected fuel label must be white: " + JSON.stringify(selectedAppearance));
+      assert.equal(appearance.foreground, "rgb(255, 255, 255)",
+        "Selected fuel label needs white text: " + JSON.stringify(appearance));
+      assert.equal(appearance.background, "rgb(21, 21, 21)",
+        "Selected fuel needs dark background: " + JSON.stringify(appearance));
       assert.equal(await page.locator(".ad-slot:visible").count(), 0);
       assert.equal(adRequests.length, 0, "Ad requests occurred while advertising is disabled");
       assert.ok(await page.locator('footer a[href="/integritet.html"]').isVisible(), "Privacy disclosure link missing");
