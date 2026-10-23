@@ -9,6 +9,10 @@ let count = 0;
 const failures = [];
 
 async function audit(page, state, width) {
+  // Check after the browser has rendered attribute-driven selection changes.
+  await page.evaluate(() => new Promise(resolve =>
+    requestAnimationFrame(() => requestAnimationFrame(resolve))
+  ));
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
     .analyze();
