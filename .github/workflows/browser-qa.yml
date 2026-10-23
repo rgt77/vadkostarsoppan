@@ -2,6 +2,8 @@ name: Browser QA
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "37 7 * * 1"
   push:
     branches: [main]
     paths:
@@ -14,6 +16,9 @@ on:
       - "policy-data.js"
       - "party-logos/**"
       - "tests/browser-qa.mjs"
+      - "tests/price-fetch.mjs"
+      - "scripts/price-fetch.mjs"
+      - "scripts/update-price-data.mjs"
       - "tests/accessibility.mjs"
       - "package.json"
       - "qa.mjs"
