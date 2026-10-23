@@ -39,3 +39,11 @@ jobs:
         run: npm run qa
       - name: Frontend release audit
         run: node scripts/release-audit.mjs
+      - name: Save dated release audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-audit-report
+          path: data/release-audit.json
+          if-no-files-found: warn
+          retention-days: 14
