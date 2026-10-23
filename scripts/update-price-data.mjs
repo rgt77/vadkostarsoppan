@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { parseFuelPrices } from "./price-parser.mjs";
+import { fetchPriceSnapshot } from "./price-fetch.mjs";
 
 const SOURCE = "https://www.carculated.se/bensinpriser";
 const FILE = "price-data.js";
@@ -9,29 +9,7 @@ const scope = {};
 new Function("window", fs.readFileSync(FILE, "utf8"))(scope);
 const current = scope.PRICE_DATA;
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-async function fetchPriceSource() {
-  let lastError;
-  for (let attempt = 1; attempt <= 3; attempt++) {
-    try {
-      const response = await fetch(SOURCE, {
-        headers: { "user-agent": "vadkostarsoppan-data-updater/1.0", accept: "text/html" },
-        signal: AbortSignal.timeout(20000)
-      });
-      if (!response.ok) throw new Error("Price source returned HTTP " + response.status);
-      if (!(response.headers.get("content-type") || "").toLowerCase().includes("text/html")) throw new Error("Price source returned non-HTML content");
-      // Parsing inside the retry block handles temporary incomplete HTML too.
-      return parseFuelPrices(await response.text());
-    } catch (error) {
-      lastError = error;
-      if (attempt < 3) await sleep(attempt * 2000);
-    }
-  }
-  throw new Error("Price source failed after 3 attempts: " + (lastError?.message || "unknown error"));
-}
-
-const parsed = await fetchPriceSource();
+const parsed = await fetchPriceSnapshot(SOURCE);
 
 const stockholmDate = new Intl.DateTimeFormat("sv-SE", {
   timeZone: "Europe/Stockholm",
