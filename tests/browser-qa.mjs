@@ -140,7 +140,10 @@ try {
         buttonText: getComputedStyle(el.parentElement).color,
         background: getComputedStyle(el.parentElement).backgroundColor,
         matched: el.matches('.fuel-button[aria-pressed="true"] > span'),
-        cssLoaded: [...document.styleSheets].some(sheet => sheet.href?.includes("style.css"))
+        cssLoaded: [...document.styleSheets].some(sheet => sheet.href?.includes("style.css")),
+        sheets: [...document.styleSheets].map(sheet => ({ href: sheet.href, count: sheet.cssRules?.length || 0,
+          activeRules: [...(sheet.cssRules || [])].filter(rule => rule.cssText.includes('fuel-button[aria-pressed')).map(rule => rule.cssText.slice(0, 230)).slice(0, 5)
+        }))
       }));
       assert.equal(selectedAppearance.text, "rgb(255, 255, 255)",
         "Selected fuel label must be white: " + JSON.stringify(selectedAppearance));
