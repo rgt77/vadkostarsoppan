@@ -135,6 +135,8 @@ try {
       // Fuel selector must recalculate, and advertisements must be off by default.
       await page.locator('[data-fuel="diesel"]').first().click();
       assert.equal(await page.locator('[data-fuel="diesel"]').first().getAttribute("aria-pressed"), "true");
+      const selectedTextColor = await page.locator('[data-fuel="diesel"] > span').first().evaluate(el => getComputedStyle(el).color);
+      assert.equal(selectedTextColor, "rgb(255, 255, 255)", "Selected fuel label must remain legible on the dark background");
       assert.equal(await page.locator(".ad-slot:visible").count(), 0);
       assert.equal(adRequests.length, 0, "Ad requests occurred while advertising is disabled");
       assert.ok(await page.locator('footer a[href="/integritet.html"]').isVisible(), "Privacy disclosure link missing");
