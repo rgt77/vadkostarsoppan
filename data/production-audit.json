@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-25",
+  "date": "2026-10-26",
   "status": "warning",
   "counts": {
     "ok": 11,
@@ -16,7 +16,7 @@
     {
       "id": "health:warnings",
       "ok": false,
-      "message": "Data health har 4 varning(ar) som bör granskas",
+      "message": "Data health har 1 varning(ar) som bör granskas",
       "severity": "warning"
     },
     {
@@ -34,7 +34,7 @@
     {
       "id": "prices:history",
       "ok": true,
-      "message": "Prishistorik har 26 mätningar",
+      "message": "Prishistorik har 27 mätningar",
       "severity": "warning"
     },
     {
@@ -58,7 +58,7 @@
     {
       "id": "market:fresh",
       "ok": true,
-      "message": "Marknadsdata är 2 dagar gammal",
+      "message": "Marknadsdata är 3 dagar gammal",
       "severity": "warning"
     },
     {
