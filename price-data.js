@@ -7,7 +7,7 @@ window.PRICE_DATA = {
     name: "Hela Sverige",
     petrol: 17.40,
     petrol98: 18.26,
-    e85: 14.83,
-    diesel: 23.38
+    e85: 14.84,
+    diesel: 23.39
   }
 };
