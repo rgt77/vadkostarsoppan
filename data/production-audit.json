@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-30",
+  "date": "2026-10-31",
   "status": "warning",
   "counts": {
     "ok": 11,
@@ -16,7 +16,7 @@
     {
       "id": "health:warnings",
       "ok": false,
-      "message": "Data health har 4 varning(ar) som bör granskas",
+      "message": "Data health har 1 varning(ar) som bör granskas",
       "severity": "warning"
     },
     {
@@ -34,7 +34,7 @@
     {
       "id": "prices:history",
       "ok": true,
-      "message": "Prishistorik har 31 mätningar",
+      "message": "Prishistorik har 32 mätningar",
       "severity": "warning"
     },
     {
