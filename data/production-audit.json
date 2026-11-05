@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-04",
+  "date": "2026-11-05",
   "status": "warning",
   "counts": {
     "ok": 11,
@@ -34,7 +34,7 @@
     {
       "id": "prices:history",
       "ok": true,
-      "message": "Prishistorik har 36 mätningar",
+      "message": "Prishistorik har 37 mätningar",
       "severity": "warning"
     },
     {
