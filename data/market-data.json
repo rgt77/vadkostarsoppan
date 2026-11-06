@@ -1,9 +1,9 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-05",
+  "updatedAt": "2026-11-06",
   "fx": {
-    "usdSek": 9.78662,
-    "observationDate": "2026-11-05",
+    "usdSek": 9.8755,
+    "observationDate": "2026-11-06",
     "seriesId": "SEKUSDPMI",
     "source": "https://api.riksbank.se/swea/v1/Observations/Latest/sekusdpmi",
     "indicative": true
