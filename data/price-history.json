@@ -429,6 +429,17 @@
         "e85": 15.25,
         "diesel": 21.39
       }
+    },
+    {
+      "date": "2026-11-08",
+      "national": {
+        "id": "riket",
+        "name": "Hela Sverige",
+        "petrol": 15.58,
+        "petrol98": 17.12,
+        "e85": 15.25,
+        "diesel": 21.38
+      }
     }
   ],
   "retentionDays": 730
