@@ -4,13 +4,13 @@
       "url": "https://www.skatteverket.se/foretag/skatterochavdrag/punktskatter/energiskatter/skattpabransle.4.15532c7b1442f256bae5e56.html",
       "hash": "daf6657c04bed76a89b2abc00422486209dba0dd64f120ed54642de21240aa4d",
       "status": "ok",
-      "checkedAt": "2026-11-08T22:28:48.782Z"
+      "checkedAt": "2026-11-09T07:11:49.147Z"
     },
     "reduction-duty-energimyndigheten": {
       "url": "https://www.energimyndigheten.se/klimat/transporter/reduktionsplikt/",
       "hash": "375f56deb6bcbf3d2f5f5d51c4e9f6bf6c388a3fa4b349d0bcea5b57554dc577",
       "status": "ok",
-      "checkedAt": "2026-11-08T22:28:49.207Z"
+      "checkedAt": "2026-11-09T07:11:50.262Z"
     }
   }
 }
