@@ -1,13 +1,13 @@
 window.PRICE_DATA = {
-  updatedAt: "2026-11-11",
-  retrievedAt: "2026-11-11",
+  updatedAt: "2026-11-12",
+  retrievedAt: "2026-11-12",
   source: "https://www.carculated.se/bensinpriser",
   national: {
     id: "riket",
     name: "Hela Sverige",
-    petrol: 15.54,
-    petrol98: 16.71,
-    e85: 14.79,
-    diesel: 20.77
+    petrol: 15.52,
+    petrol98: 16.63,
+    e85: 14.78,
+    diesel: 20.75
   }
 };
