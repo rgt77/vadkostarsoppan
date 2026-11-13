@@ -1,3 +1,10 @@
 {
-  "changes": []
+  "changes": [
+    {
+      "id": "tax-skatteverket",
+      "url": "https://www.skatteverket.se/foretag/skatterochavdrag/punktskatter/energiskatter/skattpabransle.4.15532c7b1442f256bae5e56.html",
+      "oldHash": "daf6657c04bed76a89b2abc00422486209dba0dd64f120ed54642de21240aa4d",
+      "newHash": "39a35651f54b06b27559e58d26e239b9a0a4607975b197ee9d83a92f0c7e8d7a"
+    }
+  ]
 }
