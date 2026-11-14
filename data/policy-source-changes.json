@@ -1,11 +1,3 @@
 {
-  "changes": [
-    {
-      "key": "l",
-      "name": "Liberalerna",
-      "url": "https://www.liberalerna.se/nyheter/regeringen-genomfor-ett-krispaket-for-att-mota-energikrisen",
-      "oldHash": "13d31b3396de70405c686e092358519f1bb581826c91ab4a779307ab7598c27b",
-      "newHash": "78c377edea7107152ff6e71c755fab6c72199c39ddf9ca88ed242900a611654e"
-    }
-  ]
+  "changes": []
 }
