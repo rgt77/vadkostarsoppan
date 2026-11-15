@@ -1,6 +1,6 @@
 window.PRICE_DATA = {
-  updatedAt: "2026-11-14",
-  retrievedAt: "2026-11-14",
+  updatedAt: "2026-11-15",
+  retrievedAt: "2026-11-15",
   source: "https://www.carculated.se/bensinpriser",
   national: {
     id: "riket",
