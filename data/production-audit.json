@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-19",
+  "date": "2026-11-20",
   "status": "warning",
   "counts": {
     "ok": 11,
@@ -28,7 +28,7 @@
     {
       "id": "prices:fresh",
       "ok": true,
-      "message": "Prisdata är 2 dagar gammal",
+      "message": "Prisdata är 3 dagar gammal",
       "severity": "error"
     },
     {
